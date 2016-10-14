@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+      
+    <h:body>
+        <ui:component id="dashboardCharts">  
+            <div class="twelvecol last">
+			<h:form id="chartsFormId" prependId="false">
+		    	<h:panelGroup layout="block" id="tabs" class="ui-corner-all">
+	                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{agencyConsoleDashboardMBean.chartBean.renderChart1==true?'active':''}" id="chartagency">
+	                    	<ui:param name="spendTabText" value="#{msg['page.dashboard.labels.table.header.label.spend']}" />
+	                		<pri:lineChart id="linear-spend" styleClass="bigChart" value="#{agencyConsoleDashboardMBean.chartBean.getAgencyLinearModel('linear21')}" legendPosition="e" rendered="#{agencyConsoleDashboardMBean.chartBean.renderChart1}"
+	                   					   extender="function(){ ADT.dashboardChart.extender('#{spendTabText}', ADT.dashboardChart.largeConfig, '#52BEEC', this) }" widgetVar="chart" />
+	                   		</h:panelGroup>
+	                </h:panelGroup>
+				</h:form>
+	       </div>
+	       <div class="clear"></div>
+        </ui:component>
+    </h:body>
+</html>

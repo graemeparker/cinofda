@@ -1,0 +1,22 @@
+{
+	"site":{
+		"sid":"15386999",
+		"page":"http://www.bossmobi.com/fileList/4791/new2old/1.html",
+		"name":"bossmobi.com",
+		"domain":"bossmobi.com",
+		"pid":"15377429"
+	},
+	"id":"AKUDMURICZEA62",
+	"tmax":300,
+	"imp":[ { "w":320, "impid":"AKUDMURICZEA62_1", "h":50 } ],
+	"device":{
+		"os":"android",
+		"model":"nexus 5",
+		"ua":"Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko; Google Wireless Transcoder) Chrome/38.0.1025.166 Mobile Safari/535.19",
+		"make":"google",
+		"country":"USA",
+		"ip":"168.235.197.196"
+	},
+	"at":2,
+	"user":{ "uid":"2055133331" }
+}

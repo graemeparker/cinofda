@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Account settings"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+<div id="accountSettings">
+<h:form id="mainForm">
+
+<h:messages/>
+
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+  <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+    <div class="infoContent">#{msg['page.generic.error.box']}</div>
+  </div>
+</h:panelGroup>
+
+<h:panelGroup layout="block" styleClass="infoOK" rendered="#{requestScope.didUpdate}">
+  <div class="infoOKImage"></div>
+  <div class="infoOKHeader">Saved</div>
+  <div class="infoContent">
+    Your changes have been saved.
+  </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+<hr/>
+
+<pri:panel header="Account Set Up">  
+
+  <h:panelGroup id="settingsPanel" styleClass="settingsPanel" layout="block">
+    <pri:panelGrid id="settingsGrid">
+    
+      <!-- Tech Fee -->
+      <pri:row>
+        <pri:column>
+            <pri:outputLabel for="margin" value="Tech Fee (%)"/>
+        </pri:column>
+        <pri:column>
+          <div class="error"><h:message for="margin" styleClass="error" /></div>
+          <pri:inputText id="margin" value="#{accountSettingsBean.margin}" required="true" maxlength="6" size="6" style="width:75px">
+              <f:convertNumber type="percent" maxIntegerDigits="3" maxFractionDigits="1" />
+              <f:validateDoubleRange minimum=".000" maximum="1.00" />
+          </pri:inputText>
+        </pri:column>
+        <pri:column>
+          <div class="formtip">Enter percentage with % sign. Example: 20%</div>
+        </pri:column>
+      </pri:row>
+      
+      <!-- Margin share to byyd -->
+      <pri:row>
+        <pri:column>
+          <pri:outputLabel for="marginShareDsp" value="Margin share to #{rootBean.companyName} (%)"/>
+        </pri:column>
+        <pri:column>
+          <div class="error"><h:message for="marginShareDsp" styleClass="error" /></div>
+          <pri:inputText id="marginShareDsp" value="#{accountSettingsBean.marginShareDsp}" required="true" maxlength="6" size="6" style="width:75px">
+              <pri:ajax event="change" update="settingsGrid"></pri:ajax>
+              <f:convertNumber type="percent" maxIntegerDigits="3" maxFractionDigits="1" />
+              <f:validateDoubleRange minimum=".000" maximum="1.00" />
+          </pri:inputText>
+        </pri:column>
+        <pri:column>
+            <div class="formtip">Enter percentage with % sign. Example: 20%</div>
+        </pri:column>
+      </pri:row>
+      
+      <!-- Direct Cost -->
+      <pri:row>
+        <pri:column>
+            <pri:outputLabel for="directCost" value="Direct Cost (%)"/>
+        </pri:column>
+        <pri:column>
+          <div class="error"><h:message for="directCost" styleClass="error" /></div>
+          <pri:inputText id="directCost" value="#{accountSettingsBean.directCost}" required="false" maxlength="6" size="6" style="width:75px">
+              <f:convertNumber type="percent" maxIntegerDigits="3" maxFractionDigits="1" />
+              <f:validateDoubleRange minimum=".000" maximum="1.00" />
+          </pri:inputText>
+        </pri:column>
+        <pri:column>
+          <div class="formtip">Enter percentage with % sign. Example: 5%</div>
+        </pri:column>
+      </pri:row>
+      
+      <!-- Account Minimum Fixed Margin -->
+      <pri:row rendered="#{accountSettingsBean.mustHaveAccountFixedMargin}">
+        <pri:column>
+            <pri:outputLabel for="accountFixedMargin" value="Account Minimum Fixed Margin (%) *"/>
+        </pri:column>
+        <pri:column>
+          <div class="error"><h:message for="accountFixedMargin" styleClass="error" /></div>
+          <pri:inputText id="accountFixedMargin" value="#{accountSettingsBean.accountFixedMargin}" required="false" maxlength="6" size="6" style="width:75px">
+              <f:convertNumber type="percent" maxIntegerDigits="3" maxFractionDigits="1" />
+              <f:validateDoubleRange minimum="-1.00" maximum="1.00" />
+          </pri:inputText>
+        </pri:column>
+        <pri:column>
+          <div class="formtip">Enter percentage with % sign. Example: 5%</div>
+        </pri:column>
+      </pri:row>
+            
+      <!-- Default Agency Discount (%) -->    
+      <pri:row>
+          <pri:column>
+              <pri:outputLabel for="companyDiscount" value="Default Agency Discount (%)"/><span class="required">*</span>
+          </pri:column>
+          <pri:column>
+            <div class="error"><h:message for="companyDiscount" styleClass="error" /></div>
+            <pri:inputText id="companyDiscount" value="#{accountSettingsBean.companyDiscount}" 
+                   required="false" 
+                   size="12"
+                   style="width:75px"
+                   maxlength="6">
+                <f:convertNumber type="percent" maxIntegerDigits="3" maxFractionDigits="1" />
+                <f:validateDoubleRange minimum=".000" maximum="1.00" />
+            </pri:inputText>
+          </pri:column>
+          <pri:column>
+              <div class="formtip">Enter percentage with % sign. Example: 20%</div>
+          </pri:column>
+      </pri:row>
+      
+      <!-- MAD-3303 - Default Currency -->
+      <pri:row>
+        <pri:column>
+            <pri:outputLabel for="defaultCurrency" value="Default Currency"/>
+        </pri:column>
+        <pri:column>
+            <div class="error"><h:message for="defaultCurrency" styleClass="error" /></div>
+            <pri:selectOneMenu id="defaultCurrency" value="#{accountSettingsBean.defaultCurrencyId}">
+		        <f:selectItems value="#{accountSettingsBean.defaultCurrencyIds}"
+		                       var="currencyId" itemValue="#{currencyId}" itemLabel="#{accountSettingsBean.getCurrency(currencyId).toCurrencyCode}"/>
+		    </pri:selectOneMenu>
+        </pri:column>
+        <pri:column>
+          <div class="formtip"></div>
+        </pri:column>
+      </pri:row>
+    
+      <!-- Read Only -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox id="readOnly" value="#{accountSettingsBean.readOnly}" itemLabel="Read Only"/>
+        </pri:column>
+      </pri:row> 
+  
+  	  <!-- 3rd Party Tags -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox id="thirdPartyTags" 
+              value="#{accountSettingsBean.thirdPartyTags}"
+              itemLabel="3rd Party Tags"/>
+        </pri:column>
+      </pri:row>
+      
+  	  <!-- 3rd Party Impression Trackers -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox id="thirdPartyImpressionTrackers" 
+              value="#{accountSettingsBean.thirdPartyImpressionTrackers}"
+              itemLabel="3rd Party Impression Trackers"/>
+        </pri:column>
+      </pri:row> 
+      
+      <!-- Beta Test -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox id="betaTest" 
+              value="#{accountSettingsBean.betaTest}"
+              itemLabel="Beta Test"/>
+        </pri:column>
+      </pri:row>  
+      
+      <!-- Campaign Minimum Fixed Margin -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox id="fixedMargin" 
+              value="#{accountSettingsBean.fixedMargin}"
+              itemLabel="Campaign Minimum Fixed Margin"/>
+        </pri:column>
+      </pri:row>
+      
+      <!-- 3rd Party Vendor Cost (CPM) -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox id="adServingCPMFee" 
+              value="#{accountSettingsBean.adServingCPMFee}"
+              itemLabel="3rd Party Vendor Cost (CPM)"/>
+        </pri:column>
+      </pri:row>
+      
+      <!-- Show Agency Discount -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox 
+                value="#{accountSettingsBean.showAgencyDiscount}"
+                itemLabel="Show Agency Discount at campaign level" />
+        </pri:column>
+      </pri:row>
+      
+      <!-- Editable Agency Discount -->
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:selectBooleanCheckbox id="editAgencyDiscount" 
+                value="#{accountSettingsBean.editAgencyDiscount}"
+                itemLabel="Editable Agency Discount at campaign level" />
+        </pri:column>
+      </pri:row>
+      
+      <!-- MAD-3168 - Agency-level RTB Seat ID -->
+      <pri:row>
+        <pri:column colspan="3">
+        
+          <pri:selectBooleanCheckbox id="AgencyLevelSeatID" value="#{accountSettingsBean.agencyLevelSeatID}" itemLabel="Agency-level Seat ID">
+            <pri:ajax event="change" update="seat-ids-container"></pri:ajax>
+          </pri:selectBooleanCheckbox>
+          <h:message for="AgencyLevelSeatID" styleClass="error" style=" display: inline-block;width: 500px;" />
+          <h:panelGroup id="seat-ids-container" >
+            <pri:dataTable id="seatsIdTable" var="seatId" value="#{accountSettingsBean.bidSeats}" 
+                           selection="#{accountSettingsBean.selectedBidSeats}"  rowKey="#{seatId.targetPublisher.id}"
+                           varStatus="seatIdStatus" rendered="#{accountSettingsBean.agencyLevelSeatID}" style="margin-left:20px; margin-top: 5px;">
+                <pri:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                <pri:column headerText="AdExchange">
+                    <pri:outputLabel value="#{seatId.targetPublisher.name}"/>
+                </pri:column>
+                <pri:column headerText="Seat Id" style="text-align: center;">
+                    <pri:inputText value="#{seatId.seatId}" required="false" maxlength="40" size="40" style="width:300px"/>
+                </pri:column>
+            </pri:dataTable>
+            <pri:commandButton action="#{accountSettingsBean.autogenerateSeatIds}" rendered="#{accountSettingsBean.agencyLevelSeatID}" 
+                               process="seat-ids-container" update="seat-ids-container" value="Autogenerate" style="margin-left: 20px;margin-top: 10px;"/>
+          </h:panelGroup>
+          
+        </pri:column>
+      </pri:row>
+      
+    </pri:panelGrid>
+  </h:panelGroup>
+  
+  <!-- Pre-pay / Post-pay options -->
+  <h:panelGroup id="optionPanel" styleClass="settingsPanel" layout="block">
+    <pri:panelGrid id="optionGrid">
+      <pri:row>
+        <pri:column>
+          <div class="error"><h:message for="paymentOption" styleClass="error" /></div>
+          <pri:selectOneRadio id="paymentOption"
+              layout="pageDirection"
+              value="#{accountSettingsBean.paymentOption}"
+              required="true"
+              requiredMessage="Please indicate payment option">
+            <pri:ajax process="@this" update="paymentPanel"/>  
+            <f:selectItem itemValue="PREPAID" itemLabel="Pre-pay" />
+            <f:selectItem itemValue="POSTPAID" itemLabel="Post-pay"/>
+          </pri:selectOneRadio>
+        </pri:column>
+      </pri:row>
+    </pri:panelGrid>
+  </h:panelGroup>
+    
+    <h:panelGroup id="paymentPanel" styleClass="paymentPanel settingsPanel" layout="block">
+      <h:panelGroup rendered="#{accountSettingsBean.paymentOption eq 'POSTPAID'}">    
+        <pri:panelGrid id="paymentOptionsGrid">
+          <pri:row>
+              <pri:column>
+                  <pri:outputLabel value="Credit limit USD($)"/><span class="required">*</span>
+              </pri:column>
+              <pri:column>
+                <div class="error"><h:message for="creditLimit" styleClass="error" /></div>
+                <pri:inputText id="creditLimit"
+                             value="#{accountSettingsBean.creditLimit}"
+                             size="12"
+                             maxlength="12"
+                             style="width:75px"
+                             validatorMessage="#{msg['error.generic.currency']}">
+                            <f:validateDoubleRange minimum="0.00" />
+                </pri:inputText>
+              </pri:column>
+              <pri:column>
+                <div class="formtip">#{msg['page.generic.tip.currency']}</div>
+              </pri:column>
+          </pri:row>
+                              
+          <pri:row>
+              <pri:column>
+                  <pri:outputLabel for="postPayTermDays" value="Post pay term days"/><span class="required">*</span>
+              </pri:column>
+              <pri:column>
+                <div class="error"><h:message for="postPayTermDays" styleClass="error" /></div>
+                <pri:inputText id="postPayTermDays" value="#{accountSettingsBean.postPayTermDays}"
+                         size="3"
+                         maxlength="3"
+                         style="width:75px">
+                         <f:convertNumber
+                                type="number" maxFractionDigits="0" maxIntegerDigits="3" />
+                         <f:validateLongRange minimum="0" maximum="365" />
+                </pri:inputText>
+              </pri:column>
+              <pri:column>
+                  <div class="formtip">Enter number of days. Example: 15</div>
+              </pri:column>
+          </pri:row>
+          
+          <pri:row>
+              <pri:column>
+                  <pri:outputLabel for="postPayActivationDate" value="Post pay activation date"/><span class="required">*</span>
+              </pri:column>
+              <pri:column>
+                <div class="error"><h:message for="postPayActivationDate" styleClass="error" /></div>
+                <pri:calendar id="postPayActivationDate"
+                  mode="popup"
+                  styleClass="primeDatePicker"
+                  value="#{accountSettingsBean.postPayActivationDate}"
+                  label="Postpay activation date"
+                  size="10"
+                  maxlength="10"
+                  showOn="button"
+                  pattern="#{util.shortDatePattern}"
+                  mindate="#{accountSettingsBean.hasCompanySpend ? accountSettingsBean.startOfDayTomorrow : ''}"
+                  timeZone="GMT"
+                  required="false"/>
+              </pri:column>
+              <pri:column>
+                <div class="formtip">
+                  Post pay date is start of day on the selected date.
+                  <h:panelGroup rendered="#{accountSettingsBean.hasCompanySpend}">
+                    <br/>Company has spend. New or modified date must be tomorrow or later.
+                  </h:panelGroup>
+                </div>
+              </pri:column>
+              
+          </pri:row>
+          
+        </pri:panelGrid>
+        
+      </h:panelGroup>
+    </h:panelGroup>
+</pri:panel>
+
+<div class="formtip">Note that one of Publication ID and Site/App must always be displayed. If both are unchecked Publication ID will be displayed.</div>
+
+<!-- Opti Reports Fields -->
+<pri:panelGrid columns="1" id="optiReportFields" >
+	<f:facet name="header">Opti Reports Fields</f:facet>
+	<pri:selectManyCheckbox 
+		id="optiReportFieds"
+        styleClass="accountSettings"
+		value="#{accountSettingsBean.optimisationReportFields}"  
+		layout="pageDirection">  
+		<f:converter converterId="optimisationReportFieldConverter" />
+		<f:selectItems value="#{rootBean.optimisationReportFields}" var="reportField" itemValue="#{reportField}" itemLabel="#{msg[ad:concat('page.companyRole.optimisation.prefs.', reportField)]}"/>  
+	</pri:selectManyCheckbox>
+</pri:panelGrid>
+
+<pri:dialog id="confirmSeatIdsInUse" widgetVar="confirmSeatIdsInUse" 
+            header="Agency-level Seat IDs Confirmation" 
+            resizable="false" modal="true" closable="true" >
+    <h3><h:outputText value="Do you wish to continue?" /></h3>
+    <p>
+       <h:outputText value="Seat IDs are already in use for the following AdExchanges:"/>
+       <br/>
+       <h:outputText value="#{accountSettingsBean.seatIdInUseDialogMessage}" />
+    </p>
+    <div class="buttons">
+        <pri:commandButton id="confirmButton" 
+             value="Yes" 
+             actionListener="#{accountSettingsBean.doSave}"
+             onclick="confirmSeatIdsInUse.hide();"
+             update="mainForm" process="mainForm"/>
+        <pri:commandButton id="declineButton" 
+             value="No" 
+             type="button" 
+             onclick="confirmSeatIdsInUse.hide()" 
+             update="mainForm"/>
+    </div>
+</pri:dialog>
+   
+<div class="bottomButton">
+  <pri:commandButton action="#{accountSettingsBean.doChecks}" update="mainForm,confirmSeatIdsInUse" id="iconOnly" icon="ui-icon-disk" value="Save"/>  
+</div>
+</h:form>
+</div>
+
+
+
+</ui:define>
+</ui:composition>

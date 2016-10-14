@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <bean id="testProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+        p:location="classpath:config/adfonic-encyrpted-test.properties"/>
+  
+  <bean id="simpleConfiguration" class="org.jasypt.encryption.pbe.config.SimplePBEConfig" 
+  		p:algorithm="PBEWithMD5AndDES"
+  		p:poolSize="64"
+  		p:password="MASTERKEY" />
+  
+  <bean id="configurationEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor"
+  		p:config-ref="simpleConfiguration"/>
+  
+  <bean class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer"
+        p:properties-ref="testProperties">
+  		<constructor-arg ref="configurationEncryptor"/>
+  </bean>
+        
+   <bean id="encryptedCredentialsTestBean" class="com.adfonic.weve.test.CredentialsTestBean"
+        p:username="${weve.test.username}"
+        p:password="${weve.test.password}" />
+        
+</beans>

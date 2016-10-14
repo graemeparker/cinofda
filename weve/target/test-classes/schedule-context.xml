@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<!-- Scan for @Component, etc. classes automatically -->
+	<context:component-scan base-package="com.adfonic.weve.test" />
+	<context:property-placeholder properties-ref="weveProperties"/>
+	
+	<bean id="weveProperties"
+	     class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+	     p:location="classpath:config/weve-schedule-test.properties"/>
+
+	 <!-- We use the explicit bean instantiation here instead of using the
+     task:executor declaration so that we can set daemon=true.  Otherwise
+     the default thread factory creates non-daemon threads. -->
+	<bean id="executor"
+	      class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler"
+	      p:daemon="true"
+	      p:threadNamePrefix="test-weve-executor"
+	      p:poolSize="1"/>
+	      
+	<task:annotation-driven executor="executor" scheduler="executor"/>
+	
+</beans>

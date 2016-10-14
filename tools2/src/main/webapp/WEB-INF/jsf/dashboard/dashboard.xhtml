@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+    <h:body onload="progressDialog.hide();">
+        <ui:composition template="/WEB-INF/jsf/template/layouts/layout.xhtml">
+            <ui:define name="content">
+                <!-- h:form id="dashboardFormId" prependId="false"  -->
+                    <!-- CONTAINER -->
+                    <div class="content">
+                        <!-- ROW -->
+                        <div class="row top-filters">
+                            <!-- MAIN CONTENT -->
+                            <div class="ninecol">
+                                <!-- TYPE AHEAD: -->
+                                <h:form id="typeAheadFormId" prependId="false" >
+	                                <div class="f-left">
+	                                    <pri:autoComplete 
+	                                    	id="campaignTypeAheadId"
+	                                    	widgetVar="campaignTypeAheadWidget"
+	                                    	value="#{dashBoardMBean.dashboardDto.campaigns}" 
+	                                    	completeMethod="#{dashBoardMBean.complete}" 
+	                                    	minQueryLength="3"
+	                                        var="c" 
+	                                        itemLabel="#{c.name}" 
+	                                        itemValue="#{c}" 
+	                                        multiple="true" 
+	                                        scrollHeight="300"
+	                                        converter="com.adfonic.tools.converter.campaign.CampaignConverter"
+	                                        styleClass="search-campaign-autocomplete"
+											panelStyleClass="search-campaign-dropdown"	
+											oncomplete="ADT.setFullsizeMenuDropdown('search-campaign-autocomplete', 'search-campaign-dropdown');"	                                    
+	                                    >
+	                                       <pri:ajax event="itemSelect"   oncomplete="ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);" />
+	                                       <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);" />
+	                                    </pri:autoComplete>
+                                        <pri:watermark for="campaignTypeAheadId" widgetVar="campaignTypeAheadWatermark" value="#{msg['page.dashboard.advertiser.allcampaigns.placeholder']}" />
+                                        <ui:remove>
+	                                    Removed for the moment, no 5 charts rendered
+	                                    <pri:selectBooleanCheckbox id="chartCampaignsCheckboxId" value="#{dashBoardMBean.dashboardDto.individualLines}" disabled="#{dashBoardMBean.moreThan5}">
+	                                    	<pri:ajax 
+	                                    		listener="#{dashBoardMBean.individualLinesChange}" 
+	                                    		update="typeAheadFormId,:chartsFormId,:dataTableFormId " 
+	                                    		oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+	                                    	/>
+	                                    </pri:selectBooleanCheckbox>
+	                                    <h:outputLabel id="chartCampaignsCheckboxLabelId" value="#{msg['page.dashboard.labels.chartline.checkbox']}" />
+	                                    </ui:remove>
+	                                </div>
+	                                <pri:commandButton 
+	                                	value="#{msg['page.dashboard.labels.campaign.search.button']}" 
+	                                	id="applyCampaignButtonId" onclick="progressDialog.show();" 
+	                                	oncomplete="ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark); ADT.updateStatusIcons(); progressDialog.hide();"
+                                        actionListener="#{dashBoardMBean.campaignFilter}" 
+                                        update="typeAheadFormId,:chartsFormId,:dataTableFormId" 
+                                        process="@form"
+                                   	/>
+                                </h:form>
+                            </div>
+                            <div class="threecol last">
+                                <ui:include src="dashboarddatepicker.xhtml">
+               					</ui:include>
+                            </div><!-- END SIX COL -->
+                            <div class="clear"></div>
+                        </div>
+                        <div class="row charts">
+                            <div class="twelvecol last">
+								<h:form id="chartsFormId" prependId="false">
+                                <h:panelGroup layout="block" id="tabs" class="ui-corner-all">
+                                    <table class="mainTab ui-corner-top" style="padding:0px;border-spacing:0px">
+                                        <tr>
+                                        	<!-- Impressions -->
+                                            <td data-no="1" class="#{dashBoardMBean.chartBean.renderChart1==true?'active':''}">
+                                                <h:panelGroup id="miniChart1" layout="block">                                            
+                                                    <h:commandLink id="commandChart1Id" actionListener="#{dashBoardMBean.chartBean.doChartToggle}">
+                                                        <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+                                                        <f:attribute name="chart" value="renderChart1"/>
+                                                        <ui:param name="imprTabText" value="#{msg['page.dashboard.labels.table.header.label.impressions']}" />
+                                                        <span class="tabHeader">#{imprTabText}</span>
+                                                        <span class="tabData">
+                                                        	<h:outputText value="#{dashBoardMBean.headerFigures.headerDto.impressions}">
+                                                        		<byydtechJs:numberFormatConverter format="abbreviated"/>
+                                                        	</h:outputText>
+                                                        </span>
+                                                        <pri:lineChart styleClass="mini-chart" id="small1" value="#{dashBoardMBean.chartBean.getLinearModel('small1')}" legendPosition="e"
+                                                                       extender="function(){ ADT.dashboardChart.extender('#{imprTabText}', ADT.dashboardChart.smallConfig, '#52BEEC', this) }"/>
+                                                    </h:commandLink>
+                                                    <h:panelGroup layout="block" id="helpTab1" styleClass="helpImage"></h:panelGroup>
+                                                </h:panelGroup>                                                               
+                                            </td>
+                                            
+                                            <!-- CTR -->
+                                            <td data-no="2" class="#{dashBoardMBean.chartBean.renderChart2==true?'active':''}">
+                                                <h:panelGroup id="miniChart2" layout="block">
+                                                    <h:commandLink id="commandChart2Id" actionListener="#{dashBoardMBean.chartBean.doChartToggle}">
+                                                        <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+                                                        <f:attribute name="chart" value="renderChart2"/>
+                                                        <ui:param name="ctrTabText" value="#{msg['page.dashboard.labels.table.header.label.ctr']}" />
+                                                        <span class="tabHeader">#{ctrTabText}</span>
+                                                        <span class="tabData">
+                                                        	<h:outputText value="#{dashBoardMBean.headerFigures.headerDto.ctr}">
+                                                        		<byydtechJs:numberFormatConverter format="abbreviated" units="%" unitsPosition="back"/>
+                                                        	</h:outputText>	
+                                                        </span>
+                                                        <pri:lineChart styleClass="mini-chart" id="small2" value="#{dashBoardMBean.chartBean.getLinearModel('small2')}" legendPosition="e"
+                                                                       extender="function(){ ADT.dashboardChart.extender('#{ctrTabText}', ADT.dashboardChart.smallConfig, '#52BEEC', this) }"/>
+                                                    </h:commandLink>
+                                                    <h:panelGroup layout="block" id="helpTab2" styleClass="helpImage"></h:panelGroup>
+                                                </h:panelGroup>                                            
+                                            </td>
+                                            
+                                            <!-- Clicks -->
+                                            <td data-no="3" class="#{dashBoardMBean.chartBean.renderChart3==true?'active':''}">
+                                                <h:panelGroup id="miniChart3" layout="block">
+                                                    <h:commandLink id="commandChart3Id" actionListener="#{dashBoardMBean.chartBean.doChartToggle}">
+                                                        <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+                                                        <f:attribute name="chart" value="renderChart3"/>
+                                                        <ui:param name="clicksTabText" value="#{msg['page.dashboard.labels.table.header.label.clicks']}" />
+                                                        <span class="tabHeader">#{clicksTabText}</span>
+                                                        <span class="tabData">
+                                                        	<h:outputText value="#{dashBoardMBean.headerFigures.headerDto.clicks}">
+                                                        		<byydtechJs:numberFormatConverter format="abbreviated"/>
+                                                        	</h:outputText>
+                                                        </span>
+                                                        <pri:lineChart styleClass="mini-chart" id="small3" value="#{dashBoardMBean.chartBean.getLinearModel('small3')}" legendPosition="e"
+                                                                       extender="function(){ ADT.dashboardChart.extender('#{clicksTabText}', ADT.dashboardChart.smallConfig, '#52BEEC', this) }"/>
+                                                     </h:commandLink>
+                                                    <h:panelGroup layout="block" id="helpTab3" styleClass="helpImage"></h:panelGroup>
+                                                 </h:panelGroup>
+                                            </td>
+                                            
+                                            <!-- Conversions -->
+                                            <td data-no="4" class="#{dashBoardMBean.chartBean.renderChart4==true?'active':''}">
+                                                <h:panelGroup id="miniChart4" layout="block">
+                                                    <h:commandLink id="commandChart4Id" actionListener="#{dashBoardMBean.chartBean.doChartToggle}">
+                                                        <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+                                                        <f:attribute name="chart" value="renderChart4"/>
+                                                        <ui:param name="convTabText" value="#{msg['page.dashboard.labels.table.header.label.conversions']}" />
+                                                        <span class="tabHeader">#{convTabText}</span>
+                                                        <span class="tabData">
+                                                        	<h:outputText value="#{dashBoardMBean.headerFigures.headerDto.conversions}">
+                                                        		<byydtechJs:numberFormatConverter format="abbreviated"/>
+                                                        	</h:outputText>
+                                                        </span>
+                                                        <pri:lineChart styleClass="mini-chart" id="small4" value="#{dashBoardMBean.chartBean.getLinearModel('small4')}" legendPosition="e"
+                                                                       extender="function(){ ADT.dashboardChart.extender('#{convTabText}', ADT.dashboardChart.smallConfig, '#52BEEC', this) }"/>
+                                                    </h:commandLink>
+                                                    <h:panelGroup layout="block" id="helpTab4" styleClass="helpImage"></h:panelGroup>
+                                                </h:panelGroup>
+                                            </td>
+                                            
+                                            <!-- Spend -->
+                                            <td data-no="6" class="#{dashBoardMBean.chartBean.renderChart6==true?'active':''}">
+                                                <h:panelGroup id="miniChart5" layout="block">
+                                                    <h:commandLink id="commandChart6Id" actionListener="#{dashBoardMBean.chartBean.doChartToggle}">
+                                                        <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+                                                        <f:attribute name="chart" value="renderChart6"/>
+                                                        <ui:param name="spendTabText" value="#{msg['page.dashboard.labels.table.header.label.spend']}" />
+                                                        <span class="tabHeader">#{spendTabText}</span>
+                                                        <span class="tabData">
+                                                        	<h:outputText value="#{dashBoardMBean.headerFigures.headerDto.spend}">
+                                                        		<byydtechJs:numberFormatConverter format="abbreviated" units="$" unitsPosition="front"/>
+                                                        	</h:outputText>	
+                                                        </span>
+                                                        <pri:lineChart styleClass="mini-chart" id="small6" value="#{dashBoardMBean.chartBean.getLinearModel('small6')}" legendPosition="e"
+                                                                       extender="function(){ ADT.dashboardChart.extender('#{spendTabText}', ADT.dashboardChart.smallConfig, '#52BEEC', this) }"/>
+                                                    </h:commandLink>
+                                                    <h:panelGroup layout="block" id="helpTab6" styleClass="helpImage"></h:panelGroup>
+                                                </h:panelGroup>
+                                            </td>                                            
+                                        </tr>
+                                    </table>
+
+                                    <pri:overlayPanel for="helpTab1" hideEffect="fade" styleClass="no-shadow">
+                                        <div class="helpInner ui-corner-all ui-shadow">
+                                            <div class="helpArrow"></div>
+                                            <h2>#{msg['page.dashboard.advertiser.impressions.title']}</h2>
+                                            <p>#{msg['page.dashboard.advertiser.impressions.message']}</p>
+                                        </div>
+                                    </pri:overlayPanel>
+                                    <pri:overlayPanel for="helpTab2" hideEffect="fade" styleClass="no-shadow">
+                                        <div class="helpInner ui-corner-all ui-shadow">
+                                            <div class="helpArrow"></div>
+                                            <h2>#{msg['page.dashboard.advertiser.ctr.title']}</h2>
+                                            <p>#{msg['page.dashboard.advertiser.ctr.message']}</p>
+                                        </div>
+                                    </pri:overlayPanel>
+                                    <pri:overlayPanel for="helpTab3" hideEffect="fade" styleClass="no-shadow">
+                                        <div class="helpInner ui-corner-all ui-shadow">
+                                            <div class="helpArrow"></div>
+                                            <h2>#{msg['page.dashboard.advertiser.clicks.title']}</h2>
+                                            <p>#{msg['page.dashboard.advertiser.clicks.message']}</p>
+                                        </div>
+                                    </pri:overlayPanel>
+                                    <pri:overlayPanel for="helpTab4" hideEffect="fade" styleClass="no-shadow">
+                                        <div class="helpInner ui-corner-all ui-shadow">
+                                            <div class="helpArrow"></div>
+                                            <h2>#{msg['page.dashboard.advertiser.conversions.title']}</h2>
+                                            <p>#{msg['page.dashboard.advertiser.conversions.message']}</p>
+                                        </div>
+                                    </pri:overlayPanel>
+                                    <pri:overlayPanel for="helpTab6" hideEffect="fade" styleClass="no-shadow">
+                                        <div class="helpInner ui-corner-all ui-shadow">
+                                            <div class="helpArrow"></div>
+                                            <h2>#{msg['page.dashboard.advertiser.spend.title']}</h2>
+                                            <p>#{msg['page.dashboard.advertiser.spend.message']}</p>
+                                        </div>
+                                    </pri:overlayPanel>
+
+                                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{dashBoardMBean.chartBean.renderChart1==true?'active':''}" id="chart1">
+                                		<pri:lineChart id="linear" styleClass="bigChart" value="#{dashBoardMBean.chartBean.getLinearModel('linear')}" legendPosition="e" rendered="#{dashBoardMBean.chartBean.renderChart1}"
+                                   					   extender="function(){ ADT.dashboardChart.extender('#{imprTabText}', ADT.dashboardChart.largeConfig, '#52BEEC', this) }" xaxisAngle="225" />
+
+                                    </h:panelGroup>
+                                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{dashBoardMBean.chartBean.renderChart2==true?'active':''}" id="chart2">
+                                		<pri:lineChart id="linear-ctr" styleClass="bigChart" value="#{dashBoardMBean.chartBean.getLinearModel('linear1')}" legendPosition="e" rendered="#{dashBoardMBean.chartBean.renderChart2}"
+                                   					   extender="function(){ ADT.dashboardChart.extender('#{ctrTabText}', ADT.dashboardChart.largeConfig, '#52BEEC', this) }" />                                        
+                                    </h:panelGroup>
+                                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{dashBoardMBean.chartBean.renderChart3==true?'active':''}" id="chart3">
+                                		<pri:lineChart id="linear2" styleClass="bigChart" value="#{dashBoardMBean.chartBean.getLinearModel('linear2')}" legendPosition="e" rendered="#{dashBoardMBean.chartBean.renderChart3}"
+                                   					   extender="function(){ ADT.dashboardChart.extender('#{clicksTabText}', ADT.dashboardChart.largeConfig, '#52BEEC', this) }" />                                        
+                                    </h:panelGroup>
+                                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{dashBoardMBean.chartBean.renderChart4==true?'active':''}" id="chart4">
+                                		<pri:lineChart id="linear3" styleClass="bigChart" value="#{dashBoardMBean.chartBean.getLinearModel('linear3')}" legendPosition="e" rendered="#{dashBoardMBean.chartBean.renderChart4}"
+                                   					   extender="function(){ ADT.dashboardChart.extender('#{convTabText}', ADT.dashboardChart.largeConfig, '#52BEEC', this) }" />                                        
+                                    </h:panelGroup>
+                                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{dashBoardMBean.chartBean.renderChart6==true?'active':''}" id="chart6">
+                                		<pri:lineChart id="linear-spend" styleClass="bigChart" value="#{dashBoardMBean.chartBean.getLinearModel('linear5')}" legendPosition="e" rendered="#{dashBoardMBean.chartBean.renderChart6}"
+                                   					   extender="function(){ ADT.dashboardChart.extender('#{spendTabText}', ADT.dashboardChart.largeConfig, '#52BEEC', this) }" />                                        
+                                    </h:panelGroup>                                    
+                                </h:panelGroup>
+								</h:form>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <h:form id="dataTableFormId" prependId="false">
+	                        <h:panelGroup layout="block" styleClass="row btns" rendered="#{!userSessionBean.readOnlyUser}">
+                                <pri:commandButton 
+                                    id="activeButtonId" 
+                                    value="#{msg['page.dashboard.buttons.state.activate.label']}" 
+                                    styleClass="not-last-button"
+                                    process="@this,dataTable" 
+                                    update="dataTable,:chartsFormId" 
+                                    onstart="progressDialog.show()" 
+                                    oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); ADT.enableCampaignReactivateButton()"
+                                    actionListener="#{dashBoardMBean.reportingBean.doChangeStatus}"
+                                >
+                                    <f:attribute name="stat" value="activate" />
+                                </pri:commandButton>
+                                <pri:commandButton 
+                                    id="pauseButtonId" 
+                                    value="#{msg['page.dashboard.buttons.state.pause.label']}" 
+                                    styleClass="not-last-button"
+                                    process="@this,dataTable" 
+                                    update="dataTable,:chartsFormId" 
+                                    onstart="progressDialog.show()" 
+                                    oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); ADT.enableCampaignReactivateButton()"
+                                    actionListener="#{dashBoardMBean.reportingBean.doChangeStatus}"
+                                >
+                                    <f:attribute name="stat" value="pause" />
+                                 </pri:commandButton>
+								 <pri:commandButton
+								 	rendered="#{IS_ADMIN}"
+								 	id="stopButtonId" 
+								    value="#{msg['page.dashboard.buttons.state.stop.label']}" 
+								    styleClass="not-last-button"
+								    process="@this,dataTable" 
+								    update="dataTable,:chartsFormId" 
+								    onstart="progressDialog.show()" 
+								    oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); ADT.enableCampaignReactivateButton()"
+								    actionListener="#{dashBoardMBean.reportingBean.doChangeStatus}">
+                                   <f:attribute name="stat" value="stop" />
+                                </pri:commandButton>
+                                <pri:commandButton 
+                                    id="reactiveButtonId" 
+                                    value="#{msg['page.dashboard.buttons.state.reactivate.label']}" 
+                                    actionListener="#{dashBoardMBean.reportingBean.doChangeStatus}" 
+                                    widgetVar="reButton"
+                                    process="@this,dataTable" 
+                                    update="dataTable,:chartsFormId" 
+                                    onstart="progressDialog.show()" 
+                                    oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); ADT.enableCampaignReactivateButton()"
+                                >
+                                    <f:attribute name="stat" value="reactivate" />
+                                </pri:commandButton>
+                                <pri:commandButton value="#{msg['page.dashboard.buttons.state.newcampaign.label']}" id="newCampaignButtonId" action="#{campaignMBean.doInitCampaign}" />
+                            </h:panelGroup>
+						
+                        <div class="row data-table">
+						
+                            <!-- BEGIN REPORTING TABLE -->
+                            <div class="twelvecol last">
+                            
+                            	<!-- Display validation errors during editing table cells -->
+                            	<pri:messages showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+                            	
+                            	<div class="datatable-header">
+                                    <pri:outputLabel value="#{msg['page.dashboard.labels.table.highlighted.label']}"/>
+                                </div>
+                            	
+                                <pri:dataTable id="dataTable" var="stc" styleClass="ui-corner-all advertisers dashboard-datatable"
+                                               style="display:block !important"
+                                               paginator="true" rows="25" 
+                                               paginatorTemplate="Show {RowsPerPageDropdown}  per page. Showing rows {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                               rowsPerPageTemplate="10,25,50,100"
+                                               value="#{dashBoardMBean.reportingBean.lazyModel}"
+                                               lazy="true" 
+                                               paginatorPosition="bottom"
+                                               selection="#{dashBoardMBean.reportingBean.selected}"
+                                               selectionMode="checkbox"
+                                               editable="true" editMode="cell"
+                                               rowStyleClass="#{stc.allCreativeRejected eq true ? 'datatable-red-row' : null}">
+                                    <pri:ajax event="sort" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.cancelDatatableRowClickSelect();" />
+	                   				<pri:ajax event="page" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.cancelDatatableRowClickSelect();" />
+	                   				<pri:ajax event="cellEdit" onstart="progressDialog.show();" oncomplete="progressDialog.hide();" listener="#{dashBoardMBean.reportingBean.onCellEdit}" />
+                                    <ui:remove>ajax event to sorting. primefaces sorting in columns calls an object or a function, but not
+                                    a custom made event for that.
+                                    </ui:remove>
+                                    
+                                    <!-- Store weather bid type ewas saved -->
+                                    <ui:param name="bidTypeDefined" value="#{stc.bidType != null}" />
+                                    
+                                    <!-- Display inline editor for bidding -->
+                                    <ui:param name="biddingEditorEnabled" value="#{bidTypeDefined}" />
+                                    
+                                    <!-- If EP then dailyCap is not editable -->
+                                    <ui:param name="evenPacing" value="#{stc.evenDistributionOverallBudget != 'ASAP'}" />
+                                    
+                                    <!-- If Price overridden and not admin then bidPrice is not editable -->
+                                    <ui:param name="priceOverriddenAndNotAdmin"	value="#{stc.priceOverridden and !campaignMBean.adminUserLoggedIn}" />
+                                    
+                                    <!-- Hide checkboxes in case of stopped campaigns for users, show all for admins as before -->
+                                    <pri:column selectionMode="multiple" rendered="#{IS_ADMIN}" styleClass="select-col"/>
+                                    <pri:column selectionMode="multiple" rendered="#{not IS_ADMIN}"
+                                        	styleClass="#{(stc.status eq 'STOPPED') ? 'hide-chkbox' : 'select-col'}" disabledSelection="#{(stc.status eq 'STOPPED') ? true : false}"/>
+                                    
+                                    <!-- Campaign Status -->
+                                    <pri:column id="campaignStatusHeader" styleClass="sel-box stat-col tooltip">
+                                        <f:facet name="header">
+                                            <pri:selectOneMenu 
+                                            	id="campaignStatusFilter" 
+                                            	value="#{dashBoardMBean.reportingBean.dashboardDto.campaignStatusFilter}"
+                                               	styleClass="status-filter" 
+                                               	valueChangeListener="#{dashBoardMBean.reportingBean.processFilter}"
+                                           		panelStyleClass="status-icon-panel"
+                                           	>
+                                                <f:selectItems value="#{dashBoardMBean.reportingBean.statusList}" var="status" itemValue="#{status}" itemLabel="#{msg[status.campaignStatusStr]}"/>
+                                                <pri:ajax event="change" process="@this" update="dataTable,:chartsFormId" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.insertStatIcons(); " 
+                                                		listener="#{dashBoardMBean.reportingBean.filter}"/>
+                                                <f:attribute name="filterBy" value="status" />
+                                            </pri:selectOneMenu>
+                                        </f:facet>
+                                        <ui:remove>Active,Paused,Stopped,Pending</ui:remove>
+                                        <div class="status #{stc.status}"></div>
+
+                                        <div class="ui-overlaypanel none">
+                                            <div class="helpInner ui-corner-all ui-shadow">
+                                                <div class="helpArrow"></div>
+                                                <span>#{msg[dashBoardMBean.reportingBean.convertStatus(stc.status)]}</span>
+                                            </div>
+                                        </div>
+                                    </pri:column>
+                                    
+                                    <!-- Campaign Name -->
+                                    <pri:column id="campaignNameHeader" styleClass="datatable-item-name" sortBy="#{stc.campaignName}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.campaignname']}">
+                                        <h:panelGroup rendered="#{stc.status ne 'NEW' || !userSessionBean.readOnlyUser}">
+	                                        <h:link outcome="pretty:campaignSetup" value="#{stc.campaignName}" onclick="progressDialog.show();">
+	                                        	<f:param name="id" value="#{toolsApplicationBean.encodeUrl(dashBoardMBean.getExternalIdFromId(stc.campaignId))}"></f:param>
+	                                        </h:link>
+	                                    </h:panelGroup>
+	                                    <h:panelGroup rendered="#{stc.status == 'NEW' and userSessionBean.readOnlyUser}">
+	                                    	<h:outputText value="#{stc.campaignName}"/>
+	                                    </h:panelGroup>
+                                    </pri:column>
+                                    
+                                    <!-- Bid Type -->
+                                    <pri:column id="bidtypeHeader" styleClass="sel-box center">
+                                        <f:facet name="header">
+                                            <pri:selectOneMenu id="campaignBidTypeFilter" value="#{dashBoardMBean.reportingBean.dashboardDto.bidTypeFilter}"
+                                                               valueChangeListener="#{dashBoardMBean.reportingBean.processFilter}">
+                                                <f:selectItems value="#{toolsApplicationBean.bidType}" var="types" itemValue="#{types}" itemLabel="#{types.bidType}"/>
+                                                <pri:ajax event="change" process="@this" update="dataTable,:chartsFormId"  onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+                                                		listener="#{dashBoardMBean.reportingBean.filter}"/>
+                                                <f:attribute name="filterBy" value="bidType" />
+                                            </pri:selectOneMenu>
+                                        </f:facet>
+                                        <h:outputText value="#{bidTypeDefined ? stc.bidType : '--'}" />
+                                    </pri:column>
+                                    
+                                    <!-- Bid Price -->
+                                    <pri:column id="bidPriceHeader" styleClass="num" sortBy="#{stc.bidPrice}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.bidprice']}">
+                                    	
+                                    	<!-- Read Only -->
+										<h:outputText value="#{stc.bidPrice}" rendered="#{not biddingEditorEnabled or priceOverriddenAndNotAdmin}">
+											<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front" decimals="3"/>
+										</h:outputText>
+										
+										<!-- Cell Editor -->
+                                        <pri:cellEditor id="bidPriceEditor" rendered="#{biddingEditorEnabled and not priceOverriddenAndNotAdmin}">
+                                        	<f:facet name="output">
+		       			                        <h:outputText value="#{stc.bidPrice}">
+		                                        	<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front" decimals="3"/>
+		                                        </h:outputText>
+                                        	</f:facet>
+                                        	<f:facet name="input">
+                                        		<h:inputText id="bidPrice" value="#{stc.bidPrice}"
+                                        			disabled="#{priceOverriddenAndNotAdmin}"
+                                        			required="true"
+                                        			requiredMessage="#{msg['page.campaign.bidbudget.bidprice.required']}"	
+                                        			converterMessage="#{msg['page.dashboard.bidbudget.bidprice.notnumber']}"
+                                        			validator="#{dashBoardMBean.reportingBean.priceValidator}"
+                                        			styleClass="cellEditorStyle">
+                                        				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="3" />
+                                        				<!-- maxFractionDigits cannot be dynamically set to 2 or 3
+                                        					 thats why ajax refresh needed to display proper digits from db  -->
+                                        				<pri:ajax event="change" update="dataTable"/>
+                                        		</h:inputText>
+                                        		<pri:watermark for="bidPrice" value="#{stc.bidPrice}" />
+                                        	</f:facet>
+                                        </pri:cellEditor>
+                                        
+                                    </pri:column>
+                                    
+                                    <!-- Lifetime Budget -->
+                                    <ui:param name="noCapLifetimeBudget" value="#{stc.totalBudget==null or stc.totalBudget==0}" />
+                                    <pri:column id="lifeTimeBudgetHeader" styleClass="num tooltip" sortBy="#{stc.totalBudget}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.lifetimebudget']}">
+                                    		
+                                    		<!-- Read Only -->
+                                    		<pri:outputPanel rendered="#{not biddingEditorEnabled}">
+	                                    		<h:outputText value="$" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapLifetimeBudget}"/>
+		                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.nobudgetset']}" rendered="#{noCapLifetimeBudget}"/>
+		                                        <h:outputText value="#{stc.totalBudget}" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapLifetimeBudget}">
+		                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+		                                        </h:outputText>
+		                                        <h:outputText value="#{stc.totalBudget}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapLifetimeBudget}">
+		                                        	<f:convertNumber maxFractionDigits="0"/>
+		                                        </h:outputText>
+		                                        <h:outputText value=" #{stc.budgetUnit}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapLifetimeBudget}"/>
+		                                        <div class="ui-overlaypanel none">
+		                                            <div class="helpInner ui-corner-all ui-shadow">
+		                                                <div class="helpArrow"></div>
+		                                                <span>
+		                                                	<h:outputText value="#{msg['page.dashboard.labels.table.cell.label.tooltip.prefix']}" rendered="#{stc.remainingLifetimeBudget != null}"/>
+					                  						<h:outputText value="$" rendered="#{stc.remainingLifetimeBudget != null and stc.budgetUnit eq 'MONETARY'}"/>
+					                                        <h:outputText value="#{stc.remainingLifetimeBudget}" rendered="#{stc.remainingLifetimeBudget !=null and stc.budgetUnit eq 'MONETARY'}">
+					                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+					                                        </h:outputText>
+					                                        <h:outputText value="#{stc.remainingLifetimeBudget}" rendered="#{stc.remainingLifetimeBudget !=null and stc.budgetUnit != 'MONETARY'}">
+					                                        	<f:convertNumber maxFractionDigits="0"/>
+					                                        </h:outputText>
+														</span>
+		                                            </div>
+		                                        </div>
+		                                    </pri:outputPanel>
+                                    		
+                                    		<!-- Cell Editor -->
+                                    		<pri:cellEditor id="lifetimeBudgetEditor" rendered="#{biddingEditorEnabled}">
+                                        		<f:facet name="output">
+			                                        <h:outputText value="$" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapLifetimeBudget}"/>
+			                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.nobudgetset']}" rendered="#{noCapLifetimeBudget}"/>
+			                                        <h:outputText value="#{stc.totalBudget}" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapLifetimeBudget}">
+			                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+			                                        </h:outputText>
+			                                        <h:outputText value="#{stc.totalBudget}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapLifetimeBudget}">
+			                                        	<f:convertNumber maxFractionDigits="0"/>
+			                                        </h:outputText>
+			                                        <h:outputText value=" #{stc.budgetUnit}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapLifetimeBudget}"/>
+			                                        <div class="ui-overlaypanel none">
+			                                            <div class="helpInner ui-corner-all ui-shadow">
+			                                                <div class="helpArrow"></div>
+			                                                <span>
+			                                                	<h:outputText value="#{msg['page.dashboard.labels.table.cell.label.tooltip.prefix']}" rendered="#{stc.remainingLifetimeBudget != null}"/>
+						                  						<h:outputText value="$" rendered="#{stc.remainingLifetimeBudget != null and stc.budgetUnit eq 'MONETARY'}"/>
+						                                        <h:outputText value="#{stc.remainingLifetimeBudget}" rendered="#{stc.remainingLifetimeBudget !=null and stc.budgetUnit eq 'MONETARY'}">
+						                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+						                                        </h:outputText>
+						                                        <h:outputText value="#{stc.remainingLifetimeBudget}" rendered="#{stc.remainingLifetimeBudget !=null and stc.budgetUnit != 'MONETARY'}">
+						                                        	<f:convertNumber maxFractionDigits="0"/>
+						                                        </h:outputText>
+															</span>
+			                                            </div>
+			                                        </div>
+			                                    </f:facet>
+			                                    <f:facet name="input">
+													<h:inputText id="lifeTimeBudget" value="#{stc.totalBudget}"
+														maxlength="18"
+	                                        			converterMessage="#{msg['page.dashboard.bidbudget.lifetime.budget.notnumber']}"
+	                                        			validator="#{dashBoardMBean.reportingBean.priceValidator}"
+	                                        			styleClass="cellEditorStyle">
+	                                        			<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+	                                        			<!-- Ajax refresh needed to display proper maxFractionDigits digits from db  -->
+                                        				<pri:ajax event="change" update="dataTable"/>
+	                                        		</h:inputText>
+	                                        		<pri:watermark for="lifeTimeBudget"
+	                                        			value="#{(noCapLifetimeBudget) ? msg['page.campaign.bidbudget.nocap.watermark'] : stc.totalBudget}" />
+			                                    </f:facet>
+			                                </pri:cellEditor>
+			                                
+                                    </pri:column>
+                                    
+                                    <!-- Lifetime Delivery -->
+                                    <pri:column id="lifeTimeSpendHeader" styleClass="num lifetime-delivery" sortBy="#{stc.totalSpend}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.lifetimespend']}">
+                                        <h:outputText value="$" rendered="#{stc.budgetUnit eq 'MONETARY'}"/>
+                                        <h:outputText value="#{stc.totalSpend}" rendered="#{stc.budgetUnit eq 'MONETARY'}">
+                                        	<byydtechJs:numberFormatConverter format="normal"/>
+                                        </h:outputText>
+                                        <h:outputText value="#{stc.totalSpend}" rendered="#{stc.budgetUnit != 'MONETARY'}">
+                                        	<f:convertNumber maxFractionDigits="0"/>
+                                        </h:outputText>
+                                        <h:outputText value=" #{stc.budgetUnit}" rendered="#{stc.budgetUnit != 'MONETARY'}"/>
+                                    </pri:column>
+                                    
+                                    <!-- Daily Cap -->
+                                    <ui:param name="noCapDailyBudget" value="#{stc.dailyCap==null or stc.dailyCap==0}" />
+                                    <pri:column id="dailyCapHeader" styleClass="num tooltip" sortBy="#{stc.dailyCap}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.dailycap']}">
+
+										<!-- Read Only -->
+										<pri:outputPanel rendered="#{not biddingEditorEnabled or evenPacing}">
+											<h:outputText value="$" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapDailyBudget}"/>
+	                                        
+	                                        <!-- No cap and no even pacing -->
+	                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.nodailyset']}"
+	                                        	rendered="#{noCapDailyBudget and !stc.evenDistributionOverallBudget and !stc.evenDistributionDailyBudget}"/>
+	                                        	
+	                                        <!-- No cap but even pacing -->
+	                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.evenpacing']}"
+	                                        	rendered="#{noCapDailyBudget and (stc.evenDistributionOverallBudget or stc.evenDistributionDailyBudget)}"/>
+	                                        
+	                                        <h:outputText value="#{stc.dailyCap}" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapDailyBudget}">
+	                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+	                                        </h:outputText>
+	                                        <h:outputText value="#{stc.dailyCap}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapDailyBudget}">
+	                                        </h:outputText>
+	                                        <h:outputText value=" #{stc.budgetUnit}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapDailyBudget}"/>
+	                                        <div class="ui-overlaypanel none">
+	                                            <div class="helpInner ui-corner-all ui-shadow">
+	                                                <div class="helpArrow"></div>
+	                                                <span>
+	                                                	<h:outputText value="#{msg['page.dashboard.labels.table.cell.label.tooltip.prefix']}" rendered="#{not noCapDailyBudget}"/>
+				                  						<h:outputText value="$" rendered="#{not noCapDailyBudget and stc.budgetUnit eq 'MONETARY'}"/>
+				                                        <h:outputText value="#{stc.dailyCap - stc.budgetDeliveredToday}" rendered="#{not noCapDailyBudget and stc.budgetUnit eq 'MONETARY'}">
+				                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+				                                        </h:outputText>
+				                                        <h:outputText value="#{stc.dailyCap - stc.budgetDeliveredToday}" rendered="#{not noCapDailyBudget and stc.budgetUnit != 'MONETARY'}"/>
+				                                        
+				                                        <!-- Tooltip for even pacing -->
+				                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.tooltip.evenpacing']}"
+				                                        	rendered="#{noCapDailyBudget and (stc.evenDistributionOverallBudget or stc.evenDistributionDailyBudget)}"/>                                        
+													</span>
+	                                            </div>
+	                                        </div>
+										</pri:outputPanel>
+
+										<!-- Cell Editor -->
+                                   		<pri:cellEditor id="dailyCapEditor" rendered="#{biddingEditorEnabled and not evenPacing}">
+                                       		<f:facet name="output">
+		                                        <h:outputText value="$" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapDailyBudget}"/>
+		                                        
+		                                        <!-- No cap and no even pacing -->
+		                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.nodailyset']}"
+		                                        	rendered="#{noCapDailyBudget and !stc.evenDistributionOverallBudget and !stc.evenDistributionDailyBudget}"/>
+		                                        	
+		                                        <!-- No cap but even pacing -->
+		                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.evenpacing']}"
+		                                        	rendered="#{noCapDailyBudget and (stc.evenDistributionOverallBudget or stc.evenDistributionDailyBudget)}"/>
+		                                        
+		                                        <h:outputText value="#{stc.dailyCap}" rendered="#{stc.budgetUnit eq 'MONETARY' and not noCapDailyBudget}">
+		                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+		                                        </h:outputText>
+		                                        <h:outputText value="#{stc.dailyCap}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapDailyBudget}">
+		                                        </h:outputText>
+		                                        <h:outputText value=" #{stc.budgetUnit}" rendered="#{stc.budgetUnit != 'MONETARY' and not noCapDailyBudget}"/>
+		                                        <div class="ui-overlaypanel none">
+		                                            <div class="helpInner ui-corner-all ui-shadow">
+		                                                <div class="helpArrow"></div>
+		                                                <span>
+		                                                	<h:outputText value="#{msg['page.dashboard.labels.table.cell.label.tooltip.prefix']}" rendered="#{stc.dailyCap != null}"/>
+					                  						<h:outputText value="$" rendered="#{stc.dailyCap != null and stc.budgetUnit eq 'MONETARY'}"/>
+					                                        <h:outputText value="#{stc.dailyCap - stc.budgetDeliveredToday}" rendered="#{stc.dailyCap != null and stc.budgetUnit eq 'MONETARY'}">
+					                                        	<f:convertNumber minFractionDigits="2" maxFractionDigits="2"/>
+					                                        </h:outputText>
+					                                        <h:outputText value="#{stc.dailyCap - stc.budgetDeliveredToday}" rendered="#{stc.dailyCap != null and stc.budgetUnit != 'MONETARY'}"/>
+					                                        
+					                                        <!-- Tooltip for even pacing -->
+					                                        <h:outputText value="#{msg['page.dashboard.labels.table.cell.label.tooltip.evenpacing']}"
+					                                        	rendered="#{noCapDailyBudget and (stc.evenDistributionOverallBudget or stc.evenDistributionDailyBudget)}"/>                                        
+														</span>
+		                                            </div>
+		                                        </div>
+		                                    </f:facet>
+		                                	<f:facet name="input">
+												<h:inputText id="dailyCap" value="#{stc.dailyCap}"
+												    disabled="#{evenPacing}"
+                                        			maxlength="18"
+                                        			converterMessage="#{msg['page.dashboard.bidbudget.dailycap.notnumber']}"
+                                        			validator="#{dashBoardMBean.reportingBean.priceValidator}"
+                                        			styleClass="cellEditorStyle">
+                                        			<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+                                        			<!-- Ajax refresh needed to display proper maxFractionDigits digits from db  -->
+                                        			<pri:ajax event="change" update="dataTable"/>
+                                        		</h:inputText>
+                                        		<pri:watermark for="dailyCap"
+	                                        		value="#{(noCapDailyBudget) ? msg['page.campaign.bidbudget.nocap.watermark'] : stc.dailyCap}" />
+		                                	</f:facet>    
+		                                </pri:cellEditor>
+		                                
+                                    </pri:column>                                    
+                                    
+                                    <!-- Delivery Yesterday -->
+                                    <pri:column id="spendYesterdayHeader" styleClass="num delivered-yesterday" sortBy="#{stc.spendYesterday}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.spendyesterday']}">
+                                        <h:outputText value="$" rendered="#{stc.budgetUnit eq 'MONETARY'}"/>
+                                        <h:outputText value="#{stc.spendYesterday}"  rendered="#{stc.budgetUnit eq 'MONETARY'}">
+                                        	<byydtechJs:numberFormatConverter format="normal"/>
+                                        </h:outputText>
+                                        <h:outputText value="#{stc.spendYesterday}" rendered="#{stc.budgetUnit != 'MONETARY'}">
+                                        	<f:convertNumber maxFractionDigits="0"/>
+                                        </h:outputText>
+                                        <h:outputText value=" #{stc.budgetUnit}" rendered="#{stc.budgetUnit != 'MONETARY'}"/>
+                                    </pri:column>
+                                    
+                                    <!-- CTR -->
+                                    <pri:column id="ctrHeader" styleClass="num small-col ctr smaller" sortBy="#{stc.ctr}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.ctr']}">
+                                        <h:outputText value="#{stc.ctr}">
+                                        	<byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+                                        </h:outputText>
+                                    </pri:column>
+                                    
+                                    <!-- CVR -->
+                                    <pri:column id="cvrHeader" styleClass="num cvr small-col smaller" sortBy="#{stc.cvr}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.cvr']}">
+                                        <h:outputText value="#{stc.cvr}">
+                                        	<byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+                                        </h:outputText>
+                                    </pri:column>
+                                    
+                                    <!-- Spend -->
+                                    <pri:column id="spendHeader" styleClass="num small-col" sortBy="#{stc.spend}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.spend']}">
+                                        <h:outputText value="#{stc.spend}">
+                                        	<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front" decimals="2"/>
+                                        </h:outputText>
+                                    </pri:column>
+                                    
+                                    <!-- eCPA -->
+                                    <pri:column id="ecpaHeader" styleClass="num small-col" sortBy="#{stc.cpa}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.ecpa']}">
+                                        <h:outputText value="#{stc.cpa}">
+                                        	<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front" decimals="2"/>
+                                        </h:outputText>
+                                    </pri:column>
+                                    
+                                    <!-- eCPM -->
+                                    <pri:column id="ecpmHeader" styleClass="num small-col" sortBy="#{stc.cpm}"
+                                    			headerText="#{msg['page.dashboard.labels.table.header.label.ecpm']}">
+                                        <h:outputText value="#{stc.cpm}">
+                                        	<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front" decimals="2"/>
+                                        </h:outputText>
+                                    </pri:column>
+                                    
+                                </pri:dataTable>
+                            </div>
+                            <!-- END REPORTING TABLE -->
+                            <!-- END MAIN CONTENT -->
+                            <div class="clear"></div>
+						
+                        </div><!-- END ROW -->
+                        </h:form>
+                    </div><!-- END CONTAINER -->
+                    
+                    <script type="text/javascript">
+                 		// <![CDATA[         	                        
+                        $(function(){
+                            ADT.statusPopup();
+                            ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);
+                            ADT.insertStatIcons();
+                            ADT.enableCampaignReactivateButton();                      
+                            progressDialog.hide();
+                        });
+                          
+                        $(document).on("click", ".ui-chkbox", function(){
+                        	ADT.enableCampaignReactivateButton();
+                        });
+                        // ]]>
+                    </script>
+
+                <!-- /h:form -->
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "fmHost": "fm02.qa.adf.local",
+  "name": "piotr-aj.geo.csv",
+  "fileType": "GEOPOINTS",
+  "subtype": "",
+  "companyId": "5ad4fa0a-a171-4a69-a79f-c099c7d5e434",
+  "advertiserId": "35acaaaa-3e91-476b-bf6b-bade74169c1e",
+  "status": "STORED",
+  "statusMessage": "",
+  "statusLastModified": 1438951824058,
+  "s3Path": "qa/5ad4fa0a-a171-4a69-a79f-c099c7d5e434/35acaaaa-3e91-476b-bf6b-bade74169c1e/piotr-aj.geo.csv",
+  "s3ModificationDate": 1438934778000,
+  "eTag": "fed68778fe1ebf5634e14d7de363216c-3",
+  "size": 34000063,
+  "totals": 999999,
+  "valids": 999936,
+  "notifications": [
+    {
+      "audienceId": "224",
+      "sessionId": "224-1438935414464"
+    },
+    {
+      "audienceId": "227",
+      "sessionId": "227-1438935482924"
+    },
+    {
+      "audienceId": "2562",
+      "sessionId": "2562-1440149155324"
+    }
+  ],
+  "nested" : {
+  	"property": "value",
+  	"nested": {
+  		"prop" : "val",
+  		"deep-array": [
+		    {
+		      "prop1": "val1",
+		      "prop11": "val11"
+		    },
+		    {
+		      "prop2": "val2",
+		      "prop22": "val22"
+		    },
+		    {
+		      "prop3": "val3",
+		      "prop33": "val33"
+		    }
+  		]
+  	}
+  },
+  "empty-array": []
+}

@@ -1,0 +1,21 @@
+{
+	"id":"2fcccfcd809e817a88ba89c2636b407d",
+	"site":{
+		"sid":32,
+		"name":"203 - mytaste - United Kingdom",
+		"pid":16,
+		"pub":"Stockholm Yield Optimizers (NADX)",
+		"page":"http:\/\/www.alldishes.co.uk\/"
+	},
+	"imp":[ { 
+		"impid":"9ae07c852859a6dbc63e0e5b90933f10", "w":728, "h":90 
+	} ],
+	"at":1,
+	"device":{
+		"ua":"Mozilla\/5.0 (iPad; CPU OS 8_1_3 like Mac OS X) AppleWebKit\/600.1.4 (KHTML, like Gecko) Version\/8.0 Mobile\/12B466 Safari\/600.1.4",
+		"ip":"86.144.64.28",
+		"os":"iOS",
+		"make":"Apple",
+		"model":"iPad"
+	}
+}

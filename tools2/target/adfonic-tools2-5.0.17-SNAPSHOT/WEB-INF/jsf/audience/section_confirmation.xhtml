@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<section class="form-box ui-corner-all" id="confirmation">
+  <h2 class="sec-title">#{msg['page.audience.confirmation.menu.label']}</h2>
+  <h:form id="audienceForm" prependId="false">
+    <ui:include src="/WEB-INF/jsf/audience/section_confirmation_setup.xhtml"/>
+
+    <h:panelGroup rendered="#{not empty audienceMBean.audienceSetupMBean.type}">
+        <ui:include src="#{audienceMBean.audienceConfirmationMBean.getConfirmationSection(audienceMBean.audienceSetupMBean.type)}"/>
+    </h:panelGroup>
+    
+    <pri:spacer height="10" />
+    <h:panelGroup layout="block" class="form-row" rendered="#{!userSessionBean.readOnlyUser}">
+      <pri:commandButton value="#{audienceMBean.audienceConfirmationMBean.continueButtonMessage}" id="blaunchBtn"
+                         action="#{audienceMBean.audienceConfirmationMBean.launch}"
+                         onclick="progressDialog.show();"
+                         process="@this"
+                         update=":navigationDiv,:menuForm:side-panel" />
+    </h:panelGroup>
+  </h:form>
+</section>
+</ui:composition>

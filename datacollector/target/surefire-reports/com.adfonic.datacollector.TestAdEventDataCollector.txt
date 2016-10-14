@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.datacollector.TestAdEventDataCollector
+-------------------------------------------------------------------------------
+Tests run: 28, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 1.331 sec - in com.adfonic.datacollector.TestAdEventDataCollector

@@ -1,0 +1,75 @@
+{
+   "id":"4a4cdb1d-26c8-4955-2ecd-f9f174d97031",
+   "timestamp":"2014-10-03T13:59:18.818Z",
+   "bcat":[],
+   "bid_request":{  
+      "at": 2, 
+      "device":{  
+         "model":"9782",
+         "carrier":"null",
+         "connectiontype":"2",
+         "geo":{  
+            "zip": "90210",
+            "city": "",
+            "type": "1", 
+            "country": "US"
+         },
+         "ext":{  
+            "didtypes":[]
+         }
+      },
+      "user":{  
+         "id":""
+      },
+      "imp":[  
+         {  
+            "tagid":"e93b3470-2dd6-4b2b-a339-d7d0c5e95ba0"
+         }
+      ],
+       "app" : {  
+         "id":"39916",
+         "domain":"bundle.name"
+      }
+   },
+   "bid_responses":[  
+      {  
+         "status":1,
+         "currency":"USD",
+         "seatbid":[  
+            {  
+               "bid":[  
+                  {  
+				     "crid":"320693",
+				     "cid":"88020",
+				     "price":0.4183111877024945357561591663397848606109619140625, 
+                     "status":"2",
+                      "clear_price": null,
+               	      "adomain":"rendezvousenfrance-french-vineyards.com",
+               "iurl":" http://iurl.net/as/ "
+                  }
+               ],
+               "ext":{  
+                  "fmt": "1",
+                  "advid": "29092",
+                  "exchangeid": "24440",
+                  "bid_type": "CPC"
+               }
+            }
+         ]
+      }
+   ],
+   "ext":{  
+      "byyd":{  
+         "buyer_premium": "",
+         "direct_cost": "",
+         "tech_fee": "",
+         "data_retail": "",
+         "data_wholesale": "",
+         "dsp_margin": "",
+         "cust_margin": "",
+         "payout": "",
+         "shard": "ch1",
+         "server": "ch1adserver13"
+      }
+   }
+}

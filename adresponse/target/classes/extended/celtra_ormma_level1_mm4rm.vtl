@@ -1,0 +1,17 @@
+<!-- Start of PART A -->
+<script type="text/javascript">                                                                     
+    /* _mm4rm_source = "celtra.com"                                                                 
+       _mm4rm_sample_image = ""                                                                     
+    */                                                                                              
+    var mm4rm_click = "${adComponents.destinationUrl}?redir=";                                            
+                                                                                                    
+    document.write('<script src="http://api.celtra.com/v1/creatives/${adComponents.components.extendedData.id}/compiled/ExpandableBanner/nexage-ormma-inapp.js?channel=${adComponents.components.extendedData.channel}&c='+encodeURIComponent(mm4rm_click)+'&rnd='+(Math.random()+'').slice(2)+'&useViewable=0"></scr'+'ipt>');
+</script>
+<!-- End of PART A -->
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

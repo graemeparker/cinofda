@@ -1,0 +1,49 @@
+{
+    "id":"62b1ae54-5987-4843-a879-2b666825f763",
+    "at":2,
+    "bcat":[ "IAB26", "IAB25", "IAB24" ],
+    "imp":[ {
+            "id":"62b1ae54-5987-4843-a879-2b666825f763-1",
+            "instl":1,
+            "video":{
+                "pos":7,
+                "mimes":[ "video/mp4", "video/3gpp" ],
+                "linearity":1,
+                "minduration":0,
+                "maxduration":30,
+                "protocol":2,
+                "battr":[ 9, 10 ]
+            },
+            "displaymanager":"Nexage-SDK-iOS",
+            "displaymanagerver":"5.6",
+            "bidfloor":4.0,
+            "ext":{ "nex_screen":0, "nex_sd":1 }
+    } ],
+    "app":{
+        "id":"43265",
+        "name":"PLRWorldwide-VAST-Township-iOS",
+        "publisher":{ "id":"11779", "name":"PLR Worldwide Sales Ltd" },
+        "domain":"www.playrix.com",
+        "cat":[ "IAB1", "IAB14", "IAB9" ],
+        "ext":{ "nex_coppa":0, "nex_sdkv":"5.6" },
+        "bundle":"638689075",
+        "storeurl":"https://itunes.apple.com/us/app/township/id638689075"
+    },
+    "device":{
+        "dnt":0,
+        "ip":"78.246.160.214",
+        "carrier":"WIFI",
+        "ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B411",
+        "make":"Apple",
+        "model":"iPhone",
+        "osv":"8_1",
+        "js":1,
+        "os":"iOS",
+        "language":"fr",
+        "connectiontype":2,
+        "devicetype":1,
+        "geo":{ "country":"FRA", "type":2 },
+        "ext":{ "nex_ifa":"FB6B691C-80D7-401F-9832-085BA4FFF72E", "nex_tablet":0 }
+    },
+    "user":{ "id":"FB6B691C-80D7-401F-9832-085BA4FFF72E" }
+}

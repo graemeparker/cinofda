@@ -1,0 +1,207 @@
+/*=================== PUBLICATIONS ===================*/
+@import "../utils/_mixins";
+
+/*===================  PUBLICATION APPROVAL  ===================*/
+.approvalAlignment {
+	vertical-align: middle;
+}
+
+.headerText{
+	font-weight: bold;
+}
+
+.filterText{
+	font-weight: bold;
+	font-size: 10px !important;
+    font-family: tahoma, verdana, sans-serif;
+}
+
+$dashboardWidth: 2000px;
+.publicationToolbar {
+	width: $dashboardWidth;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+}
+
+.centerToolbar {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	float: none;
+	.left {
+		text-align: left;
+	}
+}
+
+.publicationResult {
+	font-weight: bold;
+	padding: 4px 10px;
+}
+
+// Fixed dashboard columns 
+$fixedWidth: 100px;
+%fixedPubColumns {
+	.select-col				{ @include fixWrapWidth(18px); }
+	.internalId-col			{ @include fixWrapWidth($fixedWidth); }
+	.name-col				{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} }
+	.friendlyName-col		{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} }
+	.supplierName-col		{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} }
+	.supplierUserName-col	{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} }   
+	.externalId-col			{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} } 
+	.bundle-col				{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} } 
+	.type-col				{ @include fixWrapWidth($fixedWidth); }
+	.status-col				{ @include fixWrapWidth($fixedWidth); }
+	.assignedTo-col			{ @include fixWrapWidth($fixedWidth); } 
+	.accountType-col		{ @include fixWrapWidth($fixedWidth); }
+	.rtbId-col				{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} }     
+	.sellerNetworkId-col	{ @include fixWrapWidth($fixedWidth); .ui-outputlabel{cursor: text;} }      
+	.algorithmStatus-col	{ @include fixWrapWidth($fixedWidth); }  
+	.deadZoneStatus-col		{ @include fixWrapWidth($fixedWidth); }
+	.samplingActive-col		{ @include fixWrapWidth($fixedWidth); }
+}
+
+.filtersPanelGrid {
+	width: $dashboardWidth;
+	text-align: center;
+	@extend %panelGrid;
+	@extend %fixedPubColumns;
+}
+
+.filterPadding {
+	font-size: 10px !important;
+	text-align: center;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+.filterHeader {
+	font-size: 10px !important;
+	font-family: tahoma, verdana, sans-serif;
+}
+
+.publicationTable {
+	width: $dashboardWidth;
+	@extend %fixedPubColumns;
+	@extend %centeredTable;
+	
+	.ui-datatable-header {
+		border: none;
+		padding: 0;
+	}
+	
+	.header {
+		padding: 4px 10px !important;
+	}
+}
+
+/*===================  PUBLICATION APPROVAL DETAIL  ===================*/
+
+.icon {
+	width: 30px;
+    height: 30px;
+	
+	&.sampling-on	{ background: url("../../images/icons/sampling_on.png")  no-repeat; background-size: 25px; }
+	&.sampling-off	{ background: url("../../images/icons/sampling_off.png") no-repeat; background-size: 25px; }
+}
+
+$indentSize: 10px;
+.verticalSpace {
+	height: $indentSize;	
+}
+
+.horizontalSpace {
+	width: $indentSize;
+}
+
+.horizontalDoubleSpace {
+	width: multiply(2, $indentSize);
+}
+
+.publicationHistoryTable {
+	padding-left: multiply(2, $indentSize);
+}
+
+.publicationStatus-ACTIVE {
+	@include colourBgWithBorder($bgColour: #339933);
+	@include fixWidth(sub($inputWidth, 40));
+	text-align: center;
+	float: left;
+}
+
+.publicationStatus-NEW,
+.publicationStatus-NEW_REVIEW,
+.publicationStatus-PAUSED,
+.publicationStatus-PENDING,
+.publicationStatus-REJECTED,
+.publicationStatus-STOPPED
+{
+	@include colourBgWithBorder($bgColour: #ff9933);
+	@include fixWidth(sub($inputWidth, 40));
+	text-align: center;
+	float: left;
+}
+
+.approvalDetailWidth {
+	@include fixWidth($inputWidth);
+}
+
+.outputLabelStyle {
+	font-style: italic !important;
+}
+
+.inputTextStyle {
+	@include fixWidth(sub($inputWidth, 8));
+}
+
+.commandLinkStyle {
+	@include fixWidth(sub($inputWidth, 8));
+	@extend %breakAllWord;
+}
+
+.spinnerStyle {
+	.ui-spinner-input {
+		margin-right: 6px;
+		@include fixWidth(sub($inputWidth, 30));		
+	}
+	
+	.ui-spinner-up, .ui-spinner-down {
+		width: 22px;
+	}
+	
+	.ui-icon {
+		margin-left: 4px;
+	}
+}
+
+.autoCompleteStyle {
+    .ui-autocomplete-panel, .ui-autocomplete-input {
+        @include fixWidth(sub($inputWidth, 8));
+    }
+    .ui-autocomplete-multiple-container {
+    	@include fixWidth($inputWidth);
+    }
+}
+
+.selectCheckboxMenuStyle {}
+
+/* Loading icon */
+.ui-icon-loading {
+    background-image: url('../../images/ajax-loader-circle.gif') !important;
+}
+
+.show {
+	display: block;
+}
+
+.show-inline {
+	display: inline-block;
+}
+
+.hide {
+	display: none;
+}
+
+.warning {
+	color: red;
+}

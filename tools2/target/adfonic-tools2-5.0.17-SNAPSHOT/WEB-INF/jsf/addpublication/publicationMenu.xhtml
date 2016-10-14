@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:p="http://ocpsoft.com/prettyfaces"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+		<h:form id="menuForm" prependId="false">
+			<h:panelGroup id="panelSectionGroup" layout="block" class="fourcol">  
+		          <h:panelGroup layout="block" id="side-panel" class="ui-corner-all #{publicationNavigationSessionBean.menuStyleClass['section']}">
+		              <section class="#{publicationNavigationSessionBean.menuStyleClass['settingsClass']}">
+					<h2>
+		                   <pri:commandLink id="settingsMenuLinkId" disabled="#{publicationNavigationSessionBean.newPub}"
+								actionListener="#{publicationNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv">
+								<f:attribute name="navigateTo" value="settings"/>
+		                   	<span>#{msg['page.publication.create.label.settings']}</span>
+		                   </pri:commandLink>	
+		                  </h2>
+		              </section>
+		              <section class="#{publicationNavigationSessionBean.menuStyleClass['addSlotClass']}">
+		                  <h2>
+		                   <pri:commandLink id="addslotidsMenuLinkId" disabled="#{!publicationNavigationSessionBean.pubCreated}"
+								actionListener="#{publicationNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv">
+								<f:attribute name="navigateTo" value="appAddslot"/>
+		                   	<span>#{msg['page.publication.create.label.addslotids']}</span>
+		                   </pri:commandLink>	
+		                  </h2>
+		              </section>
+		          </h:panelGroup>
+		      </h:panelGroup>
+		</h:form>
+	    <script type="text/javascript">
+	        // <![CDATA[
+	            var tabNo = parseInt(window.location.href.slice(window.location.href.indexOf('?') + 3), 10);
+		        function addAppSiteformActions(app){
+			        ADT.accordion('#addslotids-app');
+		            ADT.subElExpander('radio', 'slot-size');
+		            ADT.showHide('.adv-settings', '.adv-content', '.adv-settings');
+		            ADT.dualSlider('#audience-date-range');
+		            
+			        if(app){
+			            ADT.subElExpander('radio', 'app-live');
+			            ADT.subElExpander('radio', 'approval', true);
+		        	}
+		        }
+	        // ]]>
+	    </script>    
+	</h:body>
+</html>

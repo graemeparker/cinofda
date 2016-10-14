@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+		<pri:dialog 
+			id="advertiserInvoiceDialogId"
+			widgetVar="advertiserInvoiceDialog" modal="true"
+			resizable="false"
+			header="#{msg['page.transactions.advertiser.invoices.dialog.header']}"
+			onShow="ADT.togglePageScroll(true);"
+			onHide="ADT.togglePageScroll();"
+		>
+			<div id="invoice-form">
+				<div class="form-row message">
+					<p>#{msg['page.transactions.invoices.dialog.info']}</p>
+				</div>
+				
+				<pri:dataTable id="invoicesDataTableId" var="invoiceMonth"
+					value="#{transactionMBean.transactionHistoryMBean.invoiceMonths}"
+					paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+					paginatorPosition="bottom" styleClass="invoice-datatable">
+					<pri:column headerText="#{msg['page.transactions.invoices.dialog.date']}">
+						<h:outputText value="#{invoiceMonth}">
+							<f:convertDateTime pattern="MMM yyyy" type="date" timeZone="#{transactionMBean.transactionHistoryMBean.transactionTimeZone}" />
+						</h:outputText>
+					</pri:column>
+					<pri:column>
+						<h:commandLink value="View" ajax="false" target="_blank"
+							action="#{transactionMBean.transactionHistoryMBean.doAdvertiserInvoice(invoiceMonth)}" />
+					</pri:column>
+				</pri:dataTable>
+			</div>
+		</pri:dialog>
+	</h:body>
+</ui:composition>

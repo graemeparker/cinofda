@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>byyd Low Balance Notification - ${advertiser.name}</title>
+</head>
+<body>
+${user.firstName} ${user.lastName},<br/><br/>
+Your account balance has reached its threshold.<br/><br/>
+<hr />
+Account: ${user.email}<br/>
+Advertiser: ${advertiser.name}<br/>
+Threshold: ${notifyLimit}<br/>
+Balance: ${balance}<br/>
+<hr /><br/>
+Your ads will stop being served when your balance reaches zero, so be sure to <a href="${urlRoot}/transactions">add funds</a> to your account.<br/><br/>
+Questions? <a href="${urlRoot}/support">Contact us</a>.<br/><br/>
+Kind regards,<br/>
+The byyd Team<br/><br/>
+</body>
+</html>

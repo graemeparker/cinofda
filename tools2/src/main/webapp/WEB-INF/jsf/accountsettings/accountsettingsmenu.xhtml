@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+<h:form id="menuForm" prependId="false">
+<h:panelGroup id="panelSectionGroup" layout="block" class="settingsMenu">  
+	<div id="settingsMenuHeader">
+		#{msg['page.account.settings.menu.label']}
+		<span id="settingeMenuCog"></span>
+	</div>
+	<ul>
+	    <pri:commandLink disabled="#{currentMenu eq 'accDetails' ? true : false}" action="pretty:accountDetails" process="@this">
+		    <li class="#{currentMenu eq 'accDetails' ? 'selectedMenu' : ''}">
+		        <span class="label"><h:outputText value="#{msg['page.account.settings.menu.details']}"/></span>
+		    </li>								
+	    </pri:commandLink>	
+	    <pri:commandLink disabled="#{currentMenu eq 'changePwd' ? true : false}" action="pretty:changePassword" process="@this">
+		    <li class="#{currentMenu eq 'changePwd' ? 'selectedMenu' : ''}">
+		        <span class="label"><h:outputText value="#{msg['page.account.settings.menu.changepwd']}"/></span>
+		    </li>						
+	    </pri:commandLink>    	    	    
+	</ul>
+</h:panelGroup>
+</h:form>
+</h:body>
+</html>

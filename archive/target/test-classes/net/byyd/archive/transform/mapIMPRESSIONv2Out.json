@@ -1,0 +1,12 @@
+{
+    "timestamp": "2014-09-10T16:57:50.442Z",
+    "request_id": "a7ea243b-aea3-83f4-bcb6-9dfad900764b",
+    "winning_bidder_id": "null",
+    "action": "beacon",
+    "ext":{  
+      "byyd":{  
+         "shard": "ch1",
+         "server": "ch1adserver13"
+      }
+   }
+}

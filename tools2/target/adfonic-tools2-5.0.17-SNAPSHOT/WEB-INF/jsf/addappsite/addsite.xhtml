@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<h:body>
+    <ui:composition template="/WEB-INF/jsf/template/layouts/adfonicLayout.xhtml">
+        <ui:define name="content">
+
+            <!--temporary script-->
+            <script type="text/javascript">
+                // <![CDATA[
+                $(function () {
+                    var tabNo = parseInt(window.location.href.slice(window.location.href.indexOf('?') + 3), 10),
+                        tabNames = ['settings-web', 'addslotids-web'],
+                        i = 1;
+
+                    $('#side-panel').addClass('t' + tabNo).find(':nth-child(' + tabNo + ')').addClass('current');
+                    $('#' + tabNames[tabNo - 1]).show(0);
+
+                    for (i; i < 7; i++) {
+                        (function(x) {
+                            $('#side-panel section:nth-child(' + x + ')').click((function () {
+                                window.location = 'http://' + window.location.host + window.location.pathname + '?t=' + x;
+                            }));
+                        })(i);
+                    }
+                });
+                // ]]>
+            </script>
+
+            <div class="content ovh">
+                <div class="row addsite main-add-panel">
+                    <h2 class="page-title">Add Mobile Website</h2>
+
+                    <div class="fourcol">
+
+                        <div id="side-panel" class="ui-corner-all ui-shadow">
+                            <section>
+                                <h2><span>Settings</span></h2>
+                            </section>
+                            <section>
+                                <h2><span>Ad Slot IDs</span></h2>
+                            </section>
+                        </div>
+
+                    </div>
+                    <div class="eightcol last">
+
+                        <!-- ===============================  SITE SECTION SETTINGS  =============================== -->
+                        <section style="display: none;" id="settings-web">
+                            <h2 class="sec-title">Settings</h2>
+                            <h:form id="addsite-settings" class="options" prependId="false" >
+                                <div class="form-box ui-shadow ui-corner-all">
+                                    <div class="form-row">
+                                        <h:outputLabel styleClass="bl" id="site-name-label" for="site-name"
+                                                       value="Name of your website"/>
+                                        <pri:inputText styleClass="bl" id="site-name" value="" required="true"/>
+                                    </div>
+                                    <div class="form-row">
+                                        <h:outputLabel styleClass="bl" id="site-url-label" for="site-url"
+                                                       value="URL of your mobile site"/>
+                                        <pri:inputText styleClass="bl" id="site-url" value="" required="true"/>
+                                        <pri:watermark for="site-url" value="e.g. http://m.mymobilesite.com" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row-big none adv-content">
+                                    <pri:accordionPanel multiple="true">
+                                        <pri:tab title="Ad Approval and Backfill">
+                                            <h:outputLabel styleClass="bl" id="approval-label" for="approval"
+                                                           value="Ad Approval"/>
+                                            <pri:selectOneRadio id="approval" value="temp" styleClass="approval" layout="pageDirection">
+                                                <f:selectItem itemLabel="Automatically allow all ads to appear in my site/app (recommended)"
+                                                              itemValue="1"/>
+                                                <f:selectItem itemLabel="Manually approve each ad before it can appear in my site/app"
+                                                              itemValue="2"/>
+                                            </pri:selectOneRadio>
+
+                                            <div data-no="1" class="panel-approval inner-panel">
+                                                <div class="form-row">
+                                                    <pri:selectBooleanCheckbox id="backfill" />
+                                                    <h:outputLabel styleClass="in-bl" id="backfill-label" for="approval"
+                                                                   value="Use backfill to maximise fill rate (recommended). "/>
+                                                    <a href="#"> Learn more.</a>
+                                                </div>
+                                            </div>
+                                        </pri:tab>
+                                        <pri:tab title="Audience Demographics">
+                                            <div class="form-row">User Gender Profile</div>
+                                            <div class="form-row-small slider-head">
+                                                <span class="f-left">Male</span>
+                                                <pri:inputText value="50" id="audience-gender" disabled="true" styleClass="gender-1"/>
+                                                <h:outputText value= " : "/>
+                                                <pri:inputText value="50" id="audience-gender2" disabled="true" styleClass="gender-2"/>
+                                                <span class="f-right">Female</span>
+                                            </div>
+                                            <div class="form-row-small">
+                                                <pri:slider onSlideEnd="ADT.genderRangeExpander()" for="audience-gender"/>
+                                            </div>
+                                            <div class="form-row-big">User Age Range</div>
+                                            <div class="form-row-small slider-head">
+                                                <span class="f-left">16</span>
+                                                <pri:inputText disabled="true" styleClass="date-1"/>
+                                                <h:outputText value= " to "/>
+                                                <pri:inputText disabled="true" styleClass="date-2"/>
+                                                <span class="f-right">65</span>
+                                            </div>
+                                            <div class="form-row-small">
+                                                <div id="audience-date-range"></div>
+                                            </div>
+                                        </pri:tab>
+                                        <pri:tab title="Ad Filters">
+                                            <div class="form-row ovh">
+                                                <pri:selectOneMenu styleClass="long f-left">
+                                                    <f:selectItem itemLabel="Copy filter from site/app" itemValue="0"/>
+                                                    <f:selectItem itemLabel="No sites/apps to copy from yet!"
+                                                                  itemValue="1"/>
+                                                </pri:selectOneMenu>
+                                                <pri:commandButton styleClass="f-left ad-filters-copy" value="Copy"/>
+                                            </div>
+                                            <div class="form-row-big"><h:outputText value= "Do not show adverts for"/></div>
+                                            <div class="form-row-small ovh">
+                                                <div class="form-col">
+                                                    <pri:selectManyCheckbox layout="pageDirection">
+                                                        <f:selectItem itemLabel="Dating" itemValue="Dating"/>
+                                                        <f:selectItem itemLabel="Chat" itemValue="Chat"/>
+                                                    </pri:selectManyCheckbox>
+                                                </div>
+                                                <div class="form-col">
+                                                    <pri:selectManyCheckbox layout="pageDirection">
+                                                        <f:selectItem itemLabel="Content Downloads" itemValue="Content Downloads"/>
+                                                        <f:selectItem itemLabel="Alcohol" itemValue="Alcohol"/>
+                                                    </pri:selectManyCheckbox>
+                                                </div>
+                                                <div class="form-col">
+                                                    <pri:selectManyCheckbox layout="pageDirection">
+                                                        <f:selectItem itemLabel="Gambling or gaming for money"
+                                                                      itemValue="Gambling or gaming for money"/>
+                                                        <f:selectItem itemLabel="Glamour" itemValue="Glamour"/>
+                                                    </pri:selectManyCheckbox>
+                                                </div>
+                                            </div>
+                                            <div class="form-row-big ovh">
+                                                <div class="form-col">
+                                                    <h:outputLabel styleClass="bl" id="block-by-desc-label" for="block-by-desc"
+                                                                   value="Block ads by their destination URL"/>
+                                                    <pri:inputTextarea styleClass="bl short" id="block-by-desc" value="" />
+                                                </div>
+                                                <div class="form-col">
+                                                    <h:outputLabel styleClass="bl" id="block-by-word-label" for="block-by-word"
+                                                                   value="Block ads by brand keyword"/>
+                                                    <pri:inputTextarea styleClass="bl short" id="block-by-word" value="" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <h:outputText value= "Apply these ad filters to all of my sites &amp; apps"/>
+                                                <pri:commandButton styleClass="apply-all" value="Apply to all" />
+                                            </div>
+                                        </pri:tab>
+                                    </pri:accordionPanel>
+                                </div>
+
+                                <div class="form-row-big">
+                                    <pri:commandButton value="Continue"/>
+                                    <a href="#" class="adv-settings">Advanced settings</a>
+                                </div>
+
+                            </h:form>
+                            <script type="text/javascript">
+                                // <![CDATA[
+                                $(function () {
+                                    ADT.showHide('.adv-settings', '.adv-content', '.adv-settings');
+                                    ADT.dualSlider('#audience-date-range');
+                                    ADT.subElExpander('radio', 'approval', true);
+                                });
+                                // ]]>
+                            </script>
+                        </section>
+
+                        <!-- ===============================  SITE SECTION ADD SLOT ID'S part A  =============================== -->
+                        <section style="display: none;" id="addslotids-web">
+                            <h2 class="sec-title">Ad Slot IDs</h2>
+                            <h:form id="addsite-addslotids" class="options" prependId="false" >
+                                <div class="form-box ui-shadow ui-corner-all">
+                                    <div class="form-row">
+                                        <h:outputLabel styleClass="bl" id="slot-name-label" for="slot-name"
+                                                       value="Ad Slot Name"/>
+                                        <pri:inputText styleClass="bl" id="slot-name" value="" required="true"/>
+                                        <pri:watermark for="slot-name" value="e.g. Ad Slot 1" />
+                                    </div>
+                                    <div class="form-row ovh">
+                                        <div class="form-col">
+                                            <h:outputLabel styleClass="in-bl" id="slot-size-label" for="slot-size"
+                                                           value="Ad Slot Size"/>
+                                            <a href="#">Help me choose</a>
+                                            <pri:selectOneRadio id="slot-size" value="" styleClass="slot-size" layout="pageDirection">
+                                                <f:selectItem itemLabel="Text and standard mobile banners up to 320 x 50 pixels"
+                                                              itemValue="1"/>
+                                                <f:selectItem itemLabel="MPU 300 x 250 pixels (iOS &amp; Android only)"
+                                                              itemValue="2"/>
+                                            </pri:selectOneRadio>
+
+                                            <div data-no="1" class="panel-slot-size inner-panel none">
+                                                <div class="form-row">
+                                                    <h:outputLabel styleClass="in-bl" id="bg-color-label" for="bg-color"
+                                                                   value="Background color for text ads"/>
+                                                    <pri:selectOneRadio id="bg-color" value="" layout="lineDirection">
+                                                        <f:selectItem itemLabel="Grey" itemValue="Grey"/>
+                                                        <f:selectItem itemLabel="Blue" itemValue="Blue"/>
+                                                        <f:selectItem itemLabel="Black" itemValue="Black"/>
+                                                    </pri:selectOneRadio>
+                                                </div>
+                                                <div class="form-row-small">
+                                                    <pri:selectBooleanCheckbox styleClass="in-bl" id="insert-ad"/>
+                                                    <h:outputLabel styleClass="in-bl" id="insert-ad-label"
+                                                                   for="insert-ad"
+                                                                   value="Insert '[Ad]' to the left"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <!--temp onclick handler-->
+                                                <pri:commandButton value="Get Ad Slot ID"
+                                                onclick="$('#addsite-addslotids').html($('.part-b-wrapper').html()); return false;"  />
+                                            </div>
+                                        </div>
+                                        <div class="form-col big">
+                                            <span class="bl"><h:outputText value= "Preview"/></span>
+                                            <!--temp div-->
+                                            <div style="width: 175px; height: 200px; background: grey;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                            <script type="text/javascript">
+                                // <![CDATA[
+                                $(function () {
+                                    ADT.subElExpander('radio', 'slot-size');
+                                });
+                                // ]]>
+                            </script>
+                        </section>
+
+                        <!-- ===============================  APP SECTION ADD SLOT ID'S part B  =============================== -->
+
+                        <!--temp wrapper div-->
+                        <div class="part-b-wrapper none">
+
+                            <header class="acc-head ui-corner-all">
+                                <span class="ui-icon"></span>
+                                <span>Ad slot name 1</span>
+                                <span><h:outputText value= "MPU 300x250 pixels"/></span>
+                                <span><h:outputText value= "Ad_Slot_ID"/></span>
+                                <pri:inputText styleClass="f-left" value="235234562362345632456345634" required="true"/>
+                                <a href="#"><h:outputText value="Delete"/></a>
+                            </header>
+                            <div class="acc-content ui-shadow ui-corner-bottom none">
+                                <div class="form-row">
+                                    <h:outputLabel styleClass="bl" id="slot1-name-label" for="slot1-name"
+                                                   value="Ad Slot Name"/>
+                                    <pri:inputText styleClass="bl" id="slot1-name" value="" required="true"/>
+                                </div>
+                                <div class="form-row ovh">
+                                    <div class="form-col">
+                                        <h:outputLabel styleClass="in-bl" id="slot1-size-label" for="slot-size"
+                                                       value="Ad Slot Size"/>
+                                        <a href="#">Help me choose</a>
+                                        <pri:selectOneRadio id="slot1-size" value="" layout="pageDirection">
+                                            <f:selectItem itemLabel="Text and standard mobile banners up to 320 x 50 pixels"
+                                                          itemValue="1"/>
+                                            <f:selectItem itemLabel="MPU 300 x 250 pixels (iOS &amp; Android only)"
+                                                          itemValue="2"/>
+                                        </pri:selectOneRadio>
+                                        <div class="form-row">
+                                            <pri:commandButton value="Update" />
+                                        </div>
+                                    </div>
+                                    <div class="form-col big">
+                                        <span class="bl"><h:outputText value= "Preview"/></span>
+                                        <!--temp div-->
+                                        <div style="width: 175px; height: 200px; background: grey;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-box ui-shadow ui-corner-all">
+                                <div class="form-row">
+                                    <a href="#">+ Add another add slot</a>
+                                </div>
+                                <div class="form-row-big">
+                                    <h:outputText value= "What to do now"/>
+                                    <ul>
+                                        <li>
+                                        <span class="in-bl">
+                                            <h:outputText value="In your test tag find and replace the test ID"/>
+                                        </span>
+                                            <pri:inputText styleClass="in-bl" value="235234562362345632456345634" required="true"/>
+                                        <span class="in-bl">
+                                            <h:outputText value="with your Ad Slot ID above."/>
+                                        </span>
+                                        </li>
+                                        <li>
+                                            <h:outputText value= "Not integrated the adfonic tag yet? "/>
+                                            <a href="#"><h:outputText value= " See our mobile website tags"/></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="form-row-big">
+                                <pri:commandButton value="Done" />
+                            </div>
+
+                            <script type="text/javascript">
+                                // <![CDATA[
+                                $(function () {
+                                    ADT.accordion('#addslotids-web');
+                                });
+                                // ]]>
+                            </script>
+
+                        </div>
+                        <!-- END OF temp wrapper div-->
+
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

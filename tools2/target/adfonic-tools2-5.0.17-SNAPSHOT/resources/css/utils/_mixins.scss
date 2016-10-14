@@ -1,0 +1,114 @@
+/*===================  MIXINS  ===================*/
+
+@mixin default-confirm-dialog ($buttonWidth: 67px) {
+
+    .ui-dialog-titlebar {
+        border: 0 none;
+        background: url("../../images/dialog_head_bg.png") repeat-x #dcdcdc;
+        min-height: 30px;
+
+        .ui-dialog-title {
+            font-size: 16px;
+            text-shadow: 1px 1px 1px #ffffff;
+        }
+    }
+
+    .ui-dialog-content {
+        width: 444px;
+        text-align: center;
+    }
+
+    h3 {
+        color: #434343;
+        margin-top: 21px;
+    }
+
+    p {
+        margin: 24px 0;
+    }
+
+    .ui-icon-closethick {
+        background: url("../../images/close.png") 0 1px no-repeat;
+    }
+
+    .ui-state-hover {
+      background-color: transparent;
+      border-color: transparent;
+    }
+
+    button.ui-button {
+        @include no-ui-button ();
+        margin: 0;
+        width: $buttonWidth;
+        padding: 0 10px;
+
+        .ui-button-text {
+            color: #ffffff;
+            text-shadow: 1px 1px 1px #444444;
+            font-weight: normal;
+            padding: 5px 0;
+        }
+
+        &:first-child {
+            @include yes-ui-button();
+            margin-right: 20px;
+        }
+    }
+    
+    div.buttons {
+      margin-bottom: 22px;
+    }
+}
+
+/*===================  BUTTONS  ===================*/
+
+@mixin default-ui-button ($topGradient: $btnTopGradientColour, $bottomGradient: $btnBottomGradientColour, $borderColour: $borderColour) {
+    @include v-linear-gradient-bg($topGradient, $bottomGradient);
+    box-shadow: 0 2px 3px #e5e5e5;
+    border-color: $borderColour;
+    
+    &:hover {
+        background: $topGradient !important;
+        border: 1px solid $borderColour !important;        
+    }
+}
+
+@mixin yes-ui-button () {
+    @include default-ui-button($btnYesTopGradientColour, $btnYesBottomGradientColour, #6ea10f);
+}
+
+@mixin no-ui-button () {
+    @include default-ui-button($btnNoTopGradientColour, $btnNoBottomGradientColour, #c35050);
+}
+
+/*===================  REPORTING  ===================*/
+
+@mixin reporting-icons-bg ($offsetX) {
+    background: url("../../images/reporting-icons.png") no-repeat $offsetX -10px;
+}
+
+/*===================  GRADIENTS  ===================*/
+
+@mixin v-linear-gradient-bg ($topGradient: $btnTopGradientColour, $bottomGradient: $btnBottomGradientColour) {
+    @include top-linear-gradient($topGradient, $bottomGradient);
+}
+
+@mixin top-linear-gradient ($fromColor, $toColor) {
+    background-color: $toColor; /* Fallback Color */
+    background-image: -webkit-gradient(linear, left top, left bottom, from($fromColor), to($toColor)); /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, $fromColor, $toColor); /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image:    -moz-linear-gradient(top, $fromColor, $toColor); /* FF3.6 */
+    background-image:     -ms-linear-gradient(top, $fromColor, $toColor); /* IE10 */
+    background-image:      -o-linear-gradient(top, $fromColor, $toColor); /* Opera 11.10+ */
+    background-image:         linear-gradient(top, $fromColor, $toColor);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{$fromColor}', EndColorStr='#{$toColor}');
+}
+
+@mixin fixWidth ($width: 10px) {
+	width: $width !important;
+}
+
+@mixin fixWrapWidth ($width: 10px) {
+	@extend %breakAllWord;
+	@include fixWidth($width);
+}

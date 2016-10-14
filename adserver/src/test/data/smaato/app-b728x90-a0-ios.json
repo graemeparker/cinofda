@@ -1,0 +1,49 @@
+{
+	"app":{
+		"bundle":"439873467",
+		"cat":[ "IAB1" ],
+		"domain":"itunes.apple.com",
+		"id":"65768710",
+		"name":"Magic Puzzles RTB First Call_iOS_728x90",
+		"publisher":{ "id":"923825715", "name":"XIMAD INC" }
+	},
+	"at":2,
+	"badv":[ "chase.com", "king.com" ],
+	"bcat":[
+		"IAB7-28","IAB25-5","AND21","IAB25-4","IAB25-7","AND1-3","IAB25-6","IAB19-23","IAB25-1","IAB19-15",
+		"IAB25-3","IAB25-2","IAB9-9","AND5","IAB14-4","IAB3-11","IAB22-1","IAB19-3","IAB22-2","IAB14-1","IAB14-2","IAB14-3",
+		"IAB17-18","IAB13-1","IAB7-44","IAB26","IAB7-3","IAB25","IAB8-5","IAB24","IAB23","IAB8-18","IAB7-39","IAB19",
+		"IAB26-3","IAB26-4","IAB26-1","IAB26-2","IAB7-41","APL18","IAB7-42","APL8-6","IAB11-4","IAB11"
+	],
+	"device":{
+		"connectiontype":2,
+		"devicetype":1,
+		"dnt":0,
+		"geo":{ "country":"DEU", "type":3 },
+		"ip":"88.215.97.133",
+		"js":0,
+		"make":"Apple", "model":"iPad", "os":"iOS", "osv":"8.1",
+		"ua":"Mozilla/5.0 (iPad; CPU OS 8_1_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B466"
+	},
+	"ext":{
+		"carriername":"WLAN",
+		"coppa":0,
+		"operaminibrowser":0,
+		"udi":{ "idfa":"72892E85-3C20-494E-94D2-D045BDB3CEC3", "idfatracking":1 }
+	},
+	"id":"BAMLfObQIn",
+	"imp":[ {
+			"banner":{
+				"battr":[ 1, 3, 5, 8, 9 ],
+				"btype":[ 1, 3 ],
+				"h":90,
+				"mimes":[ "image/gif", "image/jpeg", "image/png" ],
+				"w":728
+			},
+			"displaymanager":"SOMA",
+			"ext":{ "strictbannersize":1 },
+			"id":"1",
+			"instl":0
+	} ],
+	"user":{ }
+}

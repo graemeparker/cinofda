@@ -1,0 +1,64 @@
+{
+   "pmp":{
+  	"private":1,
+  	"deals":[
+     	{
+            "id":"SmaatoTest",
+        	"bidfloor":0.10,
+        	"at":2,
+        	"seats":[
+           	"Adfonic Generic Bid Seat"
+        	]
+     	}
+  	]
+   },
+   "id":"b5ba23f714a495ebc1320cc3129f47853e086f68",
+   "at":2,
+   "tmax":50000,
+   "imp":[
+  	{
+     	"id":"1",
+     	"banner":{
+        	"w":320,
+        	"h":50
+     	}
+  	}
+   ],
+   "site":{
+  	"id":"reqId",
+      "domain":"http://www.autotrader.co.uk",
+  	"name":"Autotrader UK",
+  	"publisher":{
+     	"id":"pubId"
+  	}
+   },
+   "device":{
+  	"ua":"Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53",
+  	"ip":"89.240.38.34",
+  	"language":"en",
+  	"devicetype":2,
+  	"js":1,
+  	"geo":{
+     	"country":"GBR",
+     	"region":"HNS"
+  	},
+  	"dpidsha1": "dpidsha1 id"
+   },
+   "user":{
+      "id":"4a7dda3432bc565ae46728f6eec08ea56255ea87",
+  	"ext":{
+     	"sessiondepth":1
+  	}
+   },
+   "ext":{
+      "udi": {
+        "openudid": "342a08d756a0d375524df6f07fdebd8bfaa10692",
+        "odin": "odin id",
+        "idfa": "CA3F691C-8DDB-43E1-9FAF-2CEA4A50791D",
+        "idfatracking": 1,
+        "googleadid": "googleadid id",
+        "googlednt": 0
+      }
+   }
+}
+

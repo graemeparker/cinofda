@@ -1,0 +1,674 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<section id="bidding" class="form-box ui-corner-all">
+    <h2 class="sec-title">#{msg['page.campaign.bidbudget.menu.label']}</h2>
+    <h:form id="campaign-bidding" prependId="false" >
+        <h:panelGroup layout="block" id="mainCampaignBiddingIdDiv">
+        
+        	<!-- Variables -->
+        	<ui:param name="maxFractionDigits" value="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden ? 3 : 2}" />
+        
+        	<!-- Bid price overridden (Admin only) -->
+            <sec:authorize ifAllGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+              <div class="form-row">
+                <pri:selectBooleanCheckbox id="campaignPriceOverridenChkBox" value="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden}">
+                    <pri:ajax update="cpc-price, cpm-price, cpx-price, minimumBidForCpx" event="change"/>
+                </pri:selectBooleanCheckbox>
+                <h:outputLabel for="campaignPriceOverridenChkBox" value="#{msg['page.campaign.bidbudget.priceoverriden.label']}"/>                            
+              </div>
+            </sec:authorize>
+            
+            <!-- CPC, CPM, Cpx Bid price -->
+            <div class="form-row">
+                <pri:selectOneRadio id="bidding-options" styleClass="bidding" value="#{campaignMBean.campaignBidMBean.bidType}"
+                                    layout="pageDirection"
+                                    valueChangeListener="#{campaignMBean.campaignBidMBean.onBidTypeChangeEvent}"
+                                    required="true" disabled="#{!campaignMBean.newCampaign}"
+                                    requiredMessage="#{msg['page.campaign.bidbudget.bidprice.required']}">
+                    <f:selectItem itemLabel="CPC" itemValue="CPC"/>
+                    <f:selectItem itemLabel="CPM" itemValue="CPM"/>
+                    <sec:authorize ifAllGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+	                    <f:selectItems value="#{campaignMBean.campaignBidMBean.cpxOptions}"/>
+	                </sec:authorize>
+                    <pri:ajax update="cpc-price,cpm-price,sel-bud-type,weekDayDailyBudgetDiv,budgetContainer,mediaCostOptimisationChkBox" event="change"/>
+                </pri:selectOneRadio>
+                <pri:message for="bidding-options"/>
+
+				<!-- CPC content -->
+                <div data-no="1" class="panel-bidding inner-panel none">
+                    <div>
+                        <h:outputLabel 
+                        	styleClass="in-bl b" 
+                        	value="#{msg['page.campaign.bidbudget.cpcprice.label']}"
+                            id="cpc-price-label" 
+                            for="cpc-price"
+                        />
+                        <h:outputText value="$ " />
+                       	<pri:inputText 
+                       		styleClass="in-bl" 
+                       		value="#{campaignMBean.campaignBidMBean.amountCpc}" 
+                       		id="cpc-price"
+                       		requiredMessage="#{msg['page.campaign.bidbudget.bidprice.required']}" 
+                       		disabled="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden and !campaignMBean.adminUserLoggedIn}"
+                       		converterMessage="#{msg['page.campaign.bidbudget.cpc.converter.error']}"
+                       	>
+                       		<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="#{maxFractionDigits}"/>
+                       		<pri:ajax process="@this" update="cpcPriceMessageId,cpm-price,cpx-price"/>
+                       	</pri:inputText>
+                      	<div class="long">
+                             <pri:message id="cpcPriceMessageId" for="cpc-price"/>
+                        </div>
+                        <pri:overlayPanel for="cpc-price" hideEffect="fade" styleClass="no-shadow">
+                            <div class="helpInner ui-corner-all ui-shadow">
+                                <div class="helpArrow"></div>
+                                <span><h:outputText value="#{msg['page.campaign.bidbudget.cpcprice.tip']}" /></span>
+                            </div>
+                        </pri:overlayPanel>
+                    </div>
+                   	<h:panelGroup layout="block" id="cvrLinkDiv">
+                           <pri:commandLink id="addCvrLink" process="@this" update="cvrLinkDiv,cvrContainer"
+                                            value="#{msg['page.campaign.bidbudget.cpatarget.link']}" 
+                                            actionListener="#{campaignMBean.campaignBidMBean.showCvr}"
+                                            rendered="#{campaignMBean.campaignBidMBean.cvrDisplayed}">
+                           </pri:commandLink>
+                       </h:panelGroup>
+                       <h:panelGroup layout="block" id="cvrContainer" styleClass="cvrContainer">
+	                 	<h:outputLabel styleClass="in-bl b" value="#{msg['page.campaign.bidbudget.cpatarget.label']}"
+                                       id="cvr-label" for="cvr" rendered="#{!campaignMBean.campaignBidMBean.cvrDisplayed}"/>
+                        <h:outputText value="$ " rendered="#{!campaignMBean.campaignBidMBean.cvrDisplayed}"/>
+                       	<pri:inputText styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.targetCpa}" id="cvr"
+                       				converterMessage="#{msg['page.campaign.bidbudget.cpc.converter.error']}"
+                       				rendered="#{!campaignMBean.campaignBidMBean.cvrDisplayed}">
+                       				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+                       	</pri:inputText>
+                       	<pri:overlayPanel for="cvr" hideEffect="fade" styleClass="no-shadow">
+                            <div class="helpInner ui-corner-all ui-shadow">
+                                <div class="helpArrow"></div>
+                                <span><h:outputText value="#{msg['page.campaign.bidbudget.cpatarget.tip']}" /></span>
+                            </div>
+                        </pri:overlayPanel>
+                  	</h:panelGroup>
+
+                </div>
+
+				<!-- CPM content -->
+                <div data-no="2" class="panel-bidding inner-panel none">
+                    <div>
+                        <h:outputLabel styleClass="in-bl b" value="#{msg['page.campaign.bidbudget.cpmprice.label']}"
+                                       id="cpm-price-label" for="cpm-price"/>
+                        <h:outputText value="$ " />
+
+                      	<pri:inputText styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.amountCpm}" id="cpm-price"
+                        				requiredMessage="#{msg['page.campaign.bidbudget.bidprice.required']}" disabled="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden and !campaignMBean.adminUserLoggedIn}"
+                        				converterMessage="#{msg['page.campaign.bidbudget.cpc.converter.error']}">
+                                        <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="#{maxFractionDigits}"/>
+                        	<pri:ajax process="@this" update="cpmPriceMessageId,cpc-price,cpx-price"/>
+                        </pri:inputText>
+                        <div class="long">
+                            <pri:message id="cpmPriceMessageId" for="cpm-price"/>
+                        </div>
+                        <h:outputText value="#{msg['page.campaign.bidbudget.nimpressions.label']}"/>
+                        <pri:overlayPanel for="cpm-price" hideEffect="fade" styleClass="no-shadow">
+                            <div class="helpInner ui-corner-all ui-shadow">
+                                <div class="helpArrow"></div>
+                                <span><h:outputText value="#{msg['page.campaign.bidbudget.cpmprice.tip']}" /></span>
+                            </div>
+                        </pri:overlayPanel>
+                    </div>
+                   	<h:panelGroup layout="block" id="ctrLinkDiv">
+                           <pri:commandLink id="addCtrLink" process="@this" update="ctrLinkDiv,ctrContainer"
+                                            value="#{msg['page.campaign.bidbudget.ctrtarget.link']}" 
+                                            actionListener="#{campaignMBean.campaignBidMBean.showCtr}"
+                                            rendered="#{campaignMBean.campaignBidMBean.ctrDisplayed}">
+                           </pri:commandLink>
+                       </h:panelGroup>
+                       <h:panelGroup layout="block" id="ctrContainer" styleClass="cvrContainer">
+                        <h:outputLabel styleClass="in-bl b" value="#{msg['page.campaign.bidbudget.ctrtarget.label']}"
+                                       id="ctr-label" for="ctr" rendered="#{!campaignMBean.campaignBidMBean.ctrDisplayed}"/>
+                        <pri:spacer width="10"></pri:spacer>
+                       	<pri:inputText styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.targetCtr}" id="ctr"
+                       				converterMessage="#{msg['page.campaign.bidbudget.cpc.converter.error']}"
+                       				rendered="#{!campaignMBean.campaignBidMBean.ctrDisplayed}">
+                       				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2" />
+                       	</pri:inputText>
+                       	<h:outputText value=" %" rendered="#{!campaignMBean.campaignBidMBean.ctrDisplayed}"/>
+                       	<pri:overlayPanel for="ctr" hideEffect="fade" styleClass="no-shadow">
+                            <div class="helpInnerCtr ui-corner-all ui-shadow">
+                                <div class="helpArrow"></div>
+                                <span><h:outputText value="#{msg['page.campaign.bidbudget.ctrtarget.tip']}" /></span>
+                            </div>
+                        </pri:overlayPanel>
+                    </h:panelGroup>
+                </div>
+                
+                <!-- CPx content -->
+                <div data-no="3" class="panel-bidding inner-panel none">
+                    <div>
+                        <h:outputLabel styleClass="in-bl b" value="#{campaignMBean.campaignBidMBean.cpxLabel}"
+                                       id="cpx-price-label" for="cpx-price"/>
+                        <h:outputText value="$ " />
+
+                      	<pri:inputText styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.amountCpx}" id="cpx-price"
+                        				requiredMessage="#{msg['page.campaign.bidbudget.bidprice.required']}" disabled="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden and !campaignMBean.adminUserLoggedIn}"
+                        				converterMessage="#{msg['page.campaign.bidbudget.cpc.converter.error']}">
+                        				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="#{maxFractionDigits}"/>
+                        	<pri:ajax process="@this" update="cpxPriceMessageId,cpc-price,cpm-price"/>
+                        </pri:inputText>
+                        <div class="long">
+                            <pri:message id="cpxPriceMessageId" for="cpx-price"/>
+                        </div>
+                        <h:outputText value="#{msg['page.campaign.bidbudget.nimpressions.label']}"/>
+                        <pri:overlayPanel for="cpx-price" hideEffect="fade" styleClass="no-shadow">
+                            <div class="helpInner ui-corner-all ui-shadow">
+                                <div class="helpArrow"></div>
+                                <span><h:outputText value="#{campaignMBean.campaignBidMBean.cpxTip}" /></span>
+                            </div>
+                        </pri:overlayPanel>
+                    </div>
+                    <p class="label"><h:outputText value="#{msg['page.campaign.bidbudget.minbid.label']} "/>
+                    	<h:outputText id="minimumBidForCpx" value="#{campaignMBean.campaignBidMBean.bidMinCpx}">
+                            <f:convertNumber currencyCode="USD" type="currency" maxFractionDigits="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden ? 3 : 0}" />
+                        </h:outputText>
+                    </p>
+                </div>
+
+            </div>
+            	            
+            <!-- Bidding Strategies -->
+            <pri:outputPanel styleClass="form-row">
+            	<pri:outputLabel id="bidding-strategy-label" value="#{msg['page.campaign.bidbudget.biddingstrategy.label']}" styleClass="in-bl b"/>
+            	
+            	<!-- Optimise Media Cost -->
+            	<pri:outputPanel styleClass="form-row">
+            		<pri:selectBooleanCheckbox id="mediaCostOptimisationChkBox" value="#{campaignMBean.campaignBidMBean.mediaCostOptimisationEnabled}" disabled="#{!campaignMBean.campaignBidMBean.enableMediaCostOptimisationCheckbox()}"/>
+                	<pri:outputLabel for="mediaCostOptimisationChkBox" value=" #{msg['page.campaign.bidbudget.biddingstrategy.mediacost']}" />
+					<pri:commandLink process="@this" onclick="mediacostStrategyHelpDialog.show()" styleClass="helpImageRight"/>
+				</pri:outputPanel>
+				
+				<!-- Average Maximum Bid -->
+				<pri:outputPanel rendered="#{IS_BETA_OR_ADMIN}" styleClass="form-row">
+            		<pri:selectBooleanCheckbox id="averageMaximumBidChkBox" value="#{campaignMBean.campaignBidMBean.averageMaximumBidEnabled}">
+            			<pri:ajax event="change" update="thresholdPanel" onstart="progressDialog.show();" oncomplete="populateThreshold(); progressDialog.hide()" />
+            		</pri:selectBooleanCheckbox>
+				    <script type="text/javascript">
+				    	// MAD-3554 Initialise threshold with double bid price once its checked otherwise set to empty (in sync with admin)
+				        function populateThreshold() {
+				        	var bidPrice = parseFloat($('#cpc-price').val() || $('#cpm-price').val() || $('#cpx-price').val());
+				        	$('#threshold').val($('#averageMaximumBidChkBox').find('div.ui-state-active') ? 2 * bidPrice : "");
+				        }
+				    </script>
+                	<pri:outputLabel for="averageMaximumBidChkBox" value=" #{msg['page.campaign.bidbudget.biddingstrategy.avgmaxbid']}" />
+					<pri:commandLink process="@this" onclick="averageMaximumBidStrategyHelpDialog.show()" styleClass="helpImageRight"/>
+                	<pri:outputPanel layout="inline" styleClass="status-indicator beta" />
+                	
+                	<!-- Threshold -->
+                	<ui:param name="averageMaximumBidEnabled" value="#{campaignMBean.campaignBidMBean.averageMaximumBidEnabled}" />
+                	<pri:outputPanel id="thresholdPanel">
+	                	<pri:outputPanel rendered="#{averageMaximumBidEnabled}">
+	                		<pri:outputLabel value="#{msg['page.campaign.bidbudget.biddingstrategy.avgmaxbid.threshold']}" styleClass="threshold" />
+	                		
+	                		<pri:inputText id="threshold" value="#{campaignMBean.campaignBidMBean.averageMaximumBidThreshold}"
+	                			required="#{averageMaximumBidEnabled}"
+	                			requiredMessage="#{msg['page.campaign.bidbudget.biddingstrategy.avgmaxbid.threshold.required']}"
+	                			converterMessage="#{msg['page.campaign.bidbudget.biddingstrategy.avgmaxbid.threshold.converter.error']}" styleClass="tiny">
+	                				<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="#{maxFractionDigits}" />
+	                				<pri:ajax process="@this" update="thresholdError" />
+	                		</pri:inputText>
+	                		
+	                		<div class="medium"><pri:message id="thresholdError" for="threshold" /></div>
+	                	</pri:outputPanel>
+                	</pri:outputPanel>
+                	
+				</pri:outputPanel>
+            </pri:outputPanel>
+            
+            <!-- Budget & Frequency Caps -->
+            
+            <!-- Variables -->
+            <ui:param name="isMonetary" value="#{campaignMBean.campaignBidMBean.budgetType eq 'MONETARY'}" />
+            
+            <!-- Enter budgets by -->
+            <h2 class="sec-title middle">#{msg['page.campaign.bidbudget.budget.label']}</h2>
+            <h:outputLabel styleClass="in-bl b" value="#{msg['page.campaign.bidbudget.budgettype.label']}"
+                                       id="sel-bud-type-label" for="sel-bud-type"/>
+            <pri:selectOneMenu styleClass="in-bl" id="sel-bud-type" value="#{campaignMBean.campaignBidMBean.budgetType}"
+            				   disabled="#{!campaignMBean.newCampaign}">
+            	<f:selectItems value="#{campaignMBean.campaignBidMBean.lBudgetTypes}"/>
+            	<pri:ajax event="change" update="weekDayDailyBudgetDiv, budgetContainer, mediaCostOptimisationChkBox"/>
+            </pri:selectOneMenu>
+            <h:panelGroup id="budgetFrequencyCapsIdDiv" layout="block" >
+	            <h:panelGroup id="budgetContainer"  layout="block" class="form-row-big">
+	                <h:outputLabel styleClass="in-bl b" id="campaign-budget-label" for="campaign-budget"
+	                               value="#{msg['page.campaign.bidbudget.campaignbudget.label']}"/>
+	                <h:outputText value="$&#160;" rendered="#{isMonetary}"/>
+	                <h:outputText value="&#160;&#160;&#160;" rendered="#{not isMonetary}"/>
+	                <pri:inputText styleClass="in-bl" id="campaign-budget" value="#{campaignMBean.campaignBidMBean.overallBudget}" maxlength="18">
+	                	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+	                	<pri:ajax event="blur" update="evenDistributionOverallBudgetRadio,weekDayDailyBudgetDiv,evenDistributionDailyBudgetRadio" 
+	                			listener="#{campaignMBean.campaignBidMBean.changeOverallBudgetListener}"/>
+	                </pri:inputText>
+	                <h:outputText value=" #{msg['page.campaign.bidbudget.budgettype.clicks']}" rendered="#{campaignMBean.campaignBidMBean.budgetType eq 'CLICK'}"/>
+	                <h:outputText value=" #{msg['page.campaign.bidbudget.budgettype.impressions']}" rendered="#{campaignMBean.campaignBidMBean.budgetType eq 'IMPRESSION'}"/>
+	                <pri:message for="campaign-budget"/>
+	                <pri:watermark id="campaign-budget-wm" for="campaign-budget" value="#{msg['page.campaign.bidbudget.nocap.watermark']}" />
+	                <span class="optional bl"><h:outputText value="#{msg['page.label.optional']}"/></span>
+	            </h:panelGroup>
+	            
+	            <h:panelGroup  layout="block">
+	                <pri:selectBooleanCheckbox id="campaignBudgetSendEmailChkBox" value="#{campaignMBean.campaignBidMBean.overallBudgetAlertEnabled}" />
+	                <h:outputLabel for="campaignBudgetSendEmailChkBox" value="#{msg['page.campaign.bidbudget.sendmail.label']}"/>
+	            </h:panelGroup >
+				
+	            <h:panelGroup  layout="block">
+	                <pri:selectOneRadio id="evenDistributionOverallBudgetRadio"
+	                    value="#{campaignMBean.campaignBidMBean.evenDistributionOverallBudget}"
+	                    valueChangeListener="#{campaignMBean.campaignBidMBean.onEvenDistributionOverallBudgetChangeEvent}"
+	                    disabled="#{campaignConfirmationMBean.endDate==null || campaignMBean.campaignBidMBean.overallBudget==null || campaignMBean.campaignBidMBean.overallBudget==''}"
+	                    layout="pageDirection">
+	                    <pri:ajax event="change" update="evenDistributionDailyBudgetRadio, daily-budget, dailyBudgetSendEmailChkBox"/>
+	                    <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.campaignbudget.evendistribution.asap.label']}" itemValue="ASAP"/>
+	                    <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.campaignbudget.evendistribution.even.label']}" itemValue="EVEN"/>
+	                    <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.campaignbudget.evendistribution.evenday.label']}" itemValue="EVEN_DAY"/>
+	                </pri:selectOneRadio>
+	            </h:panelGroup>
+	            
+	            <h:panelGroup id="weekDayDailyBudgetDiv" layout="block" styleClass="form-row-big">
+	                <h:outputLabel styleClass="in-bl b" id="daily-budget-label" for="daily-budget" value="#{msg['page.campaign.bidbudget.dailybudget.label']}"
+	                                                  rendered="#{!campaignMBean.campaignBidMBean.renderWeekDay}"/>
+	
+	                <h:outputLabel styleClass="in-bl b" id="daily-budget-label-week-days" for="daily-budget"
+	                                                  value="#{msg['page.campaign.bidbudget.dailybudget.weekday.label']}"
+	                                                  rendered="#{campaignMBean.campaignBidMBean.renderWeekDay}"/>
+	                <h:outputText value="$&#160;" rendered="#{isMonetary}"/>
+	                <h:outputText value="&#160;&#160;&#160;" rendered="#{not isMonetary}"/>
+	                <pri:inputText styleClass="in-bl" id="daily-budget" value="#{campaignMBean.campaignBidMBean.dailyBudget}" 
+	                               disabled="#{campaignMBean.campaignBidMBean.evenDistributionOverallBudget != 'ASAP'}" maxlength="18">
+	                	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+	                	<pri:ajax event="blur" update="evenDistributionDailyBudgetRadio" listener="#{campaignMBean.campaignBidMBean.changeDailyBudgetListener}"/>
+	                </pri:inputText>
+	                <h:outputText value=" #{msg['page.campaign.bidbudget.budgettype.clicks']}" rendered="#{campaignMBean.campaignBidMBean.budgetType eq 'CLICK'}"/>
+	                <h:outputText value=" #{msg['page.campaign.bidbudget.budgettype.impressions']}" rendered="#{campaignMBean.campaignBidMBean.budgetType eq 'IMPRESSION'}"/>
+	                <pri:message for="daily-budget"/>
+	                <pri:watermark id="daily-budget-wm" for="daily-budget" value="#{msg['page.campaign.bidbudget.nocap.watermark']}" />
+	                <span class="optional bl"><h:outputText value="#{msg['page.label.optional']}"/></span>
+	                <pri:overlayPanel for="daily-budget" hideEffect="fade" styleClass="no-shadow">
+	                    <div class="helpInner ui-corner-all ui-shadow">
+	                        <div class="helpArrow"></div>
+	                        <span><h:outputText value="#{msg['page.campaign.bidbudget.dailybudget.tip']}" /></span>
+	                    </div>
+	                </pri:overlayPanel>
+	            </h:panelGroup>
+	
+	            <h:panelGroup id="checkBoxDivId" layout="block">
+	                <pri:selectBooleanCheckbox id="dailyBudgetSendEmailChkBox" value="#{campaignMBean.campaignBidMBean.dailyBudgetAlertEnabled}" disabled="#{campaignMBean.campaignBidMBean.evenDistributionOverallBudget != 'ASAP'}" />
+	                <h:outputLabel for="dailyBudgetSendEmailChkBox" value="#{msg['page.campaign.bidbudget.sendmail.label']}"/>
+	            </h:panelGroup>
+	            
+	            <h:panelGroup  layout="block">
+	                <pri:selectOneRadio id="evenDistributionDailyBudgetRadio"
+	                    value="#{campaignMBean.campaignBidMBean.evenDistributionDailyBudget}"
+	                    layout="pageDirection"
+	                    disabled="#{campaignMBean.campaignBidMBean.evenDistributionOverallBudget != 'ASAP' or campaignMBean.campaignBidMBean.dailyBudget == '' or campaignMBean.campaignBidMBean.dailyBudget == null}">
+	                    <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.dailybudget.evendistribution.asap.label']}" itemValue="false"/>
+	                    <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.dailybudget.evendistribution.even.label']}" itemValue="true"/>
+	                </pri:selectOneRadio>
+	            </h:panelGroup>
+	
+	            <!-- Bid Deductions -->
+	            <pri:outputPanel rendered="#{IS_BETA_OR_ADMIN}" styleClass="form-row-big">
+		            <pri:outputPanel layout="inline" styleClass="status-indicator beta f-right" />
+	            	<pri:outputLabel id="biddeductions-label" value="#{msg['page.campaign.bidbudget.biddeductions.label']}" styleClass="in-bl b">
+	            		<pri:commandLink process="@this" onclick="bidDeductionsDialogId.show()" styleClass="helpImageRight" />
+	            	</pri:outputLabel>
+	            	
+	            	 <pri:outputPanel id="bidDeductionsListDiv">
+	                    <ui:repeat id="bidDeductionsUIRepeat" var="bidDeduction" varStatus="status" value="#{campaignMBean.campaignBidMBean.bidDeductions}">
+	
+	                        <ui:param name="uid" value="#{status.index}" />
+	                        <ui:param name="payerIsByyd" value="#{bidDeduction.payerIsByyd}" />
+	    
+	                        <!-- New Bid Deduction properties -->
+	                        <pri:outputPanel styleClass="repeatBgRow">
+	
+		                        <pri:panelGrid styleClass="panelGrid">
+		                            <pri:row>
+	
+		                                <!-- Payer -->
+		                                <pri:column>
+		                                   <div style="margin-top: 5px">
+			                                   <pri:outputLabel value="#{uid + 1}. #{msg['page.campaign.bidbudget.biddeductions.payer.label']}" styleClass="bl b" />
+			                                   <pri:selectOneMenu id="payer" value="#{payerIsByyd}" styleClass="short">
+			                                       <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.biddeductions.payer.byyd.label']}" itemValue="true" />
+			                                       <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.biddeductions.payer.self.label']}" itemValue="false" />
+			                                       <pri:ajax event="change" update="vendorTypeDiv, vendorNameDiv" />
+			                                   </pri:selectOneMenu>
+		                                   </div>
+		                                </pri:column>
+		                              
+										<!-- Vendor Type -->                
+		                                <pri:column>
+		                                    <pri:outputPanel id="vendorTypeDiv">
+		                                    	<pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.vendortype.label']}" rendered="#{payerIsByyd}" styleClass="bl b" />
+		                                    
+			                                    <!-- Third Party vendor type -->
+			                                    <pri:selectOneMenu id="vendorType"
+			                                    				   value="#{bidDeduction.thirdPartyVendor.thirdPartyVendorType}" 
+			                                                       required="true" requiredMessage="#{msg['page.campaign.bidbudget.biddeductions.vendortype.required']}"
+			                                                       converter="com.adfonic.tools.converter.thirdpartyvendor.ThirdPartyVendorTypeConverter"
+			                                                       rendered="#{payerIsByyd}"
+			                                                       styleClass="medium">
+			                                        <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.biddeductions.vendortype.selecttype.label']}" itemValue="" itemDescription="" /> 
+			                                        <f:selectItems value="#{campaignMBean.campaignBidMBean.thirdPartyVendorTypes}"
+			                                                       var="thirdPartyVendorType" itemLabel="#{thirdPartyVendorType.name}" itemValue="#{thirdPartyVendorType}" />
+			                                        <pri:ajax event="change" update="vendorTypeDiv, vendorNameDiv" onstart="progressDialog.show();" oncomplete="progressDialog.hide();" />
+			                                    </pri:selectOneMenu>
+			                                    <!-- Error section -->
+			                                    <pri:outputPanel rendered="#{payerIsByyd}" style="margin-left: 195px; margin-top: -5px;">
+			                                    	<pri:message for="vendorType" />
+			                                    </pri:outputPanel>
+			                            	</pri:outputPanel>
+		                                </pri:column>
+		                              
+		                                <!-- Vendor Name -->                
+		                                <pri:column>
+		                                    <pri:outputPanel id="vendorNameDiv">
+		                                    	<pri:outputLabel value="#{ payerIsByyd ? msg['page.campaign.bidbudget.biddeductions.vendor.label'] : msg['page.campaign.bidbudget.biddeductions.vendorname.label']}"
+		                                    					 styleClass="bl b #{not payerIsByyd ? 'vendorFreeTextLabelStyle' : ''}" />
+		                                    
+			                                    <!-- Third Party vendor -->
+			                                    <pri:selectOneMenu id="vendor"
+			                                    				   value="#{bidDeduction.thirdPartyVendor}" 
+			                                                       required="true" requiredMessage="#{msg['page.campaign.bidbudget.biddeductions.vendor.required']}"
+			                                                       converter="com.adfonic.tools.converter.thirdpartyvendor.ThirdPartyVendorConverter"
+			                                                       rendered="#{payerIsByyd}"
+			                                                       disabled="#{empty bidDeduction.thirdPartyVendor.thirdPartyVendorType}"
+			                                                       styleClass="medium">
+			                                        <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.biddeductions.vendor.selectvendor.label']}" itemValue="" itemDescription="" /> 
+			                                        <f:selectItems value="#{campaignMBean.campaignBidMBean.getThirdPartyVendorsByTypeId(bidDeduction.thirdPartyVendor.thirdPartyVendorType.id)}"
+			                                                       var="thirdPartyVendor" itemLabel="#{thirdPartyVendor.name}" itemValue="#{thirdPartyVendor}" />
+			                                        <pri:ajax event="change" update="vendorNameDiv, :campaign-bidding:buttonBidDeductionDiv"
+			                                        		  listener="#{campaignMBean.campaignBidMBean.changeBidDeductionVendor}"
+			                                        		  onstart="progressDialog.show();" oncomplete="progressDialog.hide();" />
+			                                        <f:attribute name="#{Tools2Constants.BID_DEDUCTION_INDEX}" value="#{uid}" />
+			                                    </pri:selectOneMenu>
+			                                    <!-- Error section -->
+			                                    <pri:outputPanel rendered="#{payerIsByyd}" style="margin-left: -6px; margin-top: -5px;">
+			                                    	<pri:message for="vendor" />
+			                                    </pri:outputPanel>
+			                                    
+			                                    <!-- Free Text vendor name -->
+			                                    <pri:inputText id="vendorFreeText"
+			                                    			   value="#{bidDeduction.thirdPartyVendorFreeText}"
+			                                    			   maxlength="255"
+			                                    			   required="true" requiredMessage="#{msg['page.campaign.bidbudget.biddeductions.vendorname.required']}"
+			                                    			   rendered="#{not payerIsByyd}"
+			                                    			   styleClass="vendorFreeTextStyle">
+			                                    	<pri:ajax event="blur" update="vendorNameDiv, :campaign-bidding:buttonBidDeductionDiv" listener="#{campaignMBean.campaignBidMBean.changeBidDeductionVendor}" onstart="progressDialog.show();" oncomplete="progressDialog.hide();" />
+			                                    	<f:attribute name="#{Tools2Constants.BID_DEDUCTION_INDEX}" value="#{uid}" />
+			                                    </pri:inputText>
+			                                    <!-- Error section -->
+			                                    <pri:outputPanel rendered="#{not payerIsByyd}" style="margin-left: 189px;">
+			                                    	<pri:message for="vendorFreeText" />
+			                                    </pri:outputPanel>
+			                            	</pri:outputPanel>
+		                                </pri:column>
+		                                                                
+		                                <!-- CPM -->
+		                                <pri:column>
+		                                    <pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.cpm.label']}" styleClass="bl b" />
+		                                    <pri:inputText id="cpm" value="#{bidDeduction.amount}"
+	                        					required="true"	requiredMessage="#{msg['page.campaign.bidbudget.biddeductions.cpm.required']}"
+	                        					converterMessage="#{msg['page.campaign.bidbudget.biddeductions.cpm.nan']}"
+	                        					styleClass="in-bl tiny">
+	                                        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="#{maxFractionDigits}" />
+	                                        	<pri:ajax event="blur" update="cpm, cpmError" />
+	                        				</pri:inputText>
+	                        				<pri:watermark for="cpm" value="#{msg['page.campaign.bidbudget.biddeductions.cpm.placeholder']}" />
+	                        				<!-- Error section -->
+	                        				<pri:outputPanel style="margin-left: -207px;">
+			                                	<pri:message id="cpmError" for="cpm" />
+			                                </pri:outputPanel>
+		                                </pri:column>
+		                                
+		                                <!-- Remove -->
+		                                <pri:column>
+		                                    <pri:commandLink value="#{msg['page.commons.links.remove']}" process="@this" oncomplete="confirmDelete.show();">                                
+		                                        <f:setPropertyActionListener value="#{uid}" target="#{campaignMBean.campaignBidMBean.bidDeductionIndexToRemove}" />
+		                                    </pri:commandLink>
+		                                </pri:column>
+		                            </pri:row>
+		                        </pri:panelGrid>
+		                    </pri:outputPanel>
+		                </ui:repeat>
+		            </pri:outputPanel>
+	            	
+	            	<!-- Add Bid deduction link -->      
+	                <pri:outputPanel id="buttonBidDeductionDiv" styleClass="form-row">
+	                    <pri:commandLink 
+	                        value="#{msg['page.campaign.bidbudget.biddeductions.addbiddeduction.link']}"
+	                        actionListener="#{campaignMBean.campaignBidMBean.addBidDeduction}" 
+	                        rendered="#{campaignMBean.campaignBidMBean.bidDeductionAddable}"
+	                        update="bidDeductionsListDiv, buttonBidDeductionDiv"
+	                        styleClass="addIcon" />  
+	                </pri:outputPanel>
+	            </pri:outputPanel>
+
+		        <!-- 3rd Party Vendor Cost (CPM) -->
+		        <sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE},#{RoleConstants.COMPANY_ROLE_AD_SERVING_CPM_FEE}">
+		            <h:panelGroup  layout="block" class="form-row-big"> 
+		                <h:outputLabel id="ad-serving-cpm-fee-label"  styleClass="in-bl b" for="ad-serving-cpm-fee" value="#{msg['page.campaign.bidbudget.adservingcpmfee.label']}"/>
+		                <h:outputText value="$ " />
+		                <pri:inputText styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.adServingCpmFee}" id="ad-serving-cpm-fee" requied="false">
+		                          <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+		                </pri:inputText>
+		                <pri:message for="ad-serving-cpm-fee"/>
+		            </h:panelGroup>
+		        </sec:authorize>
+	            
+	            <!-- Fixed Margin -->
+	            <sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE},#{RoleConstants.COMPANY_ROLE_FIXED_MARGIN}"> 
+		            <h:panelGroup  layout="block" class="form-row-big">
+		                <h:outputLabel id="fixed-margin-label" styleClass="in-bl b" for="fixed-margin" value="#{msg['page.campaign.bidbudget.fixedmargin.label']}"/>
+		                <pri:spacer width="10"></pri:spacer>
+		                <pri:inputText styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.fixedMargin}" id="fixed-margin" requied="false">
+		                    <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+		                </pri:inputText>
+		                <h:outputText value="% " />
+		                <pri:message for="fixed-margin"/>
+		                <pri:watermark for="fixed-margin" value="#{msg['page.campaign.bidbudget.fixedmargin.placeholder']}" rendered="#{campaignMBean.campaignBidMBean.enableFixedMarginPlaceholder()}" />
+		            </h:panelGroup>
+		        </sec:authorize>
+	            
+	            <!-- Agency Discount -->
+	            <pri:outputPanel rendered="#{IS_ADMIN_OR_SHOW_AGENCY_DISCOUNT}" styleClass="form-row-big">
+	                <h:outputLabel id="agency-discount-label" styleClass="in-bl b" for="agency-discount" value="#{msg['page.campaign.bidbudget.agencydiscount.label']}"/>
+	                <pri:spacer width="10"></pri:spacer>
+	                <pri:inputText styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.agencyDiscount}" id="agency-discount" requied="false"
+	                				disabled="#{!toolsApplicationBean.hasCompanyRole('EditAgencyDiscount') and !toolsApplicationBean.hasCompanyRole('Admin')}">
+	                    <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+	                </pri:inputText>
+	                <h:outputText value="% " />
+	                <pri:message for="agency-discount"/>
+	            </pri:outputPanel>
+	            
+	            <!-- Account daily budget -->
+	            <h:panelGroup  layout="block" class="form-row-big">
+	                <h:outputLabel styleClass="in-bl b" id="account-budget-label" for="account-budget"
+	                               value="#{msg['page.campaign.bidbudget.accountdailybudget.label']}"/>
+	                <h:outputText styleClass="in-bl" id="account-budget"
+	                	value="#{campaignMBean.campaignBidMBean.campaignDailyBudget != null ? campaignMBean.campaignBidMBean.campaignDailyBudget :
+	                																	  	  msg['page.campaign.bidbudget.nocap.watermark']}">
+	                	<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+	                </h:outputText>
+	                <pri:commandLink process="@this" value="#{msg['page.campaign.bidbudget.budgetsettings.label']}" onclick="dailyBudgetDialog.show()"/>
+	            </h:panelGroup>
+	            
+	            <!-- Frequency Cap -->
+	            <h:panelGroup  layout="block" class="form-row-big">
+	                <h:outputLabel styleClass="in-bl b" id="frequency-cap-label" for="frequency-cap" value="#{msg['page.campaign.bidbudget.frequencycap.label']}"/>
+	                <pri:inputText styleClass="in-bl" id="frequency-cap" value="#{campaignMBean.campaignBidMBean.capImpressions}" maxlength="5">
+                        <f:convertNumber type="number" integerOnly="true"/>
+                    </pri:inputText>
+                    <pri:watermark id="frequency-cap-wm" for="frequency-cap" value="#{msg['page.campaign.bidbudget.nocap.watermark']}" />
+                    
+	                <h:outputLabel styleClass="in-bl" id="time-label" for="account-budget" value="#{msg['page.campaign.bidbudget.views.label']}"/>
+	                <pri:selectOneMenu id="time" value="#{campaignMBean.campaignBidMBean.capPeriodSeconds}" disabled="#{campaignMBean.campaignBidMBean.capImpressions==0}">
+	                    <f:selectItems value="#{campaignMBean.campaignBidMBean.intervalList}" var="interval" itemValue="#{interval.seconds}" itemLabel="#{msg[interval.description]}"/>
+	                </pri:selectOneMenu>
+	            </h:panelGroup>
+	            <h:panelGroup  layout="block" class="form-row-big">
+	               <sec:authorize ifAllGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+                        <pri:outputPanel id="frequencyCapAppliedPerDiv" styleClass="form-row">
+                            <h:outputLabel styleClass="in-bl b" id="frequency-cap-applied-label" for="frequency-cap-applied" value="#{msg['page.campaign.bidbudget.capapplied.label']}"/>
+                            <pri:selectOneMenu styleClass="in-bl" id="frequency-cap-applied" value="#{campaignMBean.campaignBidMBean.capPerCampaign}" >
+                                <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.capapplied.percamapign.label']}" itemValue="true"/>
+                                <f:selectItem itemLabel="#{msg['page.campaign.bidbudget.capapplied.percreative.label']}" itemValue="false"/>
+                            </pri:selectOneMenu>
+                            <span class="admin status-indicator"></span>
+                        </pri:outputPanel>
+                    </sec:authorize>
+                </h:panelGroup>
+	            
+	            <!-- Invoice Currency  -->
+                <h:panelGroup  layout="block" class="form-row-big">
+                    <h:outputLabel styleClass="in-bl b" id="invoice-currency-label" for="invoice-currency" value="#{msg['page.campaign.bidbudget.invoicecurrency.label']}"/>
+                    <pri:spacer width="10"></pri:spacer>
+                    <pri:selectOneMenu styleClass="in-bl" id="invoice-currency" value="#{campaignMBean.campaignBidMBean.selectedInvoiceCurrencyId}" 
+                                       disabled="#{(!toolsApplicationBean.hasCompanyRole('Admin') and campaignMBean.campaignBidMBean.isExchangeRateAdminChange()) or !campaignMBean.campaignBidMBean.isCampaignNotLaunched()}">
+                        <pri:ajax event="change" process="invoice-currency" update="exchange-rate" listener="#{campaignMBean.campaignBidMBean.updateExchangeRate}"></pri:ajax>
+                        <f:selectItems value="#{campaignMBean.campaignBidMBean.invoiceCurrencyIds}"
+                                       var="currencyId" itemValue="#{currencyId}" itemLabel="#{campaignMBean.campaignBidMBean.getInvoiceCurrency(currencyId).toCurrencyCode}" />
+                    </pri:selectOneMenu>
+                    <pri:commandLink process="@this" onclick="invoiceCurrencyHelpDialog.show()" styleClass="helpImageRight" style="margin-left: -245px;"/>
+                </h:panelGroup>
+                
+                <!-- Exchange Rate  -->
+                <h:panelGroup  layout="block" class="form-row-big">
+                    <h:outputLabel id="exchange-rate-label"   styleClass="in-bl b" for="exchange-rate"   value="#{msg['page.campaign.bidbudget.exchangerate.label']}"/>
+                    <pri:spacer width="10"></pri:spacer>
+                    <pri:inputText id="exchange-rate" styleClass="in-bl" value="#{campaignMBean.campaignBidMBean.exchangeRate}"
+                                   disabled="#{!toolsApplicationBean.hasCompanyRole('Admin') or !campaignMBean.campaignBidMBean.isCampaignNotLaunched()}">
+                    </pri:inputText>
+                    <sec:authorize ifAllGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+				        <span class="admin status-indicator"></span>
+				    </sec:authorize>
+				    <pri:message for="exchange-rate"/>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:panelGroup>
+        <h:panelGroup layout="block" class="form-row">
+            <pri:commandButton value="#{campaignMBean.continueButtonMessage}" id="biddingContinueBtn"
+            					   onclick="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.panelsTop()"
+                                   actionListener="#{campaignMBean.campaignBidMBean.doSave}"
+                                   update=":navigationDiv,:menuForm:side-panel" >
+            </pri:commandButton>
+            <pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" actionListener="#{campaignMBean.campaignBidMBean.cancel}" rendered="#{!campaignMBean.newCampaign}"
+	    		process="@this" update=":navigationDiv,:menuForm:side-panel" onclick="progressDialog.show();" oncomplete="progressDialog.hide()">
+	        </pri:commandLink>
+        </h:panelGroup>
+    </h:form>
+    <ui:include src="/WEB-INF/jsf/transactions/sub-forms/daily-budget.xhtml"/>
+    <script type="text/javascript">
+        $(function () {
+            ADT.subElExpander('radio', 'bidding');
+            ADT.errorOrInfo();
+        });
+    </script>
+        
+    <!-- Bid Deductions dialogs -->
+
+    <!-- Confirm delete Bid deduction dialog -->
+    <pri:dialog widgetVar="confirmDelete"
+               header="#{msg['page.campaign.bidbudget.biddeductions.removebiddeduction.dialog.header']}" 
+               resizable="false" 
+               modal="true" 
+               closable="true"  
+               styleClass="confirm-dialog">
+         <pri:outputPanel>
+             <h3><pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.removebiddeduction.dialog.confirmation']} "/></h3>
+             <p><pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.removebiddeduction.dialog.explanation']}" /></p>
+             <pri:outputPanel styleClass="buttons">
+                 <pri:commandButton value="#{msg['page.campaign.bidbudget.biddeductions.removebiddeduction.dialog.btn.yes']}" 
+                                    actionListener="#{campaignMBean.campaignBidMBean.removeBidDeduction}"
+                                    onclick="confirmDelete.hide();progressDialog.show();" 
+                                    oncomplete="progressDialog.hide();"
+                                    update=":campaign-bidding:buttonBidDeductionDiv, :campaign-bidding:bidDeductionsListDiv">
+                 </pri:commandButton>
+                 <pri:commandButton value="#{msg['page.campaign.bidbudget.biddeductions.removebiddeduction.dialog.btn.no']}" 
+                                    onclick="confirmDelete.hide()" 
+                                    type="button" />
+             </pri:outputPanel>
+         </pri:outputPanel>
+    </pri:dialog>
+                        
+    <!-- Bid deduction help dialog -->
+    <pri:dialog widgetVar="bidDeductionsDialogId"
+              modal="true" 
+              resizable="false"
+              width="600"
+              header="#{msg['page.campaign.bidbudget.biddeductions.dialog.header']}"
+              onShow="ADT.togglePageScroll(true);"
+              onHide="ADT.togglePageScroll();">
+        <p><pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.dialog.part1']}" escape="false" /></p><br/>
+        <p><pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.dialog.part2']}" escape="false" /></p><br/>
+        <p><pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.dialog.part3']}" escape="false" /></p><br/>
+        <p><pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.dialog.part4']}" escape="false" /></p>
+    </pri:dialog>
+
+    <!-- Invoice currency help dialog -->
+    <pri:dialog widgetVar="invoiceCurrencyHelpDialog"
+              modal="true" 
+              resizable="false"
+              width="600"
+              header="#{msg['page.campaign.bidbudget.invoicecurrency.tooltip.header']}"
+              onShow="ADT.togglePageScroll(true)"
+              onHide="ADT.togglePageScroll()">
+        <p>
+            <h:outputText value="#{msg['page.campaign.bidbudget.invoicecurrency.tooltip.part1']}"/>
+            <br/><br/>
+            <h:outputText value="#{msg['page.campaign.bidbudget.invoicecurrency.tooltip.part2']}"/>
+            <br/><br/>
+            <h:outputText value="#{msg['page.campaign.bidbudget.invoicecurrency.tooltip.part3']}"/>
+            <br/>
+        </p>
+    </pri:dialog>
+    
+    <!-- Optimise Media Cost Bidding Strategy help dialog -->
+    <pri:dialog widgetVar="mediacostStrategyHelpDialog"
+              modal="true" 
+              resizable="false"
+              width="600"
+              header="#{msg['page.campaign.bidbudget.biddingstrategy.mediacost.tooltip.header']}"
+              onShow="ADT.togglePageScroll(true)"
+              onHide="ADT.togglePageScroll()">
+        <p>
+            <h:outputText value="#{msg['page.campaign.bidbudget.biddingstrategy.mediacost.tooltip.part1']}"/>
+            <br/>
+        </p>
+    </pri:dialog>
+    
+    <!-- Average Maximum Bid Bidding Strategy help dialog -->
+    <pri:dialog widgetVar="averageMaximumBidStrategyHelpDialog"
+              modal="true" 
+              resizable="false"
+              width="600"
+              header="#{msg['page.campaign.bidbudget.biddingstrategy.avgmaxbid.tooltip.header']}"
+              onShow="ADT.togglePageScroll(true)"
+              onHide="ADT.togglePageScroll()">
+        <p>
+            <h:outputText value="#{msg['page.campaign.bidbudget.biddingstrategy.avgmaxbid.tooltip.part1']}" /><br />
+            <h:outputText value="#{msg['page.campaign.bidbudget.biddingstrategy.avgmaxbid.tooltip.part2']}" />
+        </p>
+    </pri:dialog>
+</section>
+
+</ui:composition>

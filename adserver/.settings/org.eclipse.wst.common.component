@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="adfonic-adserver">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
+        <dependent-module archiveName="adfonic-archive-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-archive/adfonic-archive">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-util-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-util/adfonic-util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-distro-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-distro/adfonic-distro">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-adserver-api-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-adserver-api/adfonic-adserver-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-common-api-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-common-api/adfonic-common-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-adresponse-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-adresponse/adfonic-adresponse">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-cache-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-cache/adfonic-cache">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-domain-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-domain/adfonic-domain">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-ddr-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-ddr/adfonic-ddr">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-geo-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-geo/adfonic-geo">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-jms-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-jms/adfonic-jms">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-quova-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-quova/adfonic-quova">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-retargeting-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-retargeting/adfonic-retargeting">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-datacache-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-datacache/adfonic-datacache">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="adfonic-adserver"/>
+        <property name="java-output-path" value="/adfonic-adserver/target/classes"/>
+        <property name="component.exclusion.patterns" value="%regex[WEB-INF/classes/DoubleClickAdX/(?!(seller-network-id-to-name-map\.txt|ad-product-category-to-iabid-map\.txt|ad-sensitive-category-to-iabid-map\.txt)).*$],%regex[WEB-INF/classes/OpenX/(?!(.+\.properties)).*$]"/>
+    </wb-module>
+</project-modules>

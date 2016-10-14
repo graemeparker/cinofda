@@ -1,0 +1,207 @@
+/*===================  PLACEHOLDERS  ===================*/
+
+%default-text {
+    font-weight: normal !important;
+    color: #888888; 
+    text-shadow: none !important;
+}
+
+%default-dialog-form {
+    width: 533px;
+    height: auto;
+    overflow: hidden;
+    overflow-y: auto;
+    .form-row { margin: 20px 10px; }
+    
+    .ui-message-error {
+        position: absolute;
+        margin: 0px;
+        top: 5px;
+        right: 0px;
+        display: block;
+        min-width: 230px;
+        max-width: 400px;
+    
+        .ui-message-error-icon {
+            display: none;
+        }   
+    }   
+    
+    .form-row, .form-col {
+        position: relative;
+        label { font-weight: normal; }  
+    }
+
+    .warning.message { margin-bottom: 20px; }
+    .ui-selectoneradio tr td { width: auto; }
+     
+    .hide { display: none; }
+}
+
+%default-daily-budget-form {
+    @extend %default-dialog-form;
+    
+    p {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+  
+    .ui-selectoneradio tr td {
+        width: auto;
+    }   
+    
+    input {
+        width: 250px;
+        height: 30px;
+        margin-top: 0px;
+        padding-left: 5px;
+        margin-left: 10px;
+    } 
+    
+    .ui-message-error {
+        position: absolute;
+        margin: 0px;
+        top: 48px;
+        right: -28px;
+        display: block;
+    
+        .ui-message-error-icon {
+            background: url("../../images/err_arrow-vertical.png") no-repeat;
+            margin: 1px 0 0 -19px;
+            width: 18px;
+            height: 18px;
+            top: -15px;
+            left: 35px;
+            display: block;
+        }
+    }   
+}
+
+%default-highlight {
+    h2 { background: #F3F3F3 !important; }  
+    .props { background: #EEEEEE !important; }
+}
+
+%default-form-input {
+    width: 400px;
+    margin: 0px;
+    padding-left: 5px;
+}
+
+%default-help-image {
+    width: 18px;
+    height: 18px;
+    background-image: url('../../images/questionmark_GB.png');
+    background-size: cover;
+    cursor: pointer;
+    vertical-align: bottom;
+
+    &:hover, &:active {
+        background: url('../../images/questionmark_BW.png');
+        background-size: cover;
+    }
+}
+
+/*========== Device selection  =========*/
+
+/* device models autocomplete */
+%device-models {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Devices add list popup */
+%device-addlist {
+  textarea {
+    max-height: 350px;
+    overflow-y: auto;
+    display: block;
+    margin: 10px;
+  }
+  button {
+    margin-left: 180px;
+  }
+}
+
+/* Not recognised models */
+%nonmatched-dialog {
+  .ui-dialog-content {
+    width: 360px;
+  }
+  button {
+    margin-left: 80px;
+  }
+}
+
+/* Non-matched models */
+%nonmatched {
+  border-top: 1px solid $borderColour;
+  border-bottom: 1px solid $borderColour;
+  margin: 10px 0;
+  max-height: 350px;
+  overflow-y: auto;
+  
+  fieldset {
+    overflow: hidden;
+    border: none;
+    padding: 10px 0;
+  }
+
+  label {
+    display: inline-block;
+    width: 165px;
+  }
+}
+
+%panelGrid {
+    td, tr {
+        border: none;
+        background: transparent;
+        padding: 7px 7px 7px 7px;
+    }
+}
+
+%repeatBgRow {
+    margin-bottom: 14px;
+    background: #f6f6f6;
+    border: 1px solid #dddddd;
+}
+
+%breakAllWord {
+	word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+%charCount {
+  .char-count {
+    font-size: 12px;
+
+    .count {
+      padding-right: 3px;
+    }
+  }
+}
+
+%default-widths {
+	&.tiny {
+		width: 60px !important;
+		min-width: 60px !important;
+	}
+	&.short {
+		width: 90px !important;
+		min-width: 90px !important;
+	}
+	&.medium {
+		width: 165px !important;
+		min-width: 165px !important;
+	}
+    &.long {
+    	width: 250px !important;
+    	min-width: 250px !important;
+    }
+    &.longer {
+    	width: 300px !important;
+    	min-width: 300px !important;
+    }
+}

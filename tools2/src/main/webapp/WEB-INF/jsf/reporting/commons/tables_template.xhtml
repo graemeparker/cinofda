@@ -1,0 +1,101 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+    
+    <!-- Reporting Tables Template -->
+
+    <pri:outputPanel id="reportingTables" rendered="#{reportingMBean.report != null}">
+
+	    <pri:spacer height="10" />
+	    
+	    <section class="form-box ui-corner-all">
+	    
+		    <!-- Summary Table -->
+
+	        <h2 class="sec-title">#{msg['page.reporting.commons.report.summary.label']}</h2>
+			<pri:dataTable id="reportingSummaryTable" value="#{reportingMBean.report.total}" var="row">
+						   
+				<!-- Columns -->
+				<pri:columns value="#{reportingMBean.report.columns}" var="column" columnIndexVar="colIndex" rendered="#{column.showTotal}">
+				    <f:facet name="header">
+					    <h:outputText value="#{msg['page.reporting.commons.report.header.'.concat(column.header)]}" />
+				    </f:facet>
+					<h:outputText value="#{row.getCellFormattedValue(colIndex)}" />
+			    </pri:columns>
+			</pri:dataTable>
+
+	        <pri:spacer height="10" />
+	        	        
+	        <!-- Detail Table -->
+
+	        <h2 class="sec-title">#{msg['page.reporting.commons.report.detail.label']}</h2>
+	        
+            <!-- Table export buttons (top) -->
+            
+            <pri:outputPanel>
+
+                <!-- CSV -->
+                <pri:commandButton value="#{msg['page.commons.labels.export.csv']}" ajax="false" styleClass="ui-priority-primary" actionListener="#{reportingMBean.createCSV}" />
+            
+                <!-- Excel -->
+                <pri:commandButton value="#{msg['page.commons.labels.export.excel']}" ajax="false" styleClass="ui-priority-primary">
+                    <pri:fileDownload value="#{reportingMBean.exportToExcel()}" />  
+                </pri:commandButton>
+
+            </pri:outputPanel>
+            
+            <pri:spacer height="10" />
+
+            <script type="text/javascript">
+            // <![CDATA[                                    
+	            $(document).ready(function(){
+	           	   $('#reportingDetailTable div.ui-datatable-tablewrapper table').tablesorter({ 
+	                   widgets : [ 'zebra' ],
+	                   widgetOptions : {
+	                	   zebra : [ "even", "odd" ]
+	                   }
+			        }); 
+	            });
+            // ]]>
+			</script>
+			<pri:dataTable id="reportingDetailTable" value="#{reportingMBean.report.rows}" var="row" styleClass="tablesorter">
+                                    
+                <!-- Columns -->
+                <pri:columns value="#{reportingMBean.report.columns}" var="column" columnIndexVar="colIndex" styleClass="reportingDetailTableCol-#{column.header}">		           
+			       <f:facet name="header">
+	 		           <pri:outputLabel value="#{msg['page.reporting.commons.report.header.'.concat(column.header)]}" />
+			       </f:facet>
+		       	   <pri:outputLabel value="#{row.getCellFormattedValue(colIndex)}" />
+  			   </pri:columns>
+	 		</pri:dataTable>
+	        <pri:spacer height="10" />
+	        
+            <!-- Table export buttons (bottom) -->
+
+            <pri:outputPanel>
+
+                <!-- CSV -->
+                <pri:commandButton value="#{msg['page.commons.labels.export.csv']}" ajax="false" styleClass="ui-priority-primary" actionListener="#{reportingMBean.createCSV}" />
+                            
+                <!-- Excel -->
+                <pri:commandButton value="#{msg['page.commons.labels.export.excel']}" ajax="false" styleClass="ui-priority-primary">
+                    <pri:fileDownload value="#{reportingMBean.exportToExcel()}" />  
+                </pri:commandButton>
+
+	        </pri:outputPanel>
+	        
+	        <pri:spacer height="10" />
+	        
+            <!-- Footer -->
+	        <pri:outputPanel>
+                <pri:outputLabel value="#{msg['page.reporting.commons.report.footer']} #{reportingMBean.timeZoneDescription()}" />
+            </pri:outputPanel>
+
+	    </section>
+    </pri:outputPanel>
+</ui:composition>

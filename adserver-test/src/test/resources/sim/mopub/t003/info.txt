@@ -1,0 +1,5 @@
+MAD-1615 - Include the ability to configure the "Call To action Field "in the UI for native Ads
+MAD-1823 - Impression Trackers to be available for Native Ads
+This test includes:
+    - a native ad request (req.json).
+    - a native ad creative configuration (assets, extendedCreativeData and 3rd party baconURL) (sim.json)

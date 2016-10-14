@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.tasks.dmp.batch.task.OptOutTaskTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec - in com.adfonic.tasks.dmp.batch.task.OptOutTaskTest

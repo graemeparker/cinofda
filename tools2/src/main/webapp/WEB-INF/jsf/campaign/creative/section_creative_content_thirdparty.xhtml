@@ -1,0 +1,170 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+      			xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:sec="http://www.springframework.org/security/tags">
+
+	<!-- 3rd Party Impression Tracking (hidden for Text Ad only) -->
+	<pri:outputPanel id="beaconContainer" rendered="#{IS_ADMIN_OR_THIRD_PARTY_IMPR_TRACKERS and creative.format.systemName != 'text'}" styleClass="beaconContainer">
+  		<div class="form-row-small">
+       		<h:outputLabel styleClass="bl b field-label" id="beacon-label" for="beaconUrl" value="#{msg['page.campaign.creative.beacon']}"/>
+       	</div>
+       	<pri:outputPanel id="wrapper">
+    	<ui:repeat var="beacon" value="#{creative.destination.beaconUrls}" varStatus="beaconStatus">
+	    	<div class="form-row-small">
+	        	<pri:inputText styleClass="bl dest-input" id="beaconUrl" value="#{beacon.url}" validator="URLValidator">
+	        		<pri:ajax event="change" listener="#{campaignCreativeMBean.beaconChangeListener}" process="@this,@form"
+	        				  update="@parent:@parent:@parent:beaconContainer" oncomplete="update#{status.index}();"/>
+	            	<f:attribute name="creativeIndex" value="#{status.index}"/>
+	            	<f:attribute name="beaconIndex" value="#{beaconStatus.index}"/>
+	        	</pri:inputText>
+	        	<h:panelGroup layout="block" id="removeLinkDiv" styleClass="removeLink">
+                       <pri:commandLink id="removeBeaconLink" rendered="#{beaconStatus.index ne 0}" process="@this,@parent:@parent:@parent:beaconContainer" immediate="true"
+                                        update="@parent:@parent:@parent:beaconContainer" oncomplete="update#{status.index}();"
+                                        value="Remove" actionListener="#{campaignMBean.campaignCreativeMBean.doRemoveBeacon}">
+                           <f:attribute name="creativeIndex" value="#{status.index}"/>
+                           <f:attribute name="beaconIndex" value="#{beaconStatus.index}"/>
+                       </pri:commandLink>
+                   </h:panelGroup>
+	        	<pri:message id="beaconUrlMessage" for="beaconUrl" display="text" />
+	    	</div>
+    	</ui:repeat>
+    	</pri:outputPanel>
+    	
+    	<div style="margin-top:15px">
+	    	<pri:commandLink id="addBeacon" styleClass="addIcon" rendered="#{!campaignCreativeMBean.hasMaxBeacons(status.index)}"
+                 actionListener="#{campaignMBean.campaignCreativeMBean.doAddBeacon}"
+                 process="@this,beaconContainer" update="beaconContainer"
+                 value="#{msg['page.campaign.scheduling.link.addbeacon.label']}">
+                 <f:attribute name="creativeIndex" value="#{status.index}"/>
+            </pri:commandLink>
+           </div>
+           <div style="margin-top:10px">
+	    	<h:outputLink id="tokenLink" value="#{toolsApplicationBean.externalUrls['devDocsTokensUrl']}" target="_blank">
+            	<h:outputText value="#{msg['page.campaign.creative.tokenlink']}" />
+        	</h:outputLink>
+       	</div>
+	</pri:outputPanel>
+	
+	<!-- Vendors -->
+	<h:panelGroup layout="block" rendered="#{creative.thirdPartyTag}">
+	
+		<!-- Vendors for Third-party -->
+		<h:panelGroup rendered="#{!creative.richMedia and !creative.vastVideo}">
+    		<div class="form-row-small">
+	    		<h:outputLabel styleClass="bl b" id="vendor-label" for="vendor" value="#{msg['page.campaign.creative.vendors']} (for #{msg['page.campaign.creative.buttons.thirdparty']})" />
+	    		<pri:selectOneMenu id="vendor" value="#{creative.extendedCreativeType}" validator="ExtendedCreativeTypeValidator" 
+	    					converter="com.adfonic.tools.converter.extendedcreativetype.ExtendedCreativeTypeConverter" styleClass="long">
+	    			<pri:ajax event="change" update="contentForms" oncomplete="update#{status.index}();" listener="#{campaignCreativeMBean.vendorChangeListener}"/>
+	    			<f:selectItem itemLabel="#{msg['page.campaign.creative.thirdparty.selectvendor']}" itemValue="#{campaignCreativeMBean.emptyExtendedType}" itemDisabled="true"/>
+	    			<f:selectItems value="#{campaignCreativeMBean.extendedTypes}" var="e" itemLabel="#{e.name}" itemValue="#{e}" />
+	    			<f:attribute name="creativeIndex" value="#{status.index}"/>
+	    		</pri:selectOneMenu>
+	    		<pri:message id="vendorMessage" for="vendor"/>
+	    		<pri:message for="contentForms" display="text"/>
+    		</div>
+    	</h:panelGroup>
+        
+        <!-- Vendors for Rich media -->
+    	<h:panelGroup rendered="#{creative.richMedia and !creative.vastVideo}">
+    		<div class="form-row-small">
+	    		<h:outputLabel styleClass="bl b" id="vendor-label2" for="vendor2" value="#{msg['page.campaign.creative.vendors']} (for #{msg['page.campaign.creative.buttons.richmedia']})"/>
+	    		<pri:selectOneMenu id="vendor2" value="#{creative.extendedCreativeType}" validator="ExtendedCreativeTypeValidator" 
+	    					converter="com.adfonic.tools.converter.extendedcreativetype.ExtendedCreativeTypeConverter" styleClass="long">
+	    	 		<pri:ajax event="change" update="contentForms" oncomplete="update#{status.index}();" listener="#{campaignCreativeMBean.vendorChangeListener}"/>
+	    			<f:selectItem itemLabel="#{msg['page.campaign.creative.thirdparty.selectvendor']}" itemValue="#{campaignCreativeMBean.emptyExtendedType}" itemDisabled="true"/>
+	    			<f:selectItems value="#{campaignCreativeMBean.richMediaExtendedTypes}" var="e" itemLabel="#{e.name}" itemValue="#{e}"/>
+	    			<f:attribute name="creativeIndex" value="#{status.index}"/>  
+	    		</pri:selectOneMenu>
+	    		<pri:message id="vendorMessage2" for="vendor2"/>
+	    		<pri:message for="contentForms" display="text"/>
+    		</div>
+    	</h:panelGroup>
+    	
+    	<!-- Vendors for VAST -->
+    	<h:panelGroup rendered="#{creative.vastVideo}">
+            <div class="form-row-small">
+                <h:outputLabel styleClass="bl b" id="vendor-label3" for="vendor3" value="#{msg['page.campaign.creative.vendors']} (for #{msg['page.campaign.creative.buttons.vast']})"/>
+                <pri:selectOneMenu id="vendor3" value="#{creative.extendedCreativeType}" validator="ExtendedCreativeTypeValidator" 
+                            converter="com.adfonic.tools.converter.extendedcreativetype.ExtendedCreativeTypeConverter" disabled="true" styleClass="long">
+                    <pri:ajax event="change" update="contentForms" oncomplete="update#{status.index}();" listener="#{campaignCreativeMBean.vendorChangeListener}"/>
+                    <f:selectItem itemLabel="#{msg['page.campaign.creative.vast.selectvendor']}" itemValue="#{campaignCreativeMBean.emptyExtendedType}"/>
+                </pri:selectOneMenu>
+            </div>
+        </h:panelGroup>
+    	
+    	<!-- Tags for Third-party, Rich media or VAST -->
+    	<h:panelGroup id="contentForms">
+    		<h:panelGroup layout="block" styleClass="bl b" id="tagsContainer" rendered="#{creative.vendorSelected}">
+     			<ui:repeat var="template" value="#{creative.extendedCreativeTemplates}" varStatus="templateStatus">
+     				<div class="form-row">
+      					<h:outputLabel value="#{template.contentForm.description}:" for="tagInput"/>
+      				</div>
+      				<div class="form-row">		
+      					<pri:inputTextarea id="tagInput" rows="3" cols="30" value="#{template.templateOriginal}" autoResize="#{!creative.vastVideo}"
+      						required="#{creative.vastVideo}" requiredMessage="#{msg['page.campaign.creative.vast.required']}">
+      						<pri:ajax event="change" listener="#{campaignCreativeMBean.templateChangeListener}" oncomplete="update#{status.index}();"
+      							update="@parent:@parent:@parent:tagsContainer" process="@this,@form"/>
+		      				<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}"/>
+		      				<f:attribute name="#{Tools2Constants.TEMPLATE_INDEX}" value="#{templateStatus.index}"/>
+      					</pri:inputTextarea>
+         			</div>
+         		</ui:repeat>
+			</h:panelGroup>
+        </h:panelGroup>
+        
+        <!-- VAST metadata info -->
+        <h:panelGroup id="vastInfo" rendered="#{creative.vastVideo}">
+        	
+        	<!-- Manual Parse VAST -->
+        	<pri:commandLink value="#{msg['page.campaign.creative.vast.parse']}"
+                             actionListener="#{campaignCreativeMBean.parseVast}" 
+                             onstart="progressDialog.show()" oncomplete="progressDialog.hide()"
+                             process="@this,contentForms" update=":creatives-container">
+                 <f:attribute name="creativeIndex" value="#{status.index}"/>
+            </pri:commandLink>
+        	
+        	<!-- Parse errors -->
+        	<pri:outputPanel styleClass="vastError"><pri:message for="vastInfo" escape="false" /></pri:outputPanel>
+			
+			<!-- Metadata -->
+            <ui:include src="/WEB-INF/jsf/campaign/creative/section_creative_content_vast.xhtml">
+                <ui:param name="vastMetaData" value="#{campaignCreativeMBean.loadVastMetaData(creative)}" />
+            </ui:include>
+        </h:panelGroup>
+		
+		<!-- Creative image for Third-part or Rich media -->
+		<h:panelGroup rendered="#{!creative.vastVideo}">
+	        <div class="form-row">
+	        	<h:outputLabel styleClass="bl b" value="#{msg['page.campaign.creative.representativeimage.label']}" />
+	        </div>
+	        <div class="form-row">
+	        	<h:outputText value="#{msg['page.campaign.creative.representativeimage.content']}"/>
+	        	<h:outputLink id="link1" value="#{toolsApplicationBean.externalUrls['creativeSpecsUrl']}" target="_blank">
+		    <h:outputText value="#{msg['page.campaign.creative.formatshelp.link.label']}" />
+				</h:outputLink>
+	        </div>
+	        <div class="form-row">
+	        	<pri:fileUpload id="representativeUpload" mode="advanced" label="Upload" process="contentForms"
+	                        showButtons="false" auto="true" multiple="false" styleClass="change-file"
+	                        rendered="#{!creative.contentSpec.name.equals('MMA Text Link')}"
+	                        onstart="progressDialog.show();" oncomplete="progressDialog.hide();"
+	                        fileUploadListener="#{campaignCreativeMBean.uploadRepresentative}" update="edit-panel,:submitForm">
+	        		<f:attribute name="creativeIndex" value="#{status.index}"/>
+	        	</pri:fileUpload>
+	        	<pri:message for="representativeUpload"/>
+	    	</div>
+	 		<h:panelGroup styleClass="thumb-panel" layout="block" rendered="#{!creative.missingImage}">
+	      		<pri:graphicImage value="#{campaignCreativeMBean.existingStream}" cache="false"
+	                          width="#{creative.smallWidth}" height="#{creative.smallHeight}">
+	            		<f:param name="index" value="#{status.index}"/>
+	        		</pri:graphicImage>
+	     	</h:panelGroup>
+	   </h:panelGroup>
+	</h:panelGroup>
+</ui:composition>

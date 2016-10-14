@@ -1,0 +1,69 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Connections reporting options -->
+
+	<h:form prependId="false">
+		<section id="connections" class="form-box ui-corner-all">
+		    <h2 class="sec-title">#{msg['page.reporting.connections.menu.label']}</h2>
+	        <pri:panelGrid id="grid" styleClass="panelGrid">
+	               
+			    <pri:row>
+				    <!-- Campaign selection -->
+				    <pri:column colspan="2">
+	                       <ui:include src="/WEB-INF/jsf/reporting/commons/campaigns_template.xhtml">
+	                           <ui:param name="reportingMBean" value="#{advertiserConnectionReportingMBean}" />
+	                       </ui:include>
+					</pri:column>
+				</pri:row>
+	
+		        <pri:row>
+                    <!-- Start Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/start_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserConnectionReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+
+                    <!-- End Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/end_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserConnectionReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+	            </pri:row>
+	
+				<pri:row>
+				    <!-- Daily statistic for period -->
+					<pri:column colspan="2">
+						<pri:selectBooleanCheckbox id="dailyStatistics" value="#{advertiserConnectionReportingMBean.dailyStatistics}" 
+							itemLabel="#{msg['page.reporting.commons.detailed.by.day.label']}" styleClass="bl" />
+		        	</pri:column>
+		        </pri:row>
+	
+		        <pri:row>
+		            <!-- Generate Report -->
+		            <pri:column colspan="2">
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/generate_button_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserConnectionReportingMBean}" />
+                        </ui:include>
+	                </pri:column>
+	            </pri:row>
+		        
+	        </pri:panelGrid>
+	    </section>
+	   	 
+	   	<!-- Reporting tables -->
+		
+		<pri:outputPanel id="reports">
+			<ui:include src="/WEB-INF/jsf/reporting/commons/tables_template.xhtml">
+	   			<ui:param name="reportingMBean" value="#{advertiserConnectionReportingMBean}" />
+			</ui:include>	
+		</pri:outputPanel>
+
+	</h:form>
+</ui:composition>

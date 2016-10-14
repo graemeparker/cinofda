@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+<h:form id="menuForm" prependId="false">
+  <pri:remoteCommand name="updateMenu" update="@form"/>
+  <h:panelGroup id="panelSectionGroup" layout="block" class="fourcol">  
+    <h:panelGroup layout="block" id="side-panel" class="ui-corner-all t1">
+    
+      <section>
+        <h2>
+          <pri:commandLink id="publisherInvoicesLinkId" disabled="#{userSessionBean.readOnlyUser}"
+              onclick="publisherInvoiceDialog.show()">
+            <span>#{msg['page.transactions.publisher.invoices.menu.label']}</span>
+          </pri:commandLink>  
+        </h2>
+      </section> 
+      
+      <section class="true">
+			<h2>
+				<pri:commandLink id="fundOutMenuLinkId"
+					disabled="#{userSessionBean.readOnlyUser}"
+					onclick="fundsOutDialog.show()">
+					<span>#{msg['page.transactions.fundsout.menu.label']}</span>
+				</pri:commandLink>
+			</h2>
+			<h:panelGroup layout="block" class="props t1">
+				<ul>
+					<li><span class="label">#{msg['page.transactions.fundsout.dialog.method.label']}</span>
+						<span class="val">#{transactionMBean.transactionFundsOutMBean.paymentTypeLabel}</span>
+					</li>
+				</ul>
+			</h:panelGroup>
+		</section> 
+      
+      <h:panelGroup rendered="#{userSessionBean.publisher and userSessionBean.advertiser}">
+	      <section class="true">
+				<h2>
+					<pri:commandLink id="transferAcrossMenuLinkId"
+						disabled="#{userSessionBean.readOnlyUser}"
+						onclick="fundsAcrossDialog.show()">
+						<span>#{msg['page.transactions.transfer.menu.label']}</span>
+					</pri:commandLink>
+				</h2>
+				<h:panelGroup layout="block" class="props t1">
+					<ul>
+						<li><span class="label">#{msg['page.transactions.fundsacross.menu.advertiser.balance']}</span>
+							<span class="val"> <h:outputText
+									value="#{transactionMBean.transactionFundsAcrossMBean.advertiserBalance}">
+									<f:convertNumber type="currency" currencySymbol="$" />
+								</h:outputText>
+						</span></li>
+						<li><span class="label">#{msg['page.transactions.fundsacross.menu.publisher.balance']}</span>
+							<span class="val"> <h:outputText
+									value="#{transactionMBean.transactionFundsAcrossMBean.publisherBalance}">
+									<f:convertNumber type="currency" currencySymbol="$" />
+								</h:outputText>
+						</span></li>
+					</ul>
+				</h:panelGroup>
+			</section>
+        </h:panelGroup> 
+    </h:panelGroup>
+  </h:panelGroup>
+</h:form>
+</h:body>
+</html>

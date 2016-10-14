@@ -1,0 +1,51 @@
+id: "U.\216\312\000\n\344\037\n\037\'E\207\000P\313"
+ip: "BW\224"
+user_agent: "Mozilla/5.0 (Linux; Android 4.4.2; LGLS740 Build/KOT49I.LS740ZV5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36,gzip(gfe)"
+url: "http://www.thisoldyearbook.com/site/4e1889d6d06c418f978da6f2528502d4/default"
+detected_language: "en"
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 22
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: BELOW_THE_FOLD
+  ad_block_key: 215147074
+  publisher_settings_list_id: 3379207010838867560
+  17: 559
+  18: 360
+  19: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEJX_3HNabOyyE_6fGdaj2_o"
+timezone_offset: -240
+detected_content_label: 26
+mobile {
+  platform: "android"
+  mobile_device_type: HIGHEND_PHONE
+  brand: "lg"
+  model: "ls740"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 4
+  }
+  screen_width: 360
+  screen_height: 640
+  is_mobile_web_optimized: true
+  carrier_id: 70091
+}
+cookie_age_seconds: 20535802
+postal_code: "32803"
+site_list_id: 30
+geo_criteria_id: 9011784
+seller_network_id: 1
+publisher_settings_list_id: 3379207010838867560
+51: 3

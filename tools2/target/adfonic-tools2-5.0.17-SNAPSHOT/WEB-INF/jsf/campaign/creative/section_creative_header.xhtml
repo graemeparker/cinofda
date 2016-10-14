@@ -1,0 +1,120 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+                
+	<div class="item-data">
+	    <div class="head-row">
+	        <span class="stat-ico"></span>
+	        <span class="state #{creative.rejected?'red':''}">
+	        	<h:outputText value="#{msg['page.campaign.creative.active.status']}" rendered="#{creative.active}" />
+	        	<h:outputText value="#{msg['page.campaign.creative.paused.status']}" rendered="#{creative.paused and !creative.pending}" />
+	            <h:outputText value="#{msg['page.campaign.creative.pending.status']}" rendered="#{creative.pending}" />
+	            <h:outputText value="#{msg['page.campaign.creative.rejected.status']}" rendered="#{creative.rejected}" />
+	            <h:outputText value="#{msg['page.campaign.creative.incomplete.status']}" rendered="#{creative.state==1}"/>
+	            <h:outputText value="#{msg['page.campaign.creative.error.status']}" rendered="#{creative.state==2}"/>
+	        </span>
+	        <span class="f-name">
+	            <h:outputText value="#{status.index+1}. #{creative.name}"/>
+	        </span>
+	    </div>
+	    
+	     
+	    <h:panelGroup styleClass="head-row" rendered="#{creative.format.systemName.equals('native_app_install')}" layout="block">
+	    	<span class="dest-type"><h:outputText value="#{msg['page.campaign.creative.description.label']}" />: </span> 
+	    	<span style="font-weight:normal;"><h:outputText  value="#{creative.nativeAdInfo.description.equals('')?msg['page.campaign.menu.noneset.label']:creative.nativeAdInfo.description}" /></span> 
+	    </h:panelGroup>
+	
+	    <h:panelGroup styleClass="head-row input" layout="block" rendered="#{creative.destinated and creative.state!=2}">
+	        <span class="dest-type"><h:outputText value="#{msg[creative.destination.destinationType.name]}" />:</span>
+	        <pri:inputText readonly="true" styleClass="dest-data" onclick="ADT.stopBuble(event)" value="#{creative.destination.data}"></pri:inputText>
+	    </h:panelGroup>
+	    <h:panelGroup styleClass="head-row" layout="block" rendered="#{!creative.destinated and creative.state!=2}">
+	        <span class="dest-type"><h:outputText value="#{msg['page.campaign.creative.destination.label']}"/>:</span>
+	        <h:outputText value="#{msg['page.campaign.creative.incomplete.notset']}"/>
+	    </h:panelGroup>
+	    <h:panelGroup styleClass="head-row" layout="block" rendered="#{creative.state==2}">
+	        <span class="dest-type"><h:outputText value="#{msg[creative.incompleteMessage]}"/></span>
+	    </h:panelGroup>
+	
+	    <h:panelGroup styleClass="head-row" layout="block" rendered="#{creative.state!=2}">
+	        <span class="type">
+	        	<h:outputText style="padding-right:40px" 
+	        				  value="#{campaignMBean.campaignCreativeMBean.getCreativeSummaryFormat(status.index)}"/>
+	        </span>
+	        <pri:commandLink value="#{msg['page.campaign.creative.edit.link']}"   rendered="#{campaignMBean.campaignCreativeMBean.creativeEditable(status.index)}"
+	        			process="@this" update="campaign-creative,:submitForm,:buttons-container"
+	                         actionListener="#{campaignMBean.campaignCreativeMBean.openCreative}">
+				<f:attribute name="creativeIndex" value="#{status.index}"/>
+	        </pri:commandLink>
+	    </h:panelGroup>
+	    <h:panelGroup styleClass="head-row" layout="block" rendered="#{creative.state==2}">
+	    	<pri:commandLink value="#{msg['page.campaign.creative.delete.label']}" onclick="ADT.stopBuble(event)" 
+	        			process="@this" rendered="#{creative.deletable}" update=":navigationDiv,:menuForm:side-panel"
+	                    actionListener="#{campaignMBean.campaignCreativeMBean.deleteCreative}">
+				<f:attribute name="creativeIndex" value="#{status.index}"/>
+	        </pri:commandLink>
+	    </h:panelGroup>
+	
+	    <pri:outputPanel styleClass="head-row last" rendered="#{creative.format.systemName.equals('text')}" layout="block">
+	             <span class="text-label">
+	                 <h:outputText value="#{msg['page.campaign.creative.textad']}" rendered="#{creative.format.systemName.equals('text')}"/>
+	             </span>
+	             <h:panelGroup styleClass="text" rendered="#{creative.state==0}">
+	                 <h:outputText value="#{creative.adText}" rendered="#{creative.format.systemName.equals('text')}"/>
+	             </h:panelGroup>
+	             <h:panelGroup styleClass="text" rendered="#{creative.state!=0}">
+	                 <h:outputText value="#{msg['page.campaign.creative.incomplete.notset']}" rendered="#{creative.format.systemName.equals('text')}"/>
+	             </h:panelGroup>
+	             <pri:outputPanel rendered="#{!creative.english}" styleClass="translation">
+	                 <span><h:outputText value="#{msg['page.campaign.creative.translationfrom']} #{creative.language.name}"/>:</span>
+	                 <span><h:outputText value="#{toolsApplicationBean.shortMessage(creative.englishTranslation,12)}"/></span>
+	             </pri:outputPanel>
+	         </pri:outputPanel>
+	     </div>
+	     <h:panelGroup rendered="#{!creative.format.systemName.equals('text') and !creative.format.systemName.equals('native_app_install') and !creative.vastVideo}" layout="block">
+		     <h:panelGroup styleClass="thumb-panel" layout="block" rendered="#{!creative.missingImage}">
+		         <pri:graphicImage value="#{campaignCreativeMBean.existingStream}" cache="false"
+		                           width="#{creative.smallWidth}" height="#{creative.smallHeight}">
+		             <f:param name="index" value="#{status.index}"/>
+		         </pri:graphicImage>
+		     </h:panelGroup>
+		     <h:panelGroup styleClass="thumb-panel" layout="block" rendered="#{creative.missingImage}">
+		         <pri:graphicImage url="/resources/images/no_image.png">
+		             <f:param name="index" value="#{status.index}"/>
+		         </pri:graphicImage>
+		     </h:panelGroup>
+	     </h:panelGroup>
+	     <h:panelGroup rendered="#{creative.format.systemName.equals('native_app_install')}" layout="block">
+		     <h:panelGroup styleClass="thumb-panel icon" layout="block" rendered="#{creative.nativeAdInfo.icon!=null}">
+		         <pri:graphicImage  cache="false"
+		         	value="#{campaignCreativeMBean.nativeAdIconStream}"
+					width="20" 
+					height="20"
+				>
+		             <f:param name="index" value="#{status.index}"/>
+		         </pri:graphicImage>
+		     </h:panelGroup>
+		     <h:panelGroup styleClass="thumb-panel icon" layout="block" rendered="#{creative.nativeAdInfo.icon==null}">
+		         <pri:graphicImage url="/resources/images/no_image.png" width="20" height="20" >
+		             <f:param name="index" value="#{status.index}"/>
+		         </pri:graphicImage>
+		     </h:panelGroup>
+		     <h:panelGroup styleClass="thumb-panel image" layout="block" rendered="#{creative.nativeAdInfo.image!=null}">
+		         <pri:graphicImage value="#{campaignCreativeMBean.nativeAdImageStream}" cache="false"
+		                           width="90" height="48">
+		             <f:param name="index" value="#{status.index}"/>
+		         </pri:graphicImage>
+		     </h:panelGroup>
+		     <h:panelGroup styleClass="thumb-panel image" layout="block" rendered="#{creative.nativeAdInfo.image==null}">
+		         <pri:graphicImage url="/resources/images/no_image.png" width="90" height="48">
+		             <f:param name="index" value="#{status.index}"/>
+		         </pri:graphicImage>
+		     </h:panelGroup>
+	     </h:panelGroup>
+	        	
+</ui:composition>

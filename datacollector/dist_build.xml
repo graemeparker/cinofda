@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+]>
+
+<project name="adfonic-datacollector" default="run" basedir=".">
+
+  <property environment="env."/>
+
+  <path id="main.run.classpath">
+    <fileset dir="lib" />
+    <pathelement location="conf" />
+  </path>
+
+  <target name="database-smoke-test" description="Database Smoke Test">
+    <java classname="com.adfonic.datacollector.app.DatabaseSmokeTest"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+    </java>
+  </target>
+ 
+  <property name="heapArg" value="-Xmx6144m"/>
+  <property name="newrelicArg" value="-javaagent:/opt/newrelic/java/newrelic.jar"/>
+ 
+  <target name="start-datacollector" description="Start DataCollector">
+    <echo>Using heap size: ${heapArg}</echo>
+    <java classname="com.adfonic.datacollector.app.DataCollectorApp"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="${heapArg}"/>
+      <jvmarg value="${newrelicArg}"/>
+      <jvmarg value="-XX:PermSize=128m"/>
+      <jvmarg value="-XX:MaxPermSize=512m"/>
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+      <sysproperty key="com.sun.management.jmxremote.port" value="9104"/>
+      <sysproperty key="com.sun.management.jmxremote.password.file" value="/usr/local/adfonic/config/jmxremote.password"/>
+      <sysproperty key="com.sun.management.jmxremote.access.file" value="/usr/local/adfonic/config/jmxremote.access"/>
+      <sysproperty key="com.sun.management.jmxremote.ssl" value="false"/>
+    	<sysproperty key="logging.config" value="/usr/local/adfonic/adfonic-datacollector/conf/logback.xml"/>
+    </java>
+  </target>
+ 
+</project>

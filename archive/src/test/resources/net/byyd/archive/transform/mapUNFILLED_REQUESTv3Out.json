@@ -1,0 +1,43 @@
+{
+   "id":"655223801135468907523926b21da0ec",
+   "timestamp":"2014-10-27T14:05:50.454Z",
+   "bcat":[],
+   "bid_request":{  
+      "at": 2, 
+      "device":{  
+         "model":"11277",
+         "carrier":"null",
+         "connectiontype":"2",
+         "geo":{  
+            "zip": "dy4",
+            "city": "",
+            "type": "", 
+            "country": "GB"
+         },
+         "ext":{  
+            "didtypes":[]
+         }
+      },
+      "user":{  
+         "id":""
+      },
+      "imp":[  
+         {  
+            "tagid":"07eec32c-0706-4625-9398-81712176fe0d"
+         }
+      ],
+       "app" : {  
+         "id":"9165014",
+         "domain":""
+      }
+   },
+   "bid_responses":[ ],
+   "exchange_id": "25816",
+   "ext":{  
+	  "nobid_reason": "8",
+      "byyd":{  
+         "shard": "ch1",
+         "server": "ch1adserver13"
+      }
+   }
+}

@@ -1,0 +1,534 @@
+{
+   "description": "Simple successful bid served with one option",
+   "request": { 
+	   "uri":"/rtb/dcadx/bid/APPLNID-reqId",
+	   "method":"post",
+	   "headers":{
+	      "User-Agent" : "Mozilla/5.0 (Linux; U; Android 2.2; en-ca; GT-P1000M Build/FROYO) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1,gzip(gfe)"
+	   },
+	   "content":{
+		  "protoFile" : "sim/adx/t001/adx-req1.proto"	   		
+	      
+	   }   
+   },
+   "response" : {
+	  "code" : 200,
+	  "headersRequired" : {
+	    "Content-Type" : "application/json",
+	    "Expires" : "0",
+	    "Pragma" : "No-Cache"
+	  },
+	  "contentRequired" : {
+	    "contentType" : "application/json"
+	  }
+	},   
+   "adserverData":{
+      "displayTypes":[
+         {
+            "name":"iPhone",
+            "systemName":"iPhone",
+            "constraints":null,
+            "id":159
+         }
+      ],
+      "adspaces":[
+         {
+            "name":null,
+            "status":"VERIFIED",
+            "formatIds":[
+               9
+            ],
+            "externalID":"APPLNID-reqId",
+            "publication":{
+               "name":null,
+               "status":null,
+               "samplingRate":25,
+               "useSoftFloor":false,
+               "externalID":null,
+               "publisher":{
+                  "operatingPublisherId":14,
+                  "rtbConfig":{
+                     "bidCurrency":"USD",
+                     "adMode":null,
+                     "priceTransformer":null,
+                     "dpidFallback":null,
+                     "integrationTypePrefix":null,
+                     "admProfile":null,
+                     "prefixonEscapedURLs":null,
+                     "escapedClickForwardURL":null,
+                     "winNoticeMode":null,
+                     "spMacro":null,
+                     "clickForwardValidationPattern":null,
+                     "decryptionScheme":null,
+                     "auctionType":"SECOND_PRICE",
+                     "id":null
+                  },
+                  "company":null,
+                  "currentRevShare":0.0,
+                  "externalId":"APPLNID-reqId",
+                  "ecpmTargetRateCard":null,
+                  "buyerPremium":0.0,
+                  "pendingAdType":null,
+                  "defaultAdRequestTimeout":null,
+                  "defaultRateCardMap":{
+
+                  },
+                  "defaultIntegrationTypeIdsByPublicationTypeId":{
+
+                  },
+                  "id":14
+               },
+               "publicationTypeId":28,
+               "defaultIntegrationTypeId":null,
+               "ecpmTargetRateCard":null,
+               "categoryId":16,
+               "languageIds":[
+
+               ],
+               "trackingIdentifierType":"DEVICE",
+               "transparentNetwork":null,
+               "installTrackingDisabled":false,
+               "adRequestTimeout":500000,
+               "rtbId":"RTB2AID-69db518e4a644f3c85a8613a3e9744c0",
+               "rateCardMap":{
+
+               },
+               "adOpsStatus":null,
+               "approveDate":null,
+               "id":12
+            },
+            "unfilledAction":null,
+            "backfillEnabled":false,
+            "colorScheme":null,
+            "id":1
+         }
+      ],
+      "advertisers":[
+         {
+            "externalID":null,
+            "company":{
+               "backfill":false,
+               "mediaCostMargin":0.0,
+               "directCost":0.0,
+               "discount":0.0,
+               "marginShareDSP":0.0,
+               "id":241
+            },
+            "bidSeat":null,
+            "id":213
+         }
+      ],
+      "assets":[
+         {
+            "externalID":null,
+            "data":null,
+            "id":200
+         }
+      ],
+      "campaignes":[
+         {
+            "name":null,
+            "status":"ACTIVE",
+            "currentBid": {
+               "amount":0.8,
+               "bidType":"CPM",
+               "bidModelType":"SECOND_PRICE",
+               "maximum":false,
+               "id":128
+            },
+            "externalID":null,
+            "advertiser":{
+               "externalID":null,
+               "company":{
+                  "backfill":false,
+                  "mediaCostMargin":0.0,
+                  "directCost":0.0,
+                  "discount":0.0,
+                  "marginShareDSP":0.0,
+                  "id":241
+               },
+               "bidSeat":null,
+               "id":213
+            },
+            "agencyDiscount":0.0,
+            "behavioural":false,
+            "deviceIdentifierTypeIds":[
+
+            ],
+            "houseAd":false,
+            "throttle":100,
+            "capImpressions":null,
+            "capPeriodSeconds":null,
+            "privateMarketPlaceDeal":null,
+            "endDate":null,
+            "categoryId":null,
+            "disableLanguageMatch":false,
+            "installTrackingEnabled":false,
+            "conversionTrackingEnabled":false,
+            "applicationID":null,
+            "campaignRetargetings":[
+
+            ],
+            "advertiserDomain":null,
+            "installTrackingAdXEnabled":false,
+            "startDate":null,
+            "timePeriods":[
+
+            ],
+            "sortedTimePeriods":[
+
+            ],
+            "dataFeeId":0,
+            "tradingDeskMargin":0.0,
+            "dataFee":0.0,
+            "rmAdServingFee":0.0,
+            "boostFactor":0.0,
+            "id":142
+         }
+      ],
+      "companies":[
+         {
+            "backfill":false,
+            "mediaCostMargin":0.0,
+            "directCost":0.0,
+            "discount":0.0,
+            "marginShareDSP":0.0,
+            "id":241
+         }
+      ],
+      "countries":[
+         {
+            "name":"USA",
+            "isoCode":"US",
+            "id":180
+         }
+      ],
+      "destinations":[
+         {
+            "destinationType":"URL",
+            "beaconUrl":null,
+            "data":"Foobar",
+            "id":182
+         }
+      ],
+      "deviceIdTypes":[
+         {
+            "secure":false,
+            "systemName":"dpid",
+            "validationPattern":null,
+            "precedenceOrder":0,
+            "id":31
+         }
+      ],
+      "formats":[
+         {
+            "name":"320x20",
+            "components":[
+
+            ],
+            "displayTypes":[
+               {
+                  "name":"iPhone",
+                  "systemName":"iPhone",
+                  "constraints":null,
+                  "id":159
+               }
+            ],
+            "systemName":"iPhone",
+            "id":9
+         }
+      ],
+      "integrationTypes":[
+         {
+            "name":"Test",
+            "blockedExtendedCreativeTypes":[
+
+            ],
+            "systemName":null,
+            "supportedFeatures":[
+
+            ],
+            "supportedBeaconModes":[
+
+            ],
+            "contentFormsByMediaType":{
+
+            },
+            "id":29
+         }
+      ],
+      "models":[
+         {
+            "name":null,
+            "hidden":false,
+            "vendor":{
+               "name":"Apple",
+               "id":13
+            },
+            "externalID":"iPhone5s",
+            "platforms":[
+
+            ],
+            "deviceGroupId":35,
+            "id":null
+         }
+      ],
+      "publications":[
+         {
+            "name":null,
+            "status":null,
+            "samplingRate":25,
+            "useSoftFloor":false,
+            "externalID":null,
+            "publisher":{
+               "operatingPublisherId":14,
+               "rtbConfig":{
+                  "bidCurrency":"USD",
+                  "adMode":null,
+                  "priceTransformer":null,
+                  "dpidFallback":null,
+                  "integrationTypePrefix":null,
+                  "admProfile":null,
+                  "prefixonEscapedURLs":null,
+                  "escapedClickForwardURL":null,
+                  "winNoticeMode":null,
+                  "spMacro":null,
+                  "clickForwardValidationPattern":null,
+                  "decryptionScheme":null,
+                  "auctionType":"SECOND_PRICE",
+                  "id":null
+               },
+               "company":null,
+               "currentRevShare":0.0,
+               "externalId":null,
+               "ecpmTargetRateCard":null,
+               "buyerPremium":0.0,
+               "pendingAdType":null,
+               "defaultAdRequestTimeout":null,
+               "defaultRateCardMap":{
+
+               },
+               "defaultIntegrationTypeIdsByPublicationTypeId":{
+
+               },
+               "id":14
+            },
+            "publicationTypeId":28,
+            "defaultIntegrationTypeId":null,
+            "ecpmTargetRateCard":null,
+            "categoryId":16,
+            "languageIds":[
+
+            ],
+            "trackingIdentifierType":"DEVICE",
+            "transparentNetwork":null,
+            "installTrackingDisabled":false,
+            "adRequestTimeout":500000,
+            "rtbId":"RTB2AID-69db518e4a644f3c85a8613a3e9744c0",
+            "rateCardMap":{
+
+            },
+            "adOpsStatus":null,
+            "approveDate":null,
+            "id":12
+         }
+      ],
+      "publicationTypes":[
+         {
+            "systemName":"FooBar",
+            "medium":null,
+            "defaultIntegrationTypeId":29,
+            "defaultTrackingIdentifierType":null,
+            "id":28
+         }
+      ],
+      "publishers":[
+         {
+            "operatingPublisherId":14,
+            "rtbConfig":{
+               "bidCurrency":"USD",
+               "adMode":null,
+               "priceTransformer":null,
+               "dpidFallback":null,
+               "integrationTypePrefix":null,
+               "admProfile":null,
+               "prefixonEscapedURLs":null,
+               "escapedClickForwardURL":null,
+               "winNoticeMode":null,
+               "spMacro":null,
+               "clickForwardValidationPattern":null,
+               "decryptionScheme":null,
+               "auctionType":"SECOND_PRICE",
+               "id":null
+            },
+            "company":null,
+            "currentRevShare":0.0,
+            "externalId":"APPLNID-reqId",
+            "ecpmTargetRateCard":null,
+            "buyerPremium":0.0,
+            "pendingAdType":null,
+            "defaultAdRequestTimeout":null,
+            "defaultRateCardMap":{
+
+            },
+            "defaultIntegrationTypeIdsByPublicationTypeId":{
+
+            },
+            "id":14
+         }
+      ],
+      "formatBySizes":[
+         {
+            "formatIds":[
+               9
+            ],
+            "width":320,
+            "height":20
+         }
+      ],
+      "weightedAdspaces":[
+         {
+            "adspaceId":1,
+            "countriesIsoCode":[
+               "US"
+            ],
+            "creativesByPriority":[
+            	{
+					"priority":1,
+					"creatives": [ 8 ]
+				}
+            ]
+         }
+      ],
+      "creativeAssetContents":[
+         {
+            "assetId":200,
+            "displayTypeId":159,
+            "componentId":192,
+            "creativeId":8,
+            "contentTypeId":12
+         }
+      ],
+      "rtbEnabled":true,
+      "creatives" : [ {
+      "id" : 8,
+      "externalID" : null,
+      "name" : null,
+      "campaign" : {
+        "id" : 11,
+        "name" : null,
+        "externalID" : null,
+        "advertiser" : {
+          "id" : 12,
+          "externalID" : null,
+          "company" : {
+            "id" : 13,
+            "discount" : 0.0,
+            "backfill" : false,
+            "mediaCostMargin" : 0.0,
+            "marginShareDSP" : 0.0,
+            "directCost" : 0.0
+          },
+          "bidSeat" : null
+        },
+        "startDate" : null,
+        "endDate" : null,
+        "status" : "ACTIVE",
+        "disableLanguageMatch" : false,
+        "boostFactor" : 0.0,
+        "capImpressions" : null,
+        "capPeriodSeconds" : null,
+        "installTrackingEnabled" : false,
+        "installTrackingAdXEnabled" : false,
+        "conversionTrackingEnabled" : false,
+        "applicationID" : null,
+        "currentBid" : {
+          "id" : 5,
+          "bidType" : "CPM",
+          "amount" : 0.8,
+          "maximum" : false,
+          "bidModelType" : "SECOND_PRICE"
+        },
+        "timePeriods" : [ ],
+        "houseAd" : false,
+        "throttle" : 100,
+        "advertiserDomain" : null,
+        "categoryId" : null,
+        "deviceIdentifierTypeIds" : [ ],
+        "campaignRetargetings" : [ ],
+        "tradingDeskMargin" : 0.0,
+        "dataFee" : 0.0,
+        "dataFeeId" : 0,
+        "rmAdServingFee" : 0.0,
+        "privateMarketPlaceDeal" : null,
+        "agencyDiscount" : 0.0,
+        "behavioural" : false,
+        "sortedTimePeriods" : [ ]
+      },
+      "segment" : null,
+      "formatId" : 9,
+      "creativeAttributes" : [ ],
+      "destination" : {
+        "id" : 10,
+        "destinationType" : "URL",
+        "data" : "Foobar",
+        "beaconUrl" : null
+      },
+      "languageId" : null,
+      "pluginBased" : false,
+      "priority" : 0,
+      "endDate" : null,
+      "extendedCreativeTypeId" : null,
+      "extendedData" : { },
+      "status" : "ACTIVE",
+      "animated" : false,
+      "extendedCreativeTemplates" : { },
+      "closedMode" : false
+    } ]
+   },
+   "output": {
+	    "backupLogs":{
+		      "require":[
+		         {
+		            "event":"AD_SERVED_AND_IMPRESSION",
+		            "requiredAttributes":[
+		               "RTB_BID_SUCCESS"
+		            ]
+		         },
+		         {
+		            "event":"AD_SERVED",
+		            "requiredAttributes":[
+		            ]
+		         }
+		      ]
+   		},
+	   "counter":{
+	      "require":[
+	         {
+	            "name":"QuavaTotalCall",
+	            "count":1
+	         },
+	         {
+	            "name":"QuavaTotalTime",
+	            "below":500
+	         },
+	         {
+	            "name":"com.adfonic.adserver.rtb.impl.RtbLogicImpl.AD_REQUEST",
+	            "count":1
+	         },
+	         {
+	            "name":"com.adfonic.adserver.rtb.impl.RtbLogicImpl.AD_SERVED",
+	            "count":1
+	         },
+	         {
+	            "name":"com.adfonic.adserver.rtb.impl.RtbLogicImpl.AD_TARGET_START",
+	            "count":1
+	         },
+	         {
+	            "name":"fliterOutThirdPartyCreatives.total.requests",
+	            "count":1
+	         }
+	      ]
+	   }
+	}
+}

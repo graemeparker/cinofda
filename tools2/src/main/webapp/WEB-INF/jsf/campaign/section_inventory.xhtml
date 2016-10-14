@@ -1,0 +1,167 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:pe="http://primefaces.org/ui/extensions"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:sec="http://www.springframework.org/security/tags" >
+              
+<pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+
+<!-- Boolean Expressions -->
+<ui:param name="isExchangeInventorySelected"         value="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory eq Tools2Constants.EXCHANGE_INVENTORY}" />
+<ui:param name="isAppSiteListSelected"               value="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory eq Tools2Constants.APP_SITE_LIST}" />
+<ui:param name="isIABCategorySelected"               value="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory eq Tools2Constants.IAB_CATEGORY}" />
+<ui:param name="isMarketplaceSelected"               value="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory eq Tools2Constants.PRIVATE_MARKET_PLACE}" />
+
+<ui:param name="hasExchangeInventoryBlacklistSelected"         value="#{campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean.hasSelectedList}" />
+<ui:param name="hasIABCategoryBlacklistSelected"     value="#{campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean.hasSelectedList}" />
+
+<ui:param name="hasFactualAudience" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.hasFactualAudience()}" />
+
+<section id="inventory" class="form-box ui-corner-all">
+    <h2 class="sec-title">#{msg['page.campaign.inventory.menu.label']}</h2>
+    <h:form id="inventory-targeting" class="options" prependId="false">
+        
+        <pri:selectOneRadio 
+            id="inventorySelection" 
+            value="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory}"
+            valueChangeListener="#{campaignMBean.campaignInventoryTargetingMBean.changeSelection}"
+            style="font-weight: bold;"
+        >
+            <f:selectItem itemLabel="#{msg['page.campaign.inventory.option.network']}" itemValue="#{Tools2Constants.EXCHANGE_INVENTORY}"/>
+            <f:selectItem itemLabel="#{msg['page.campaign.inventory.option.list']}" itemValue="#{Tools2Constants.APP_SITE_LIST}"/>
+            <f:selectItem itemLabel="#{msg['page.campaign.inventory.option.category']}" itemValue="#{Tools2Constants.IAB_CATEGORY}"/>
+            <f:selectItem itemLabel="#{msg['page.campaign.inventory.option.marketplace']}" itemValue="#{Tools2Constants.PRIVATE_MARKET_PLACE}"
+                          itemDisabled="#{empty campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.rtbListForPmp}"/>
+            <pri:ajax event="change" update="options-container,safetylevel-container"></pri:ajax>
+        </pri:selectOneRadio>
+        
+        <h:panelGroup id="options-container" layout="block">
+        
+           <!-- Exchange Inventory -->
+            <h:panelGroup id="networkContainer" rendered="#{isExchangeInventorySelected}" style="min-height:350px" layout="block">
+		                   
+		        <!-- Show warning about override targeting when Factual audience were selected -->
+		   		<pri:outputPanel id="targetingOverwriteWarning" styleClass="form-row warning message #{(hasFactualAudience) ? 'show' : 'hide'}" style="background-position-y: 20px">
+					<p>#{msg['page.audience.source.factual.targetingoverwrite.warning']}</p>
+				</pri:outputPanel>
+				
+                <h:panelGroup id="networks-container" layout="block" styleClass="form-row">
+                        <ui:insert name="sectionDspRtb" >
+                            <ui:include src="/WEB-INF/jsf/campaign/inventory/section_inventory_exchange_inventory.xhtml" />
+                        </ui:insert>
+                </h:panelGroup>
+                
+                <h:panelGroup id="blacklistContainer" layout="block" styleClass="form-row">
+                    <pri:commandLink value="#{msg['page.campaign.inventory.blacklist.add.label']}"
+                                     actionListener="#{campaignMBean.campaignInventoryTargetingMBean.addNetworkBlackList}"
+                                     rendered="#{not hasExchangeInventoryBlacklistSelected}"
+                                     process="@this"
+                                     update="blacklistContainer" />
+                    <h:panelGroup layout="block" rendered="#{hasExchangeInventoryBlacklistSelected}">
+                        <f:subview id="networkBlacklist">
+                            <ui:include src="/WEB-INF/jsf/campaign/publicationlist/publication_list_template.xhtml">
+                                <ui:param name="listBean" value="#{campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean}"></ui:param>
+                            </ui:include>
+                        </f:subview>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:panelGroup>
+            
+            <!-- Site/App List -->
+            <h:panelGroup id="listContainer" rendered="#{isAppSiteListSelected}" layout="block">
+                <f:subview id="whiteList">
+                    <ui:include src="/WEB-INF/jsf/campaign/publicationlist/publication_list_template.xhtml">
+                            <ui:param name="listBean" value="#{campaignMBean.campaignInventoryTargetingMBean.whiteListMBean}"></ui:param>   
+                    </ui:include>
+                </f:subview>
+            </h:panelGroup>
+            
+            <!-- IAB Category -->
+            <h:panelGroup id="categoryContainer" rendered="#{isIABCategorySelected}" layout="block">
+                <h:panelGroup id="categories-container" layout="block" styleClass="form-row">
+                    <ui:insert name="sectionCategories" >
+                        <ui:include src="/WEB-INF/jsf/campaign/inventory/section_inventory_categories.xhtml" />
+                    </ui:insert>
+                </h:panelGroup>
+                <h:panelGroup id="blacklistCategoriesContainer" layout="block" styleClass="form-row">
+                    <pri:commandLink value="#{msg['page.campaign.inventory.blacklist.add.label']}"
+                                     actionListener="#{campaignMBean.campaignInventoryTargetingMBean.addCategoriesBlackList}"
+                                     rendered="#{not hasIABCategoryBlacklistSelected}"
+                                     process="@this"
+                                     update="blacklistCategoriesContainer" />
+                    <h:panelGroup layout="block" rendered="#{hasIABCategoryBlacklistSelected}">
+                        <f:subview id="categoriesBlacklist">
+                            <ui:include src="/WEB-INF/jsf/campaign/publicationlist/publication_list_template.xhtml">
+                                <ui:param name="listBean" value="#{campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean}"></ui:param>
+                            </ui:include>
+                        </f:subview>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:panelGroup>
+            
+            <!-- Private Marketplace -->
+            <h:panelGroup id="marketplacecontainer" rendered="#{isMarketplaceSelected}" layout="block">
+                <h:panelGroup id="marketplace-container" layout="block" styleClass="form-row">
+                    <ui:insert name="sectionMarketplace" >
+                        <ui:include src="/WEB-INF/jsf/campaign/inventory/section_inventory_marketplace.xhtml" />
+                    </ui:insert>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:panelGroup>
+        
+        <h:panelGroup id="safetylevel-container" layout="block" style="margin-top:20px">
+            <h:panelGroup id="safetylevel-selectoneradio" layout="block" styleClass="form-row" rendered="#{isExchangeInventorySelected or isIABCategorySelected}">
+                    <ui:include src="/WEB-INF/jsf/campaign/inventory/brand-safety-settings.xhtml"/>
+            </h:panelGroup>
+        </h:panelGroup>
+        
+        <div class="form-row">
+            <pri:commandButton id="continueTargetingBtn1" value="#{campaignMBean.continueButtonMessage}" 
+                               actionListener="#{campaignMBean.campaignInventoryTargetingMBean.checkContinue}"
+                               onclick="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.panelsTop();ADT.scrollToElement('.ui-message-error')"
+                               process="@this,inventorySelection,rtb_networks,nonrtb_networks,categories-container,marketplace-container,safetylevel-container"         
+                               update=":menuForm:panelSectionGroup,:navigationDiv">
+            </pri:commandButton>
+            
+            <pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" rendered="#{!campaignMBean.newCampaign}"
+                             actionListener="#{campaignMBean.campaignTargetingMBean.cancel}"
+                             onclick="progressDialog.show();" oncomplete="progressDialog.hide()"
+                             update=":navigationDiv,:menuForm:side-panel">
+            </pri:commandLink>
+        </div>
+        
+        <pri:dialog id="confirmSaveDialog" resizable="false" modal="true" closable="true"  
+                        styleClass="confirm-dialog" widgetVar="confirmationSave">
+               <h3>
+                   <h:outputText value="#{msg['page.campaign.inventory.confirmationdialog.message']}" />
+               </h3>
+               <p> 
+                   <h:outputText value="#{msg['page.campaign.inventory.confirmationdialog.warning']}" />
+               </p>
+               <div class="buttons">
+                   <pri:commandButton id="confirmation"
+                                      value="#{msg['page.campaign.creative.delete.confirmation.yes']}"
+                                      onclick="confirmationSave.hide();progressDialog.show();"
+                                      oncomplete="progressDialog.hide();ADT.scrollToElement('.ui-message-error')"
+                                      actionListener="#{campaignMBean.campaignInventoryTargetingMBean.doSave}"
+                                      process="@this"
+                                      update=":navigationDiv,:menuForm:side-panel">
+                   </pri:commandButton>
+                   <pri:commandButton id="declineApp" type="button" value="#{msg['page.campaign.creative.delete.confirmation.no']}"
+                                      onclick="confirmationSave.hide()" />
+               </div>
+        </pri:dialog>
+    </h:form> 
+    <script type="text/javascript">
+         // <![CDATA[
+            ADT.selectAllElement("#rtb-container");
+            ADT.selectAllElement("#nonrtb-container");
+        // ]]>
+    </script>  
+</section>
+
+</ui:composition>

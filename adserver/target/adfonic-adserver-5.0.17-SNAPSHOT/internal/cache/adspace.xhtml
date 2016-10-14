@@ -1,0 +1,583 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util">
+<h:head>
+	<title>AdSpaces</title>
+	<style type="text/css">
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #CEE3F6;
+}
+.ui-widget {
+font-size: 13px !important;
+}
+
+</style>
+</h:head>
+<h:body>
+    <h:outputText value="RTB Enabled :" /><h:outputText value="#{adServerCacheBean.rtbEnabled}" /> | <a href="./../index.jsp">home</a>
+	<h:form id="adspaceForm">
+		<p:dataTable id="ad_space_table" var="oneAdSpace"
+			value="#{adServerCacheBean.allAdspaces}" widgetVar="adSpaceTable"
+			paginator="true" rows="20" paginatorPosition="bottom"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="5,10,15">
+
+			<f:facet name="header">
+				<p:outputPanel>
+					<h:outputText value="AD SPACES" />
+					<p:inputText id="globalFilter" onkeyup="adSpaceTable.filter()"
+						style="width:250px" />
+					<h:outputText value="Export:" />
+					<h:commandLink title="Excel Sheet">
+						XLS
+						<p:dataExporter type="xls" target=":adspaceForm:ad_space_table"
+							excludeColumns="7" fileName="adSpaces" />
+					</h:commandLink>
+					,
+					<h:commandLink title="PDF">
+						PDF
+						<p:dataExporter type="pdf" target=":adspaceForm:ad_space_table"
+							excludeColumns="7" fileName="adSpaces" />
+					</h:commandLink>
+					,
+					<h:commandLink title="CSV">
+						CSV
+						<p:dataExporter type="csv" target=":adspaceForm:ad_space_table"
+							excludeColumns="7" fileName="adSpaces" />
+					</h:commandLink>
+
+					<h:commandLink title="XML">
+						XML
+						<p:dataExporter type="xml" target=":adspaceForm:ad_space_table"
+							excludeColumns="7" fileName="adSpaces" />
+					</h:commandLink>
+				</p:outputPanel>
+			</f:facet>
+
+			<p:column filterBy="#{oneAdSpace.name}">
+				<f:facet name="header">
+					<h:outputText value="Name" />
+				</f:facet>
+				<h:outputText value="#{oneAdSpace.name}" />
+			</p:column>
+			<p:column filterBy="#{oneAdSpace.id}">
+				<f:facet name="header">
+					<h:outputText value="ID" />
+				</f:facet>
+				<h:outputText value="#{oneAdSpace.id}" />
+			</p:column>
+			<p:column filterBy="#{oneAdSpace.externalID}">
+				<f:facet name="header">
+					<h:outputText value="External ID" />
+				</f:facet>
+				<h:outputText value="#{oneAdSpace.externalID}" />
+			</p:column>
+			<p:column filterBy="#{oneAdSpace.status}">
+				<f:facet name="header">
+					<h:outputText value="Status" />
+				</f:facet>
+				<h:outputText value="#{oneAdSpace.status}" />
+			</p:column>
+			<p:column filterBy="#{oneAdSpace.unfilledAction}" style="width:1px;">
+				<f:facet name="header" style="width:1px;">
+					<h:outputText value="UnfilledAction" />
+				</f:facet>
+				<h:outputText value="#{oneAdSpace.unfilledAction}" />
+			</p:column>
+			<p:column filterBy="#{oneAdSpace.backfillEnabled}">
+				<f:facet name="header">
+					<h:outputText value="BackfillEnabled" />
+				</f:facet>
+				<h:outputText value="#{oneAdSpace.backfillEnabled}" />
+			</p:column>
+			<p:column filterBy="#{oneAdSpace.colorScheme}">
+				<f:facet name="header">
+					<h:outputText value="ColorScheme" />
+				</f:facet>
+				<h:outputText value="#{oneAdSpace.colorScheme}" />
+			</p:column>
+			<p:column filterBy="#{oneAdSpace.publication.externalID}">
+				<f:facet name="header">
+					<h:outputText value="Publication" />
+				</f:facet>
+				<p:commandLink update=":publicationDetailPanel"
+					oncomplete="publicationDetailDialog.show()"
+					title="Publication Detail">
+					<h:outputText value="#{oneAdSpace.publication.externalID}" />
+					<f:setPropertyActionListener value="#{oneAdSpace}"
+						target="#{adServerCacheBean.selectedAdSpace}" />
+				</p:commandLink>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Eligible Creatives" />
+				</f:facet>
+				<p:commandLink update=":eligibleCreativesPanel"
+					oncomplete="eligibleCreativesDialog.show()"
+					title="Eligible Creatives">
+					<h:outputText value="Show" />
+					<f:setPropertyActionListener value="#{oneAdSpace}"
+						target="#{adServerCacheBean.selectedAdSpace}" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+	<p:dialog header="Eligible Creatives"
+		widgetVar="eligibleCreativesDialog" modal="true">
+
+		<p:outputPanel id="eligibleCreativesPanel" style="text-align:left;"
+			layout="block">
+
+			<!-- 
+    private Map<Long,Map<Long,AssetDto>> assetsByDisplayTypeIdAndComponentId = new HashMap<Long,Map<Long,AssetDto>>();
+    private Map<String,String> extendedData = new HashMap<String,String>();
+-->
+			<h:form id="eligibleCreativeForm">
+
+				<p:dataTable id="eligible_creatives_table" var="oneEligibleCreative"
+					value="#{adServerCacheBean.selectedAdSapceEligibleCreatives}"
+					paginator="true" rows="15" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15"
+					emptyMessage="No Eligible Creatives.">
+
+					<p:column filterBy="#{oneEligibleCreative.externalID}">
+						<f:facet name="header">
+							<h:outputText value="ExternalId" />
+						</f:facet>
+						<h:outputText id="creativeExternalId"
+							value="#{oneEligibleCreative.externalID}">
+						</h:outputText>
+					</p:column>
+
+					<p:column filterBy="#{oneEligibleCreative.name}">
+						<f:facet name="header">
+							<h:outputText value="Name" />
+						</f:facet>
+						<h:outputText id="creativeName"
+							value="#{oneEligibleCreative.name}">
+						</h:outputText>
+					</p:column>
+					<p:column filterBy="#{oneEligibleCreative.id}">
+						<f:facet name="header">
+							<h:outputText value="Id" />
+						</f:facet>
+						<h:outputText id="creativeId"
+							value="#{oneEligibleCreative.id}">
+						</h:outputText>
+					</p:column>
+
+					<p:column filterBy="#{oneEligibleCreative.campaign.name}">
+						<f:facet name="header">
+							<h:outputText value="Campaign" />
+						</f:facet>
+						<p:commandLink update=":campaignDetailPanel"
+							oncomplete="campaignDetailDialog.show()"
+							title="Cmapaign">
+							<h:outputText id="creativeCampaign"
+								value="#{oneEligibleCreative.campaign.name}">
+							</h:outputText>
+							<f:setPropertyActionListener value="#{oneEligibleCreative}"
+								target="#{adServerCacheBean.selectedCreative}" />
+						</p:commandLink>
+
+					</p:column>
+					<!-- 
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Segment" />
+						</f:facet>
+						<h:outputText id="creativeSegment" value="view">
+						</h:outputText>
+					</p:column>
+ 					-->
+					<p:column filterBy="#{oneEligibleCreative.formatId}">
+						<f:facet name="header">
+							<h:outputText value="Format" />
+						</f:facet>
+						<h:outputText id="creativeFormat"
+							value="#{oneEligibleCreative.formatId}">
+						</h:outputText>
+					</p:column>
+
+					<p:column
+						filterBy="#{oneEligibleCreative.destination.destinationType}">
+						<f:facet name="header">
+							<h:outputText value="Destination" />
+						</f:facet>
+							<h:outputText id="creativeDestination"
+								value="#{oneEligibleCreative.destination.destinationType}" />
+					</p:column>
+					<!-- 
+					<p:column  filterBy="#{oneEligibleCreative.languageId}">
+						<f:facet name="header">
+							<h:outputText value="Language" />
+						</f:facet>
+						<h:outputText id="creativeLanguage"
+							value="#{oneEligibleCreative.languageId}">
+						</h:outputText>
+					</p:column>
+
+					<p:column  filterBy="#{oneEligibleCreative.pluginBased}">
+						<f:facet name="header">
+							<h:outputText value="isPluginBased" />
+						</f:facet>
+						<h:outputText id="creativePluginBased"
+							value="#{oneEligibleCreative.pluginBased}">
+						</h:outputText>
+					</p:column>
+ 					-->
+					<p:column filterBy="#{oneEligibleCreative.priority}">
+						<f:facet name="header">
+							<h:outputText value="Priority" />
+						</f:facet>
+						<h:outputText id="creativePriority"
+							value="#{oneEligibleCreative.priority}">
+						</h:outputText>
+					</p:column>
+
+					<p:column filterBy="#{oneEligibleCreative.endDate}">
+						<f:facet name="header">
+							<h:outputText value="EndDate" />
+						</f:facet>
+						<h:outputText id="creativeEndDate"
+							value="#{oneEligibleCreative.endDate}">
+						</h:outputText>
+					</p:column>
+					<!-- 
+					<p:column  filterBy="#{oneEligibleCreative.extendedCreativeTypeId}">
+						<f:facet name="header">
+							<h:outputText value="ExtendedCreativeTypeId" />
+						</f:facet>
+						<h:outputText id="creativeExtendedCreativeTypeId"
+							value="#{oneEligibleCreative.extendedCreativeTypeId}">
+						</h:outputText>
+					</p:column>
+ 					-->
+					<p:column filterBy="#{oneEligibleCreative.status}">
+						<f:facet name="header">
+							<h:outputText value="Status" />
+						</f:facet>
+						<h:outputText id="creativeStatus"
+							value="#{oneEligibleCreative.status}">
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+
+		</p:outputPanel>
+	</p:dialog>
+	<p:dialog header="Publication / Publisher Details"
+		widgetVar="publicationDetailDialog" modal="true">
+		<p:outputPanel id="publicationDetailPanel" style="text-align:left;"
+			layout="block">
+
+			<!-- These fields also need to be shown
+    private Set<Long> languageIds = new HashSet<Long>();
+    private Map<BidType,RateCardDto> rateCardMap = new HashMap<BidType,RateCardDto>();
+     -->
+     <p:panelGrid columns="2">
+     
+			<p:panelGrid columns="2">
+				<f:facet name="header">
+					<h:outputText value="Publication Detail" />
+				</f:facet>
+				<h:outputLabel for="publicationExternalId" value="ExternalId :" />
+				<h:outputText id="publicationExternalId"
+					value="#{adServerCacheBean.selectedAdSpace.externalID}"></h:outputText>
+
+				<h:outputLabel for="publicationPublisher" value="Publisher:" />
+				<h:outputText id="publicationPublisher"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publisher.externalId}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationName" value="Name:" />
+				<h:outputText id="publicationName"
+					value="#{adServerCacheBean.selectedAdSpace.publication.name}">
+				</h:outputText>
+				<h:outputLabel for="publicationId" value="ID:" />
+				<h:outputText id="publicationId"
+					value="#{adServerCacheBean.selectedAdSpace.publication.id}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationStatus" value="Status:" />
+				<h:outputText id="publicationStatus"
+					value="#{adServerCacheBean.selectedAdSpace.publication.status}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationAdOpsStatus" value="AdOps Status:" />
+				<h:outputText id="publicationAdOpsStatus"
+					value="#{adServerCacheBean.selectedAdSpace.publication.adOpsStatus}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationTypeId" value="PublicationTypeId:" />
+				<h:outputText id="publicationTypeId"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publicationTypeId}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationInstallTrackingDisabled"
+					value="InstallTrackingDisabled" />
+				<h:outputText id="publicationInstallTrackingDisabled"
+					value="#{adServerCacheBean.selectedAdSpace.publication.installTrackingDisabled}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationTrackingIdentifierType"
+					value="TrackingIdentifierType" />
+				<h:outputText id="publicationTrackingIdentifierType"
+					value="#{adServerCacheBean.selectedAdSpace.publication.trackingIdentifierType}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationAdRequestTimeout"
+					value="AdRequestTimeout" />
+				<h:outputText id="publicationAdRequestTimeout"
+					value="#{adServerCacheBean.selectedAdSpace.publication.adRequestTimeout}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationDefaultIntegrationTypeId"
+					value="DefaultIntegrationTypeId" />
+				<h:outputText id="publicationDefaultIntegrationTypeId"
+					value="#{adServerCacheBean.selectedAdSpace.publication.defaultIntegrationTypeId}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationRtbId" value="RtbId" />
+				<h:outputText id="publicationRtbId"
+					value="#{adServerCacheBean.selectedAdSpace.publication.rtbId}">
+				</h:outputText>
+
+				<h:outputLabel for="publicationCategoryId" value="CategoryId" />
+				<h:outputText id="publicationCategoryId"
+					value="#{adServerCacheBean.selectedAdSpace.publication.categoryId}">
+				</h:outputText>
+				<h:outputLabel for="publicationBundle" value="Bundle" />
+                <h:outputText id="publicationBundle"
+                    value="#{adServerCacheBean.selectedAdSpace.publication.bundleName}">
+                </h:outputText>
+			</p:panelGrid>
+			<!-- 
+    private Map<Long,Long> defaultIntegrationTypeIdsByPublicationTypeId = new HashMap<Long,Long>();
+    private Map<BidType,RateCardDto> defaultRateCardMap = new HashMap<BidType,RateCardDto>();
+    private RtbConfigDto rtbConfig;
+    private String externalId;
+			 -->
+			<p:panelGrid columns="2">
+				<f:facet name="header">
+					<h:outputText value="Publisher Detail" />
+				</f:facet>
+				<h:outputLabel for="publisherExternalId" value="ExternalId" />
+				<h:outputText id="publisherExternalId"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publisher.externalId}"></h:outputText>
+
+				<h:outputLabel for="publisherPendingAdType" value="PendingAdType" />
+				<h:outputText id="publisherPendingAdType"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publisher.pendingAdType}">
+				</h:outputText>
+
+				<h:outputLabel for="publisherDefaultAdRequestTimeout" value="DefaultAdRequestTimeout" />
+				<h:outputText id="publisherDefaultAdRequestTimeout"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publisher.defaultAdRequestTimeout}">
+				</h:outputText>
+
+				<h:outputLabel for="publisherCurrentRevShare" value="CurrentRevShare" />
+				<h:outputText id="publisherCurrentRevShare"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publisher.currentRevShare}">
+				</h:outputText>
+
+				<h:outputLabel for="publisherRtbConfig" value="RtbConfig" />
+				<p:panelGrid columns="2" id="publisherRtbConfig">
+					<h:outputLabel for="publisherRtbAdMode" value="AdMode" />
+						<h:outputText id="publisherRtbAdMode"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publisher.rtbConfig.adMode}"></h:outputText>
+					
+					<h:outputLabel for="publisherRtbWinNoticeMode" value="WinNoticeMode" />
+						<h:outputText id="publisherRtbWinNoticeMode"
+					value="#{adServerCacheBean.selectedAdSpace.publication.publisher.rtbConfig.winNoticeMode}"></h:outputText>
+					</p:panelGrid>
+			</p:panelGrid>
+			</p:panelGrid>
+		</p:outputPanel>
+	</p:dialog>
+	
+	
+	<p:dialog header="Campaign/Advertiser/Company Details" widgetVar="campaignDetailDialog"
+		modal="true">
+		<p:outputPanel id="campaignDetailPanel" style="text-align:left;"
+			layout="block">
+			<p:panelGrid columns="4">
+				<f:facet name="header">
+					<h:outputText value="Campaign Detail" />
+				</f:facet>
+				<h:outputLabel for="campaignExternalId" value="ExternalId :" />
+				<h:outputText id="campaignExternalId"
+					value="#{adServerCacheBean.selectedCreative.campaign.externalID}"></h:outputText>
+
+				<h:outputLabel for="campaignName" value="Name:" />
+				<h:outputText id="campaignName"
+					value="#{adServerCacheBean.selectedCreative.campaign.name}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignAdvertiser" value="Advertiser:" />
+				<h:outputText id="campaignAdvertiser"
+					value="#{adServerCacheBean.selectedCreative.campaign.advertiser.externalID}">
+				</h:outputText>
+				
+				<h:outputLabel for="deviceIdentifierTypeIds" value="DeviceIdentifierTypeIds" />
+				<h:outputText id="deviceIdentifierTypeIds"
+					value="#{adServerCacheBean.getStringForDeviceIdentifierTypeIds(adServerCacheBean.selectedCreative.campaign.deviceIdentifierTypeIds)}">
+				</h:outputText>
+				
+				
+
+				<h:outputLabel for="campaignStartDate" value="StartDate" />
+				<h:outputText id="campaignStartDate"
+					value="#{adServerCacheBean.selectedCreative.campaign.startDate}">
+					<f:convertDateTime pattern="dd-MMM-yyyy HH:mm" />
+				</h:outputText>
+				
+				<h:outputLabel for="campaignEndDate" value="EndDate" />
+				<h:outputText id="campaignEndDate"
+					value="#{adServerCacheBean.selectedCreative.campaign.endDate}">
+					<f:convertDateTime pattern="dd-MMM-yyyy HH:mm" />
+				</h:outputText>
+<!-- TODO : this field need to be shown too
+private Set<CampaignTimePeriodDto> timePeriods = new HashSet<CampaignTimePeriodDto>(); 
+-->
+				<h:outputLabel for="campaignStatus" value="Status:" />
+				<h:outputText id="campaignStatus"
+					value="#{adServerCacheBean.selectedCreative.campaign.status}">
+				</h:outputText>
+				
+				<h:outputLabel for="campaignDisableLanguageMatch" value="disableLanguageMatch:" />
+				<h:outputText id="campaignDisableLanguageMatch"
+					value="#{adServerCacheBean.selectedCreative.campaign.disableLanguageMatch}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignBoostFactor"
+					value="BoostFactor:" />
+				<h:outputText id="campaignBoostFactor"
+					value="#{adServerCacheBean.selectedCreative.campaign.boostFactor}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignCapImpressions"
+					value="CapImpressions" />
+				<h:outputText id="campaignCapImpressions"
+					value="#{adServerCacheBean.selectedCreative.campaign.capImpressions}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignCapPeriodSeconds"
+					value="CapPeriodSeconds" />
+				<h:outputText id="campaignCapPeriodSeconds"
+					value="#{adServerCacheBean.selectedCreative.campaign.capPeriodSeconds}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignInstallTrackingEnabled"
+					value="InstallTrackingEnabled" />
+				<h:outputText id="campaignInstallTrackingEnabled"
+					value="#{adServerCacheBean.selectedCreative.campaign.installTrackingEnabled}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignInstallTrackingAdXEnabled"
+					value="InstallTrackingAdXEnabled" />
+				<h:outputText id="campaignInstallTrackingAdXEnabled"
+					value="#{adServerCacheBean.selectedCreative.campaign.installTrackingAdXEnabled}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignConversionTrackingEnabled" value="ConversionTrackingEnabled" />
+				<h:outputText id="campaignConversionTrackingEnabled"
+					value="#{adServerCacheBean.selectedCreative.campaign.conversionTrackingEnabled}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignApplicationID" value="ApplicationID" />
+				<h:outputText id="campaignApplicationID"
+					value="#{adServerCacheBean.selectedCreative.campaign.applicationID}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignhouseAd" value="IsHouseAd" />
+				<h:outputText id="campaignhouseAd"
+					value="#{adServerCacheBean.selectedCreative.campaign.houseAd}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignThrottle" value="Throttle" />
+				<h:outputText id="campaignThrottle"
+					value="#{adServerCacheBean.selectedCreative.campaign.throttle}">
+				</h:outputText>
+
+				<h:outputLabel for="campaignAdvertiserDomain" value="AdvertiserDomain" />
+				<h:outputText id="campaignAdvertiserDomain"
+					value="#{adServerCacheBean.selectedCreative.campaign.advertiserDomain}">
+				</h:outputText>
+				
+				<h:outputLabel for="campaignCurrentBid" value="CurrentBid" />
+				<h:outputText id="campaignCurrentBid"
+					value="#{adServerCacheBean.selectedCreative.campaign.currentBid.bidType}-#{adServerCacheBean.selectedCreative.campaign.currentBid.amount}">
+				</h:outputText>
+				
+				<h:outputLabel for="campaignCategoryId" value="CategoryId" />
+				<h:outputText id="campaignCategoryId"
+					value="#{adServerCacheBean.selectedCreative.campaign.categoryId}">
+				</h:outputText>
+			</p:panelGrid>
+			
+			<p:panelGrid columns="2">
+				<f:facet name="header">
+					<h:outputText value="Adveriser/Company Detail" />
+				</f:facet>
+				
+				<h:outputLabel for="campaignAdvertiserExternalId" value="Advertiser ExternalId:" />
+				<h:outputText id="campaignAdvertiserExternalId"
+					value="#{adServerCacheBean.selectedCreative.campaign.advertiser.externalID}">
+				</h:outputText>
+
+
+				<h:outputLabel for="campaignAdvertiserCompanyDiscount" value="Advertiser Company Discount" />
+				<h:outputText id="campaignAdvertiserCompanyDiscount"
+					value="#{adServerCacheBean.selectedCreative.campaign.advertiser.company.discount}">
+				</h:outputText>
+
+
+				<h:outputLabel for="campaignAdvertiserCompanyBackfill" value="Advertiser Company Backfill" />
+				<h:outputText id="campaignAdvertiserCompanyBackfill"
+					value="#{adServerCacheBean.selectedCreative.campaign.advertiser.company.backfill}">
+				</h:outputText>
+				
+				<!-- MAD-3168 - Bid Seat Ids (pmp, agency and advertiser) -->
+				<h:outputLabel for="campaignAdvertiserPMPSeatIds" value="Advertiser PMP Seat Id" />
+                <h:outputText id="campaignAdvertiserPMPSeatIds"
+                    value="#{adServerCacheBean.selectedCreative.campaign.advertiser.pmpBidSeat.seatId}">
+                </h:outputText>
+                
+                <h:outputLabel for="campaignAdvertiserCompanyRTBSeatIds" value="Agency RTB Seat Ids &lt;br /&gt; (publisher Id = seat Id)" escape="false" />
+                <p:dataTable id="campaignAdvertiserCompanyRTBSeatIds" var="entry" value="#{adServerCacheBean.selectedCreative.campaign.advertiser.company.rtbBidSeats.entrySet().toArray()}">
+                    <p:column headerText="Publisher Id" style="width:100px;">
+                        <h:outputLabel value="#{entry.key}"/>
+                    </p:column>
+                    <p:column headerText="Seat Id" style="text-align: center;">
+                        <h:outputLabel value="#{entry.value}"/>
+                    </p:column>
+                </p:dataTable>
+                
+                <h:outputLabel for="campaignAdvertiserRTBSeatIds" value="Advertiser RTB Seat Ids &lt;br /&gt; (publisher Id = seat Id)" escape="false" />
+	            <p:dataTable id="campaignAdvertiserRTBSeatIds" var="entry" value="#{adServerCacheBean.selectedCreative.campaign.advertiser.rtbBidSeats.entrySet().toArray()}">
+	                <p:column headerText="Publisher Id" style="width:100px;">
+	                    <h:outputLabel value="#{entry.key}"/>
+	                </p:column>
+	                <p:column headerText="Seat Id" style="text-align: center;">
+	                    <h:outputLabel value="#{entry.value}"/>
+	                </p:column>
+	            </p:dataTable>
+                
+			</p:panelGrid>
+		</p:outputPanel>
+	</p:dialog>
+	
+</h:body>
+</html>

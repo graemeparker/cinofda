@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<pri:tab id="demographicTab" title="Demographics">
+    <div class="sliders">
+        <div class="form-row">#{msg['page.campaign.targeting.demographics.title.label']}</div>
+        <div class="form-row-small slider-head">
+            <span class="f-left">#{msg['page.campaign.targeting.demographics.male.label']}</span>
+            <h:inputText id="audience-gender" styleClass="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all gender-1"
+                        value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDemographicsMBean.genderMix}" />
+            <h:outputText value= " : "/>
+            <h:inputText id="audience-gender2" styleClass="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all gender-2"
+                        value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDemographicsMBean.genderMixOpposite}"/>
+            <span class="f-right">#{msg['page.campaign.targeting.demographics.female.label']}</span>
+        </div>
+        <div class="form-row-small">
+            <pri:slider for="audience-gender2" onSlide="ADT.genderRangeExpander()" onSlideEnd="ADT.genderRangeExpander()" >
+
+            </pri:slider>
+        </div>
+        <div class="form-row-big">#{msg['page.campaign.targeting.demographics.audience.label']}</div>
+        <div class="form-row-small slider-head">
+            <span class="f-left">#{msg['page.campaign.targeting.demographics.minrange.label']}</span>
+            <pri:inputText styleClass="date-1" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDemographicsMBean.minAge}"/>
+            <h:outputText value= " to "/>
+            <pri:inputText styleClass="date-2" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDemographicsMBean.maxAge}"/>
+            <span class="f-right">#{msg['page.campaign.targeting.demographics.maxrange.label']}</span>
+        </div>
+        <div class="form-row-small">
+            <div id="audience-date-range"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        ADT.blockInput('.sliders');
+    </script>
+</pri:tab>
+
+</ui:composition>

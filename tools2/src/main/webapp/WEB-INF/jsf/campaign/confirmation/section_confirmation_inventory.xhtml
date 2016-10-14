@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      >
+
+	<pri:panelGrid id="inventoryTable" style="width:100%">
+		<f:facet name="header">  
+	    	<pri:row>
+	       		<pri:column colspan="3">
+	        		<pri:commandLink id="inventoryMenuLinkId" 
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.inventoryTargetingDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="inventoryTargeting"/>      
+                    <span>#{msg['page.campaign.inventory.menu.label']}</span>
+                    </pri:commandLink>	
+	       		</pri:column>
+	       	</pri:row>
+	 	</f:facet>
+	  	<pri:row>
+	    	<pri:column>
+	       		<span><h:outputText value="#{msg['page.campaign.inventory.menu.inventory.label']}" /></span>
+			</pri:column>
+	      	<pri:column colspan="2">
+	       		<span><h:outputText value="#{campaignMBean.campaignInventoryTargetingMBean.inventorySelectionSummary}" /></span>
+			</pri:column>
+		</pri:row>
+		<pri:row rendered="#{!campaignMBean.campaignConfirmationMBean.renderWhiteList}">
+		  	<pri:column>
+		    	<span><h:outputText value="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory eq 'CATEGORY'?msg['page.campaign.inventory.menu.category.label']:msg['page.campaign.inventory.menu.targeting.label']}"/></span>
+		 	</pri:column>
+		   	<pri:column colspan="2">
+		    	<span><h:outputText value="#{campaignMBean.campaignInventoryTargetingMBean.getExchangeSummary(true)}" /></span>
+		   	</pri:column>
+		</pri:row>
+		<pri:row rendered="#{campaignMBean.campaignConfirmationMBean.renderBlackList}">
+		  	<pri:column>
+		    	<span><h:outputText value="#{msg['page.campaign.inventory.menu.blacklist.label']}" /></span>
+		 	</pri:column>
+		   	<pri:column colspan="2">
+		    	<span><h:outputText value="#{toolsApplicationBean.shortMessage(campaignMBean.campaignInventoryTargetingMBean.getListSummary(true),300)}" /></span>
+		   	</pri:column>
+		</pri:row>
+		<pri:row rendered="#{campaignMBean.campaignConfirmationMBean.renderWhiteList}">
+		  	<pri:column>
+		    	<span><h:outputText value="#{msg['page.campaign.inventory.menu.whitelist.label']}" /></span>
+		 	</pri:column>
+		   	<pri:column colspan="2">
+		    	<span><h:outputText value="#{campaignMBean.campaignInventoryTargetingMBean.whiteListMBean.listName}" /></span>
+		   	</pri:column>
+		</pri:row>
+		<pri:row rendered="#{campaignMBean.campaignConfirmationMBean.renderPrivateMarketplace}">
+		  	<pri:column>
+		    	<span><h:outputText value="#{msg['page.campaign.inventory.marketplace.dealid.label']}" /></span>
+		 	</pri:column>
+		   	<pri:column colspan="2">
+		    	<span><h:outputText value="#{toolsApplicationBean.shortMessage(campaignMBean.campaignInventoryTargetingMBean.getListSummary(true),300)}" /></span>
+		   	</pri:column>
+		</pri:row>
+		<pri:row rendered="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory ne 'PRIVATE_MARKET_PLACE' and campaignMBean.campaignInventoryTargetingMBean.selectedInventory ne 'WHITELIST'}">
+	    	<pri:column>
+	       		<span><h:outputText value="#{msg['page.campaign.inventory.menu.safetylevel.label']}" /></span>
+			</pri:column>
+	      	<pri:column colspan="2">
+	       		<span><h:outputText value="#{campaignMBean.campaignInventoryTargetingMBean.safetySummary}" /></span>
+			</pri:column>
+		</pri:row>
+	</pri:panelGrid>
+</ui:composition>

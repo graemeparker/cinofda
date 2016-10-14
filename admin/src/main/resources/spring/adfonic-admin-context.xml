@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <context:annotation-config/>
+  
+  <!-- Auto-scan for MBean components via their @Component annotations -->
+  <context:component-scan base-package="com.adfonic.beans" />
+  
+  <bean id="propertyPlaceholderConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+	  <array>
+		<value>file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-admin.properties</value>
+		<value>file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-sso-global.properties</value>
+  	 </array>
+	</property>
+  </bean>
+  
+  <!-- Admin spring contexts -->
+  <import resource="classpath:spring/**/adfonic-admin-util-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-admin-security-context.xml"/>
+  
+  <!-- Middleware spring contexts -->
+  <import resource="classpath:spring/**/adfonic-middleware-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-auditor-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-db-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-email-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-jms-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-auditlog-context.xml"/>
+  <!-- import resource="classpath:spring/**/adfonic-middleware-paypal-context.xml"/-->
+  
+  <!-- Presentation spring contexts -->
+  <import resource="classpath*:spring/**/adfonic-presentation2-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-presentation2-db-context.xml"/>
+  
+  <bean id="showUploadedContentServlet"
+     class="com.adfonic.servlet.ShowUploadedContentServlet"
+     autowire="byName"/>
+          
+</beans>

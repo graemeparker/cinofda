@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:p="http://ocpsoft.com/prettyfaces"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"
+>
+	<h:body>
+		<section style="display: block;" id="settings-app" class="form-box ui-corner-all">
+	         	<h2 class="sec-title">#{msg['page.publication.create.label.settings']}</h2>
+	     		<h:form id="addapp-settings" class="options" prependId="false" >
+	           <div class="form-row">
+	               <h:outputLabel 
+	               		styleClass="bl" 
+	               		id="app-name-label" 
+	               		for="app-name" 
+	                    value="#{msg['page.publication.settings.label.app.name']}"
+	               />
+	               <pri:inputText styleClass="bl" id="app-name" required="true" value="#{publicationMBean.appSettingsMBean.name}" requiredMessage="#{msg['page.publication.settings.name.requiredmessage']}"/>
+	               <pri:message for="app-name"/>
+	           </div>
+	           <div class="form-row">
+	               <h:outputLabel 
+						styleClass="bl" 
+						id="app-alive-label" 
+						for="app-live"
+						value="#{msg['page.publication.settings.label.app.live']}"
+				   />
+	               <pri:selectOneRadio 
+	               		value="#{publicationMBean.appSettingsMBean.appLive}" 
+	               		styleClass="app-live" 
+	               		layout="pageDirection" 
+	               		required="true"
+	               		id="app-live" 
+						requiredMessage="#{msg['page.publication.settings.applive.requiredmessage']}"
+					>
+	                	<pri:ajax event="change" update="store-url, app-desc"/>
+	               		<f:selectItem itemLabel="#{msg['page.publication.settings.label.app.yes']}" itemValue="1"/>
+	          			<f:selectItem itemLabel="#{msg['page.publication.settings.label.app.no']}" itemValue="2"/>
+	               </pri:selectOneRadio>
+	               <pri:message for="app-live"/>
+	
+	               <div data-no="1" class="panel-app-live inner-panel none">
+	                   <div class="form-row">
+	                       <h:outputLabel 
+		                  		styleClass="bl" 
+		                  		id="store-url-label" 
+		                  		for="store-url"
+	                            value="#{msg['page.publication.settings.label.app.url']}"
+	                      	/>
+	                       <pri:inputText 
+	                       		styleClass="bl" 
+	                       		id="store-url" 
+	                       		value="#{publicationMBean.appSettingsMBean.urlString}"
+	                            required="#{publicationMBean.appSettingsMBean.appLive==1}" 
+	                            requiredMessage="#{msg['page.publication.settings.url.requiredmessage']}"
+	                       >
+	                       		<f:validator validatorId="URLValidator"/>
+	                       </pri:inputText>
+	                       <pri:watermark for="store-url" value="#{msg['page.publication.settings.label.site.egurl']}" />
+	                       <pri:message id="url-mess" for="store-url"/>
+	                   </div>
+	               </div>
+	
+	               <div data-no="2" class="panel-app-live inner-panel none">
+	                   <div class="form-row">
+	                       <h:outputLabel styleClass="bl" id="app-desc-label" for="app-desc"
+	                                      value="#{msg['page.publication.settings.label.app.description']}"/>
+	                       <pri:inputTextarea styleClass="bl" id="app-desc" value="#{publicationMBean.appSettingsMBean.description}"
+	                                        required="#{publicationMBean.appSettingsMBean.appLive==2}" requiredMessage="#{msg['page.publication.settings.description.requiredmessage']}"/>
+	                       <pri:message for="app-desc"/>
+	                   </div>
+	               </div>
+	
+	           </div>
+	           <div class="form-row">
+	                <h:outputLabel styleClass="bl" id="platform-label" for="platform"
+	                              value="#{msg['page.publication.settings.label.app.platform']}"/>
+	                <pri:selectOneRadio id="platform" value="#{publicationMBean.appSettingsMBean.publicationType}" layout="pageDirection" required="true"
+	                                    converter="com.adfonic.tools.converter.publication.publicationtype.PublicationTypeConverter" requiredMessage="#{msg['page.publication.settings.platform.requiredmessage']}">
+	                    <f:selectItems value="#{publicationMBean.appSettingsMBean.lTypes}" var="type" itemLabel="#{type.name}"
+	                                      itemValue="#{type}"/>
+	               </pri:selectOneRadio>
+	               <pri:message for="platform"/>
+	           </div>
+	
+	           <h:panelGroup id="advContainer" layout="block">
+		           <h:panelGroup styleClass="form-row-big" rendered="#{publicationMBean.appSettingsMBean.showAdvanced}">
+		               <pri:accordionPanel id="accordion" multiple="true" activeIndex="3" onTabShow="addAppSiteformActions(true);">
+		                   <pri:tab title="#{msg['page.publication.settings.label.app.approback']}" id="approvalBackfillTab">
+		                       <h:outputLabel styleClass="bl" id="approval-label" for="approval"
+		                                      value="#{msg['page.publication.settings.label.app.approval']}"/>
+		                       <pri:selectOneRadio id="approval" value="#{publicationMBean.appSettingsMBean.autoApproval}"
+		                                           styleClass="approval" layout="pageDirection" required="true">
+		                           <pri:ajax event="change" update="backfill"/>
+		                           <f:selectItem itemLabel="#{msg['page.publication.settings.label.app.automatic']}"
+		                                         itemValue="true"/>
+		                           <f:selectItem itemLabel="#{msg['page.publication.settings.label.app.manual']}"
+		                                         itemValue="false"/>
+		                       </pri:selectOneRadio>
+		                       <pri:message for="approval"/>
+		
+		                       <div data-no="1" class="panel-approval inner-panel">
+		                           <div class="form-row">
+		                               <pri:selectBooleanCheckbox id="backfill" value="#{publicationMBean.appSettingsMBean.backfillEnabled}"
+		                                                          disabled="#{publicationMBean.appSettingsMBean.autoApproval.equals(false)}"/>
+		                               <h:outputLabel styleClass="in-bl" id="backfill-label" for="approval"
+		                                              value="#{msg['page.publication.settings.label.app.maximise']}"/>
+		                               <h:panelGroup layout="block" id="learnMore" styleClass="learnMoreImageWrapper">
+		                                   <div class="helpImage"></div>
+	                                   </h:panelGroup>
+		                               <pri:overlayPanel for="learnMore" hideEffect="fade" styleClass="no-shadow" my="left middle" at="right middle">
+				                            <div class="helpInner ui-corner-all ui-shadow">
+				                                <div class="arrow backfillArrow"></div>
+				                                <span><h:outputText value="#{msg['page.publication.settings.backfill.tip']}" /></span>
+				                            </div>
+				                        </pri:overlayPanel>
+		                           </div>
+		                       </div>
+		                   </pri:tab>
+		                   <pri:tab title="#{msg['page.publication.settings.label.app.audience']}">
+		                       <div class="form-row">#{msg['page.publication.settings.label.app.gender']}</div>
+		                       <div class="form-row-small slider-head">
+		                           <span class="f-left">#{msg['page.publication.settings.label.app.male']}</span>
+		                           <pri:inputText value="#{publicationMBean.appSettingsMBean.genderMix}" id="audience-gender"
+		                                          disabled="true" styleClass="gender-1" />
+		                           <h:outputText value= " : "/>
+		                           <pri:inputText value="#{publicationMBean.appSettingsMBean.genderMixOpposite}" id="audience-gender2" disabled="true" styleClass="gender-2"/>
+		                           <span class="f-right">#{msg['page.publication.settings.label.app.female']}</span>
+		                       </div>
+		                       <div class="form-row-small">
+		                           <pri:slider for="audience-gender2" onSlide="ADT.genderRangeExpander()" onSlideEnd="ADT.genderRangeExpander()" />
+		                       </div>
+		                       <div class="form-row-big">#{msg['page.publication.settings.label.app.age']}</div>
+		                       <div class="form-row-small slider-head">
+						            <span class="f-left">#{msg['page.campaign.targeting.demographics.minrange.label']}</span>
+						            <pri:inputText styleClass="date-1" value="#{publicationMBean.appSettingsMBean.minAge}" id="minAge"/>
+						            <h:outputText value= " to "/>
+						            <pri:inputText styleClass="date-2" value="#{publicationMBean.appSettingsMBean.maxAge}" id="maxAge"/>
+						            <span class="f-right">#{msg['page.campaign.targeting.demographics.maxrange.label']}</span>
+						        </div>
+						        <div class="form-row-small">
+						            <div id="audience-date-range"></div>
+						        </div>
+		                   </pri:tab>
+		               </pri:accordionPanel>
+		        	</h:panelGroup>
+	           </h:panelGroup>
+	           <h:panelGroup id="linkContainer" layout="block" styleClass="form-row-big">
+	           		<pri:commandLink value="#{msg['page.publication.settings.label.app.advancedsettings']}" actionListener="#{publicationMBean.appSettingsMBean.displayAdvanced}" rendered="#{!publicationMBean.appSettingsMBean.showAdvanced}"
+			    		process="@this" update="linkContainer,advContainer">
+			       </pri:commandLink>
+			   </h:panelGroup>
+	           <div class="form-row-big">
+	               <pri:commandButton 
+	               		value="#{publicationMBean.appSettingsMBean.buttonText}"  
+	               		id="continueBtn1" 
+					  	onclick="progressDialog.show();" 
+					  	oncomplete="progressDialog.hide(); addAppSiteformActions(true)"
+					  	actionListener="#{publicationMBean.appSettingsMBean.doSave}" 
+					  	process="@this,app-name,app-live,store-url,app-desc,platform,accordion"
+	                    update=":menuForm:panelSectionGroup,:navigationDiv"
+	               >
+		           		<f:param value=""></f:param>
+		           </pri:commandButton>
+		           <pri:commandLink 
+		           		value="#{msg['page.campaign.creative.cancel.label']}" 
+		           		actionListener="#{publicationMBean.appSettingsMBean.cancel}" 
+		           		rendered="#{!publicationMBean.newPublication}"
+			    		process="@this" 
+			    		update=":menuForm:panelSectionGroup,:navigationDiv" 
+			    		onclick="progressDialog.show();" 
+			    		oncomplete="progressDialog.hide()"
+			       >
+			       </pri:commandLink>
+	           </div>
+	       </h:form>
+	      </section>  
+	</h:body>
+</html>
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{MMM dd, YYYY h:mm:ss a} %C %M %n%p: %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.byyd.middleware" level="INFO" additivity="true">
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<Logger name="com.byyd.middleware.iface.service.jpa.GenericCachingEntityResolver" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<Logger name="com.byyd.middleware.campaign.service.jpa.CampaignManagerJpaImpl" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.byyd.middleware.account.service.jpa.AdvertiserManagerJpaImpl" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+		<Logger name="com.adfonic.tasks" level="TRACE" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>	
+		<Logger name="org.apache.activemq" level="WARN" additivity="true">
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<Logger name="org.springframework" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>	
+		<Logger name="org.hibernate" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>	
+		<Root level="INFO"> 
+			<AppenderRef ref="Console"/> 
+		</Root>
+	</Loggers>
+</Configuration>

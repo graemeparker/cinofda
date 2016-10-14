@@ -1,0 +1,25 @@
+/*===================  PLACEHOLDERS  ===================*/
+
+%cleanLayoutPane {
+	padding: 0px;
+	border: none;
+}
+
+%panelGrid {
+    td, tr {
+        border: none !important;
+        background: transparent;
+    }
+}
+
+%centeredTable {
+	td, th {
+		text-align: center;
+	}
+}
+
+%breakAllWord {
+	word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap !important;
+}

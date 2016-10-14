@@ -1,0 +1,5 @@
+{
+   "id":"@{adEvent.impressionExternalID}",
+   "timestamp":"@{dateFmt(adEvent.eventTime)}",
+   INAVALID JSON {},
+}

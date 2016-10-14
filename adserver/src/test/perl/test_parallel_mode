@@ -1,0 +1,115 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Digest::MD5 qw(md5_hex);
+use Digest::SHA1 qw(sha1_hex);
+use JSON;
+use LWP::UserAgent;
+
+my $ipAddress = "32.128.108.158"; # AT&T US
+
+my $adSpaceID = "c70135db-b587-4777-9ec2-3ad16f310f93"; # this is an iPhone app
+my $trackingId = "0123456789abcdef0123456789abcdef01234567"; # 40-char iPhone UDID
+my $userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+my %params = ();
+$params{"r.parallel"} = "1";
+$params{"r.ip"} = $ipAddress;
+$params{"r.id"} = $trackingId;
+$params{"h.user-agent"} = $userAgent;
+$params{"t.format"} = "json";
+$params{"t.markup"} = "false";
+
+my $host = "localhost";
+my $port = "8080";
+my $urlBase = "http://$host:$port/adfonic-adserver";
+
+my $queryString = "";
+print "*** Request Parameters:\n";
+foreach my $key (sort(keys(%params))) {
+    print "$key = $params{$key}\n";
+    if (length($queryString) > 0) {
+        $queryString .= '&';
+    }
+    $queryString .= $key;
+    $queryString .= '=';
+    $queryString .= CGI::escape($params{$key});
+}
+
+my $url = $urlBase . "/ad/" . $adSpaceID . '?' . $queryString;
+print "*** Hitting URL: $url\n";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+
+my $response = $ua->get($url);
+print "*** HTTP Status: ".$response->status_line."\n";
+#$response->headers->scan(sub { my ($key, $value) = @_; print "*** Response Header: $key: $value\n"; });
+if (!$response->is_success) {
+    exit(1);
+}
+
+my $content = $response->decoded_content;
+#print "*** Response Content:\n$content\n";
+
+# Parse the JSON response
+my $json = JSON->new->decode($content);
+unless ($json->{"status"} eq "success") {
+    print "*** ERROR: status=".$json->{"status"}.", error=".$json->{"error"}."\n";
+    exit(1);
+}
+
+my $adId = $json->{"adId"};
+my $destinationType = $json->{"destination"}->{"type"};
+my $destinationUrl = $json->{"destination"}->{"url"};
+my $components = $json->{"components"};
+my $adContent = $json->{"adContent"};
+if ($adContent) {
+  print "*** Ad Content:\n$adContent\n";
+}
+
+my @beaconUrls = ();
+
+# Display the response attributes
+print "------------------------------------------------------------\n";
+print "*** adId = $adId\n";
+if ($json->{"trackingId"}) {
+    print "*** trackingId = ".$json->{"trackingId"}."\n";
+}
+print "*** format = ".$json->{"format"}."\n";
+print "*** destination = $destinationUrl\n";
+if ($components) {
+    foreach my $compKey (keys(%$components)) {
+        my $component = $components->{$compKey};
+        foreach my $attr (keys(%$component)) {
+            my $value = $component->{$attr};
+            if ($value =~ /^(data:[^;]+;base64,).+/) {
+                print "*** $compKey.$attr = $1...(data not shown)\n";
+            }
+            else {
+                print "*** $compKey.$attr = ".$component->{$attr}."\n";
+            }
+            if ($compKey eq "beacons" && $attr =~ /^beacon(\d+)/) {
+              push(@beaconUrls, $component->{$attr});
+            }
+        }
+    }
+}
+
+# Hit the parallel mode win notice URL
+$url = $urlBase . "/pw/" . $adSpaceID . '/' . $adId;
+print "*** Hitting Parallel Mode Win Notice URL: $url\n";
+
+$response = $ua->get($url);
+print "*** HTTP Status: ".$response->status_line."\n";
+#$response->headers->scan(sub { my ($key, $value) = @_; print "*** Response Header: $key: $value\n"; });
+if (!$response->is_success) {
+    exit(1);
+}
+
+$content = $response->decoded_content;
+print "Response:\n$content\n";

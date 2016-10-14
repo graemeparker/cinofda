@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<bean id="historyLogConfig" class="com.byyd.middleware.auditlog.config.AuditLogConfig">
+		<property name="auditedEntities">
+	    	<map>
+	    		<!-- Campaign entity configuration -->
+	    		<entry key="com.adfonic.domain.Campaign">
+	    			<bean class="com.byyd.middleware.auditlog.config.AuditLogEntityConfig">
+	    				<property name="auditedProperties">
+	    					<list>
+	    						<!-- [CAMPAIGN WORKFLOW] Campaign Name and IO Reference -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="name" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="reference" p:type="VARCHAR"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Campaign Status (Live, Pending, Paused, Stopped) -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="status" p:type="VARCHAR"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Start Date -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="startDate" p:type="DATETIME"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] End Date -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="endDate" p:type="DATETIME"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Schedulling Time periods -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="timePeriodsHumanReadable" p:type="VARCHAR"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Inventory - From field contains a CSV of old values, To Field contains CSV on new values -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="inventoryTargetingType" p:type="VARCHAR"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Whitelist - From field contains a CSV of old values, To Field contains CSV on new values -->
+								<!-- BlackList -From field contains a CSV of old values, To Field contains CSV on new values -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="publicationList.name" p:type="VARCHAR"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] PMP -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="privateMarketPlaceDeal.publisher.name" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="privateMarketPlaceDeal.dealId" p:type="VARCHAR"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Bid -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="priceOverridden" p:type="BOOLEAN"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="currentBid.amount" p:type="DECIMAL"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="targetCPA" p:type="DECIMAL"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="targetCTR.targetCTR" p:type="DECIMAL"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Bid Type (i.e Pricing Type) -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="currentBid.bidType" p:type="VARCHAR"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Campaign Budget -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="budgetType" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="overallBudget" p:type="DECIMAL"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="overallBudgetImpressions" p:type="DECIMAL"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="overallBudgetClicks" p:type="DECIMAL"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Daily Budget -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="dailyBudget" p:type="DECIMAL"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="dailyBudgetImpressions" p:type="DECIMAL"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="dailyBudgetClicks" p:type="DECIMAL"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Campaign Pacing (Once available) -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="evenDistributionOverallBudget" p:type="BOOLEAN"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Daily Pacing (Once available) -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="evenDistributionDailyBudget" p:type="BOOLEAN"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Bidding Strategy -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="mediaCostOptimisationEnabled" p:type="BOOLEAN"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Frequency Cap -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="capImpressions" p:type="INT"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="capPeriodSecondsHumanReadable" p:type="VARCHAR"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Trading Desk Margin -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="currentTradingDeskMargin.tradingDeskMargin" p:type="DECIMAL"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Rich Media Fee -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="currentRichMediaAdServingFee.richMediaAdServingFee" p:type="DECIMAL"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Data Fee -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="currentDataFee.dataFee" p:type="DECIMAL"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Agency Discount -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="currentAgencyDiscount.discount" p:type="DECIMAL"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Audiences -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="campaignAudiences*audience.name" p:type="BLOB"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Tracking options -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="deviceIdentifierTypes*name" p:type="BLOB"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="conversionTrackingEnabled" p:type="BOOLEAN"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="installTrackingEnabled" p:type="BOOLEAN"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="applicationID" p:type="VARCHAR"/>
+
+    							<!-- [CAMPAIGN WORKFLOW] Campaign Triggers -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="campaignTriggersHumanReadable" p:type="VARCHAR"/>    							
+	    					</list>
+	    				</property>
+	    			</bean>
+	    		</entry>
+	    		
+	    		<!-- Segment entity configuration -->
+	    		<entry key="com.adfonic.domain.Segment">
+	    			<bean class="com.byyd.middleware.auditlog.config.AuditLogEntityConfig">
+	    				<property name="auditedProperties">
+	    					<list>
+    							<!-- [CAMPAIGN WORKFLOW] Location -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="geotargetType.type" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="countryListIsWhitelist" p:type="BOOLEAN"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="countries*name" p:type="BLOB"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="geotargets*name" p:type="BLOB"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="locationTargets*name" p:type="BLOB"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="explicitGPSEnabled" p:type="BOOLEAN"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Platform -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="platforms*name" p:type="BLOB"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Mobile vs Tablet -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="deviceGroupHumanReadable" p:type="VARCHAR"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Device - From field contains a CSV of old values, To Field contains CSV on new values -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="models*name" p:type="BLOB"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="excludedModels*name" p:type="BLOB"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Connection -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="connectionType" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="mobileOperatorListIsWhitelist" p:type="BOOLEAN"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="ispOperatorListIsWhitelist" p:type="BOOLEAN"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="mobileOperatorsHumanReadable" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="ispOperatorsHumanReadable" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="browsers*name" p:type="BLOB"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="ipAddresses" p:type="BLOB"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="ipAddressesListWhitelist" p:type="BOOLEAN"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Channel -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="includedCategories*name" p:type="BLOB"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] Demographics -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="genderMixHumanReadable" p:type="VARCHAR"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="minAge" p:type="INT"/>
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="maxAge" p:type="INT"/>
+    								
+    							<!-- [CAMPAIGN WORKFLOW] App Vs Web -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="medium" p:type="VARCHAR"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] Inventory - From field contains a CSV of old values, To Field contains CSV on new values -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="targettedPublishers*name" p:type="BLOB"/>
+    							
+    							<!-- [CAMPAIGN WORKFLOW] SafetyLevel -->
+    							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="safetyLevel" p:type="VARCHAR"/>
+	    					</list>
+	    				</property>
+	    			</bean>
+	    		</entry>
+	    		
+	    		<!-- Advertiser entity configuration -->
+	    		<entry key="com.adfonic.domain.Advertiser">
+	    			<bean class="com.byyd.middleware.auditlog.config.AuditLogEntityConfig">
+	    				<property name="auditedProperties">
+	    					<list>
+	   							<!-- [CAMPAIGN WORKFLOW] Account Budget -->
+	   							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="dailyBudget" p:type="DECIMAL"/>
+	   						</list>
+	    				</property>
+	    			</bean>
+	    		</entry>
+	    		
+	    		<!-- Creative entity configuration -->
+	    		<entry key="com.adfonic.domain.Creative">
+	    			<bean class="com.byyd.middleware.auditlog.config.AuditLogEntityConfig">
+	    				<property name="auditedProperties">
+	    					<list>
+	    						<!-- [CAMPAIGN WORKFLOW] Creative Name -->
+	   							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="name" p:type="VARCHAR"/>
+	   							
+	   							<!-- [CAMPAIGN WORKFLOW] Creative Status (Live, Pending, Paused, Stopped) -->
+	   							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="status" p:type="VARCHAR"/>
+	   							
+	   							<!-- [CAMPAIGN WORKFLOW] Creative SSL compliance -->
+	   							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="sslCompliant" p:type="BOOLEAN"/>
+	   						</list>
+	    				</property>
+	    			</bean>
+	    		</entry>
+	    		
+	    		<!-- Campaign Audiences entity configuration -->
+	    		<entry key="com.adfonic.domain.CampaignAudience">
+	    			<bean class="com.byyd.middleware.auditlog.config.AuditLogEntityConfig">
+	    				<property name="auditedProperties">
+	    					<list>
+	   							<!-- [CAMPAIGN WORKFLOW] Included -->
+	   							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="include" p:type="BOOLEAN"/>
+                                
+                                <!-- [CAMPAIGN WORKFLOW] RecencyDays -->
+                                <bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="recencyDaysHumanReadable" p:type="VARCHAR"/>
+	   							
+	   							<!-- [CAMPAIGN WORKFLOW] RecencyDate -->
+                                <bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="recencyDateHumanReadable" p:type="VARCHAR"/>
+	   						</list>
+	    				</property>
+	    			</bean>
+	    		</entry>
+	    		
+	    		<!-- CurrencyExchangeRate entity configuration -->
+                <entry key="com.adfonic.domain.CurrencyExchangeRate">
+                    <bean class="com.byyd.middleware.auditlog.config.AuditLogEntityConfig">
+                        <property name="auditedProperties">
+                            <list>
+                                <!-- Current Exchange Rate -->
+                                <bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="currentExchangeRate" p:type="DECIMAL"/>
+                            </list>
+                        </property>
+                    </bean>
+                </entry>
+                
+	    		<!-- BidDeduction entity configuration -->
+	    		<entry key="com.adfonic.domain.BidDeduction">
+	    			<bean class="com.byyd.middleware.auditlog.config.AuditLogEntityConfig">
+	    				<property name="auditedProperties">
+	    					<list>
+	   							<!-- Payer is Byyd -->
+	   							<bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="payerIsByyd" p:type="BOOLEAN"/>
+                                
+                                <!-- ThirdPartyVendor Name -->
+                                <bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="thirdPartyVendor.name" p:type="VARCHAR"/>
+                                
+                                <!-- ThirdPartyVendor Free Text -->
+                                <bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="thirdPartyVendorFreeText" p:type="VARCHAR"/>
+	   							
+	   							<!-- Amount -->
+                                <bean class="com.byyd.middleware.auditlog.config.AuditLogPropertyConfig" p:key="amount" p:type="DECIMAL"/>
+	   						</list>
+	    				</property>
+	    			</bean>
+	    		</entry>
+	    		
+	    	</map>
+	    </property>
+	</bean>
+  
+</beans>

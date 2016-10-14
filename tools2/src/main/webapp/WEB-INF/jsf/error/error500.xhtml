@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+    <ui:composition template="/WEB-INF/jsf/template/layouts/byyd-layout.xhtml">
+        <ui:define name="content">
+            <!-- CONTAINER -->
+            <div class="content">
+                <!-- ROW -->
+                <div class="row">
+                    <!-- MAIN CONTENT -->
+                    <div class="twelvecol last">
+                        <!-- LOGIN FORM -->
+                        <article id="http-status-note">
+                            <div>
+                                <h1>#{msg['page.error.whoops']}</h1>
+
+                                <h2>#{msg['page.error.error500']}</h2>
+                            </div>
+
+                            <div>
+                                <p>#{msg['page.error.notbehaving']}</p>
+
+                                <div>
+                                    <p>
+                                        <p:link mappingId="home">#{msg['page.error.gotohomepage']}</p:link>
+                                    </p>
+                                    <p>
+                                        <p:link mappingId="support/contact-us">#{msg['page.error.contactsupport']}</p:link>
+                                    </p>
+                                    <p>
+                                        <a href="#" onclick="javascript:history.back();return false;">#{msg['page.error.gotopreviouspage']}</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                        <!-- LOGIN FORM END -->
+                    </div>
+                    <!-- END MAIN CONTENT -->
+                    <div class="clear"></div>
+                </div>
+                <!-- END ROW -->
+            </div>
+            <!-- END CONTAINER -->
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

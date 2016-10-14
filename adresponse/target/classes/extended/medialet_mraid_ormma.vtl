@@ -1,0 +1,14 @@
+<script type="text/javascript">
+(function(a,h,c){var b,f=Math.floor(1E7*Math.random()),i=new RegExp('[A-Za-z]+:[/][/][A-Za-z0-9.-]+'),g='',e,d;a==a.parent?b='i':a.parent.location.href?b='f':(b='u',a=a.document.referrer.match(i),null!==a&&(g='&loc='+a[0]));try{e=!!localStorage.getItem}catch(j){e=!1}d=e&&'u'!==b?(d=localStorage.getItem('MedialetsUserID'))?'&userID='+d:'':'';h.write('<script id="'+c.tagID+"_"+f+'" src="http://c.medialytics.com/creative?tagID='+c.tagID+"&type="+b+"&imppx="+c.imppx+"&click="+c.click+d+g+"&r="+f+'"><\/script>')})(window,document,{
+tagID:'${adComponents.components.extendedData.tagID}',
+imppx:'${adComponents.components.extendedData.imppx}',
+click:'${adComponents.destinationUrl}'
+});
+</script>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

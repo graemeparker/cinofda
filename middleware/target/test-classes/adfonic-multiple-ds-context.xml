@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    ">
+
+    <context:annotation-config/>
+
+    <tx:annotation-driven />
+
+    <!-- Load configuration settings -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:adfonic-springdata-hibernate-database.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Common stuff -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:persistenceUnitName="adfonic-domain"
+        p:packagesToScan="com.adfonic.domain"
+          p:dataSource-ref="dataSource">
+      <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+              p:database="MYSQL"
+              p:showSql="false"
+              p:generateDdl="false"/>
+      </property>
+      <property name="jpaProperties">
+        <props>
+          <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+          <prop key="hibernate.format_sql">true</prop>
+          <prop key="hibernate.generate_statistics">false</prop>
+          <prop key="hibernate.jdbc.fetch_size">10</prop>
+          <prop key="hibernate.jdbc.batch_size">10</prop>
+        </props>
+      </property>
+    </bean>
+
+    <bean id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${database.driver}"
+        p:url="${database.url}"
+        p:username="${database.username}"
+        p:password="${database.password}"
+        p:maxActive="${database.dbcp.maxActive}"
+        p:maxWait="${database.dbcp.maxWait}"
+        p:minIdle="${database.dbcp.minIdle}"
+        p:maxIdle="${database.dbcp.maxIdle}"
+        p:validationQuery="${database.dbcp.validationQuery}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+
+    <bean id="transactionManager"
+        class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="campaignDao"
+		class="com.byyd.middleware.campaign.dao.jpa.CampaignDaoJpaImpl">
+		<property name="entityManagerFactory"
+			ref="entityManagerFactory" />
+	</bean>
+
+    <bean id="campaignManager"
+		class="com.byyd.middleware.campaign.service.jpa.CampaignManagerJpaImpl">
+		<property name="campaignDao" ref="campaignDao"></property>
+	</bean>
+  
+    
+
+    <!-- Fetch Stragegy support beans -->
+    <bean id="fetchesfactory" class="com.byyd.middleware.iface.dao.jpa.FetchesFactory"/>
+    <bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory" init-method="init"/>
+
+    <!-- Bean Dispatcher -->
+    <bean id="adfonicBeanDispatcher" class="com.byyd.middleware.utils.AdfonicBeanDispatcher"/>
+
+    <!-- Transactional Runner -->
+    <bean id="transactionalRunner" class="com.byyd.middleware.utils.TransactionalRunner"/>
+
+  
+    <!-- Read-Only stuff -->
+    <bean id="entityManagerFactoryRO"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:persistenceUnitName="adfonic-domain-ro"
+        p:packagesToScan="com.adfonic.domain"
+          p:dataSource-ref="dataSourceRO">
+      <property name="jpaVendorAdapter">
+        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+              p:database="MYSQL"
+              p:showSql="false"
+              p:generateDdl="false"/>
+      </property>
+      <property name="jpaProperties">
+        <props>
+          <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+          <prop key="hibernate.format_sql">true</prop>
+          <prop key="hibernate.generate_statistics">false</prop>
+          <prop key="hibernate.jdbc.fetch_size">10</prop>
+          <prop key="hibernate.jdbc.batch_size">10</prop>
+        </props>
+      </property>
+    </bean>
+
+    <bean id="dataSourceRO"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${ro.database.driver}"
+        p:url="${ro.database.url}"
+        p:username="${ro.database.username}"
+        p:password="${ro.database.password}"
+        p:maxActive="${ro.database.dbcp.maxActive}"
+        p:maxWait="${ro.database.dbcp.maxWait}"
+        p:minIdle="${ro.database.dbcp.minIdle}"
+        p:maxIdle="${ro.database.dbcp.maxIdle}"
+        p:validationQuery="${ro.database.dbcp.validationQuery}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+
+    <bean id="transactionManagerRO"
+        class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryRO" />
+        <property name="dataSource" ref="dataSourceRO" />
+    </bean>
+
+	<bean id="campaignDaoRO"
+		class="com.byyd.middleware.campaign.dao.jpa.CampaignDaoJpaImpl">
+		<property name="entityManagerFactory"
+			ref="entityManagerFactoryRO" />
+	</bean>
+
+    <bean id="campaignManagerRO"
+		class="com.byyd.middleware.campaign.service.jpa.CampaignManagerJpaImpl">
+		<property name="campaignDao" ref="campaignDaoRO"></property>
+	</bean>
+  
+
+</beans>

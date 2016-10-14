@@ -1,0 +1,36 @@
+package com.adfonic.adserver;
+
+message TrafficCapture {
+	required int64 timestampFrom = 1;
+	required int64 timestampTo = 2;
+	repeated Capture capture = 3;
+	required int64 droppedRequests = 4;
+}
+
+message Capture {
+  required int64 timestamp = 10;
+  required Request request = 11;
+  required Response repsonse = 12;
+}
+
+message Request {
+  required string method = 20;
+  required string uri = 21;
+  required string queryString = 22;
+  repeated Header headers = 23;
+  optional bytes body = 24;
+  optional string remoteHost = 25;
+  optional string remoteAddr = 26;
+  optional int32 remotePort = 27;
+}
+
+message Response {
+  repeated Header headers = 30;
+  required int32 code = 31;
+  optional bytes body = 32;
+}
+
+message Header {
+  required string name = 40;
+  required string value = 41;
+}

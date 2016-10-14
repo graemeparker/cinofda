@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <ui:param name="moreThanOnePage" value="#{fn:length(publicationApprovalDashboardMBean.pageNumbers) gt 1}" />
+    
+	<!-- Page Number filter -->
+	<pri:outputLabel value="#{msg['page.approval.publication.page.label']}"
+					 rendered="#{hasResults and moreThanOnePage}"
+					 styleClass="approvalAlignment" />
+	<pri:selectOneMenu id="numOfPagesSelect" value="#{publicationApprovalDashboardMBean.search.first}"
+					   filter="true" filterMatchMode="startsWith"	
+					   rendered="#{hasResults and moreThanOnePage}"
+					   styleClass="approvalAlignment left">
+        <f:selectItems value="#{publicationApprovalDashboardMBean.pageNumbers}" var="num" itemLabel="#{num}"/>
+	</pri:selectOneMenu>
+
+	<pri:spacer styleClass="horizontalDoubleSpace" />
+
+	<!-- Page Size filter -->
+	<pri:selectOneMenu value="#{publicationApprovalDashboardMBean.search.pageSize}"
+					   styleClass="approvalAlignment left">
+        <f:selectItem itemLabel="25 records" itemValue="25" />
+        <f:selectItem itemLabel="50 records" itemValue="50" />
+        <f:selectItem itemLabel="100 records" itemValue="100" />
+        <pri:ajax event="change" update="numOfPagesSelect"/>
+	</pri:selectOneMenu>
+	
+	<pri:spacer styleClass="horizontalDoubleSpace" />
+	
+	<!-- Record count -->
+	<pri:outputPanel layout="inline" rendered="#{hasResults}">
+		<h:outputFormat value="#{msg['page.approval.publication.recordcount.label']}" styleClass="headerText">
+	        <f:param value="#{recordCount}" />
+	    </h:outputFormat>
+    </pri:outputPanel>
+    
+    <pri:spacer styleClass="horizontalDoubleSpace" />
+	
+</ui:composition>

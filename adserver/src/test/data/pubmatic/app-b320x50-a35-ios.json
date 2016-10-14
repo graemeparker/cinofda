@@ -1,0 +1,66 @@
+{
+	"id":"FBFE3C6A-2626-4813-AF8C-054EFBA857AF",
+	"imp":[ {
+			"id":"1", "tagid":"85458",
+			"banner":{
+				"w":320, "h":50, "pos":1, "topframe":0,
+				"battr":[ 44, 13, 14, 11, 3, 2, 10, 1, 6, 5, 4, 9, 8 ],
+				"api":[ 3, 5 ]
+			}
+		}
+	],
+	"app":{
+		"id":"519094154",
+		"name":"National Rail Enquiries",
+		"ver":"5.0.1",
+		"bundle":"uk.co.nationalrail.ios",
+		"domain":"http://m.nationalrail.co.uk",
+		"cat":[ "IAB20", "IAB3" ],
+		"paid":0,
+		"storeurl":"https://itunes.apple.com/gb/app/national-rail-enquiries/id519094154?ls=1&mt=8",
+		"publisher":{ "id":"29907" }
+	},
+	"device":{
+		"ip":"82.132.220.214",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11B554a QuantcastSDK/iOS_1.3.0/0fqo5bd4ywakx00r-cn06u6463ayp1288",
+		"carrier":"Telefonica UK Limited",
+		"language":"en-gb",
+		"make":"Apple", "model":"iPhone", "os":"iOS", "Osv":"7", "osv":"7",
+		"js":1,
+		"devicetype":1,
+		"geo":{ "country":"GB", "region":"H9", "city":"London", "lat":51.4472809, "lon":0.317734987, "type":1 },
+		"ext":{
+			"idfa":"C4A0A945-86BE-4A48-B8B2-074998209F15",
+			"hash":1,
+			"xff":"10.129.82.108",
+			"res":"320x480",
+			"pf":4
+		}
+	},
+	"user":{
+		"id":"C877FED3-7B69-409D-AB4D-E830BF086657",
+		"geo":{ "lat":51.4472809, "lon":0.317734987, "type":1 }
+	},
+	"badv":[
+		"yakuba.com",
+		"bernerverein.ch",
+		"cm.netseer.com",
+		"skybet.cpm",
+		"zitaholdings.com",
+		"onlineconsumerlifestyles.co.uk",
+		"onlineconsumerlifestyles.com",
+		"russianbrides.com",
+		"russianbrides.info",
+		"c-date.es",
+		"chinawomendating.asia",
+		"yabuka.com",
+		"delta.com",
+		"linode.com",
+		"ostserving.com",
+		"unbetserver.com",
+		"liwestat.com",
+		"elfadv.org",
+		"rightfieldmedia.com",
+		"spaceadv.com"
+	]
+}

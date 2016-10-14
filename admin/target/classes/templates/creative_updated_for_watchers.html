@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Creative ${creative.id} Updated</title>
+</head>
+<body>
+
+	<table border=1 cellpadding=2 cellspacing=0>
+	  <tr> 
+	    <th>Creative ID</th>
+	    <td><a href="${creativeUrl}?id=${creative.id}">${creative.id}</a></td>
+	  </tr>
+	  <tr>
+	    <th>Creative Name</th>
+	    <td>${creative.name}</td>
+	  </tr>
+	  <tr>
+	    <th>Creative Status</th>
+	    <td>${creative.status}</td>
+	  </tr>
+	  <tr>
+	    <th>Assigned To</th>
+	    <td>${creative.assignedTo.fullName}</td>
+	  </tr>
+	  <tr>
+	    <th>Campaign ID</th>
+	    <td>${creative.campaign.id}</td>
+	  </tr>
+	  <tr>
+	    <th>Campaign Name</th>
+	    <td>${creative.campaign.name}</td>
+	  </tr>
+	  <tr>
+	    <th>Campaign Status</th>
+	    <td>${creative.campaign.status}</td>
+	  </tr>
+	  <tr>
+	    <th>Company</th>
+	    <td>${creative.campaign.advertiser.company.name}</td>
+	  </tr>
+	  <tr>
+	    <th>Account Manager</th>
+	    <td>${creative.campaign.advertiser.company.accountManager.email}</td>
+	  </tr>
+	</table>
+  
+<p>
+<b>History:</b>
+${historyTable}
+</p>
+  
+<p>
+<a href="${creativeApprovalsDashboardUrl}">Creative Approvals Dashboard</a>
+</p>
+
+</body>
+</html>

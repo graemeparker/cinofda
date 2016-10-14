@@ -1,0 +1,26 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <!-- Reporting End Date Template -->
+	<pri:outputLabel for="endDate" value="#{msg['page.reporting.commons.date.end.label']}" styleClass="bl b" />
+	<pri:calendar
+	    id="endDate"
+	    widgetVar="endDateCalendar"
+	    pattern="#{languageSessionBean.dateFormat}" 
+	    mode="popup" 
+	    value="#{reportingMBean.endDate}"
+	    maxdate="#{reportingMBean.today}"                         
+	    pages="2"
+	    onclick="ADT.setEndDateCalendar()"
+	    locale="#{languageSessionBean.locale}"
+	    timeZone="#{reportingMBean.companyTimeZone}"
+	    required="true"
+	    requiredMessage="#{msg['page.reporting.commons.date.end.required']}"
+	    styleClass="calendarStyle" 
+	    disabled="#{reportingMBean.disableEndDate}"/>
+	<pri:message id="endDateMessage" for="endDate" />
+	<pri:watermark for="endDate" value="#{msg['page.reporting.commons.date.end.placeholder']}" />
+
+</ui:composition>

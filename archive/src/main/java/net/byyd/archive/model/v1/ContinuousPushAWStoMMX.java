@@ -1,0 +1,312 @@
+package net.byyd.archive.model.v1;
+
+import java.io.EOFException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
+
+import net.byyd.archive.transform.HTTPPostOutputStream;
+import net.byyd.archive.transform.MVELTransformer;
+import net.byyd.archive.transform.OneItemLineFileSink;
+import net.byyd.archive.transform.OneItemLineFileSink.ItemsInfo;
+import net.byyd.archive.transform.OneItemLineFileSink.UpdateStream;
+import net.byyd.archive.transform.PublishEventFeed;
+import net.byyd.archive.transform.S3PostOutputStream;
+import net.byyd.archive.transform.util.MVELUtil;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.model.AttributeAction;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.ReceiveMessageResult;
+
+public class ContinuousPushAWStoMMX {
+	private static final Logger LOG = LoggerFactory
+			.getLogger(ContinuousPushAWStoMMX.class);
+
+	public static final ThreadLocal<S3PostOutputStream> post = new ThreadLocal<>();
+
+	private static ThreadLocal<AmazonSQSClient> sqsClient = new ThreadLocal<>();
+	private static ThreadLocal<AmazonDynamoDBClient> dynClient = new ThreadLocal<>();
+	private static ThreadLocal<AmazonS3Client> s3Client = new ThreadLocal<>();
+
+	private static ThreadLocal<ObjectMapper> mapper = new ThreadLocal<ObjectMapper>() {
+		protected ObjectMapper initialValue() {
+			return new ObjectMapper();
+		};
+	};
+
+	private static String tableName = "adevent-state";
+	private static String bucketName = "byydarchive";
+	private static String notificationQueue = "https://sqs.us-east-1.amazonaws.com/189908807348/aepq";
+
+	private static String destImpUrl;
+	private static String destAdUrl;
+	private static String userPw;
+	private static String secKey;
+	private static String accKey;
+
+	public static final ThreadLocal<HTTPPostOutputStream> postAd = new ThreadLocal<>();
+	public static final ThreadLocal<HTTPPostOutputStream> postImp = new ThreadLocal<>();
+	
+	private static LoggingPush logPush = new LoggingPush() {
+		public Logger getLog() {return LOG;}
+		public String getMessage() {
+			return "ad served/failed/win pushes: " + postAd.get().getPosts() + 
+					" ; impression pushes: " + postImp.get().getPosts(); 
+		}
+	};
+	
+	public static void main(String[] args) {
+
+		if (args.length != 6) {
+			System.out
+					.println("Usage: ContinuousPushAWStoMMX <threads> <accKey> <secKey> "
+							+ "<user:password> <destination-ad-url> <destination-imp-url>");
+			System.exit(1);
+		}
+
+		String threads = args[0];
+		accKey = args[1];
+		secKey = args[2];
+		userPw = args[3];
+		destAdUrl = args[4];
+		destImpUrl = args[5];
+
+		
+		setupAWSClients(accKey, secKey);
+		logPush.start();
+		
+		int th = Integer.parseInt(threads);
+		ExecutorService es = new ThreadPoolExecutor(th, th, 1000,
+				TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000));
+		for (int i = 0; i < th; i++) {
+			es.execute(new FeedMessages());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+
+	static class FeedMessages implements Runnable {
+		@Override
+		public void run() {
+			setupAWSClients(accKey, secKey);
+			JsonBackupLogReader reader = new JsonBackupLogReader();
+			postAd.set(new HTTPPostOutputStream(destAdUrl, userPw,
+					"application/json", true));
+			postImp.set(new HTTPPostOutputStream(destImpUrl, userPw,
+					"application/json", true));
+			OneItemLineFileSink<AdEvent> sinkImp = setupSink(postImp.get());
+			OneItemLineFileSink<AdEvent> sinkAd = setupSink(postAd.get());
+			do {
+				feedMessages(reader, sinkImp, sinkAd);
+			} while (true);
+		}
+
+	}
+
+	private static void feedMessages(JsonBackupLogReader reader,
+			OneItemLineFileSink<AdEvent> sinkImp,
+			OneItemLineFileSink<AdEvent> sinkAd) {
+		try {
+			ReceiveMessageResult message = sqsClient.get().receiveMessage(
+					notificationQueue);
+			long n = 0;
+			int i = 0;
+			if (message != null && message.getMessages() != null
+					&& !message.getMessages().isEmpty()) {
+				for (Message m : message.getMessages()) {
+					// redis: verify message dup
+					CompletionMessage cm = mapper.get().readValue(m.getBody(),
+							CompletionMessage.class);
+					S3Object file = null;
+
+					LOG.info("Received: " + cm.getName() + " / ts: " + cm.getTime());
+					long delay = new Date().getTime() - cm.getTime();
+					if (delay > 500) {
+						LOG.warn("Delay above 500 milliseconds: " + delay);
+					}
+
+					try {
+						file = s3Client.get().getObject(bucketName,
+								cm.getName());
+					} catch (RuntimeException re) {
+						LOG.warn("Unable to read: " + cm.getName()
+								+ ", reason: " + re.getMessage());
+					}
+
+					if (file != null && file.getObjectContent() != null) {
+						InputStream is = new GZIPInputStream(
+								file.getObjectContent());
+						reader.setItems(0);
+						reader.setHostname(retrieveHostname(file.getKey()));
+						reader.setShard(retrieveShard(file.getKey()));
+						try {
+							reader.feed(is,
+									new PublishEventFeed<>(new TranslateEvent(new EventFilterSink(
+											sinkImp, AdAction.IMPRESSION,
+											AdAction.CLICK), AdAction.AD_SERVED, AdAction.IMPRESSION),
+											
+											new SamplingUnfilledEventFilterSink(sinkAd,
+													AdAction.AD_SERVED,
+													AdAction.RTB_LOST,
+													AdAction.UNFILLED_REQUEST,
+													AdAction.RTB_FAILED)));
+							is.close();
+						} catch (EOFException eof) {
+							LOG.warn("Unable to read until end of: "
+									+ cm.getName() + ", removing.");
+						}
+						sqsClient.get().deleteMessage(notificationQueue,
+								m.getReceiptHandle());
+						n += reader.getItems();
+						i++;
+						if (i % 100 == 0) {
+							updateProgress(n);
+							n = 0;
+							i = 0;
+						}
+					} else {
+						LOG.warn("Unable ot read: " + cm.getName());
+					}
+				}
+			}
+		} catch (FileNotFoundException fnfe) {
+			LOG.warn("File not found: " + fnfe.getMessage());
+		} catch (RuntimeException e) {
+			LOG.warn("Unable to process file: ", e);
+		} catch (IOException e) {
+			LOG.warn("Unable to open/read source: " + e.getMessage());
+		}
+	}
+
+	public static String retrieveHostname(String key) {
+		String[] keyPart = key.split("/");
+		String hostname = null;
+		if (keyPart.length > 1) {
+			hostname = keyPart[keyPart.length - 2];
+			if (hostname.startsWith("lon") || hostname.startsWith("iad")
+					|| hostname.startsWith("ch")) {
+				hostname = hostname.substring(0, hostname.indexOf("."));
+			} else {
+				hostname = hostname.replaceAll(".adf.local", "");
+				hostname = hostname.replaceAll("aws", "nca1");
+			}
+		}
+		return hostname;
+	}
+
+	public static String retrieveShard(String key) {
+		String[] keyPart = key.split("/");
+		String hostname = null, shard = null;
+		if (keyPart.length > 1) {
+			hostname = keyPart[keyPart.length - 2];
+			if (hostname.startsWith("lon") || hostname.startsWith("iad")) {
+				shard = hostname.substring(0, 4);
+			} else if (hostname.startsWith("ch")) {
+				shard = hostname.substring(0, 3);
+			} else {
+				String[] hostpart = hostname.split("\\.");
+				if (hostpart.length > 1) {
+					shard = hostpart[1];
+				}
+				shard = shard.replaceAll("aws", "nca1");
+			}
+		}
+		return shard;
+	}
+
+	private static void setupAWSClients(String accKey, String secKey) {
+		LOG.info("Setting up AWS Clients.");
+		BasicAWSCredentials awsCred = new BasicAWSCredentials(accKey, secKey);
+		sqsClient.set(new AmazonSQSClient(awsCred));
+		dynClient.set(new AmazonDynamoDBClient(awsCred));
+		s3Client.set(new AmazonS3Client(awsCred));
+	}
+
+	private static void updateProgress(long lineNr) {
+		HashMap<String, AttributeValue> key = new HashMap<String, AttributeValue>();
+		Map<String, AttributeValueUpdate> values = new HashMap<String, AttributeValueUpdate>();
+		key.put("server_id",
+				new AttributeValue("h" + MVELUtil.resolve("@{env('HOSTNAME')}")));
+		values.put(
+				"total_items",
+				new AttributeValueUpdate(new AttributeValue()
+						.withN("" + lineNr), AttributeAction.ADD));
+		values.put(
+				"last_update",
+				new AttributeValueUpdate(new AttributeValue().withN(""
+						+ new Date().getTime()), AttributeAction.PUT));
+
+		while (true) {
+			try {
+				dynClient.get().updateItem(tableName, key, values);
+				break;
+			} catch (Throwable t) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+	}
+
+	private static OneItemLineFileSink<AdEvent> setupSink(
+			HTTPPostOutputStream post) {
+		OneItemLineFileSink<AdEvent> sink = new OneItemLineFileSink<>(
+				new MVELTransformer<AdEvent>(AdEvent.VERSION), post);
+		sink.setRenewOnItemCount(400);
+		sink.setInfoOnItemCount(10000);
+		sink.setInfo(new ItemsInfo() {
+			@Override
+			public void info(long itemsProcessed, boolean finish) {
+				String text = (finish ? "Finished: " : "Processed: ")
+						+ itemsProcessed;
+				LOG.info(text);
+				if (finish) {
+					try {
+						postAd.get().post();
+					} catch (IOException e) {
+						LOG.warn("Unable to post: " + e.getMessage());
+					}
+				}
+			}
+		});
+		sink.setUpdate(new UpdateStream() {
+			@Override
+			public OutputStream update(OutputStream os, long itemsProcessed) {
+				if (os instanceof HTTPPostOutputStream) {
+					HTTPPostOutputStream http = (HTTPPostOutputStream) os;
+					try {
+						http.post();
+					} catch (IOException e) {
+						LOG.warn("Unable to post: " + e.getMessage());
+					}
+				}
+				return null;
+			}
+		});
+		return sink;
+	}
+	
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<!-- Allow @Scheduled and what not on component methods -->
+	<task:executor id="executor" pool-size="20" />
+	<task:scheduler id="scheduler" pool-size="20" />
+	<task:annotation-driven executor="executor"
+		scheduler="scheduler" />
+
+	<context:annotation-config />
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tasks.properties" />
+
+	<bean id="expressionFactory" class="de.odysseus.el.ExpressionFactoryImpl" />
+
+	<!-- We'll use the JMS-based email service, and no need to wire up any other 
+		instance of EmailService since we don't need DataHandler or Multipart support -->
+    <amq:queue id="outboundEmailQueue" physicalName="adfonic.email.outbound"/>
+	<bean id="emailService" class="com.adfonic.email.impl.JmsBasedEmailService"
+          p:outboundEmailQueue-ref="outboundEmailQueue">
+      <constructor-arg ref="centralJmsConnectionFactory"/>
+    </bean>
+		
+	<!-- The email address manager bean, which is used to look up email addresses 
+		by well-known enums -->
+	<bean id="emailAddressManager" class="com.adfonic.email.EmailAddressManager"
+		autowire="byName">
+		<property name="addresses">
+			<props>
+				<prop key="NOREPLY">${mail.address.NOREPLY}</prop>
+				<prop key="SUPPORT">${mail.address.SUPPORT}</prop>
+				<prop key="ALERT">${mail.address.ALERT}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="centralJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop" p:maxConnections="${central.jms.pool.maxConnections}">
+		<property name="connectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory"
+				p:brokerURL="${central.jms.broker.url}" />
+		</property>
+	</bean>
+
+    <bean id="centralJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+      <constructor-arg ref="centralJmsConnectionFactory"/>
+    </bean>
+  
+    <bean id="jmsUtils" class="com.adfonic.jms.JmsUtils"/>
+    
+	<!-- Bean Dispatcher...required by dao impl stuff -->
+	<bean id="adfonicBeanDispatcher" class="com.byyd.middleware.utils.AdfonicBeanDispatcher" />
+
+	<bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory"
+		init-method="init" />
+	
+	<!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+    <context:component-scan base-package="com.byyd.middleware"/>
+	
+	<!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+    <context:component-scan base-package="com.byyd.middleware"/>
+	
+	<bean id="auditorConfig" class="com.adfonic.audit.AuditorConfig">
+		<property name="auditedProperties">
+			<props>
+				<prop key="com.adfonic.domain.Campaign">
+					status
+				</prop>
+				<prop key="com.adfonic.domain.Publication">
+					name,publicationType,autoApproval,status,category,statedCategoriesAsString,rtbId,URLString
+				</prop>
+				<prop key="com.adfonic.domain.AdSpace">
+					name,status,backfillEnabled,formatsAsString
+				</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Auditor -->
+	<bean id="entityAuditor" class="com.byyd.middleware.domainlog.EntityAuditorJpaImpl">
+		<constructor-arg ref="auditorConfig" />
+		<constructor-arg ref="domainLogManager" />
+		<constructor-arg value="tasks" />
+	</bean>
+	
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="objectMapper" ref="jacksonObjectMapper" />
+	</bean>
+                
+   <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+	
+</beans>

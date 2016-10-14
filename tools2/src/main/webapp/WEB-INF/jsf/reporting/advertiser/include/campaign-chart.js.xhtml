@@ -1,0 +1,108 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:body>
+			<pri:spacer height="10"/>
+			<section class="form-box ui-corner-all">
+			<script type="text/javascript" src="https://www.google.com/jsapi" />
+			<script type="text/javascript">
+			// <![CDATA[ 
+				google.load('visualization', '1', {packages:['corechart'], callback: drawChart});
+				var columnIndices = [0, 1, 2];
+				function drawChart() {
+				
+				  var data = new google.visualization.DataTable();
+				  data.addColumn('number', 'x'); 
+				  data.addColumn('number', 'Impressions');
+				  data.addColumn('number', 'Clicks');
+				  data.addColumn('number', 'CTR');
+				  data.addColumn('number', 'Spend');
+				  data.addColumn('number', 'Conversions');
+				  data.addColumn('number', 'CPC');
+				  var chartData = #{advertiserCampaignReportingMBean.statistics};
+			      data.addRows(chartData);
+				  var chartLabel = '#{advertiserCampaignReportingMBean.formattedStartDate}';
+				  
+			      var percentFormatter = new google.visualization.NumberFormat({suffix: '%'});
+			      percentFormatter.format(data, 3);
+			      
+			      var moneyFormatter = new google.visualization.NumberFormat({prefix: '$'});
+			      moneyFormatter.format(data, 4);
+                  moneyFormatter.format(data, 6);
+			
+                  var options = {width: 980, height: 620, chartArea: {left: 50, top: 60, width: 880, height: 500},
+                          		 vAxes: {0: {logScale: false, viewWindow:{min:0}, minorGridLines:0, textStyle:{color: '#28AECC', fontSize: 14}},
+                             			1: {logScale: false, viewWindow:{min:0}, minorGridLines:0, textStyle:{color: '#E22A83', fontSize: 14}}},
+	                             hAxis:{ticks:#{advertiserCampaignReportingMBean.xAxisTicks},
+                             	  textStyle:{fontSize: 11},
+		                                title:chartLabel, titleTextStyle:{ 
+	    			                      color: 'black',
+	    			                      fontSize: 14,
+	    			                      bold: true,
+	    			                      italic: false}},
+	    			             legend:{position: 'top', textStyle:{fontSize: 12}},
+		    			         fontName: 'Arial,sans-serif',
+	    			             pointSize:3,
+					             series:{
+					                0:{targetAxisIndex:0},
+			                        1:{targetAxisIndex:1, color: '#E22A83'},
+			                        2:{targetAxisIndex:1, color: '#28AECC'}},
+			                     animation: {duration: 1000, easing: "out"}
+				                 };
+				  
+                  var chart = new google.visualization.ChartWrapper({
+                      chartType: 'LineChart',
+                      containerId: 'campaignHourlyChart',
+                      dataTable: data,
+                      options: options
+                  });
+				  chart.setView({columns: columnIndices});
+				  chart.draw(data, options);
+				}  
+				  
+				function filterColumns(value1, value2) {
+					if (value1 != null && value2 != null) {
+						if (value1 == value2) {
+							columnIndices = [0, parseInt(value1)];
+						} else {
+							columnIndices = [0, parseInt(value1), parseInt(value2)];
+						}
+						drawChart();
+					} 
+				}
+				// ]]>
+			</script>
+				<pri:panelGrid styleClass="panelGrid">
+ 					<pri:row>
+ 					    <pri:column colspan="1">
+ 					       <h:outputLabel for="chartFilter" value="#{msg['page.reporting.campaigns.chartfilter.label']}" styleClass="bl b"/>
+ 					    </pri:column>
+ 					</pri:row>
+ 					<pri:row>
+						<pri:column colspan="1" style="align:left">
+							<pri:selectManyButton id="chartFilter" widgetVar="chartFilterWidget" styleClass="chartFilterStyle" 
+									value="#{advertiserCampaignReportingMBean.selectedMetrics}" 
+									onchange="ADT.limitSelectedManyButtons(event, chartFilterWidget, 2);
+											  filterColumns(chartFilterWidget.jq.find(':checkbox:checked:first').val(),
+														    chartFilterWidget.jq.find(':checkbox:checked:last').val());"> 
+								<f:selectItem itemLabel="Impressions" itemValue="1" />
+								<f:selectItem itemLabel="Clicks" itemValue="2" />
+								<f:selectItem itemLabel="CTR" itemValue="3" />
+								<f:selectItem itemLabel="Spend" itemValue="4" />
+								<f:selectItem itemLabel="Conversions" itemValue="5" />
+								<f:selectItem itemLabel="CPC" itemValue="6" />
+							</pri:selectManyButton>
+						</pri:column>
+					</pri:row>
+					<pri:row>
+						<pri:column colspan="12">
+			    			<pri:outputPanel id="campaignHourlyChart" />
+			    		</pri:column>	
+					</pri:row>
+				</pri:panelGrid>
+			</section>
+	</h:body>
+</ui:composition>

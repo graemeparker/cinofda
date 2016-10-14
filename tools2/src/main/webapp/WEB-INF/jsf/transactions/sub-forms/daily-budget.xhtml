@@ -1,0 +1,75 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+		<pri:dialog 
+			id="dailyBudgetDialogId" 
+			widgetVar="dailyBudgetDialog"
+			modal="true" resizable="false"
+			header="#{msg['page.transactions.dailybudget.dialog.header']}"
+			onShow="ADT.togglePageScroll(true)"
+			onHide="ADT.togglePageScroll()"
+		>
+			<h:form id="dailyBudgetForm" prependId="false">
+				<div class="form-row warning message">
+					<p>#{msg['page.transactions.dailybudget.dialog.p1']}
+					   #{msg['page.transactions.dailybudget.dialog.p2']}</p>
+				</div>
+	
+				<div class="form-row">
+					<div class="form-col">
+						<pri:selectOneRadio id="accountBudgetEnabled"
+							value="#{transactionMBean.transactionDailyBudgetMBean.enabled}">
+							<f:selectItem itemValue="true" itemLabel="On" />
+							<f:selectItem itemValue="false" itemLabel="Off" />
+							<pri:ajax process="@this" update="amountWrapper" />
+						</pri:selectOneRadio>
+					</div>
+		
+					<h:panelGroup id="amountWrapper">
+						<h:panelGroup 
+							layout="block" 
+							styleClass="form-col"
+							rendered="#{transactionMBean.transactionDailyBudgetMBean.enabled}">
+							<span style="margin-left: 24px;">#{msg['page.transactions.dailybudget.dialog.amount.label']}</span>
+		             		<h:inputText id="amount"
+								value="#{transactionMBean.transactionDailyBudgetMBean.amount}"
+								maxlength="10">
+								<f:convertNumber type="number" minFractionDigits="2" />
+							</h:inputText>
+							<pri:message id="amountMessage" for="amount" />
+							<pri:watermark for="amount" value="#{msg['page.transactions.dailybudget.amount.watermark']}" />
+						</h:panelGroup>
+					</h:panelGroup>
+					<div class="clear"></div>
+				</div>
+	
+				<h:panelGroup layout="block" class="form-row last">
+					<pri:commandButton
+						value="#{msg['page.transactions.dailybudget.dialog.save.label']}"
+						id="saveDailyBudgetButton" onclick="progressDialog.show();"
+						oncomplete="progressDialog.hide()"
+						actionListener="#{transactionMBean.transactionDailyBudgetMBean.doSave}"
+						process="@form" update="@form, :menuForm:side-panel">
+					</pri:commandButton>
+	
+					<pri:commandButton
+						value="#{msg['page.transactions.dailybudget.dialog.cancel.label']}"
+						id="cancelDailyBudgetButton"
+						actionListener="#{transactionMBean.transactionDailyBudgetMBean.doCancel}"
+						onclick="dailyBudgetDialog.hide();"
+						update="@form, :menuForm:side-panel">
+					</pri:commandButton>
+	
+				</h:panelGroup>
+			</h:form>
+		</pri:dialog>
+	</h:body>
+</ui:composition>

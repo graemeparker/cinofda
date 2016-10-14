@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+   
+	<!-- Sort field filter -->
+	<pri:outputLabel value="#{msg['page.approval.publication.orderedby.label']}" styleClass="approvalAlignment" />
+	<pri:selectOneMenu value="#{publicationApprovalDashboardMBean.search.sortFieldIndex}"
+					   styleClass="approvalAlignment left">
+        <f:selectItems value="#{publicationApprovalDashboardMBean.searchFieldNameIndexList}"
+        			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}"/>
+	</pri:selectOneMenu>
+	
+	<pri:spacer styleClass="horizontalDoubleSpace" />
+	
+	<!-- Sort order filter -->
+	<pri:selectBooleanButton value="#{publicationApprovalDashboardMBean.search.ascending}"
+		onLabel="#{msg['page.approval.publication.filter.asc.label']}" onIcon="ui-icon-carat-1-n"
+		offLabel="#{msg['page.approval.publication.filter.desc.label']}" offIcon="ui-icon-carat-1-s"
+		styleClass="approvalAlignment" />
+	
+</ui:composition>

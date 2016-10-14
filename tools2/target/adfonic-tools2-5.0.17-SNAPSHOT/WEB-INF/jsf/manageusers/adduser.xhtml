@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<h:body>
+    <ui:composition template="/WEB-INF/jsf/template/layouts/layout.xhtml">
+        <ui:define name="content">
+        	<div class="content ovh">
+			    <div class="row main-add-panel">
+				    <pri:outputPanel styleClass="fourcol">
+						<ui:include src="/WEB-INF/jsf/manageusers/manageusersmenu.xhtml">
+							<ui:param name="currentMenu" value="addUser" />
+						</ui:include>
+				    </pri:outputPanel>
+				    
+				    <div id="navigationDiv" class="eightcol last">
+						<section id="setup" class="form-box ui-corner-all">
+						
+						    <h2 class="sec-title"><h:outputText value="#{msg['page.agency.settings.menu.newUser']}"/></h2>
+						    <h:form id="addUserForm" prependId="false">
+		
+						        <div class="form-row">
+						            <h:outputLabel styleClass="bl b" id="first-name-label" for="first-name"
+						                           value="#{msg['page.agency.settings.newuser.firstname']}"/>
+						            <pri:inputText styleClass="bl" id="first-name" value="#{newUserMBean.name}" required="true"
+						            				requiredMessage="#{msg['page.agency.settings.newuser.required.firstname']}">           				
+						            </pri:inputText>
+						            <pri:message id="nameErrorMessage" for="first-name"/>
+						        </div>
+						        
+						        <div class="form-row">
+						            <h:outputLabel styleClass="bl b" id="last-name-label" for="last-name"
+						                           value="#{msg['page.agency.settings.newuser.lastname']}"/>
+						            <pri:inputText styleClass="bl" id="last-name" value="#{newUserMBean.lastName}" required="true"
+						            				requiredMessage="#{msg['page.agency.settings.newuser.required.lastname']}">         				
+						            </pri:inputText>
+						             <pri:message id="lastNameErrorMessage" for="last-name"/>
+						        </div>
+						        
+						        <div class="form-row">
+						            <h:outputLabel styleClass="bl b" id="email-address-label" for="email-address"
+						                           value="#{msg['page.agency.settings.newuser.emailaddress']}"/>
+						            <pri:inputText styleClass="bl" id="email-address" value="#{newUserMBean.emailAddress}" required="true"
+						            				requiredMessage="#{msg['page.agency.settings.newuser.required.emailaddress']}">        			
+						            </pri:inputText>
+						            <pri:message id="emailErrorMessage" for="email-address"/>
+						        </div>
+						        
+						        <div class="form-row">
+						            <h:outputLabel styleClass="bl b" id="password-label" for="password"
+						                           value="#{msg['page.agency.settings.newuser.password']}"/>
+						            <pri:password styleClass="bl" id="password" value="#{newUserMBean.password}" required="true"
+						            				requiredMessage="#{msg['page.agency.settings.newuser.required.password']}">       				
+						            </pri:password>
+						            <pri:message id="passwordErrorMessage" for="password"/>
+						        </div>
+						        
+						        <div class="form-row">
+						            <h:outputLabel styleClass="bl b" id="retype-password-label" for="retype-password"
+						                           value="#{msg['page.agency.settings.newuser.retypepassword']}"/>
+						            <pri:password styleClass="bl" id="retype-password" value="#{newUserMBean.retypePassword}" required="true"
+						            				requiredMessage="#{msg['page.agency.settings.newuser.required.retypepassword']}">    				
+						            </pri:password>
+						            <pri:message id="passwordRetypeErrorMessage" for="retype-password"/>
+						        </div>				
+						        
+						        <div class="form-row manualHeight">
+						    	<pri:selectBooleanCheckbox id="isAdmin" 
+						                                   value="#{newUserMBean.isAdmin}" 
+						    							   itemLabel="#{msg['page.agency.settings.newuser.adminuser']}">                
+						        </pri:selectBooleanCheckbox>						        		        						        						        
+						        </div>
+						        
+						        <div class="form-row">
+						            <pri:commandButton value="#{msg['page.agency.settings.newuser.create']}" id="continueBtn" disabled="#{userSessionBean.readOnlyUser}"
+						            				   onclick="progressDialog.show();" oncomplete="progressDialog.hide();"
+						                               action="#{newUserMBean.doSave}" update="nameErrorMessage,lastNameErrorMessage,emailErrorMessage,passwordErrorMessage,passwordRetypeErrorMessage"
+						                               process="@this,first-name,last-name,email-address,password,retype-password,isAdmin">
+						            	<f:param value=""></f:param>
+						            </pri:commandButton>
+						        </div>
+						        
+						    </h:form>
+						</section>
+				    </div>
+				           
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

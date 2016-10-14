@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="PID optimisation"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+
+<!-- Show error box if there are any errors -->
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">${msg['page.generic.error.label']}</div>
+    <div class="infoContent">${msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+    <div style="width: 800px;">
+    <hr/>
+            <h:form id="mainForm">
+                <table style="border:0px;width:100%" >
+                    <tr>
+                      <td><br/></td>
+                      <td><span class="error"><h:message for="advertiser"/></span></td>
+                    </tr>
+                    <tr>
+                        <td>Advertiser</td>
+                        <td>
+                          <h:selectOneMenu id="advertiser"
+                            required="true"
+                            converter="jpaConverter"
+                            requiredMessage="Advertiser is required"
+                            onchange="submit()"
+                            value="#{adminPidOptimisationBean.advertiser}"
+                            styleClass="styled">
+                            <f:selectItem itemValue=""
+                                itemLabel="--- Select an Advertiser ---" />
+                            <f:selectItems
+                                value="#{adminPidOptimisationBean.companyAdvertisers}" />
+                        </h:selectOneMenu></td>
+                    </tr>
+                    <tr>
+                            <td>
+                            </td>
+                            <td>
+                                  <h:message for="campaign" styleClass="error" />
+                            </td>
+                    </tr>
+                    <tr>
+                        <td>Live/Paused Campaign</td>
+                        <td>
+                            <pri:autoComplete id="campaign"
+                                value="#{adminPidOptimisationBean.search}"
+                                completeMethod="#{adminPidOptimisationBean.doPubQuery}"
+                                minQueryLength="1"
+                                queryDelay="100"
+                                size="60"
+                                scrollHeight="200"
+                                multiple="false"
+                                forceSelection="true"
+                                converter="jpaConverter"
+                                var="c"
+                                itemValue="#{c}"
+                                itemLabel="#{c}"
+                                required="false"
+                                >
+                                <pri:ajax event="itemSelect" listener="#{adminPidOptimisationBean.handleSelectedCampaignsId}"
+                                          update=":mainForm:selectedExcludedCategoryDisplay"/>
+                            </pri:autoComplete>
+                        </td>
+                    </tr>
+                    <tr><td></td>
+                            <td>
+                        <pri:outputPanel id="selectedExcludedCategoryDisplay"><br/>
+                            Selected Campaigns
+                             <div id="selectedCampaigns" style="height:90px; width:300px; overflow:auto; border:1px solid grey; padding:5px;">
+                              <pri:dataList type="none" value="#{adminPidOptimisationBean.selectedCampaigns}"
+                                              var="camp" rowCountVar="rowMax" rowIndexVar="rowIndex">
+                                  <pri:column>
+                                     <span style="white-space: nowrap">
+                                          <h:outputText value="#{adminPidOptimisationBean.labelMap[camp]}" />
+                                              <pri:commandLink update=":mainForm:selectedExcludedCategoryDisplay"
+                                                  actionListener="#{adminPidOptimisationBean.doRemoveCampaign(camp)}">
+                                                   <span class="tagDeleteIcon"></span>
+                                              </pri:commandLink>
+                                          <h:outputText value=" " rendered="#{!(rowIndex == rowMax - 1)}" />
+                                                       </span>
+                                              </pri:column>
+                              </pri:dataList>
+                                            </div>
+                        </pri:outputPanel>
+                            </td>
+                      </tr>
+                    <tr>
+                            <td>
+                            </td>
+                            <td>
+                                  <h:message for="publicationIds" styleClass="error" />
+                            </td>
+                    </tr>
+                    <tr>
+                        <td>Publication IDs <br/><small>#{msg['page.pidoptimisation.tip.pids']}</small></td>
+                        <td><h:inputTextarea id="publicationIds"
+                                 value="#{adminPidOptimisationBean.publicationsIds}"
+                                 required="false"
+                                 rows="4"
+                                 cols="50"
+                                 >
+                            </h:inputTextarea>
+                        </td>
+                    </tr>
+                    <tr>
+                            <td>
+                            </td>
+                            <td>
+                              <h:message for="startDate" styleClass="error" />
+                              <h:message for="endDate" styleClass="error" />
+                            </td>
+                    </tr>
+                    <tr>
+                    <td>View by date</td>
+                    <td>Start date
+                      <pri:calendar
+                          id="startDate" 
+                          value="#{adminPidOptimisationBean.dateRangeBean.start}"
+                          binding="#{adminPidOptimisationBean.dateRangeBean.binding}"
+                          required="false"
+                          size="8"
+                          showOn="button" 
+                          label="start date" 
+                          maxlength="8"
+                          pattern="#{util.shortDatePattern}" 
+                          timeZone="#{ad:defaultTimeZone()}"/>                          
+                      &#160;&#160;
+                      End date
+                      <pri:calendar
+                          id="endDate" 
+                          value="#{adminPidOptimisationBean.dateRangeBean.end}"
+                          required="false"
+                          showOn="button" 
+                          size="8" 
+                          label="end date" 
+                          maxlength="8"
+                          validator="#{adminPidOptimisationBean.dateRangeBean.validate}"
+                          pattern="#{util.shortDatePattern}" 
+                          timeZone="#{ad:defaultTimeZone()}"/>                          
+                      </td>
+                    </tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr>
+                    <td></td>
+                       <td>
+                            <h:commandLink
+                                action="#{adminPidOptimisationBean.doLoad}"
+                                styleClass="largeButton">
+                                <span>Load</span>
+                                <span class="greenGo"></span>
+                            </h:commandLink>
+                       &#160;&#160;
+                            <h:commandLink
+                                action="#{adminPidOptimisationBean.doLoadRemovedPids}" >
+                                <span style="margin-top: 10px;vertical-align: bottom;color: #0066CC;">#{msg['page.pidoptimisation.loadremoved.pids']}</span>
+                            </h:commandLink>
+                       </td>
+                    </tr>
+                    <tr><td><br/></td></tr>
+                </table>
+                <h:panelGroup id="checksDiv" layout="block" rendered="#{not empty adminPidOptimisationBean.optiTableList}" style="clear:both;">
+                        <!-- div style="float: left;margin-top: 7px;">
+                            <input type="checkbox" id="allChecked" value="" onclick="" />all
+                            <input type="checkbox" id="liveChecked" value="" onclick="" />Live
+                            <input type="checkbox" id="removedChecked" value="" onclick="" />Removed
+                        </div -->
+                        <div style="float: left; margin-left:10px;">
+                                <h:commandLink id="removePubsButton"
+                                    action="#{adminPidOptimisationBean.removePubs}"
+                                    styleClass="largeButton">
+                                    <span>Remove</span>
+                                    <span class="greenGo"></span>
+                                </h:commandLink>
+
+                                <h:commandLink id="enablePubsButton"
+                                    action="#{adminPidOptimisationBean.enablePubs}"
+                                    styleClass="largeButton" style="margin-left:15px;">
+                                    <span>Enable</span>
+                                    <span class="greenGo"></span>
+                                </h:commandLink>
+                        </div>
+                </h:panelGroup>
+                <br/><br/><br/>
+                <h:panelGroup id="pidOptiTableDiv" layout="block" rendered="#{not empty adminPidOptimisationBean.optiTableList}" style="clear:both;">
+                       <pri:dataTable id="pidOptiTable"  rendered="#{not empty adminPidOptimisationBean.optiTableList}"
+                                        var="row" paginator="true" rows="10"
+                                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                        rowsPerPageTemplate="10,20,50,100"
+                                        value="#{adminPidOptimisationBean.optiTableList}"
+                                        styleClass="data"
+                                        style="width: auto;"
+                                        rowStyleClass="#{row.exists? null : 'rowNoExists'}"
+                                        >
+                                          <pri:column>
+                                            <f:facet name="header">
+                                                  <h:outputText value=" " />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox styleClass="styled" id="checked" value="#{row.checked}"  rendered="#{row.exists}">
+                                                <pri:ajax listener="#{adminPidOptimisationBean.toggleRow(row)}"/>
+                                            </h:selectBooleanCheckbox>
+                                          </pri:column>
+                                          <pri:column>
+                                            <f:facet name="header">
+                                            <h:commandLink action="#{adminPidOptimisationBean.doSortByStatus}">
+                                                  <h:outputText value="Status" />
+                                            </h:commandLink>
+                                            </f:facet>
+                                            <h:outputText value="#{row.status}" />
+                                          </pri:column>
+                                          <pri:column>
+                                            <f:facet name="header">
+                                            <h:commandLink action="#{adminPidOptimisationBean.doSortByStatusDate}">
+                                                  <h:outputText value="Status date" />
+                                            </h:commandLink>
+                                            </f:facet>
+                                            <h:outputText value="#{row.statusDate}" />
+                                          </pri:column>
+                                          <pri:column>
+                                            <f:facet name="header">
+                                            <h:commandLink action="#{adminPidOptimisationBean.doSortByPublisher}">
+                                                  <h:outputText value="Publisher" />
+                                            </h:commandLink>
+                                            </f:facet>
+                                            <h:outputText value="#{row.exists?row.publisher:'ID not recognised'}" />
+                                          </pri:column>
+                                          <pri:column>
+                                            <f:facet name="header">
+                                            <h:commandLink action="#{adminPidOptimisationBean.doSortByPublication}">
+                                                  <h:outputText value="Publication" />
+                                            </h:commandLink>
+                                            </f:facet>
+                                            <h:outputText value="#{row.publication}" />
+                                          </pri:column>
+                                          <pri:column>
+                                            <f:facet name="header">
+                                            <h:commandLink action="#{adminPidOptimisationBean.doSortByPublicationId}">
+                                                  <h:outputText value="Publication ID" />
+                                            </h:commandLink>
+                                            </f:facet>
+                                            <h:outputText value="#{row.publicationId}" />
+                                          </pri:column>
+                        </pri:dataTable>
+                </h:panelGroup>
+            </h:form>
+    </div>
+</ui:define>
+</ui:composition>

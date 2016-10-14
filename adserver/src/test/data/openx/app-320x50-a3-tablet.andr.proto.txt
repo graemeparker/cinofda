@@ -1,0 +1,66 @@
+api_version: 15
+auction_id: "496953d7-ccc3-4062-bf51-c78410bfcbeb"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537102797"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "6854d55f-5d6e-4ed5-5de6-4f319870fde5"
+user_ip_address: "HA|\017"
+user_geo_country: "us"
+user_geo_state: "maine"
+user_geo_dma: 537
+user_agent: "Mozilla/5.0 (Linux; Android 4.4.2; SM-T230NU Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Safari/537.36"
+url: "http://play.google.com/store/apps/details?id=com.pinger.textfree.call"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2028
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 8
+pub_blocked_content: 15
+pub_blocked_type: 10
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 1
+  ua: "Mozilla/5.0 (Linux; Android 4.4.2; SM-T230NU Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Safari/537.36"
+  ip: "72.65.124.15"
+  os: "Android"
+  osv: "4"
+  make: "Samsung"
+  model: "SM-T230"
+  connectiontype: "wifi"
+  geo {
+    lat: 44.4723
+    lon: -68.08698
+    country: "us"
+    city: "gouldsboro"
+    zip: "04607"
+    type: 1
+    continent: "north america"
+    state: "maine"
+    dma: 537
+  }
+  browser: "Chrome"
+  browser_version: "30"
+  api: 3
+  idforad_enabled: false
+  category: "tablet"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+  yob: 1985
+  gender: "F"
+}

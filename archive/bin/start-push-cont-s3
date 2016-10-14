@@ -1,0 +1,20 @@
+#!/bin/bash
+
+ACC_KEY=AKIAJRQDOV4DMY47DKPQ
+SEC_KEY=kldAIrcq+lUVbWqOMO6FDOoIbhTC3syuOAliqBq/
+BACKUP_FILE=/opt/tomcat/logs/adserver-backup
+
+cd /mnt/data/logs/archive
+CP=
+for i in  /usr/local/adfonic/adfonic-archive/lib/*.jar; do
+  CP=$CP:$i
+done
+
+APPNAME=push-cont-s3
+START_COMMAND="java -XX:-UseLargePages -Xmx4g -cp $CP:/usr/local/adfonic/adfonic-archive/conf/ net.byyd.archive.model.v1.ContinuousPushS3BackupLog $BACKUP_FILE $ACC_KEY $SEC_KEY"
+
+. /usr/local/adfonic/bin/init-env
+
+export HOSTNAME=`hostname`
+
+startProcess ${APPNAME} ${START_COMMAND}

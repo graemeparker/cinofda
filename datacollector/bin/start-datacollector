@@ -1,0 +1,39 @@
+#!/bin/bash
+
+heapArg=""
+
+until [ -z "$1" ]; do
+    if [[ $1 =~ ^-Xmx.+$ ]]; then
+        heapArg=$1
+    else
+        echo "Unrecognized option: $1"
+    fi
+    shift
+done
+
+# This is a trick that lets developers use mvn to run this locally.
+if [ -f pom.xml ]; then
+    if [ -z "$heapArg" ]; then
+        # For developer use, default to 1024m heap
+        heapArg="-Xmx1024m"
+    fi
+    echo "Running in developer mode with $heapArg"
+    exec mvn \
+        compile \
+        exec:exec \
+        -Dexec.classpathScope=runtime \
+        -Dexec.executable="java" \
+        -Dexec.args="$heapArg -XX:-OmitStackTraceInFastThrow -Djava.util.logging.config.file=conf/logging.properties -Dcom.sun.management.jmxremote.port=9104 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -cp %classpath com.adfonic.datacollector.app.DataCollectorApp"
+fi
+
+if [ -z "$heapArg" ]; then
+    # For production, default to 8192m heap
+    heapArg="-Xmx8192m"
+fi
+
+APPNAME=datacollector
+START_COMMAND="ant -emacs -DheapArg=$heapArg -f `dirname $0`/../build.xml start-datacollector"
+
+. /usr/local/adfonic/bin/init-env
+
+startProcess ${APPNAME} ${START_COMMAND}

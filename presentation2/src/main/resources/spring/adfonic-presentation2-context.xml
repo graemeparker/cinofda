@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Auto-scan for MBean components via their @Component, @Repository annotations -->
+	<context:component-scan base-package="com.adfonic.presentation" />
+
+	<bean id="dtobinder" class="org.jdto.spring.SpringDTOBinder" />
+
+	<bean id="adfonicUserDetailsServiceForUsers"
+		class="com.adfonic.presentation.credentials.impl.AdfonicUserDetailsServiceImpl" />
+		
+	<bean id="adfonicUserDetailsServiceForAdfonicUsers"
+		class="com.adfonic.presentation.credentials.impl.AdfonicUserDetailsServiceImpl" >
+		<property name="fetchAdfonicUser" value="true" />
+	</bean>
+	
+	<bean id="advertiserDashboardDao"
+		class="com.adfonic.presentation.dashboard.statistics.impl.AdvertiserDashboardDaoImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="dashBoardDataSource" />
+	</bean>	
+	
+	<bean id="muidDao"
+		class="com.adfonic.presentation.audience.dao.impl.MuidDaoImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="muidDataSource" />
+	</bean>	
+	
+	<bean id="muidSizeDao"
+		class="com.adfonic.presentation.audience.dao.impl.MuidSizeDaoImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="muidDataSource" />
+	</bean>	
+	
+	<bean id="publisherDashboardDao"
+		class="com.adfonic.presentation.dashboard.statistics.impl.PublisherDashboardDaoImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="dashBoardDataSource" />
+	</bean>
+	
+	<bean id="agencyConsoleDashboardDao"
+		class="com.adfonic.presentation.dashboard.statistics.impl.AgencyConsoleDashboardDaoImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="dashBoardDataSource" />
+	</bean>
+	
+	<bean id="publicationSearchDao"
+		class="com.adfonic.presentation.publicationlist.dao.impl.PublicationSearchDaoImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="dashBoardDataSource" />
+	</bean>
+	
+	<bean id="postalCodeReferenceDao"
+		class="com.adfonic.presentation.location.impl.PostalCodeReferenceDaoImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="readOnlyDataSource" />
+	</bean>
+	
+	<bean id="org.dozer.Mapper" class="org.dozer.DozerBeanMapper" scope="singleton"/>
+	
+	<bean id="advertiserOptimisationService"
+		class="com.adfonic.presentation.optimisation.service.impl.AdvertiserOptimisationServiceImpl"
+		lazy-init="false">
+		<property name="dataSource" ref="reportingDataSource" />
+	</bean>	
+
+	<bean id="categorySearchService" class="com.byyd.middleware.common.service.jpa.CachingCategoryService">
+		<constructor-arg ref="commonManager"/>
+		<constructor-arg value="${CachingCategoryService.reload.periodSec:3600}"/>
+	</bean>
+	<alias name="categorySearchService" alias="categoryHierarchyService"/>
+	
+	<bean id="mailService" class="com.adfonic.presentation.email.impl.MailServiceImpl">
+		<property name="salesMail" value="${mail.sales.address:'sales@adfonic.com'}"/>
+		<property name="supportMail" value="${mail.support.address:'support@adfonic.com'}"/>
+	</bean>
+
+	<bean id="toolsSqlQuery" class="com.adfonic.reporting.sql.ToolsSQLQuery" scope="prototype">
+		<property name="dataSource" ref="reportingDataSource" />
+	</bean>	 
+	  
+</beans>

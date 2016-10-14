@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<h:body>
+    <ui:composition template="/WEB-INF/jsf/template/layouts/layout.xhtml">
+        <ui:define name="content">
+        	<div class="content ovh">
+			    <div class="row main-add-panel">
+				    <pri:outputPanel styleClass="fourcol">
+						<ui:include src="/WEB-INF/jsf/manageusers/manageusersmenu.xhtml">
+							<ui:param name="currentMenu" value="companySettings" />
+						</ui:include>
+				    </pri:outputPanel>
+
+				    <div id="navigationDiv" class="eightcol last">
+						<section id="setup" class="form-box ui-corner-all">
+						
+						    <h2 class="sec-title"><h:outputText value="#{msg['page.agency.settings.menu.companysettings']}"/></h2>
+						    <h:form id="companySettingsForm" prependId="false">
+						    
+						        <!-- Default currency -->
+								<pri:outputPanel styleClass="form-row" layout="block">
+						            <h:outputLabel id="default-currency-label" for="default-currency" styleClass="bl b" value="#{msg['page.agency.settings.companysettings.defaultcurrency.label']}"/>
+						            <pri:selectOneMenu id="default-currency" value="#{companySettingsMBean.defaultCurrencyId}" style="width:80px;">
+						            	<f:selectItems value="#{companySettingsMBean.defaultCurrencyIds}"
+                                                       var="currencyId" itemValue="#{currencyId}" itemLabel="#{companySettingsMBean.getCurrency(currencyId).toCurrencyCode}"/>
+						            </pri:selectOneMenu>
+						            <pri:message id="default-currency-message" for="default-currency"/>
+						        </pri:outputPanel>	
+	
+					            <div class="form-row">
+						            <pri:commandButton id="save-but"
+						                               value="#{msg['page.agency.settings.companysettings.save']}" 
+						                               update="default-currency-message"
+								            		   process="@this,default-currency" action="#{companySettingsMBean.doChecks}" 
+								            		   onclick="progressDialog.show();"  oncomplete="progressDialog.hide();"/>
+					            </div>
+					            
+					            <pri:dialog id="confirmApplyDialog" widgetVar="confirmationChanges"
+					                        header="#{msg['page.agency.settings.companysettings.currencychangedialog.header']}" 
+					                        resizable="false" modal="true" closable="true"  
+						                    styleClass="confirm-dialog">
+						            <h3>
+						                <h:outputText value="#{msg['page.agency.settings.companysettings.currencychangedialog.heading']}" />
+						            </h3>
+						            <p>
+						                <h:outputText value="#{msg['page.agency.settings.companysettings.currencychangedialog.message']}" escape="false"/>
+						            </p>
+						            <div class="buttons">
+						            
+						                <pri:commandButton id="confirmation"  value="#{msg['page.agency.settings.companysettings.currencychangedialog.yes.btn']}"
+								                           actionListener="#{companySettingsMBean.doSave}"
+								                           onclick="confirmationChanges.hide();progressDialog.show();" oncomplete="progressDialog.hide()"
+								                           update=":companySettingsForm:default-currency-message" process="@form"/>
+								                           
+						                <pri:commandButton id="declineApp" value="#{msg['page.agency.settings.companysettings.currencychangedialog.no.btn']}" 
+						                                   onclick="confirmationChanges.hide()"
+						                                   type="button" />
+						            </div>
+                                </pri:dialog>
+						    </h:form>
+						</section>
+				    </div>
+
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

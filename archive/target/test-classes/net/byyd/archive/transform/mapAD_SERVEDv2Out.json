@@ -1,0 +1,76 @@
+{
+   "id":"2dd5a4b0-58b4-ce1c-1964-1d112fd29b45",
+   "timestamp":"2014-09-10T17:24:06.010Z",
+   "bcat":[],
+   "bid_request":{  
+      "at": 2, 
+      "device":{  
+         "model":"121",
+         "carrier":"184",
+         "connectiontype":"3",
+         "geo":{ 
+         	"zip": "e1w",
+            "city": "",
+            "type": "2", 
+            "country": "GB"
+         },
+         "ext":{  
+            "didtypes":[]
+         }
+      },
+      "user":{  
+         "id":""
+      },
+      "imp":[  
+         {  
+            "tagid":"f6914088-b4f0-4c4b-bae7-661b4e214484"
+         }
+      ],
+       "app" : {  
+         "id":"25202702",
+         "domain":"bundle.name"
+      }
+   },
+   "bid_responses":[  
+      {  
+         "status":1,
+         "currency":"USD",
+         "seatbid":[  
+            {  
+               "bid":[  
+                  {  
+				     "crid":"285758",
+				     "cid":"80923",
+				     "price":7.7000000000000010658141036401502788066864013671875, 
+                     "status":"1",
+                     "clear_price": 2.4,
+               	      "adomain":"ondeviceresearch.com",
+               "iurl":"http://as.byyd.net/as/"
+                  }
+               ],
+               "ext":{  
+                  "fmt": "1",
+                  "advid": "34675",
+                  "exchangeid": "17593",
+                  "bid_type": "CPM"
+               }
+            }
+         ]
+      }
+   ],
+   "ext":{  
+      "byyd":{  
+         "buyer_premium": 0.0000,
+         "direct_cost": 0.0000,
+         "tech_fee": 0.0000,
+         "data_retail": 0.0,
+         "data_wholesale": 0.00000,
+         "dsp_margin": "",
+         "cust_margin": "",
+         "payout": 0.0024,
+         "shard": "ch1",
+         "server": "ch1adserver13",
+         "campaign_discount": "0.37"
+      }
+   }
+}

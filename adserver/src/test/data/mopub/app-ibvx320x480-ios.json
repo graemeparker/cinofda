@@ -1,0 +1,64 @@
+{
+	"app":{
+		"bundle":"651510680",
+		"cat":[ "IAB1", "IAB9", "IAB9-30", "entertainment", "games" ],
+		"id":"9e898003b465446ebe80712312413243",
+		"name":"Trivia Crack iOS",
+		"publisher":{ "id":"8cc575bd24ad48bcbb6a3b0e1a71d171", "name":"Etermax" },
+		"storeurl":"https://itunes.apple.com/us/app/trivia-crack/id651510680?mt=8&uo=4",
+		"ver":"1.9.2"
+	},
+	"at":2,
+	"badv":[ "club1616.com", "huntmads.com", "mobilestreams.com", "mobilestrems.com", "movistar.mobilewap.com", "pdx.mobileboost.me", "quizup.com", "wlsmapi.com" ],
+	"bcat":[ "IAB7-39", "IAB8-5", "IAB8-18", "IAB9-9", "IAB25", "IAB26" ],
+	"device":{
+		"carrier":"310-410",
+		"connectiontype":2,
+		"devicetype":1,
+		"dnt":0,
+		"dpidmd5":"b6257c3fa0940e831ba3a717267181a9",
+		"dpidsha1":"ab39777fdcc2f43be2c98d0c8cde12f5b39e7c26",
+		"ext":{ "idfa":"114CA366-2EDB-4509-A398-20C6B20F2E5A" },
+		"geo":{ "city":"Youngstown", "country":"USA", "region":"OH", "zip":"44512" },
+		"ip":"72.23.101.164",
+		"js":1,
+		"language":"en",
+		"make":"Apple",
+		"model":"iPhone 5s (GSM)",
+		"os":"iOS",
+		"osv":"8.0",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12A365"
+	},
+	"id":"693204bb-23f4-4552-9bd9-92be92d46921",
+	"imp":[
+		{
+			"banner":{
+				"api":[ 3 ],
+				"battr":[ 2, 9, 10 ],
+				"btype":[ 4 ],
+				"ext":{
+					"mraid":[{
+						"functions":[ "storePicture", "supports", "playVideo", "createCalendarEvent" ],
+						"version":"2.0"
+					}],
+					"nativebrowserclick":1,
+					"video":{
+						"linearity":1,
+						"maxduration":30,
+						"minduration":16,
+						"type":[ "VAST 2.0", "HTML5" ]
+					}
+				},
+				"h":480,
+				"pos":1,
+				"w":320
+			},
+			"bidfloor":10.380,
+			"displaymanager":"mopub",
+			"displaymanagerver":"3.2.0",
+			"id":"1",
+			"instl":1,
+			"tagid":"286066e20b3f4e74ab0e1d50aa96e982"
+		}
+	]
+}

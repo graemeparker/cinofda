@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SCH=${1:-"adfonic"}
+
+. ./common-env
+
+cp ${SCH}-test-dump.sql ${ADF_DB_ROOT}/misc/testdata.${SCH}.bootstrap.sql

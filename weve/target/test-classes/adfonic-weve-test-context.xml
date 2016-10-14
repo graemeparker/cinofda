@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:encryption="http://www.jasypt.org/schema/encryption"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       					   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+       					   http://www.jasypt.org/schema/encryption http://www.jasypt.org/schema/encryption/jasypt-spring31-encryption-1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!-- Config for in memory db via xml, not working --> 
+<!-- 	<jdbc:embedded-database id="testDataSource" />
+    
+    <jdbc:initialize-database ignore-failures="DROPS">
+        <jdbc:script location="classpath:sql/weve-test-schema.sql"/>
+    </jdbc:initialize-database> -->
+    
+	<context:annotation-config/>
+	
+ 	<!-- Scan for @Component, etc. classes automatically -->
+	<context:component-scan base-package="com.adfonic.weve">
+	  <!-- Exclude controllers...they get picked up in the dispatcher context -->
+	  <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	  <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+	</context:component-scan> 
+	
+	  <bean id="weveProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+        p:location="classpath:config/adfonic-weve-test.properties"/>
+  
+  <encryption:encryptable-property-placeholder encryptor="stringEncryptor" properties-ref="weveProperties"/>
+  <encryption:string-encryptor id="stringEncryptor" algorithm="PBEWithMD5AndDES" password="MASTERKEY" />
+          
+     <bean id="testDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close"
+        p:driverClassName="${weve.jdbc.driverClassName}"
+        p:url="${weve.jdbc.url}"
+        p:username="${weve.jdbc.username}"
+        p:password="${weve.jdbc.password}"
+        p:initialSize="${weve.dbcp.initialSize:0}"
+        p:maxActive="${weve.dbcp.maxActive}"
+        p:minIdle="${weve.dbcp.minIdle:0}"
+        p:maxIdle="${weve.dbcp.maxIdle}"
+        p:maxWait="${weve.dbcp.maxWait:-1}"
+        p:testOnBorrow="${weve.dbcp.testOnBorrow:true}"
+        p:validationQuery="${weve.dbcp.validationQuery}"
+        p:validationQueryTimeout="${weve.dbcp.validationQueryTimeout:-1}"
+        p:testOnReturn="${weve.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${weve.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${weve.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${weve.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${weve.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="2"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true"/>
+        
+<!--       <bean id="testDataSource" 
+      	class="org.mariadb.jdbc.MySQLDataSource"
+        p:url="${weve.jdbc.url}"
+        p:userName="${weve.jdbc.username}"
+        p:password="${weve.jdbc.password}"
+        p:properties="serverSslCert=classpath:client-cert.pem"/> -->
+        
+<!--     <bean id="jdbcTemplate" class="org.springframework.core.JdbcTemplate">
+    	<constructor-arg name="dataSource" ref="testDataSource"/>
+    	<constructor-arg name="lazyInit" ref="false"/>
+    </bean> -->
+  
+	<bean id="beaconServiceDao" class="com.adfonic.weve.dao.BeaconServiceDaoImpl">
+		<property name="dataSource" ref="testDataSource"/>
+	</bean>
+	
+	<bean id="optOutServiceDao" class="com.adfonic.weve.dao.OptOutServiceDaoImpl">
+		<property name="dataSource" ref="testDataSource"/>
+	</bean>
+	
+</beans>

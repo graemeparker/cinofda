@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"
+>
+	<h:body>
+		<ui:composition template="/WEB-INF/jsf/template/layouts/byyd-layout.xhtml">
+			<ui:define name="content">
+				<div class="content ovh contact-form">
+					<h:form id="customer-contact-form" class="margin-top--35 margin-lft-20">
+						<pri:outputPanel styleClass="margin-btm-307" rendered="#{contactUsMBean.sended eq null}">
+							<div class="form-header">
+								<div class="featured-plain-nobotton margin-lft-240 salesHeader">
+									<h1 class="salesHeader">#{msg['page.contact.form.salesHeader']}</h1>
+								</div>
+								<p class="margin-lft-292">
+									#{msg['page.contact.form.salesHeader.info']}
+								</p>
+								<ul>
+									<li>#{msg['page.contact.form.salesHeader.q1']}</li>
+									<li>#{msg['page.contact.form.salesHeader.q2']} <p:link mappingId="support">#{msg['page.contact.form.salesHeader.q2.link.text']}</p:link></li>	
+								</ul>
+							</div>
+							<div class="field">
+								<div style="float: left;">
+									<label class="text" for="firstName">#{msg['page.contact.form.name.label']}<font color="red">*</font></label>
+									<h:inputText 
+										id="firstName" 
+										size="50" 
+										maxlength="254"
+										value="#{contactUsMBean.name}"
+										validator="MaxLengthNameValidator" 
+										required="true"
+										requiredMessage="#{msg['page.contact.form.name.required.error.message']}"
+										validatorMessage="#{msg['page.contact.form.name.error.message']}"
+										styleClass="#{(firstName.valid eq false)?'error':''}"
+										binding="#{firstName}"
+									>
+										<f:validateLength minimum="1" maximum="255" />
+									</h:inputText>
+									<pri:watermark for="firstName" value="#{msg['page.contact.form.name.watermark']}" /> 
+								</div>
+								<c:if test="#{firstName.valid eq false}">
+									<div class="bubble error" style="float: left; text-align: left;">
+										<pri:message for="firstName" />
+										<div class="left-tip"></div>
+									</div>
+								</c:if>
+							</div>
+							<div class="field">
+								<div style="float: left;">
+									<label class="text" for="email">#{msg['page.contact.form.email.label']}<font color="red">*</font></label>
+									<h:inputText 
+										id="email" 
+										size="50" 
+										maxlength="254"
+										value="#{contactUsMBean.email}" required="true"
+										requiredMessage="#{msg['page.contact.form.email.required.error.message']}"
+										validatorMessage="#{msg['page.contact.form.email.error.message']}"
+										validator="EmailValidator"
+										styleClass="#{(email.valid eq false)?'error':''}"
+										binding="#{email}"
+									 />
+								</div>
+								<pri:watermark for="email" value="#{msg['page.contact.form.email.watermark']}" />
+								<c:if test="#{email.valid eq false}">
+									<div class="bubble error" style="float: left; text-align: left;">
+										<pri:message for="email" />
+										<div class="left-tip"></div>
+									</div>
+								</c:if>
+							</div>
+							<div class="field">
+								<div style="float: left;">
+									<label class="text" for="country">#{msg['page.contact.form.country.label']}<font color="red">*</font></label>
+									<pri:selectOneMenu 
+										id="gCountry"
+										styleClass="dropdown"
+										required="true"
+										requiredMessage="#{msg['page.contact.form.country.required.error.message']}"
+										converter="com.adfonic.tools.converter.country.CountryConverter"
+										value="#{contactUsMBean.selectedCountry}"
+									>
+										<f:selectItems 
+											value="#{contactUsMBean.countries}" 
+											var="country"
+											itemValue="#{country}" 
+											itemLabel="#{country.name}" 
+										/>
+									</pri:selectOneMenu>
+								</div>
+							</div>
+							<div class="field">
+								<div style="float: left;">
+									<label class="text" for="phoneNumber">#{msg['page.contact.form.phone.label']}</label>
+									<h:inputText 
+										size="50" 
+										maxlength="254" 
+										id="phoneNumber"
+										label="phone number" 
+										value="#{contactUsMBean.phoneNumber}"
+										validatorMessage="#{msg['page.contact.form.phone.error.message']}" 
+										validator="PHONEValidator"
+										styleClass="#{(phoneNumber.valid eq false)?'error':'pre-value'}"
+										binding="#{phoneNumber}" 
+									/>
+									<pri:watermark for="phoneNumber" value="#{msg['page.contact.form.phone.watermark']}" />
+								</div>
+								<c:if test="#{phoneNumber.valid eq false}">
+									<div class="bubble error" style="float: left; text-align: left;">
+										<pri:message for="phoneNumber" />
+										<div class="left-tip"></div>
+									</div>
+								</c:if>
+							</div>
+							<div class="field">
+								<div style="float: left;">
+									<label class="text" for="description">#{msg['page.contact.form.details.label']}<font color="red">*</font></label>
+									<h:inputTextarea 
+										id="description"
+										cols="38" 
+										required="true"
+										style="width:270px;" 
+										value="#{contactUsMBean.description}"
+										requiredMessage="#{msg['page.contact.form.details.required.error.message']}"
+										validatorMessage="#{msg['error.contactUsGeneral.description']}"
+										styleClass="#{(description.valid eq false)?'error':''}"
+										binding="#{description}"
+									>
+										<f:validateLength minimum="1" maximum="5000" />
+									</h:inputTextarea>
+								</div>
+								<c:if test="#{description.valid eq false}">
+									<div class="bubble error" style="float: left; text-align: left;">
+										<pri:message for="description" />
+										<div class="left-tip"></div>
+									</div>
+								</c:if>
+							</div>
+							<pri:commandButton 
+								id="submitForm" 
+								value="submit"
+								action="#{contactUsMBean.doSalesRequest}"
+								process="@form" 
+								update="@form" 
+							/>
+						</pri:outputPanel>
+						
+						<ui:include src="/WEB-INF/jsf/template/common/contact-confirmation.xhtml"/>
+		
+					</h:form>
+				</div>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+]>
+
+<project name="adfonic-tasks" default="run" basedir=".">
+
+  <property name="home" value="."/>
+  <property name="parent" value=".." />
+  <property name="args" value="" />
+  <property environment="env."/>
+  <property name="newrelicArg" value="-javaagent:/opt/newrelic/java/newrelic.jar"/>
+
+  <path id="main.run.classpath">
+    <fileset dir="lib" />
+    <pathelement location="conf" />
+  </path>
+
+  <target name="taskprep" depends="" />
+	
+  <target name="combined" description="CombinedTask">
+    <java classname="com.adfonic.tasks.combined.CombinedTask"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="-Xmx6000m"/>
+      <jvmarg value="${newrelicArg}"/>
+      <jvmarg value="-XX:MaxPermSize=256m"/>
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+      <jvmarg value="-Dcom.sun.management.jmxremote"/>
+      <jvmarg value="-Dcom.sun.management.jmxremote.ssl=false"/>
+      <jvmarg value="-Dcom.sun.management.jmxremote.authenticate=false"/>
+      <jvmarg value="-Dcom.sun.management.jmxremote.port=9006"/>
+    	<sysproperty key="logging.config" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-combined.xml"/>
+    </java>
+  </target>
+
+  <target name="database-smoke-test" description="Database Smoke Test">
+    <java classname="com.adfonic.tasks.DatabaseSmokeTest"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+    	<sysproperty key="logback.configurationFile" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-single.xml"/>
+    </java>
+  </target>
+  
+  <target name="sync-devices" description="Synchronize device DB" depends="taskprep">
+    <java classname="com.adfonic.tasks.SyncDevices"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+    	<sysproperty key="logback.configurationFile" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-single.xml"/>
+    </java>
+  </target>
+
+  <target name="whatsup" description="Which Adsevers are up">
+    <java classname="com.adfonic.tasks.whatsup.WhatsUpService"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="-Xmx512m"/>
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+    	<sysproperty key="logback.configurationFile" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-single.xml"/>
+    </java>
+  </target>
+
+ <target name="platform-mapper" description="PlatformMapper">
+    <java classname="com.adfonic.tasks.PlatformMapper"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="-Xmx2g"/>
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+    	<sysproperty key="logback.configurationFile" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-single.xml"/>
+    </java>
+  </target>
+  
+  <target name="auto-phase-out-mobile-ip-address-range" depends="taskprep">
+    <java classname="com.adfonic.tasks.AutoPhaseOutMobileIpAddressRange"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+    	<sysproperty key="logback.configurationFile" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-single.xml"/>
+    </java>
+  </target>
+  
+  <target name="update-canada">
+    <java classname="com.adfonic.tasks.UpdateCanadianPostalCodeData"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+    	<sysproperty key="logback.configurationFile" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-single.xml"/>
+      <arg value="${dataFile}"/>
+    </java>
+  </target>
+  
+  <target name="gen-postal-codes">
+    <java classname="com.adfonic.tasks.GeneratePostalCodesDataFile"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+    	<sysproperty key="logback.configurationFile" value="/usr/local/adfonic/config/virtualcp/adfonic-tasks/logback-single.xml"/>
+      <arg value="${dataFile}"/>
+    </java>
+  </target>
+	
+</project>

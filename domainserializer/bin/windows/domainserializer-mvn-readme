@@ -1,0 +1,9 @@
+Adserver Domain Cache
+mvn compile exec:exec -Dexec.classpathScope=runtime -Dexec.executable="java" -Dexec.args=" -Dadfonic.cache.home=C:\cache -Dadfonic.config.home=C:\work\workspaces\workspace_trunk\config-new\local -Dshard=default -DrunOnceMode=true -Dcom.adfonic.progress.enabled=true -DomitDomainCache=true -DomitDataCollectorDomainCache=true -XX:-OmitStackTraceInFastThrow -DDomainSerializer.developerMode=true -Djava.util.logging.config.file=conf/logging.properties -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -cp %classpath com.adfonic.domainserializer.DomainSerializer"
+
+Domain Cache
+mvn compile exec:exec -Dexec.classpathScope=runtime -Dexec.executable="java" -Dexec.args=" -Dadfonic.cache.home=C:\cache -Dadfonic.config.home=C:\work\workspaces\workspace_trunk\config-new\local -Dshard=default -DrunOnceMode=true -Dcom.adfonic.progress.enabled=true -DomitAdserverDomainCache=true -DomitDataCollectorDomainCache=true -XX:-OmitStackTraceInFastThrow -DDomainSerializer.developerMode=true -Djava.util.logging.config.file=conf/logging.properties -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -cp %classpath com.adfonic.domainserializer.DomainSerializer"
+
+DataCollector Cache
+mvn compile exec:exec -Dexec.classpathScope=runtime -Dexec.executable="java" -Dexec.args=" -Dadfonic.cache.home=C:\cache -Dadfonic.config.home=C:\work\workspaces\workspace_trunk\config-new\local -Dshard=default -DrunOnceMode=true -Dcom.adfonic.progress.enabled=true -DomitAdserverDomainCache=true -DomitDomainCache=true -XX:-OmitStackTraceInFastThrow -DDomainSerializer.developerMode=true -Djava.util.logging.config.file=conf/logging.properties -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -cp %classpath com.adfonic.domainserializer.DomainSerializer"
+

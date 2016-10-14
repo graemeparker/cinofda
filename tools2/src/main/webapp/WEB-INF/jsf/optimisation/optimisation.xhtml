@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"
+      xmlns:sec="http://www.springframework.org/security/tags">
+      
+      
+  <h:body onload="progressDialog.hide();">
+    <ui:composition template="/WEB-INF/jsf/template/layouts/layout.xhtml">
+      <ui:define name="content">
+      
+	  <pe:importConstants className="com.adfonic.tools.beans.optimisation.OptimisationFields" var="OptimisationFields" />
+	  
+	  <!-- Boolean Expressions -->
+	  <ui:param name="isEcpmVisible"              value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_ECPM)}" />
+	  <ui:param name="isEcpaVisible"              value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_ECPA)}" />
+	  <ui:param name="isEcpcVisible"              value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_ECPC)}" />
+	  <ui:param name="isIabCategoryVisible"       value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_IAB_CATEGORY)}" />
+	  <ui:param name="isInventorySourceVisible"   value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_INVENTORY_SOURCE)}" />
+	  <ui:param name="isPublicationExtIdVisible"  value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_PUB_EXT_ID)}" />
+	  <ui:param name="isPublicationNameVisible"   value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_PUBLICATION_NAME)}" />
+	  <ui:param name="isPublicationTypeVisible"   value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_PUBLICATION_TYPE)}" />
+	  <ui:param name="isBundleIdVisible"   		  value="#{optimisationUserInterfaceMBean.isFieldVisible(OptimisationFields.COLUMN_KEY_PUB_BUNDLE)}" />
+	  
+        <div id="optimisation" class="content"><!-- BEG CONTAINER -->
+          <h:form id="typeAheadFormId" prependId="false">
+
+            <div class="row main-add-panel">
+              <section id="optimisationSection" class="form-box ui-corner-all">
+                <pri:message id="generic" for="campaignTypeAheadId"/>
+              
+                <div class="form-row">
+                
+                  <h:panelGroup layout="block" class="form-col"> 
+                    <h:outputLabel styleClass="bl b" value="#{msg['page.optimisation.labels.campaign']}"/>
+                    <pri:autoComplete id="campaignTypeAheadId"  
+                        widgetVar="campaignTypeAheadWidget"
+                        value="#{optimisationUserInterfaceMBean.campaign}"  
+                        completeMethod="#{optimisationUserInterfaceMBean.completeCampaigns}"  
+                        minQueryLength="1"
+                        dropdown="true" 
+                        var="c"  
+                        itemLabel="#{c.name}"  
+                        itemValue="#{c}"  
+                        multiple="false"  
+                        required="true"
+                        requiredMessage="#{msg['page.optimisation.error.nocampaign']}"
+                        converter="com.adfonic.tools.converter.campaign.CampaignConverter"
+                    	oncomplete="ADT.escapeAutocompleteResults(); "
+                    > 
+                      <pri:ajax event="itemSelect"   oncomplete="ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);"
+                                listener="#{optimisationUserInterfaceMBean.campaignSelectedEvent}" process="@this" update="@this, :typeAheadFormId:removePidListContainer" />  
+                      <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);" />
+                    </pri:autoComplete> 
+                    
+                    <pri:watermark widgetVar="campaignTypeAheadWatermark" for="typeAheadFormId:campaignTypeAheadId" value="#{msg['page.optimisation.labels.selectcampaign']}" />
+                  </h:panelGroup>
+                
+                  <h:panelGroup layout="block" class="form-col"> 
+                    <h:outputLabel styleClass="bl b"  value="#{msg['page.optimisation.labels.date']}"/>
+                    <pri:selectOneMenu id="datePickerId" styleClass="long" value="#{optimisationUserInterfaceMBean.previousSelection}">
+                       <f:selectItem itemLabel="#{msg['page.optimisation.labels.datepicker.options.today']}" itemValue="1"/>
+                       <f:selectItem itemLabel="#{msg['page.optimisation.labels.datepicker.options.yesterday']}" itemValue="2"/>
+                       <f:selectItem itemLabel="#{msg['page.optimisation.labels.datepicker.options.last7days']}" itemValue="3"/>
+                       <f:selectItem itemLabel="#{msg['page.optimisation.labels.datepicker.options.last14days']}" itemValue="4"/>
+                       <f:selectItem itemLabel="#{msg['page.optimisation.labels.datepicker.options.thismonth']}" itemValue="5"/>
+                       <c:if test="#{optimisationUserInterfaceMBean.renderLastMonth}">
+                           <f:selectItem itemLabel="#{msg['page.optimisation.labels.datepicker.options.lastmonth']}" itemValue="6"/>
+                       </c:if>
+                    </pri:selectOneMenu>
+                  </h:panelGroup>
+                  
+                  <h:panelGroup layout="block" class="form-col"> 
+                    <h:outputLabel styleClass="bl b" value="#{msg['page.optimisation.labels.breakdownBy']}"/>
+                    <h:panelGrid columns="2" id="groupByPanelGrid">
+                      <pri:selectBooleanCheckbox 
+                        id="breakdownByCreative" 
+                        value="#{optimisationUserInterfaceMBean.breakdownByCreative}">
+                      </pri:selectBooleanCheckbox>
+                      <h:outputLabel id="breakdownByCreativeLabelId" for="breakdownByCreative" value="#{msg['page.optimisation.labels.breakdownByCreative.checkbox']}" />
+                    </h:panelGrid>                   
+                  </h:panelGroup>
+                  
+                </div>
+                <div class="clear"></div>
+                <div class="form-row">
+                  <h:panelGroup layout="block" class="form-col"> 
+                    <pri:commandButton 
+                      value="#{msg['page.optimisation.labels.run']}" 
+                      id="applyCampaignButtonId" 
+                      onclick="progressDialog.show();" 
+                      oncomplete="progressDialog.hide(); "
+                      actionListener="#{optimisationUserInterfaceMBean.doRun}" 
+                      update=":typeAheadFormId, :livePublicationsPanelWrapper, :removedPublicationsPanelWrapper" 
+                      process="@form"/>
+                  </h:panelGroup>           
+                  
+                    <h:panelGroup id="removePidListContainer" layout="block" class="form-col">
+                        <pri:commandLink value="#{msg['page.optimisation.removePidList.link']}" disabled="#{userSessionBean.readOnlyUser}" onclick="removePidList.show()" rendered="#{not empty optimisationUserInterfaceMBean.campaign}"/>
+                    </h:panelGroup>
+                    
+                    <pri:dialog id="removePidListDialog" 
+                        styleClass="add-list-dialog" 
+                        header="#{msg['page.optimisation.addlist.header']}" 
+                        widgetVar="removePidList" 
+                        modal="true" resizable="false" closable="false"
+                        draggable="false" width="560">
+                      <pri:inputTextarea id="textAreaPidList" value="#{optimisationUserInterfaceMBean.pidsAddList}" rows="15" cols="15" />
+                      <pri:watermark value="#{msg['page.optimisation.addlist.watermark']}" for="textAreaPidList" />
+                      <pri:separator/>
+                      <pri:commandButton id="addPidsButton" 
+                        value="#{msg['page.optimisation.addlist.add.button']}" 
+                        oncomplete="progressDialog.hide(); unrecognizedPidList.show(); "  
+                        update="textAreaPidList,unrecognizedPidsDialog"
+                        actionListener="#{optimisationUserInterfaceMBean.addPids}" 
+                        onclick="removePidList.hide();progressDialog.show()" />
+                      <pri:commandLink value="#{msg['page.optimisation.addlist.cancel.link']}" onclick="removePidList.hide()" actionListener="#{optimisationUserInterfaceMBean.cancelList}"/>
+                    </pri:dialog>
+                    
+                    <pri:dialog id="unrecognizedPidsDialog" 
+                          styleClass="unrecognized" 
+                          header="#{msg['page.optimisation.addlist.header']}" 
+                          widgetVar="unrecognizedPidList" modal="true" resizable="false" closable="false" draggable="false">
+                        <p><h:outputText value="#{optimisationUserInterfaceMBean.matchingMessage}" /></p>
+                        <p><h:outputText value="#{optimisationUserInterfaceMBean.notMatchingMessage}" /></p>
+                        <div class="unrecognized-publications">
+                            <ui:repeat var="unrecognizedPid" value="#{optimisationUserInterfaceMBean.unrecognizedPublications}">
+                              <h:outputLabel value="#{unrecognizedPid.name}"/>
+                            </ui:repeat>
+                        </div>
+                        <pri:commandButton 
+                        	value="#{msg['page.optimisation.addlist.done.button']}" 
+                        	oncomplete="progressDialog.hide(); "  
+                        	update="addPidsButton,textAreaPidList, :livePublicationsPanelWrapper, :removedPublicationsPanelWrapper"
+                            actionListener="#{optimisationUserInterfaceMBean.removePublicationsList}" 
+                            onclick="unrecognizedPidList.hide();progressDialog.show()"/>
+                        <pri:commandLink 
+                        	value="#{msg['page.optimisation.addlist.cancel.link']}" 
+                        	onclick="unrecognizedPidList.hide()" 
+                        	actionListener="#{optimisationUserInterfaceMBean.cancelList}"
+                            update="removePidListDialog,unrecognizedPidsDialog" 
+                            process="@this"/>
+                    </pri:dialog>      
+                  
+                </div>
+               <div class="clear"></div>
+               
+              </section>
+            </div>
+            
+          </h:form>
+        
+          <div class="row data-table" style="margin-top:10px">
+            <h:panelGroup id="livePublicationsPanelWrapper">
+            
+              <h:panelGroup id="livePublicationsPanel" layout="block" rendered="#{optimisationUserInterfaceMBean.livePublicationsLazyDataModel ne null}">
+                <h:outputLabel styleClass="bl b" value="Live"/>
+  
+  				<!-- Live Publications -->
+                <h:form id="liveDataTableForm" prependId="false">	            
+    	            <pri:dataTable 
+          				id="livePublications"
+		                var="livePublicationDto"
+		                widgetVar="livePublicationsVar"
+		                lazy="true"
+		                value="#{optimisationUserInterfaceMBean.livePublicationsLazyDataModel}"
+		                paginator="true" 
+		                rows="10"
+		                rowsPerPageTemplate="10,25,50,100"
+		                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+		                paginatorPosition="bottom"
+		                selection="#{optimisationUserInterfaceMBean.livePublicationsSelectedRows}"
+		                filteredValue="#{optimisationUserInterfaceMBean.filteredLivePublications}"
+		                styleClass="ui-corner-all big-data"
+		                rowSelectMode="add"
+    	          	 >
+                        <pri:ajax event="sort" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+                        <pri:ajax event="page" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+    	                      
+    	            	<pri:column selectionMode="multiple" styleClass="select-col"/>
+    	                      
+    					<pri:column sortBy="#{livePublicationDto.partiallyRemoved}" rendered="#{!optimisationUserInterfaceMBean.breakdownByCreative}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.part_removed_flag']}</f:facet>
+    					  <h:outputText value="#{(livePublicationDto.partiallyRemoved ? msg['page.optimisation.table.partiallyremoved.true'] : msg['page.optimisation.table.partiallyremoved.false'])}"/>
+    					</pri:column>
+
+    					<pri:column sortBy="#{livePublicationDto.publicationName}" rendered="#{isPublicationNameVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.publication']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.publicationName}"/>
+    					</pri:column>
+    					
+    					<pri:column styleClass="small-col" sortBy="#{livePublicationDto.publicationType}" rendered="#{isPublicationTypeVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.publication_type']}</f:facet>
+                          <h:outputText value="#{optimisationUserInterfaceMBean.getPublicationTypeLabel(livePublicationDto.publicationType)}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.creativeName}" rendered="#{optimisationUserInterfaceMBean.breakdownByCreative}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.creative']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.creativeName}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.publicationExternalId}" rendered="#{isPublicationExtIdVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.publication_external_id']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.publicationExternalId}"/>
+    					</pri:column>
+    					
+    					<!-- Bundle -->
+    					<pri:column sortBy="#{livePublicationDto.publicationBundle}" rendered="#{isBundleIdVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.publication_bundle']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.publicationBundle}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.iabCategory}" rendered="#{isIabCategoryVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.iab_category']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.iabCategory}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.inventorySource}" rendered="#{isInventorySourceVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.inventory_source']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.inventorySource}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.bids}" styleClass="num small-col smaller">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.bids']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.bids}">
+                            <f:convertNumber groupingUsed="true"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.impressions}" styleClass="num">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.impressions']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.impressions}">
+                            <f:convertNumber groupingUsed="true"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.winRate}" styleClass="num">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.win_rate']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.winRate}">
+                            <byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+    					  </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.clicks}" styleClass="num small-col">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.clicks']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.clicks}">
+                            <f:convertNumber groupingUsed="true"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.ctr}" styleClass="num small-col smaller">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ctr']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.ctr}">
+                            <byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+    					  </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.conversions}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.conversions']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.conversions}">
+                            <f:convertNumber groupingUsed="true"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.cvr}" styleClass="num small-col smaller">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.cvr']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.cvr}">
+                          <byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+    					  </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.spend}" styleClass="num">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.spend']}</f:facet>
+                          <h:outputText value="#{livePublicationDto.spend}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.ecpm}" styleClass="num small-col" rendered="#{isEcpmVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ecpm']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.ecpm}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.ecpc}" styleClass="num small-col" rendered="#{isEcpcVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ecpc']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.ecpc}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{livePublicationDto.ecpa}" styleClass="num small-col" rendered="#{isEcpaVisible}">
+    					  <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ecpa']}</f:facet>
+    					  <h:outputText value="#{livePublicationDto.ecpa}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>                
+    					</pri:column>
+    				            
+    					<f:facet name="footer">  
+			                <pri:commandButton value="#{msg['page.optimisation.labels.removeSelected']}" 
+			                   update=":livePublicationsPanelWrapper, :removedPublicationsPanelWrapper" 
+			                   id="removeSelected"
+			                   actionListener="#{optimisationUserInterfaceMBean.doNewRemoveChecked}"
+                               onclick="progressDialog.show();" 
+                               oncomplete="progressDialog.hide(); "
+                               disabled="#{userSessionBean.readOnlyUser or optimisationUserInterfaceMBean.isCampaignCompleted()}"
+			                   styleClass="ui-priority-primary" />
+			                <pri:commandButton value="#{msg['page.commons.labels.export.excel']}" 
+			                 				    ajax="false" 
+			                 				    styleClass="ui-priority-primary">
+							  	<pri:fileDownload value="#{optimisationUserInterfaceMBean.exportLivePublicationsToExcel()}" />  
+							</pri:commandButton>
+			                <br/>
+				            <pri:outputLabel value="#{msg['page.optimisation.tips.campaigncompleted']}" 
+				              				 rendered="#{optimisationUserInterfaceMBean.isCampaignCompleted()}"/>
+			            </f:facet>  
+    					
+    	            </pri:dataTable>
+      	          </h:form>
+  	           </h:panelGroup>
+            </h:panelGroup>
+            
+          </div>
+          
+          <div class="row data-table">
+            <h:panelGroup id="removedPublicationsPanelWrapper">
+              <h:panelGroup id="removedPublicationsPanel" layout="block" rendered="#{optimisationUserInterfaceMBean.removedPublicationsLazyDataModel ne null}">
+                <h:outputLabel styleClass="bl b" value="Removed"/>
+  
+  				<!-- Removed Publications -->
+                <h:form id="removedDataTableForm" prependId="false">	            
+    	            <pri:dataTable id="removedPublications"
+    	                      var="removedPublicationDto"
+    	                      widgetVar="removedPublicationsVar"
+    	                      lazy="true"
+    	                      value="#{optimisationUserInterfaceMBean.removedPublicationsLazyDataModel}"
+    	                      paginator="true" 
+    	                      rows="10" 
+    	                      rowsPerPageTemplate="10,25,50,100"
+    	                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+    	                      paginatorPosition="bottom"
+    	                      selection="#{optimisationUserInterfaceMBean.removedPublicationsSelectedRows}"
+    	                      filteredValue="#{optimisationUserInterfaceMBean.filteredRemovedPublications}"
+    	                      styleClass="ui-corner-all"
+    	                      disabledSelection="#{userSessionBean.readOnlyUser}"
+    	                      rowSelectMode="add">
+                        <pri:ajax event="sort" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+                        <pri:ajax event="page" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+    	                      
+                        <pri:column selectionMode="multiple" styleClass="select-col"/>
+    	                      
+                        <pri:column sortBy="#{removedPublicationDto.partiallyRemoved}" rendered="#{!optimisationUserInterfaceMBean.breakdownByCreative}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.part_removed_flag']}</f:facet>
+                          <h:outputText value="#{(removedPublicationDto.partiallyRemoved ? msg['page.optimisation.table.partiallyremoved.true'] : msg['page.optimisation.table.partiallyremoved.false'])}"/>
+                        </pri:column>
+
+    					<pri:column sortBy="#{removedPublicationDto.publicationName}" rendered="#{isPublicationNameVisible}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.publication']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.publicationName}"/>
+    					</pri:column>
+    					
+    					<pri:column styleClass="small-col" sortBy="#{removedPublicationDto.publicationType}" rendered="#{isPublicationTypeVisible}">
+    					  <f:facet name="header">Type</f:facet>
+                          <h:outputText value="#{optimisationUserInterfaceMBean.getPublicationTypeLabel(removedPublicationDto.publicationType)}"/>
+    					</pri:column>
+    					
+    					<pri:column  sortBy="#{removedPublicationDto.creativeName}" rendered="#{optimisationUserInterfaceMBean.breakdownByCreative}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.creative']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.creativeName}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.publicationExternalId}" rendered="#{isPublicationExtIdVisible}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.publication_external_id']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.publicationExternalId}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.iabCategory}" rendered="#{isIabCategoryVisible}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.iab_category']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.iabCategory}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.inventorySource}" rendered="#{isInventorySourceVisible}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.inventory_source']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.inventorySource}"/>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.bids}" styleClass="num small-col smaller">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.bids']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.bids}">
+                            <f:convertNumber groupingUsed="true"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.impressions}" styleClass="num">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.impressions']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.impressions}">
+                            <f:convertNumber groupingUsed="true"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.winRate}" styleClass="num">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.win_rate']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.winRate}">
+                            <byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+    					  </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.clicks}" styleClass="num small-col">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.clicks']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.clicks}"/>
+    					</pri:column>
+    					
+     					<pri:column sortBy="#{removedPublicationDto.ctr}" styleClass="num small-col smaller">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ctr']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.ctr}">
+                            <byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+    					  </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.conversions}" styleClass="num">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.conversions']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.conversions}">
+                            <f:convertNumber groupingUsed="true"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.cvr}" styleClass="num small-col">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.cvr']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.cvr}">
+                          <byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+    					  </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.spend}" styleClass="num">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.spend']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.spend}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.ecpm}" styleClass="num small-col" rendered="#{isEcpmVisible}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ecpm']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.ecpm}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.ecpc}" styleClass="num small-col" rendered="#{isEcpcVisible}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ecpc']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.ecpc}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>
+    					</pri:column>
+    					
+    					<pri:column sortBy="#{removedPublicationDto.ecpa}" styleClass="num small-col" rendered="#{isEcpaVisible}">
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.ecpa']}</f:facet>
+    					  <h:outputText value="#{removedPublicationDto.ecpa}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                          </h:outputText>
+    					</pri:column>
+
+                        <pri:column>
+                          <f:facet name="header">#{msg['page.optimisation.labels.table.header.label.removal_unix_timestamp']}</f:facet>
+                          <h:outputText value="#{removedPublicationDto.dateRemoved}">
+                            <f:convertDateTime locale="#{languageSessionBean.locale}" pattern="#{languageSessionBean.getLongDateFormat()}" type="date" />
+                          </h:outputText>
+                        </pri:column>
+
+   						<f:facet name="footer">  
+			                <pri:commandButton 
+			                   value="#{msg['page.optimisation.labels.reenableSelected']}" 
+			                   update=":livePublicationsPanelWrapper, :removedPublicationsPanelWrapper" 
+			                   id="reenableSelected"
+			                   actionListener="#{optimisationUserInterfaceMBean.doNewReEnableChecked}"
+                               disabled="#{userSessionBean.readOnlyUser or optimisationUserInterfaceMBean.isCampaignCompleted()}"
+                               onclick="progressDialog.show();" 
+                               oncomplete="progressDialog.hide(); "
+			                   styleClass="ui-priority-primary"/>
+			                <pri:commandButton value="#{msg['page.commons.labels.export.excel']}" 
+			                 				    ajax="false" 
+			                 				    styleClass="ui-priority-primary">
+							  	<pri:fileDownload value="#{optimisationUserInterfaceMBean.exportRemovedPublicationsToExcel()}" />  
+							</pri:commandButton>
+			               <br/>
+			               <pri:outputLabel value="#{msg['page.optimisation.tips.campaigncompleted']}" 
+			               					rendered="#{optimisationUserInterfaceMBean.isCampaignCompleted()}"/>
+			            </f:facet>  
+
+    	            </pri:dataTable>
+      	          </h:form>
+  	           </h:panelGroup>
+            </h:panelGroup>
+            
+          </div>            
+        
+        </div><!-- END CONTAINER -->
+	      <script type="text/javascript">
+	       // <![CDATA[
+	       $(function(){
+	           ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);
+	       });
+	       // ]]>
+	      </script>
+      </ui:define>
+    </ui:composition>
+  </h:body>
+</html>

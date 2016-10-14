@@ -1,0 +1,9 @@
+package com.adfonic.domain;
+
+public enum StopAction {
+	STOP_CAMPAIGN_FOR_HOUR,
+    STOP_CAMPAIGN_FOR_TODAY,
+    STOP_CAMPAIGN_FOREVER,
+    STOP_ADVERTISER_FOR_TODAY,
+    STOP_ADVERTISER_ZERO_BALANCE
+}

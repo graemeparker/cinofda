@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+    
+    <pe:importEnum type="com.adfonic.dto.publication.enums.PublicationStatus" />
+
+	<pri:panelGrid id="publicationFilters" styleClass="filtersPanelGrid">
+	
+		<ui:param name="charNumErr" value="#{msg['page.approval.publication.validation.characters']}" />
+		<ui:param name="filterNumErr" value="#{msg['page.approval.publication.validation.filternum']}" />
+		<ui:param name="freeFilterNumErr" value="#{msg['page.approval.publication.validation.freefilternum']}" />
+		<ui:param name="numErr" value="#{msg['page.approval.publication.validation.number']}" />
+		
+		<!-- Filter Validations -->
+		<pri:row>
+			<pri:column><pri:spacer height="15" /></pri:column>
+			<pri:column colspan="14">
+				<pri:outputLabel id="filterErr" styleClass="hide" />
+				<pri:outputLabel id="freeFilterErr" styleClass="hide" />
+			</pri:column>
+		</pri:row>
+		<pri:row>
+			<pri:column><pri:spacer height="15" /></pri:column>
+			<pri:column><pri:outputLabel id="InternalIdErr" 		styleClass="hide filterPadding" /></pri:column>
+			<pri:column><pri:outputLabel id="NameErr"				styleClass="hide filterPadding" /></pri:column>
+			<pri:column><pri:outputLabel id="FriendlyNameErr"		styleClass="hide filterPadding" /></pri:column>
+			<pri:column><pri:outputLabel id="SupplierNameErr"		styleClass="hide filterPadding" /></pri:column>
+			<pri:column><pri:outputLabel id="SupplierUserNameErr"	styleClass="hide filterPadding" /></pri:column>
+			<pri:column><pri:outputLabel id="ExternalIdErr"			styleClass="hide filterPadding" /></pri:column>
+			<pri:column><pri:outputLabel id="BundleErr"				styleClass="hide filterPadding" /></pri:column>
+			<pri:column />
+			<pri:column />
+			<pri:column />
+			<pri:column />
+			<pri:column><pri:outputLabel id="RtbIdErr"				styleClass="hide filterPadding" /></pri:column>
+			<pri:column><pri:outputLabel id="SellerNetworkIdErr"	styleClass="hide filterPadding" /></pri:column>
+			<pri:column />
+			<pri:column />
+		</pri:row>
+
+		<!-- Publication filters -->
+		<pri:row>
+			<!-- Selection -->
+			<pri:column styleClass="select-col" />
+			
+			<!-- Internal ID -->
+			<pri:column styleClass="internalId-col">
+				<pri:inputText id="exactInternalIdInput"
+							   value="#{publicationApprovalDashboardMBean.search.internalId}"
+							   placeholder="#{msg['page.approval.publication.filter.exact.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('InternalId', 1, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}', '#{numErr}')"
+							   styleClass="internalId-col filterPadding" />
+			</pri:column>
+		    
+			<!-- Publication Name -->
+			<pri:column styleClass="name-col">
+				<pri:inputText id="freeNameInput"
+							   value="#{publicationApprovalDashboardMBean.search.name}"
+							   placeholder="#{msg['page.approval.publication.filter.free.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('Name', 3, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}')"
+							   styleClass="name-col filterPadding" />
+			</pri:column>
+
+			<!-- Friendly Name -->
+			<pri:column styleClass="friendlyName-col">
+				<pri:inputText id="freeFriendlyNameInput"
+							   value="#{publicationApprovalDashboardMBean.search.friendlyName}"
+							   placeholder="#{msg['page.approval.publication.filter.free.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('FriendlyName', 3, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}')"
+							   styleClass="friendlyName-col filterPadding" />
+			</pri:column>
+
+			<!-- Supplier Name -->
+			<pri:column styleClass="supplierName-col">
+				<pri:inputText id="freeSupplierNameInput"
+							   value="#{publicationApprovalDashboardMBean.search.supplierName}"
+							   placeholder="#{msg['page.approval.publication.filter.free.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('SupplierName', 3, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}')"
+							   styleClass="supplierName-col filterPadding" />
+			</pri:column>
+
+			<!-- Supplier User Name -->
+			<pri:column styleClass="supplierUserName-col">
+				<pri:inputText id="exactSupplierUserNameInput"
+							   value="#{publicationApprovalDashboardMBean.search.supplierUserName}"
+							   placeholder="#{msg['page.approval.publication.filter.exact.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('SupplierUserName', 3, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}')"
+							   styleClass="supplierUserName-col filterPadding" />
+			</pri:column>
+			
+			<!-- External Id -->
+			<pri:column styleClass="externalId-col">
+				<pri:inputText id="exactExternalIdInput"
+							   value="#{publicationApprovalDashboardMBean.search.externalId}"
+							   placeholder="#{msg['page.approval.publication.filter.exact.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('ExternalId', 3, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}')"
+							   styleClass="externalId-col filterPadding" />
+			</pri:column>
+
+			<!-- Bundle Id -->
+			<pri:column styleClass="bundle-col">
+				<pri:inputText id="freeBundleInput"
+							   value="#{publicationApprovalDashboardMBean.search.bundle}"
+							   placeholder="#{msg['page.approval.publication.filter.free.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('Bundle', 3, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}')"
+							   styleClass="bundle-col filterPadding" />
+			</pri:column>
+
+			<!-- Publication Type -->
+			<pri:column styleClass="type-col">
+				<pri:selectCheckboxMenu id="typeSelection" widgetVar="typeSelectionWidget"
+										value="#{publicationApprovalDashboardMBean.selectedTypeIds}"
+										label="#{publicationApprovalDashboardMBean.publicationMultiSelectTypeLabel}"
+                           				filter="true" filterMatchMode="contains"
+                           				onHide="ADT.toggleSelectCheckboxMenuWatermark(typeSelectionWidget, allTypeSelectionWatermark, someTypeSelectionWatermark);"
+                           				styleClass="type-col filterPadding approvalAlignment selectCheckboxMenuStyle">
+		            <f:selectItems value="#{publicationApprovalDashboardMBean.publicationTypes}"
+		            			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+			    </pri:selectCheckboxMenu>
+			    <!-- Store custom messages for selected types -->
+    			<pri:watermark for="typeSelection" widgetVar="allTypeSelectionWatermark"  value="#{msg['page.approval.publication.type.label.all']}" />
+    			<pri:watermark for="typeSelection" widgetVar="someTypeSelectionWatermark" value="#{msg['page.approval.publication.type.label.some']}" />
+			</pri:column>
+
+			<!-- Status -->
+			<pri:column styleClass="status-col">
+				<pri:selectCheckboxMenu id="statusSelection" widgetVar="statusSelectionWidget"
+										value="#{publicationApprovalDashboardMBean.selectedStatusNames}"
+										label="#{publicationApprovalDashboardMBean.publicationMultiSelectStatusLabel}"
+										onHide="ADT.toggleSelectCheckboxMenuWatermark(statusSelectionWidget, allStatusSelectionWatermark, someStatusSelectionWatermark);"
+                           				filter="true" filterMatchMode="contains"
+                           				styleClass="status-col filterPadding approvalAlignment selectCheckboxMenuStyle">
+                 	<c:forEach items="#{PublicationStatus.ALL_VALUES}" var="publicationStatus">
+	                    <!-- Hide ALL predefined option -->
+                 		<c:if test="#{PublicationStatus.ALL != publicationStatus.name()}">
+                 			<f:selectItem itemValue="#{publicationStatus.name()}" itemLabel="#{msg[publicationStatus.publicationStatusStr]}" />
+				    	</c:if>
+				    </c:forEach>
+			    </pri:selectCheckboxMenu>
+			    <!-- Store custom messages for selected statuses -->
+    			<pri:watermark for="statusSelection" widgetVar="allStatusSelectionWatermark"  value="#{msg['page.approval.publication.status.label.all']}" />
+    			<pri:watermark for="statusSelection" widgetVar="someStatusSelectionWatermark" value="#{msg['page.approval.publication.status.label.some']}" />
+			</pri:column>
+			
+			<!-- Assigned To -->
+			<pri:column styleClass="assignedTo-col">
+				<pri:selectCheckboxMenu id="assignedToSelection" widgetVar="assignedToSelectionWidget"
+										value="#{publicationApprovalDashboardMBean.selectedAssignedToUserIds}"
+										label="#{publicationApprovalDashboardMBean.publicationMultiSelectAssignedToLabel}"
+										onHide="ADT.toggleSelectCheckboxMenuWatermark(assignedToSelectionWidget, allAssignedToSelectionWatermark, someAssignedToSelectionWatermark);"
+                           				filter="true" filterMatchMode="contains"
+                           				styleClass="assignedTo-col filterPadding approvalAlignment selectCheckboxMenuStyle">
+		            <f:selectItems value="#{publicationApprovalDashboardMBean.publicationAssignedToUsers}"
+		            			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+			    </pri:selectCheckboxMenu>
+			    <!-- Store custom messages for selected assigned to -->
+    			<pri:watermark for="assignedToSelection" widgetVar="allAssignedToSelectionWatermark"  value="#{msg['page.approval.publication.assignedto.label.all']}" />
+    			<pri:watermark for="assignedToSelection" widgetVar="someAssignedToSelectionWatermark" value="#{msg['page.approval.publication.assignedto.label.some']}" />
+		    </pri:column>
+
+			<!-- Account Type -->
+			<pri:column styleClass="accountType-col">
+				<pri:selectCheckboxMenu id="accountTypeSelection" widgetVar="accountTypeSelectionWidget"
+										value="#{publicationApprovalDashboardMBean.selectedAccountTypeIds}"
+										label="#{publicationApprovalDashboardMBean.publicationMultiSelectAccountTypeLabel}"
+										onHide="ADT.toggleSelectCheckboxMenuWatermark(accountTypeSelectionWidget, allAccountTypeSelectionWatermark, someAccountTypeSelectionWatermark);"
+                           				filter="true" filterMatchMode="contains"
+                           				styleClass="accountType-col filterPadding approvalAlignment selectCheckboxMenuStyle">
+		            <f:selectItems value="#{publicationApprovalDashboardMBean.publicationAccountTypes}"
+		            			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+			    </pri:selectCheckboxMenu>
+			    <!-- Store custom messages for selected account type -->
+    			<pri:watermark for="accountTypeSelection" widgetVar="allAccountTypeSelectionWatermark"  value="#{msg['page.approval.publication.accounttype.label.all']}" />
+    			<pri:watermark for="accountTypeSelection" widgetVar="someAccountTypeSelectionWatermark" value="#{msg['page.approval.publication.accounttype.label.some']}" />
+			</pri:column>
+			
+			<!-- RTB Id -->
+			<pri:column styleClass="rtbId-col">
+				<pri:inputText id="freeRtbIdInput"
+							   value="#{publicationApprovalDashboardMBean.search.rtbId}"
+							   placeholder="#{msg['page.approval.publication.filter.free.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('RtbId', 3, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}')"
+							   styleClass="rtbId-col filterPadding" />
+			</pri:column>
+			
+			<!-- Seller Network Id -->
+			<pri:column styleClass="sellerNetworkId-col">
+				<pri:inputText id="exactSellerNetworkIdInput"
+							   value="#{publicationApprovalDashboardMBean.search.sellerNetworkId}"
+							   placeholder="#{msg['page.approval.publication.filter.exact.placeholder']}"
+							   onkeyup="ADT.showErrorPreventSearch('SellerNetworkId', 1, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}', '#{numErr}')"
+							   styleClass="sellerNetworkId-col filterPadding" />
+			</pri:column>
+			
+			<!-- Algorithm Status -->
+			<pri:column styleClass="algorithmStatus-col">
+				<pri:selectCheckboxMenu id="algorithmStatusSelection" widgetVar="algorithmStatusSelectionWidget"
+										value="#{publicationApprovalDashboardMBean.selectedAlgorithmStatusIds}"
+										label="#{publicationApprovalDashboardMBean.publicationMultiSelectAlgorithmStatusLabel}"
+										onHide="ADT.toggleSelectCheckboxMenuWatermark(algorithmStatusSelectionWidget, allAlgorithmStatusSelectionWatermark, someAlgorithmStatusSelectionWatermark);"
+                           				filter="true" filterMatchMode="contains"
+                           				styleClass="algorithmStatus-col filterPadding approvalAlignment selectCheckboxMenuStyle">
+		            <f:selectItems value="#{publicationApprovalDashboardMBean.publicationAlgorithmStatuses}"
+		            			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+			    </pri:selectCheckboxMenu>
+			    <!-- Store custom messages for selected algorithm status -->
+    			<pri:watermark for="algorithmStatusSelection" widgetVar="allAlgorithmStatusSelectionWatermark"  value="#{msg['page.approval.publication.algorithm.status.label.all']}" />
+    			<pri:watermark for="algorithmStatusSelection" widgetVar="someAlgorithmStatusSelectionWatermark" value="#{msg['page.approval.publication.algorithm.status.label.some']}" />
+			</pri:column>
+			
+			<!-- Dead Zone Status -->
+			<pri:column styleClass="deadZoneStatus-col">
+				<pri:selectCheckboxMenu id="deadZoneStatusSelection" widgetVar="deadZoneStatusSelectionWidget"
+										value="#{publicationApprovalDashboardMBean.selectedDeadZoneStatusIds}"
+										label="#{publicationApprovalDashboardMBean.publicationMultiSelectDeadZoneStatusLabel}"
+										onHide="ADT.toggleSelectCheckboxMenuWatermark(deadZoneStatusSelectionWidget, allDeadZoneStatusSelectionWatermark, someDeadZoneStatusSelectionWatermark);"
+                           				filter="true" filterMatchMode="contains"
+                           				styleClass="deadZoneStatus-col filterPadding approvalAlignment selectCheckboxMenuStyle">
+		            <f:selectItems value="#{publicationApprovalDashboardMBean.publicationDeadZoneStatuses}"
+		            			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+			    </pri:selectCheckboxMenu>
+			    <!-- Store custom messages for selected deadzone status -->
+    			<pri:watermark for="deadZoneStatusSelection" widgetVar="allDeadZoneStatusSelectionWatermark"  value="#{msg['page.approval.publication.deadzone.status.label.all']}" />
+    			<pri:watermark for="deadZoneStatusSelection" widgetVar="someDeadZoneStatusSelectionWatermark" value="#{msg['page.approval.publication.deadzone.status.label.some']}" />
+			</pri:column>
+		</pri:row>
+		
+		<!-- Filter Headers -->
+		<pri:row rendered="#{not hasResults}">
+			<pri:column />
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.internalid.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.name.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.friendlyname.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.supplier.name.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.supplier.username.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.externalid.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.bundle.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.type.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.status.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.assignedto.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.accounttype.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.rtbid.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.sellernetworkid.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.algorithm.status.label']}" styleClass="filterHeader" /></pri:column>
+			<pri:column><pri:outputLabel value="#{msg['page.approval.publication.deadzone.status.label']}" styleClass="filterHeader" /></pri:column>
+		</pri:row>
+
+	</pri:panelGrid>
+	    <script type="text/javascript">
+       // <![CDATA[
+       $(function(){
+    	   ADT.showErrorPreventSearch('InternalId', 1, '#{charNumErr}', '#{filterNumErr}', '#{freeFilterNumErr}', '#{numErr}');
+       });
+       // ]]>
+    </script>
+	
+</ui:composition>

@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+      
+		<pri:panelGrid styleClass="creativesTable">
+		    <f:facet name="header">
+		        <pri:row>
+		            <pri:column colspan="2">
+		            	<pri:commandLink id="creativeLinkId" 
+									actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv"
+									disabled="#{userSessionBean.readOnlyUser}">
+							<f:attribute name="navigateTo" value="creative"/>                    
+	                    	<span>#{msg['page.campaign.creative.menu.label']}</span>
+	                    </pri:commandLink>
+		            </pri:column>
+		        </pri:row>
+		    </f:facet>
+		    
+		    <c:forEach items="#{campaignCreativeMBean.campaignDto.creatives}" var="creative" varStatus="status">
+		    	<pri:row>
+		            <pri:column styleClass="creativeInfo">
+				    	<h:panelGroup>
+				    		<pri:panelGrid columns="2">
+				    			<h:outputText value="#{msg['page.campaign.confirmation.creative.name.label']}" styleClass="fieldlabel"/>
+				    			<h:outputText value="#{creative.name}"/>
+				    			
+							    <h:outputText value="${msg['page.campaign.confirmation.creative.id.label']}" rendered="#{creative.externalID != null}"  styleClass="fieldlabel"/>
+						    	<h:outputText value="#{creative.externalID}" rendered="#{creative.externalID != null}"/>
+							
+						    	<h:outputText value="#{msg['page.campaign.confirmation.creative.format.label']}" styleClass="fieldlabel"/>
+						    	<h:outputText value="#{campaignMBean.campaignCreativeMBean.getCreativeSummaryFormat(status.index)}"/>
+							    
+						    	<h:outputText value="#{msg['page.campaign.confirmation.creative.asset.label']}" rendered="#{creative.contentSpec.name.equals('MMA Text Link')}" styleClass="fieldlabel"/>
+						    	<h:outputText value="#{creative.name}" rendered="#{creative.contentSpec.name.equals('MMA Text Link')}"/>
+						    	
+						    	<h:outputText value="#{msg[creative.destination.destinationType.name]}" styleClass="fieldlabel"/>
+						    	<a href="#{creative.destination.data}" target="_blank">#{creative.destination.data}</a>
+						    </pri:panelGrid>
+				    	</h:panelGroup>
+		    		</pri:column>
+		    		<pri:column styleClass="creativeImage">
+				    	<h:panelGroup>
+				    		<h:panelGroup rendered="#{!creative.format.systemName.equals('text') and !creative.format.systemName.equals('native_app_install') and !creative.vastVideo}">
+							     <h:panelGroup styleClass="thumb-panel" layout="block" rendered="#{!creative.missingImage}">
+							         <pri:graphicImage value="#{campaignCreativeMBean.existingStream}" width="106" cache="false">
+							             <f:param name="index" value="#{status.index}"/>
+							         </pri:graphicImage>
+							     </h:panelGroup>
+							     <h:panelGroup styleClass="thumb-panel" layout="block" rendered="#{creative.missingImage}">
+							         <pri:graphicImage url="/resources/images/no_image.png" width="106">
+							             <f:param name="index" value="#{status.index}"/>
+							         </pri:graphicImage>
+							     </h:panelGroup>
+						    </h:panelGroup>
+			                <h:panelGroup rendered="#{creative.format.systemName.equals('native_app_install')}">
+							     <h:panelGroup styleClass="thumb-panel icon" layout="block" rendered="#{creative.nativeAdInfo.icon!=null}">
+							         <pri:graphicImage value="#{campaignCreativeMBean.nativeAdIconStream}" width="20" height="20" cache="false">
+							             <f:param name="index" value="#{status.index}"/>
+							         </pri:graphicImage>
+							     </h:panelGroup>
+							     <h:panelGroup styleClass="thumb-panel icon" layout="block" rendered="#{creative.nativeAdInfo.icon==null}">
+							         <pri:graphicImage url="/resources/images/no_image.png" width="20" height="20">
+							             <f:param name="index" value="#{status.index}"/>
+							         </pri:graphicImage>
+							     </h:panelGroup>
+							     <h:panelGroup styleClass="thumb-panel image" layout="block" rendered="#{creative.nativeAdInfo.image!=null}">
+							         <pri:graphicImage value="#{campaignCreativeMBean.nativeAdImageStream}" width="106" cache="false">
+							             <f:param name="index" value="#{status.index}"/>
+							         </pri:graphicImage>
+							     </h:panelGroup>
+							     <h:panelGroup styleClass="thumb-panel image" layout="block" rendered="#{creative.nativeAdInfo.image==null}">
+							         <pri:graphicImage url="/resources/images/no_image.png" width="106" >
+							             <f:param name="index" value="#{status.index}"/>
+							         </pri:graphicImage>
+							     </h:panelGroup>
+						     </h:panelGroup>
+				    	</h:panelGroup>
+				    </pri:column>
+				</pri:row>
+		    </c:forEach>
+		</pri:panelGrid>
+</ui:composition>

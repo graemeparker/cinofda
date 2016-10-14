@@ -1,0 +1,30 @@
+{
+	"id":"7391859981134865993",
+	"bidid":"3c5206a8-4950-389d-bd36-d341f4c85425",
+	"seatbid":[ {
+			"bid":[ {
+					"impid":"7b3a4975-9a72-d085-e2c4-0ceaaba288a5",
+					"price":1,
+					"adomain":[ "byyd-tech.com" ],
+					"cid":"529ca184-e5d1-46ec-94d8-a6705d0f8cf7",
+					"crid":"f0b9daf3-ab3c-4934-bd83-99af1594ac16",
+					"nurl":"http://appnexus-rtb-us-east.byyd.net/rtb/win/7b3a4975-9a72-d085-e2c4-0ceaaba288a5?sp=${AUCTION_PRICE}",
+					"adid":"24648691",
+					"id":"263673",
+					"ext":{
+						"appnexus":{
+							"custom_macros":[
+								{ "name":"AUCTION_IMP_ID", "value":"7b3a4975-9a72-d085-e2c4-0ceaaba288a5" },
+								{ "name":"CUSTOM_BEACONS", "value":" --><!-- Beacon 1 -->\n<img width=1 height=1 src=\"http://appnexus-rtb-us-east.byyd.net/bc/83454aa4-3000-48ed-993e-e8cb4f806bc0/7b3a4975-9a72-d085-e2c4-0ceaaba288a5.gif\"/>\n<!-- " },
+								{ "name":"END_POINT", "value":"-us-east" },
+								{ "name":"ASP_ID", "value":"83454aa4-3000-48ed-993e-e8cb4f806bc0" },
+								{ "name":"END_POINT", "value":"-us-east" }
+							]
+						}
+					}
+				}
+			],
+			"seat":"2560"
+		}
+	]
+}

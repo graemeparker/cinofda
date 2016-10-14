@@ -1,0 +1,127 @@
+id: "U.\216\337\000\002.{\n\037\031D\313\0007c"
+ip: "I\270C"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70,gzip(gfe)"
+url: "http://dictionary.reference.com/browse/are"
+detected_language: "en"
+detected_vertical {
+  id: 108
+  weight: 0.51998425
+}
+detected_vertical {
+  id: 692
+  weight: 1.0
+}
+detected_vertical {
+  id: 1264
+  weight: 0.1645482
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 30
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  excluded_attribute: 52
+  allowed_vendor_type: 28
+  allowed_vendor_type: 42
+  allowed_vendor_type: 43
+  allowed_vendor_type: 60
+  allowed_vendor_type: 63
+  allowed_vendor_type: 92
+  allowed_vendor_type: 94
+  allowed_vendor_type: 113
+  allowed_vendor_type: 145
+  allowed_vendor_type: 146
+  allowed_vendor_type: 179
+  allowed_vendor_type: 182
+  allowed_vendor_type: 198
+  allowed_vendor_type: 231
+  allowed_vendor_type: 232
+  allowed_vendor_type: 237
+  allowed_vendor_type: 238
+  allowed_vendor_type: 255
+  allowed_vendor_type: 260
+  allowed_vendor_type: 267
+  allowed_vendor_type: 285
+  allowed_vendor_type: 303
+  allowed_vendor_type: 325
+  allowed_vendor_type: 332
+  allowed_vendor_type: 335
+  allowed_vendor_type: 472
+  allowed_vendor_type: 474
+  allowed_vendor_type: 476
+  allowed_vendor_type: 477
+  allowed_vendor_type: 481
+  allowed_vendor_type: 485
+  allowed_vendor_type: 489
+  allowed_vendor_type: 497
+  allowed_vendor_type: 504
+  allowed_vendor_type: 542
+  allowed_vendor_type: 543
+  allowed_vendor_type: 551
+  allowed_vendor_type: 562
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 5
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 1880000
+    7: "0\300\337r"
+  }
+  targetable_channel: "pack-brand-IAC Programmatic::All"
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 9381321317904241372
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEDKO1zVzc-z9OzONiNPzpjo"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 39
+mobile {
+  platform: "iphone"
+  app_id: "308750436"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60516
+  app_category_ids: 60503
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 8
+    os_version_minor: 3
+  }
+  screen_width: 320
+  screen_height: 568
+  is_mobile_web_optimized: true
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "U.\216\337\000\002.{\n\037\031D\001\0007cB\361N4\237\ag6\020\305!\242\0304\213\360\206\375|\202"
+}
+cookie_age_seconds: 17958794
+postal_code: "30311"
+site_list_id: 30
+geo_criteria_id: 9010930
+encrypted_hyperlocal_set: "U.\216\337\000\002.{\n\037\031D\002\0007c5b\227\203N\0336I\300I\240\311\212\326=\253\332\362\265U\271\276\a\246\253\254G\212\356\341s\v\321\343)\331\031_]0\245HH\304Bo3\333
+G_\272b\337\237\245\345\267\300eb\304n\226\t\350\n"
+seller_network_id: 5390
+publisher_settings_list_id: 6400421738702107424

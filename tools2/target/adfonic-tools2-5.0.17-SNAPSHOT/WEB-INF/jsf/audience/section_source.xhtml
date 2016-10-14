@@ -1,0 +1,327 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:sec="http://www.springframework.org/security/tags"
+              xmlns:pe="http://primefaces.org/ui/extensions">
+
+<!-- Constants, enums -->
+<pe:importEnum type="com.adfonic.dto.audience.enums.AudienceType" />
+<pe:importConstants className="com.adfonic.tools.beans.audience.source.AudienceSourceMBean" var="AudienceSourceMBean"/>
+ 
+<!-- Variables -->
+<ui:param name="hasS3Credentials" value="#{not empty audienceMBean.audienceSourceMBean.advertiserCloudInformation}" />
+<ui:param name="isFactualSelected" value="#{audienceMBean.audienceSourceMBean.isFactualAudience()}" />
+<ui:param name="hasDMPVendorSelected" value="#{not empty audienceMBean.audienceSourceMBean.dmpVendor}" />
+
+<section id="source" class="form-box ui-corner-all">
+    <h:form id="audienceForm" prependId="false">
+    
+      <!-- Campaign Event -->
+      <h:panelGroup id="campaignEventPanel" layout="block" styleClass="form-row" rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.CAMPAIGN_EVENT}">
+        <h2 class="sec-title">#{msg['page.audience.source.label.campaignevent']}</h2>
+        
+        <div class="form-row">
+            <h:outputLabel styleClass="bl b" value="#{msg['page.audience.source.label.type']}"/>            
+            <pri:selectOneRadio id="campaign-event-type"
+                    required="true"
+                    styleClass="sourceSelect"
+                    scrollHeight="200"
+                    valueChangeListener="#{audienceMBean.audienceSourceMBean.onCampaignEventTypeChangedEvent}"
+                    requiredMessage="#{msg['page.audience.validation.type.required']}"
+                    value="#{audienceMBean.audienceSourceMBean.campaignEventType}">
+                <pri:ajax process="@this" update="campaignEventTypeErrorMessage"/>  
+                <f:selectItems value="#{audienceMBean.audienceSourceMBean.campaignEventTypes}" var="eventType" itemValue="#{eventType}" itemLabel="#{msg[eventType.label]}" />                        
+            </pri:selectOneRadio>        
+            <pri:message id="campaignEventTypeErrorMessage" for="campaign-event-type"/>
+        </div>
+        
+        <div class="form-row">
+            <h:outputLabel styleClass="bl b" value="#{msg['page.audience.source.label.sourcecampaigns']}"/>            
+            <pri:autoComplete id="campaignTypeAhead" 
+                    value="#{audienceMBean.audienceSourceMBean.campaigns}" 
+                    multiple="true"
+                    completeMethod="#{audienceMBean.audienceSourceMBean.completeCampaigns}" 
+                    var="c" 
+                    valueChangeListener="#{audienceMBean.audienceSourceMBean.onSourceCampaignChangedEvent}"
+                    itemLabel="#{c.name}" 
+                    itemValue="#{c}" 
+                    minQueryLength="1"
+                    queryDelay="100"
+                    converter="com.adfonic.tools.converter.campaign.CampaignConverter">                    
+            </pri:autoComplete>
+            <pri:message id="campaignTypeAheadErrorMessage" for="campaignTypeAhead"/>
+        </div>
+      </h:panelGroup>
+
+	  <!-- Site App -->
+     <!--  <h:panelGroup id="siteAppPanel" layout="block" styleClass="form-row" rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.SITE_APP}">
+        <h2 class="sec-title">#{msg['page.audience.source.label.siteappvisitors']}</h2>
+        <h:outputText value="#{msg['page.audience.source.siteapp.text']}"/>
+        <pri:inputTextarea readonly="true" value="#{audienceMBean.audienceSourceMBean.audienceCollectionTag}" style="font-size:12px;" autoResize="false" />
+      </h:panelGroup> -->
+      
+      <!-- Device -->
+      <h:panelGroup id="devicePanel" layout="block" styleClass="form-row" rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.DEVICE}" style="margin-bottom: 20px;">
+        <h2 class="sec-title">#{msg['page.audience.source.label.deviceid']}</h2>
+        
+        <sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+            <h:panelGroup rendered="#{empty audienceMBean.audienceSourceMBean.advertiserCloudInformation}">
+                <span class="admin status-indicator" style="margin-left: 250px;margin-top: 5px;position: absolute;"></span>
+            </h:panelGroup>
+        </sec:authorize>
+
+        <pri:selectOneRadio id="devicePanelSelection" value="#{audienceMBean.audienceSourceMBean.selectedUploadType}" style="margin-bottom: 20px;">
+            <f:selectItems value="#{audienceMBean.audienceSourceMBean.selectedUploadTypes}" 
+                           var="dit" itemValue="#{dit}" itemLabel="#{audienceMBean.audienceSourceMBean.getSelectedUploadTypesLabel(dit)}" />
+            <pri:ajax event="change" update="devicePanel" onstart="progressDialog.show();" oncomplete="progressDialog.hide();" ></pri:ajax>
+        </pri:selectOneRadio>
+        
+        <h:panelGroup id="s3-container" rendered="#{audienceMBean.audienceSourceMBean.selectedUploadType eq Tools2Constants.S3_UPLOAD}">
+	        <!-- S3 Credentials Section -->
+           <ui:include	src="/WEB-INF/jsf/commons/s3_credentials_template.xhtml">
+        	  <ui:param name="id" value="device" />
+        	  <ui:param name="container" value="devicePanel" />
+           </ui:include>
+	        
+	        <!-- S3 Files Section -->
+        	<ui:include	src="/WEB-INF/jsf/audience/commons/s3_files_template.xhtml">
+        		<ui:param name="id" value="device" />
+        	</ui:include>
+        </h:panelGroup>
+        
+        <h:panelGroup id="fileupload-container" rendered="#{audienceMBean.audienceSourceMBean.selectedUploadType eq Tools2Constants.FILE_UPLOAD}">
+	        <div class="form-row">
+	            <h:outputLabel styleClass="bl b" value="#{msg['page.audience.source.label.type']}"/>            
+	            <pri:selectOneRadio id="audienceDeviceIdentifierType" 
+	                    value="#{audienceMBean.audienceSourceMBean.audienceDeviceIdentifierType}" 
+	                    converter="com.adfonic.tools.converter.deviceidentifier.DeviceIdentifierTypeConverter"
+	                    layout="custom">  
+	              <f:selectItems value="#{toolsApplicationBean.audienceDeviceIdentifierTypes}" var="dit" itemValue="#{dit}" itemLabel="#{dit.name}" />                        
+	              <pri:ajax process="@this" update="@form"/>
+	            </pri:selectOneRadio>  
+	
+				<!-- Should be keep in sync with ToolsApplicationBean.AUDIENCE_DEVICE_IDENTIFIER_TYPES -->
+	            <pri:panelGrid id="audienceTypeOptions">
+	                <pri:row>
+	                    <pri:column>
+	                      <pri:radioButton id="di0" for="audienceDeviceIdentifierType" itemIndex="0"  onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	                      <h:outputLabel for="di0" value="#{audienceMBean.audienceSourceMBean.getDeviceIdentifierTypeName('IFA')}"/>
+	                    </pri:column>
+	
+	                    <pri:column>
+	                      <pri:radioButton id="di1" for="audienceDeviceIdentifierType" itemIndex="1"  onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	                      <h:outputLabel for="di1" value="#{audienceMBean.audienceSourceMBean.getDeviceIdentifierTypeName('ATID')}"/>
+	                    </pri:column>
+	                    
+	                    <pri:column>
+	                      <pri:radioButton id="di2" for="audienceDeviceIdentifierType" itemIndex="2"  onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	                      <h:outputLabel for="di2" value="#{audienceMBean.audienceSourceMBean.getDeviceIdentifierTypeName('HIFA')}"/>
+	                    </pri:column>
+	                </pri:row>
+	                <pri:row>
+	                    <pri:column>
+	                      <pri:radioButton id="di3" for="audienceDeviceIdentifierType" itemIndex="3"  onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	                      <h:outputLabel for="di3" value="#{audienceMBean.audienceSourceMBean.getDeviceIdentifierTypeName('ADID')}"/>
+	                    </pri:column>
+	                    
+	                    <pri:column>
+	                      <pri:radioButton id="di4" for="audienceDeviceIdentifierType" itemIndex="4"  onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	                      <h:outputLabel for="di4" value="#{audienceMBean.audienceSourceMBean.getDeviceIdentifierTypeName('ADID_MD5')}"/>
+	                    </pri:column>
+	
+	                    <pri:column>
+	                      <pri:radioButton id="di5" for="audienceDeviceIdentifierType" itemIndex="5"  onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	                      <h:outputLabel for="di5" value="#{audienceMBean.audienceSourceMBean.getDeviceIdentifierTypeName('IDFA_MD5')}"/>
+	                    </pri:column>
+	                </pri:row>
+	            </pri:panelGrid>            
+	        </div>
+	        
+	        <div class="form-row">
+	            <h:outputLabel styleClass="b" value="#{msg['page.audience.source.button.deviceidentifier.upload.label']}"/>  
+	            <h:panelGroup layout="block" id="help" styleClass="learnMoreImageWrapper">
+	                <div class="helpImage"></div>
+	                <pri:overlayPanel for="help" hideEffect="fade" styleClass="no-shadow" my="left middle" at="right middle">
+	                     <div class="helpInner ui-corner-all ui-shadow">
+	                         <div class="arrow backfillArrow"></div>
+	                         <span>
+	                         	<h:outputFormat value="#{msg['page.audience.source.button.deviceidentifier.upload.tip']}">
+	                         		<f:param value="#{toolsApplicationBean.bytesToMegabytes(audienceMBean.audienceSourceMBean.deviceFileUploadMaxBytes)}" />
+	                         	</h:outputFormat>
+	                         </span>
+	                     </div>
+	                </pri:overlayPanel>
+	            </h:panelGroup>
+	                      
+	            <pri:fileUpload 
+	                id="uploadDeviceIds" 
+	                mode="advanced"
+	                label="Browse..." 
+	                showButtons="false" 
+	                auto="true" 
+	                multiple="false" 
+	                styleClass="change-file"
+	                onstart="progressDialog.show();" 
+	                oncomplete="progressDialog.hide();"
+	                fileUploadListener="#{audienceMBean.audienceSourceMBean.uploadDeviceIds}" 
+	                update="@this, mess-upload, uploadDeviceHistory,confirmApplyDialog"
+	                process="@this">
+	            </pri:fileUpload>
+	            <pri:message id="mess-upload" for="uploadDeviceIds" styleClass="ui-corner-all"/>
+	            
+	        </div>
+	        
+	        <div class="form-row ovh">
+	            <h:outputLabel styleClass="b" value="#{msg['page.audience.source.label.upload.history']}"/>
+	            <h:panelGroup id="uploadDeviceHistory">        
+	              <pri:dataTable id="uploadHistoryTable"
+	                  var="history"
+	                  widgetVar="historyWidgetVar"
+	                  lazy="true"
+	                  value="#{audienceMBean.audienceSourceMBean.historyLazyDataModel}"
+	                  rows="10" 
+	                  paginator="true" 
+	                  rowsPerPageTemplate="10,25,50,100"
+	                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+	                  paginatorPosition="bottom"
+	                  sortBy="#{history.dateTimeUploaded}"
+	                  sortOrder="ascending"
+	                  styleClass="ui-corner-all big-data">
+	              <pri:ajax event="sort" onstart="progressDialog.show();" oncomplete="progressDialog.hide();"/>
+	              <pri:ajax event="page" onstart="progressDialog.show();" oncomplete="progressDialog.hide();"/>
+	              
+	              <pri:column sortBy="#{history.dateTimeUploaded}" headerText="#{msg['page.audience.confirmation.upload.history.header.uploaded']}">
+	                <h:outputText value="#{history.dateTimeUploaded}">
+	                  <f:convertDateTime locale="#{languageSessionBean.locale}" timeZone="#{audienceMBean.audienceSourceMBean.advertiserTimeZone}" pattern="#{languageSessionBean.getTimeStampFormat()}" type="both" />
+	                </h:outputText>
+	              </pri:column>
+	      
+	              <pri:column sortBy="#{history.filename}" headerText="#{msg['page.audience.confirmation.upload.history.header.filename']}">
+	                <h:outputText value="#{history.filename}"/>
+	              </pri:column>
+	      
+	              <pri:column sortBy="#{history.deviceIdentifierType}" headerText="#{msg['page.audience.confirmation.upload.history.header.type']}">
+	                <h:outputText value="#{history.deviceIdentifierType.name}"/>
+	              </pri:column>
+	      
+	              <pri:column sortBy="#{history.totalNumRecords}" headerText="#{msg['page.audience.confirmation.upload.history.header.total']}" styleClass="num">
+	                <h:outputText value="#{history.totalNumRecords}">
+	                  <f:convertNumber groupingUsed="true"/>
+	                </h:outputText>
+	              </pri:column>
+	              
+	              <pri:column sortBy="#{history.numValidatedRecords}" headerText="#{msg['page.audience.confirmation.upload.history.header.validated']}" styleClass="num">
+	                <h:outputText value="#{history.numValidatedRecords}">
+	                  <f:convertNumber groupingUsed="true"/>
+	                </h:outputText>
+	              </pri:column>
+	              
+	              <pri:column sortBy="#{history.numInsertedRecords}" headerText="#{msg['page.audience.confirmation.upload.history.header.inserted']}" styleClass="num">
+	                <h:outputText value="#{history.numInsertedRecords}">
+	                  <f:convertNumber groupingUsed="true"/>
+	                </h:outputText>
+	              </pri:column>
+	           </pri:dataTable>
+	           </h:panelGroup>            
+	        </div>
+	     </h:panelGroup> 
+      </h:panelGroup>
+
+	  <!-- Custom 3rd Party Segments -->
+      <h:panelGroup id="dmpPanel" layout="block" rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.DMP}">
+        <h2 class="sec-title">#{msg['page.audience.source.label.thirdpartysegment']}</h2>
+        
+        <!-- 3rd Party Vendors -->
+        <div class="form-row">
+          <pri:selectOneMenu id="vendor-select" 
+              value="#{audienceMBean.audienceSourceMBean.dmpVendor}"
+              required="true" 
+              requiredMessage="#{msg['page.audience.thirdparty.vendor.empty']}"
+              styleClass="long"              
+              valueChangeListener="#{audienceMBean.audienceSourceMBean.onVendorEvent}" 
+              converter="dmpVendorConverter">
+            <f:selectItem itemLabel="#{msg['page.audience.source.choosedmpvendor.label']}"/> 
+            <f:selectItems value="#{audienceMBean.audienceSourceMBean.vendors}" var="vendor" itemLabel="#{vendor.name}" itemValue="#{vendor}"/>
+            <pri:ajax process="@this" update="@form" />
+          </pri:selectOneMenu>
+          <pri:message id="vendorSelectErrorMessage" for="vendor-select"/>
+        </div>
+        
+        <!-- 3rd Party Vendor Options (Factual DMP) -->
+        <pri:outputPanel rendered="#{hasDMPVendorSelected and isFactualSelected}" styleClass="form-row">
+        	<ui:include	src="/WEB-INF/jsf/audience/template/dmp_factual_template.xhtml" />
+        	
+        	<!-- Show warning about override targeting when Factual audience were selected -->
+	    	<pri:outputPanel styleClass="form-row warning message" style="background-position-y: 20px">
+				<p>#{msg['page.audience.source.factual.targetingoverwrite.warning']}</p>
+			</pri:outputPanel>
+        </pri:outputPanel>
+        
+        <!-- 3rd Party Vendor Options (Custom DMP) -->
+        <pri:outputPanel rendered="#{hasDMPVendorSelected and not isFactualSelected}" styleClass="form-row">
+        	<ui:include	src="/WEB-INF/jsf/audience/template/dmp_common_template.xhtml" />
+        </pri:outputPanel>
+      </h:panelGroup>
+      
+      <!-- Locations -->
+      <pri:outputPanel id="locationPanel" rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.LOCATION}">
+        <h2><pri:outputLabel value="#{msg['page.audience.source.label.location']}" styleClass="sec-title" /></h2>
+        
+        <!-- S3 Credentials Section -->
+        <ui:include	src="/WEB-INF/jsf/commons/s3_credentials_template.xhtml">
+        	<ui:param name="id" value="location" />
+        	<ui:param name="container" value="locationPanel" />
+        </ui:include>
+        
+        <!-- S3 Files Section -->
+       	<ui:include	src="/WEB-INF/jsf/audience/commons/s3_files_template.xhtml">
+       		<ui:param name="id" value="location" />
+       	</ui:include>
+      </pri:outputPanel>
+      
+      <!-- Continue Button -->
+      <div class="form-row">
+        <pri:commandButton value="#{audienceMBean.continueSourceButtonMessage}" id="continueBtn" disabled="#{userSessionBean.readOnlyUser}"
+                           onclick="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.panelsTop()"
+                           actionListener="#{audienceMBean.audienceSourceMBean.checkContinue}"
+                           update=":menuForm:panelSectionGroup,:navigationDiv,dmpSelectorErrorMessage,dmpFactualAudienceSelectorsErrorMessage" process="audienceForm">
+            <f:param value=""></f:param>
+        </pri:commandButton>
+        <pri:message id="filemoverConnectivityErrorMessage" for="continueBtn" />
+               
+        <pri:commandLink id="cancelButton"
+                value="#{msg['page.audience.cancel.label']}" 
+                actionListener="#{audienceMBean.audienceSourceMBean.cancel}" 
+                rendered="#{!audienceMBean.newAudience and audienceMBean.audienceSetupMBean.type ne AudienceType.DEVICE and audienceMBean.audienceSetupMBean.type ne AudienceType.LOCATION}"
+                process="@this" update=":navigationDiv,:menuForm:side-panel" 
+                onclick="progressDialog.show();" 
+                oncomplete="progressDialog.hide()">
+        </pri:commandLink>                
+                
+        <pri:dialog id="confirmApplyDialog" header="#{msg['page.audience.source.labels.confirmchangedialog.header']}" resizable="false" modal="true" closable="true"  
+                    styleClass="confirm-dialog" widgetVar="confirmationChanges">
+            <h3>
+                <h:outputText value="#{msg['page.audience.source.labels.confirmchangedialog.heading']}" />
+            </h3>
+            <p>
+                <h:outputText value="#{audienceMBean.audienceSourceMBean.confirmationBody}"/>
+                <br/>
+                <h:outputText value="#{audienceMBean.audienceSourceMBean.confirmationMessage}" escape="false"/>
+            </p>
+            <div class="buttons">
+                <pri:commandButton value="#{msg['page.audience.source.labels.confirmchangedialog.yes.btn']}" id="confirmation" 
+                           actionListener="#{audienceMBean.audienceSourceMBean.doSave}"
+                           onclick="confirmationChanges.hide();progressDialog.show();" oncomplete="progressDialog.hide()"
+                           update=":menuForm:panelSectionGroup,:navigationDiv" process="@form">
+                </pri:commandButton>
+                <pri:commandButton id="declineApp" value="#{msg['page.audience.source.labels.confirmchangedialog.btn']}" actionListener="#{audienceMBean.audienceSourceMBean.cancelSave}" update=":navigationDiv" onclick="confirmationChanges.hide()" type="button" />
+            </div>
+        </pri:dialog>
+      </div>
+    </h:form>
+</section>
+</ui:composition>

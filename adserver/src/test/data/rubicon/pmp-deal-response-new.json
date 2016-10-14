@@ -1,0 +1,20 @@
+{
+	"id":"59ce236f3b5d5524925f68117580a663a3f566e1",
+	"bidid":"1d3d8c61-f26a-a409-6899-997c1bee42d3",
+	"seatbid":[ {
+			"bid":[
+				{
+					"impid":"1",
+					"price":16.388000000000001676880856393836438655853271484375,
+					"adomain":[ "lloydsbank.com" ],
+					"cid":"dc505a94-9693-4b0c-b2e7-61bd314edc73",
+					"crid":"e17ab2b9-ada3-41bb-9a2c-1090e2d0c1eb",
+					"dealid":"BYD-7706-00143",
+					"iurl":"http://asset.qa.byyd.net/as//70e7727d-529a-4a71-b11c-7c37390db85c",
+					"adm":"<a href=\"%%click_macro%%?url=http%3A%2F%2Flocalhost%3A8888%2Fcr%2Ffd1db93e-d32d-48c7-80e8-450411974512%2F37e764f0-c236-756e-ef02-bf79090f11d8?redir=http%3A%2F%2Fad.doubleclick.net%2Fddm%2Fjump%2FN6010.1327842.WEVE.COM%2FB8640287.116734847%3Bsz%3D320x50%3Bord%3D1430472762593%3F\">\r\n\r\n<IMG SRC=\"http://ad.doubleclick.net/ddm/ad/N6010.1327842.WEVE.COM/B8640287.116734847;sz=320x50;ord=1430472762593?\" BORDER=0 WIDTH=320 HEIGHT=50 ALT=\"Advertisement\"></A><!-- Beacon 1 -->\n<img width=1 height=1 src=\"http://localhost:8888/bc/fd1db93e-d32d-48c7-80e8-450411974512/37e764f0-c236-756e-ef02-bf79090f11d8.gif?sp=${AUCTION_PRICE:BF}\"/>\n<!-- Beacon 2 -->\n<img width=1 height=1 src=\"http://weve.qa.byyd.net/weve/bc/fd1db93e-d32d-48c7-80e8-450411974512/37e764f0-c236-756e-ef02-bf79090f11d8/e17ab2b9-ada3-41bb-9a2c-1090e2d0c1eb.gif?d.adid=d50cf31c-37ad-4c69-9875-22e7c89fc9e2&d.adid_md5=6e56dca5875ef0a7f6e7787e1075d151\"/>\n",
+					"id":"2"
+				}
+			],
+			"seat":"a795ff8f-6c88-46e4-97cc-bd4c2cd2886a"
+	} ]
+}

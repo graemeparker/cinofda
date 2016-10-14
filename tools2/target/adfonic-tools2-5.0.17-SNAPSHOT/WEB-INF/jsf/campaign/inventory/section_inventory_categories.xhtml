@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+	<pri:tab id="categoryTab" title="#{msg['page.campaign.targeting.menu.categories.label']}" >
+	   	<pri:selectBooleanCheckbox 
+	   		id="select_all_iab"
+	  		itemLabel="Select All" 
+			styleClass="iab-select-all select-all"  
+		/>
+	    <pri:selectManyCheckbox
+	    	id="iabCategorySelection" 
+	    	layout="c03" 
+	    	value="#{campaignMBean.campaignInventoryTargetingMBean.campaignInventoryCategoriesMBean.targetedChannels}" 
+			converter="com.adfonic.tools.converter.channel.CategoryConverter" 
+			styleClass="iabCategories indent-chkbox"
+		>
+	        <f:selectItems 
+	        	var="categoriesVar" 
+	        	value="#{campaignMBean.campaignInventoryTargetingMBean.campaignInventoryCategoriesMBean.categories}"
+                itemLabel="#{categoriesVar.name}" 
+                itemValue="#{categoriesVar}" 
+            />
+	    </pri:selectManyCheckbox>
+	    <pri:message id="iabErrorMessage" for="iabCategorySelection"/>
+	</pri:tab>
+	
+   	<script type="text/javascript">
+		 // <![CDATA[	   
+			ADT.selectAllElement("#categories-container");
+		// ]]>
+    </script>  
+</ui:composition>

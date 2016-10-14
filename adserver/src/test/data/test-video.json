@@ -1,0 +1,69 @@
+{
+   "app":{
+       "bundle":"651510680",
+       "cat":[ "IAB1", "IAB9", "IAB9-30", "entertainment", "games" ],
+       "id":"agltb3B1Yi1pbmNyDAsSA0FwcBj_g_kUDA",
+       "name":"Trivia Crack iOS",
+       "publisher":{ "id":"agltb3B1Yi1pbmNyEAsSB0FjY291bnQY3NbZEgw", "name":"Etermax" },
+       "storeurl":"https://itunes.apple.com/us/app/trivia-crack/id651510680?mt=8&uo=4",
+       "ver":"1.9.2"
+   },
+   "tmax":5000,
+   "at":2,
+   "badv":[ "club1616.com", "huntmads.com", "mobilestreams.com", "mobilestrems.com", "movistar.com", "movistar.mobilewap.com", "pdx.mobileboost.me", "quizup.com", "wlsmapi.com" ],
+   "bcat":[ "IAB7-39", "IAB8-18", "IAB9-9", "IAB25", "IAB26" ],
+   "device":{
+       "carrier":"311-480",
+       "connectiontype":2,
+       "devicetype":1,
+       "dnt":0,
+       "dpidsha1":"fec96b9f15d8cc0dffe4721308cb021baa3e08b6",
+       "ext":{ "idfa":"35A32E28-BEB1-4A60-BC24-63DF4EB25569" },
+       "geo":{ "city":"Yonkers", "country":"USA", "region":"NY" },
+       "ip":"69.74.126.146",
+       "js":1,
+       "language":"en",
+       "make":"Apple",
+       "model":"iPhone 5 (GSM+CDMA)",
+       "os":"iOS",
+       "osv":"8.1",
+       "ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B411"
+   },
+   "id":"66d7b00c-bbb1-4346-b608-3bd8fac635ff",
+   "imp":[
+       {
+           "banner":{
+               "api":[ 3 ],
+               "battr":[ 2, 9, 10 ],
+               "btype":[ 4 ],
+               "ext":{
+                   "mraid":[{
+                           "functions":[ "storePicture", "supports", "playVideo", "createCalendarEvent" ],
+                           "version":"2.0"
+                   }],
+                   "nativebrowserclick":1
+               },
+               "h":480,
+               "pos":1,
+               "w":320
+           },
+           "bidfloor":0.610,
+           "displaymanager":"mopub",
+           "displaymanagerver":"3.2.0",
+           "id":"1",
+           "instl":1,
+           "tagid":"286066e20b3f4e74ab0e1d50aa96e982",
+           "video":{
+               "battr":[ 2, 9, 10 ],
+               "h":480,
+               "linearity":1,
+               "maxduration":30,
+               "mimes":[ "video/3gpp", "video/3gpp2", "video/mp4", "video/quicktime", "video/x-m4v" ],
+               "minduration":0,
+               "protocol":2,
+               "protocols":[ 2, 5 ],
+               "w":320
+           }
+       }
+   ]
+}

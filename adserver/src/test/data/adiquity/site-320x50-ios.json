@@ -1,0 +1,22 @@
+{
+	"site":{
+		"sid":"15413272",
+		"page":"http://adiquity.rooms-apps.com/",
+		"name":"Human Anatomy!",
+		"domain":"adiquity.rooms-apps.com",
+		"pid":"15390996"
+	},
+	"id":"AKUDMUQYDAABQO",
+	"tmax":300,
+	"imp":[ { "w":320, "impid":"AKUDMUQYDAABQO_1", "h":50 } ],
+	"device":{
+		"os":"ios",
+		"model":"iphone",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A405 Safari/8536.25",
+		"make":"apple",
+		"country":"USA",
+		"ip":"162.246.19.72"
+	},
+	"at":2,
+	"user":{ "uid":"1118984562" }
+}

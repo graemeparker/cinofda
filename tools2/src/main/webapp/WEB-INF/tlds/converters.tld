@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+	<tlib-version>2.0</tlib-version>
+	<short-name>byydtechJS</short-name>
+	<uri>http://byyd-tech.com/jsf/extenderjs</uri>
+	<tag>
+		<description>Formats a long or a double</description>
+		<name>numberFormatConverter</name>
+		<tag-class>com.adfonic.tools.converter.format.NumberFormatConverter</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Position for the units - front or back(default)</description>
+			<name>unitsPosition</name>
+			<rtexprvalue>true</rtexprvalue>
+			<deferred-value>
+				<type>java.lang.String</type>
+			</deferred-value>
+		</attribute>
+		<attribute>
+			<description>Unit symbol to be displayed</description>
+			<name>units</name>
+			<rtexprvalue>true</rtexprvalue>
+			<deferred-value>
+				<type>java.lang.String</type>
+			</deferred-value>
+		</attribute>
+		<attribute>
+			<description>Format for the values - abbreviated or normal(default)</description>
+			<name>format</name>
+			<rtexprvalue>true</rtexprvalue>
+			<deferred-value>
+				<type>java.lang.String</type>
+			</deferred-value>
+		</attribute>
+        <attribute>
+            <description>Decimals - decimal places to be displayed but only currently applied when specified and > 2 and the number is non-zero</description>
+            <name>decimals</name>
+            <rtexprvalue>true</rtexprvalue>
+            <deferred-value>
+                <type>java.lang.Integer</type>
+            </deferred-value>
+        </attribute>
+	</tag>
+</taglib>

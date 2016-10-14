@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Company administration"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+<ui:define name="pageContent">
+
+<!-- Show error box if there are any errors -->
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">${msg['page.generic.error.label']}</div>
+    <div class="infoContent">${msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+ <!-- Green box if we just updated -->
+<h:panelGroup layout="block" styleClass="infoOK" rendered="#{requestScope.didUpdate}">
+  <div class="infoOKImage"></div>
+  <div class="infoOKHeader">Saved</div>
+  <div class="infoContent">
+    Your changes have been saved.
+  </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+<hr/>
+
+<p class="label">Advertiser</p>
+<h:form id="advertiserSelect">
+<table class="form">
+<tr>
+    <td class="label">Advertiser</td>
+    <td>
+        <h:selectOneMenu id="advertiser"
+          converter="jpaConverter"
+          onchange="submit()"
+          value="#{companyAdminBean.advertiser}">
+            <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+            <f:selectItems value="#{companyAdminBean.companyAdvertisers}"/>
+        </h:selectOneMenu>
+    </td>
+</tr>
+</table>
+</h:form>
+
+<h:panelGroup rendered="#{not empty companyAdminBean.advertiser}">
+<h:form id="companyForm">
+<table class="form">
+	<tr>
+	    <td class="label">Key</td>
+	    <td>
+	        <h:selectBooleanCheckbox id="keyAdvertiser"
+	            value="#{companyAdminBean.advertiser.key}">
+	        </h:selectBooleanCheckbox>
+	    </td>
+	</tr>
+	<tr>
+	    <td class="label">Managed</td>
+	    <td>
+	        <h:selectBooleanCheckbox id="managedTrafficking"
+	            value="#{companyAdminBean.advertiser.managedTrafficking}">
+	        </h:selectBooleanCheckbox> Managed_Trafficking&#160;&#160;&#160;&#160;
+	        <h:selectBooleanCheckbox id="managedDelivery"
+	            value="#{companyAdminBean.advertiser.managedDelivery}">
+	        </h:selectBooleanCheckbox> Managed_Delivery
+	    </td> 
+	</tr>
+	
+	<tr>
+		<td class="label">AdOps owner</td>
+		<td>
+		    <h:selectOneMenu id="advertiserAdOpsOwner"
+		        value="#{companyAdminBean.advertiser.adOpsOwner}"
+		        required="false"
+		        converter="jpaConverter">
+		        <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+		        <f:selectItems value="#{companyAdminBean.adfonicUsers}"/>
+		    </h:selectOneMenu>
+		</td>
+	</tr>
+	
+	<tr>
+		<td class="label">Sales owner</td>
+		<td>
+		    <h:selectOneMenu id="advertiserSalesOwner"
+		        value="#{companyAdminBean.advertiser.salesOwner}"
+		        required="false"
+		        converter="jpaConverter">
+		        <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+		        <f:selectItems value="#{companyAdminBean.adfonicUsers}"/>
+		    </h:selectOneMenu>
+		</td>
+	</tr>
+	
+	<!-- MAD-3168 - RTB Seat ID -->
+	<tr>
+	    <td class="label">Advertiser-level Seat ID</td>
+        <td>
+            
+            <h:selectBooleanCheckbox id="advertiserLevelSeatID" value="#{companyAdminBean.advertiser.enableRtbBidSeat}" onchange="submit()"/>
+            
+            <h:panelGroup id="seat-ids-container" >
+	           <pri:dataTable var="seatId" value="#{companyAdminBean.bidSeats}" varStatus="seatIdStatus" rendered="#{companyAdminBean.advertiser.enableRtbBidSeat}">
+	                <pri:column headerText="AdExchange">
+	                    <pri:outputLabel value="#{seatId.targetPublisher.name}"/>
+	                </pri:column>
+	                <pri:column headerText="Seat Id" style="text-align: center;">
+	                    <pri:inputText id="seatIds" value="#{seatId.seatId}" required="false" maxlength="40" size="40" style="width:300px"/>
+	                </pri:column>
+	           </pri:dataTable>
+	        </h:panelGroup>
+        </td>
+	</tr>
+</table>
+
+<p class="label">Publisher</p>
+<table class="form">
+<tr>
+    <td class="label">Key</td>
+    <td>
+        <h:selectBooleanCheckbox id="keyPublisher"
+            label="Key publisher"
+            value="#{companyAdminBean.publisher.key}">
+        </h:selectBooleanCheckbox>
+    </td>
+</tr>
+<tr>
+    <td class="label">Disclose identity</td>
+    <td>
+        <h:selectBooleanCheckbox id="disclosedPublisher"
+            label="Disclosed publisher"
+            value="#{companyAdminBean.publisher.disclosed}">
+        </h:selectBooleanCheckbox>
+    </td>
+</tr>
+<tr>
+<td>AdOps owner</td>
+<td>
+    <h:selectOneMenu id="publisherAdOpsOwner"
+        value="#{companyAdminBean.publisher.adOpsOwner}"
+        required="false"
+        converter="jpaConverter">
+        <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+        <f:selectItems value="#{companyAdminBean.adfonicUsers}"/>
+    </h:selectOneMenu>
+</td>
+</tr>
+<tr>
+<td>Sales owner</td>
+<td>
+    <h:selectOneMenu id="publisherSalesOwner"
+        value="#{companyAdminBean.publisher.salesOwner}"
+        required="false"
+        converter="jpaConverter">
+        <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+        <f:selectItems value="#{companyAdminBean.adfonicUsers}"/>
+    </h:selectOneMenu>
+</td>
+</tr>
+</table>
+
+<p class="label">User</p>
+<table class="form">
+<tr>
+    <td class="label">Developer key</td>
+    <td>
+        <div class="error"><h:message for="developerKey"/></div>
+        <h:inputText id="developerKey"
+            size="40"
+            maxlength="80"
+            required="true"
+            requiredMessage="Developer key must not be empty"
+            value="#{companyAdminBean.developerKey}"
+        />
+    </td>
+</tr>
+<tr>
+    <td>&#160;</td>
+    <td valign="bottom">
+        <h:commandButton id="regenerateDeveloperkey" value="Regenerate">
+            <f:ajax listener="#{companyAdminBean.doRegenerateDeveloperKey}" render="developerKey" />
+        </h:commandButton>
+    </td>
+</tr>
+</table>
+
+<div class="bottomButton">
+  <!-- button start -->
+        <h:commandLink action="#{companyAdminBean.doSaveCompanyAdmin}" styleClass="largeButton">
+            <span>Save</span><span class="go"></span>
+        </h:commandLink>
+  <!-- button end -->
+</div>
+
+</h:form>
+
+</h:panelGroup>
+
+
+</ui:define>
+</ui:composition>

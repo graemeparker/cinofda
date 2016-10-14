@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+  <title>byyd Auto Topup Failed - ${advertiser.name}</title>
+</head>
+<body>
+<p></p>
+<p>Dear ${user.firstName} ${user.lastName},
+</p>
+<p>Username: ${user.email}<br>
+<p>Advertiser: ${advertiser.name}<br>
+</p>
+<p>IMPORTANT: The following transaction has been rejected, so we are unable to process your auto top-up payment.</p>
+<p></p>
+
+<p>Failed payment details</p>
+<p>Payment type: Auto top-up</p>
+<p>Date and time: ${transactionDate} ${transactionTime}</p>
+<p>Amount: ${total}</p>
+<p>&nbsp;</p>
+<p>Reason for payment failure: Card failed</p>
+<p>&nbsp;</p>
+<p>The most common reasons for payment failure are that:</p>
+<p>&nbsp;</p>
+<p>* Your card has expired/been cancelled.</p>
+<p>* The credit limit on your card has been reached.</p>
+<p>* Your card details have changed but your agreement has not been updated</p>
+<p>
+</p>
+<p>Visit the <a href="${urlRoot}/transactions/auto-topup">auto top-up page</a>
+to:</p>
+<p>
+</p>
+<div>- Update your auto top-up payment details or </div>
+<div>- Disable your existing auto top-up payment</div>
+<p>
+</p>
+<p>Need help? Contact us at <a href="${urlRoot}/support">${urlRoot}/support</a>.
+We will answer your email as soon as possible and get you back up and running with our advertising solutions.
+</p>
+<p><br>
+Kind regards,<br/>
+The byyd Team<br/><br/>
+</p>
+</body>
+</html>

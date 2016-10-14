@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"
+>
+	<h:body>
+		<ui:composition template="/WEB-INF/jsf/template/layouts/byyd-layout.xhtml">
+			<ui:define name="content">
+				<div class="content ovh contact-form">
+					<h:form id="customer-contact-form" class="margin-top--35 margin-lft-20">
+						<ui:include src="/WEB-INF/jsf/template/common/contact-form.xhtml"/>
+					</h:form>
+				</div>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

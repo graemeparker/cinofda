@@ -1,0 +1,49 @@
+{
+	"id":"21adbd5b-a0ac-4fe1-aea7-0a8d7f9ff90f",
+	"at":2,
+	"bcat":[ "IAB14-1", "IAB26", "IAB25", "IAB8-5", "IAB24", "IAB8-18", "NEX8-101" ],
+	"imp":[
+		{
+			"id":"21adbd5b-a0ac-4fe1-aea7-0a8d7f9ff90f-1",
+			"instl":0,
+			"banner":{ "h":50, "w":320,
+				"btype":[ 1 ],
+				"battr":[ 3, 4, 5, 8, 9, 12 ],
+				"pos":0
+			},
+			"displaymanager":"millennial",
+			"displaymanagerver":"5.2.0-cc9dfc02.i",
+			"bidfloor":0.1,
+			"ext":{ "nex_screen":0 }
+		}
+	],
+	"app":{
+		"id":"48907",
+		"name":"Mangobird-Truth or Dare Party-IPHONE",
+		"publisher":{ "id":"14171", "name":"Mangobird" },
+		"domain":"mangobird.com",
+		"cat":[ "IAB9-30" ],
+		"ext":{ "nex_coppa":0, "nex_sdkv":"5.2.0-cc9dfc02.i" },
+		"bundle":"501017656",
+		"storeurl":"http://itunes.apple.com/us/app/truth-or-dare-party/id501017656?mt=8"
+	},
+	"device":{
+		"dnt":0,
+		"ip":"78.247.146.56",
+		"carrier":"WIFI",
+		"ua":"iPhone 8.2",
+		"make":"Apple",
+		"model":"iPhone",
+		"osv":"5",
+		"js":1,
+		"os":"iOS",
+		"connectiontype":2,
+		"devicetype":1,
+		"geo":{ "country":"FRA", "zip":"89100", "type":2 },
+		"ext":{ "nex_ifa":"77F5EA53-B931-4637-83EB-B2F6A68383A6", "nex_tablet":0 }
+	},
+	"user":{
+		"id":"77F5EA53-B931-4637-83EB-B2F6A68383A6",
+		"geo":{ "country":"FRA", "zip":"89100", "type":3 }
+	}
+}

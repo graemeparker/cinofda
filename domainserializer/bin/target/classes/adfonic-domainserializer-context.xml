@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    
+  <context:annotation-config/>
+  
+  <context:mbean-export/>
+  
+  <!-- We use the explicit bean instantiation here instead of using the
+       task:executor declaration so that we can set daemon=true.  Otherwise
+       the default thread factory creates non-daemon threads. -->
+  <bean id="executor"
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler"
+        p:daemon="true"
+        p:threadNamePrefix="adfonic-scheduler-executor"
+        p:poolSize="5"/>
+
+  <!-- Allow @Scheduled and what not on component methods -->
+  <task:annotation-driven executor="executor" scheduler="executor" />
+
+  <bean id="domainSerializerProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-domainserializer.properties"/>
+  
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:properties-ref="domainSerializerProperties"/>
+
+  <bean id="domainCacheLoader"
+        class="com.adfonic.domain.cache.DomainCacheLoader"
+        p:dataSource-ref="toolsReadDataSource"/>
+
+  <bean id="adserverDomainCacheLoader"
+        class="com.adfonic.domain.cache.ext.AdserverDomainCacheLoader"
+        p:toolsDataSource-ref="toolsReadDataSource"
+        p:ecpmDataSource-ref="ecpmDataSource"
+        p:genderMixWeightBoost="${weightBoost.genderMix}"
+        p:ageRangeWeightBoost="${weightBoost.ageRange}"
+        p:ecpmWeightBoost="${weightBoost.ecpm}"
+        p:ecpmWeightMap0="${ecpmWeightMap.valueFor0}"
+        p:ecpmWeightMap1="${ecpmWeightMap.valueFor1}"
+        p:eligibilityPhaseConcurrencyLevel="${AdserverDomainCache.eligibilityPhaseConcurrencyLevel}"/>
+
+  <bean id="dataCollectorDomainCacheLoader"
+        class="com.adfonic.domain.cache.DataCollectorDomainCacheLoader"
+        p:dataSource-ref="toolsReadDataSource"/>
+
+  <bean id="domainSerializer"
+        class="com.adfonic.domainserializer.DomainSerializerS3"/>
+
+  <bean id="creativeEligibilityUpdater" scope="prototype"
+        class="com.adfonic.domainserializer.CreativeEligibilityUpdater"
+        p:dataSource-ref="toolsWriteDataSource"/>
+
+  <bean id="jmsConnectionFactory"
+        class="org.apache.activemq.pool.PooledConnectionFactory"
+        destroy-method="stop"
+        p:maxConnections="${jms.pool.maxConnections}">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory"
+            p:brokerURL="${jms.broker.url}"/>
+    </property>
+  </bean>
+
+  <amq:queue id="pubCreativeApprovalQueue" physicalName="adfonic.publisher.creative.approval"/>
+  
+  <bean id="publisherCreativeSyncNotifier" class="com.adfonic.service.impl.PublisherCreativeSyncNotifier">
+      <constructor-arg ref="jmsConnectionFactory"/>
+      <constructor-arg ref="pubCreativeApprovalQueue"/>
+  </bean>
+
+<!-- 
+  <task:scheduled-tasks scheduler="executor">
+    <task:scheduled ref="domainSerializer" method="reloadDomainCache" fixed-rate="${DomainCache.reloadPeriod}"/>
+    <task:scheduled ref="domainSerializer" method="reloadAdserverDomainCache" fixed-rate="${AdserverDomainCache.reloadPeriod}"/>
+    <task:scheduled ref="domainSerializer" method="reloadDataCollectorDomainCache" fixed-rate="${DataCollectorDomainCache.reloadPeriod}"/>
+  </task:scheduled-tasks>
+   -->
+    <bean id="adspaceLoader"
+        class="com.adfonic.domain.cache.ext.loader.AdSpaceLoader"
+        p:dataSource-ref="toolsReadDataSource"
+        />
+  <bean id="creativeLoader"
+        class="com.adfonic.domain.cache.ext.loader.CreativeLoader"
+        p:dataSource-ref="toolsReadDataSource"
+        />
+
+  <bean id="auditedCreativesFilter"
+        class="com.adfonic.domain.cache.ext.loader.AuditedCreativesFilterImpl"
+        p:auditingPublishers="#{'${external.auditing.publishers}'.split(',')}"
+        p:appNexusAllowAuditPublishers="#{'${appnxs.allow.audit}'.split(',')}"
+        p:creativeSyncService-ref="publisherCreativeSyncNotifier" />
+
+  <bean id="dsRejectionListener"
+        class="com.adfonic.domain.cache.listener.DSRejectionListenerImpl"
+        />
+        
+  <bean id="campaignAudienceLoader" class="com.adfonic.domain.cache.ext.loader.CampaignAudienceLoader"/>
+  
+  <util:constant id="webServiceEndPoint" static-field="com.adfonic.domainserializer.DomainSerializer.WEBSERVICE_EP_URL"/>
+  
+  <!-- 
+  <bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter"
+      p:baseAddress="#{webServiceEndPoint?:domainSerializerProperties['Webservice.MasterInstance.URL']}"/>
+   -->
+
+  <!-- 
+  <bean id="serviceRegistryMasterEPStub" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean"
+      p:serviceInterface="com.adfonic.service.IEligibleServiceRegistry"
+      p:wsdlDocumentUrl="classpath:EligibilityServiceRegistry.wsdl"
+      p:serviceName="EligibilityServiceRegistry"
+      p:namespaceUri="http://service.adfonic.com/"
+      p:endpointAddress="${Webservice.MasterInstance.URL}EligibilityServiceRegistry"
+      p:portName="ECRegistryServicePort"/>
+   -->
+   
+  <bean id="null" class="com.adfonic.service.NullFactoryBean"/>
+  
+  <bean id="serviceRegistryEP" class="com.adfonic.service.ECRegistryService"
+      p:parentService="#{webServiceEndPoint==null ? null : domainSerializerProperties['Webservice.MasterInstance.URL']}"/>
+  
+  <!-- 
+  <bean id="serviceEpStub" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean"
+      p:serviceInterface="com.adfonic.service.IEligibleCreativeService"
+      p:wsdlDocumentUrl="classpath:EligibilityService.wsdl"
+      p:serviceName="EligibilityService"
+      p:namespaceUri="http://service.adfonic.com/"
+      p:endpointAddress="#{webServiceEndPoint?:domainSerializerProperties['Webservice.MasterInstance.URL']}EligibilityService"
+      p:portName="EligibleCreativeServicePort"/>
+   -->
+   
+  <!-- 
+  <bean id="serviceEp" class="com.adfonic.service.EligibleCreativeService"
+      p:localRegistry-ref="serviceRegistryEP"
+      p:self="#{webServiceEndPoint?:domainSerializerProperties['Webservice.MasterInstance.URL']}EligibilityService"/>
+   -->
+   
+   <bean id="logManager" class="com.adfonic.domainserializer.LogManager" />
+	  
+</beans>

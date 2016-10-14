@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<h:body>
+<ui:composition template="/WEB-INF/jsf/template/layouts/adfonicLayout.xhtml">
+<ui:define name="content">
+
+<!--temporary script-->
+<script type="text/javascript">
+    // <![CDATA[
+    $(function () {
+        var tabNo = parseInt(window.location.href.slice(window.location.href.indexOf('?') + 3), 10),
+                tabNames = ['setup', 'scheduling', 'targeting', 'creative', 'bidding', 'tracking', 'confirm'],
+                i = 1;
+
+        $('#side-panel').addClass('t' + tabNo).find(':nth-child(' + tabNo + ')').addClass('current');
+        $('#' + tabNames[tabNo - 1]).show(0);
+
+        for (i; i < 8; i++) {
+            (function(x) {
+                $('#side-panel section:nth-child(' + x + ')').click((function () {
+                    window.location = 'http://' + window.location.host + window.location.pathname + '?t=' + x;
+                }));
+            })(i);
+        }
+    });
+    // ]]>
+</script>
+
+<div class="content ovh">
+    <div class="row addcampaign main-add-panel">
+        <div class="fourcol">
+            <div id="side-panel" class="ui-corner-all ui-shadow">
+                <section>
+                    <h2><span>Campaign Setup</span></h2>
+                    <div class="props t1">
+                        <ul>
+                            <li>
+                                <span class="label">Name</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">IO Reference</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Targeting Adults</span>
+                                <span class="val">None Set</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <h2><span>Scheduling</span></h2>
+                    <div class="props t2">
+                        <ul>
+                            <li>
+                                <span class="label">Start Date</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">End Date</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Time period</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Time of weekday</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Time of weekend</span>
+                                <span class="val">None Set</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <h2><span>Targeting</span></h2>
+                    <div class="props t3">
+                        <ul>
+                            <li>
+                                <span class="label">Location</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Devices</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Platforms</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">iOS</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Connection</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Demographics</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Channels</span>
+                                <span class="val">None Set</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <h2><span>Creative</span></h2>
+                    <div class="props t4">
+                        <ul>
+                            <li>
+                                <span class="label">Name</span>
+                                <span class="val">None</span>
+                            </li>
+                            <li>
+                                <span class="label">Language</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Format</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Destination</span>
+                                <span class="val">None Set</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span class="label">Name</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Language</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Format</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Destination</span>
+                                <span class="val">None Set</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <h2><span>Bidding &amp; Budget</span></h2>
+                    <div class="props t5">
+                        <ul>
+                            <li>
+                                <span class="label">Network</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Bid Price</span>
+                                <span class="val">None Set</span>
+                            </li>
+                            <li>
+                                <span class="label">Budget Gap</span>
+                                <span class="val">None Set</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <h2><span>Conversion Tracking</span></h2>
+                    <div class="props t7">
+                        <ul>
+                            <li>
+                                <span class="label">sample label</span>
+                                <span class="val">None Set</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <h2><span>Confirmation</span></h2>
+                </section>
+
+            </div>
+        </div>
+        <div class="eightcol last">
+
+        <!-- ===============================  SETUP SECTION  =============================== -->
+        <section style="display: none;" id="setup">
+            <h2 class="sec-title">Setup</h2>
+            <a href="#">Copy settings from another campaign</a>
+            <h:form id="campaign-setup" class="options" prependId="false" >
+                <div class="form-box ui-shadow ui-corner-all">
+                    <div class="form-row">
+                        <h:outputLabel styleClass="bl" id="campaign-name-label" for="campaign-name"
+                                       value="Campaign Name"/>
+                        <pri:inputText styleClass="bl" id="campaign-name" value="" required="true"/>
+                        <pri:watermark for="campaign-name" value="e.g. SummerPromo iOS Canada" />
+                    </div>
+                    <div class="form-row">
+                        <h:outputLabel styleClass="bl" id="io-ref-label" for="campaign-name" value="IO Reference"/>
+                        <pri:inputText styleClass="bl" id="io-ref" value="" required="true"/>
+                    </div>
+                    <div class="form-row">
+                        <span>Product / service is only for adults?</span>
+                        <pri:selectOneRadio id="adult-options" value="temp" layout="pageDirection">
+                            <f:selectItem itemLabel="Yes" itemValue="1"/>
+                            <f:selectItem itemLabel="No" itemValue="2"/>
+                        </pri:selectOneRadio>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <pri:commandButton value="Save &amp; continue"  id="continueBtn" />
+                </div>
+            </h:form>
+        </section>
+
+        <!-- ===============================  SCHEDULING SECTION  =============================== -->
+        <section style="display: none;" id="scheduling">
+            <h2 class="sec-title">Scheduling</h2>
+            <h:form id="campaign-scheduling" class="options" prependId="false" >
+                <div class="form-box ui-shadow ui-corner-all">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <h:outputLabel styleClass="bl" id="start-date-label" for="campaign-name" value="Start"/>
+                            <pri:calendar mode="popup" id="start-date"/>
+                            <pri:watermark for="start-date" value="ASAP" />
+                        </div>
+                        <div class="form-col">
+                            <h:outputLabel styleClass="bl" id="end-date-label" for="campaign-name" value="End"/>
+                            <pri:calendar mode="popup" id="end-date"/>
+                            <pri:watermark for="end-date" value="No end date" />
+                        </div>
+                        <div class="form-col set-dates">
+                            <a href="#">Set start and end times</a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="form-row">
+                        <a href="#">+ Add another period</a>
+                    </div>
+                    <div class="form-row">
+                        <a href="#">Control campaign by time &amp; day of week</a>
+                    </div>
+                    <div class="form-row">
+                        <div id="time-range-boxes">
+                            <div class="row-labels-y">
+                                <div class="first-top">Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                            </div>
+                            <div class="row-checkboxes-days">
+                                <div data-no="0" class="first-top"><pri:selectBooleanCheckbox styleClass="day y0"/></div>
+                                <div data-no="1"><pri:selectBooleanCheckbox styleClass="day y1"/></div>
+                                <div data-no="2"><pri:selectBooleanCheckbox styleClass="day y2"/></div>
+                                <div data-no="3"><pri:selectBooleanCheckbox styleClass="day y3"/></div>
+                                <div data-no="4"><pri:selectBooleanCheckbox styleClass="day y4"/></div>
+                            </div>
+                            <div class="row-labels-x">
+                                <div>0</div>
+                                <div>1</div>
+                                <div>2</div>
+                                <div>3</div>
+                                <div>4</div>
+                                <div>5</div>
+                                <div>6</div>
+                                <div>7</div>
+                                <div>8</div>
+                                <div>9</div>
+                                <div>10</div>
+                                <div>11</div>
+                                <div>12</div>
+                                <div>13</div>
+                                <div>14</div>
+                                <div>15</div>
+                                <div>16</div>
+                                <div>17</div>
+                                <div>18</div>
+                                <div>19</div>
+                                <div>20</div>
+                                <div>21</div>
+                                <div>22</div>
+                                <div>23</div>
+                            </div>
+                            <div class="row-checkboxes-hours-week">
+                                <div data-no="0"><pri:selectBooleanCheckbox styleClass="hour x0"/></div>
+                                <div data-no="1"><pri:selectBooleanCheckbox styleClass="hour x1"/></div>
+                                <div data-no="2"><pri:selectBooleanCheckbox styleClass="hour x2"/></div>
+                                <div data-no="3"><pri:selectBooleanCheckbox styleClass="hour x3"/></div>
+                                <div data-no="4"><pri:selectBooleanCheckbox styleClass="hour x4"/></div>
+                                <div data-no="5"><pri:selectBooleanCheckbox styleClass="hour x5"/></div>
+                                <div data-no="6"><pri:selectBooleanCheckbox styleClass="hour x6"/></div>
+                                <div data-no="7"><pri:selectBooleanCheckbox styleClass="hour x7"/></div>
+                                <div data-no="8"><pri:selectBooleanCheckbox styleClass="hour x8"/></div>
+                                <div data-no="9"><pri:selectBooleanCheckbox styleClass="hour x9"/></div>
+                                <div data-no="10"><pri:selectBooleanCheckbox styleClass="hour x10"/></div>
+                                <div data-no="11"><pri:selectBooleanCheckbox styleClass="hour x11"/></div>
+                                <div data-no="12"><pri:selectBooleanCheckbox styleClass="hour x12"/></div>
+                                <div data-no="13"><pri:selectBooleanCheckbox styleClass="hour x13"/></div>
+                                <div data-no="14"><pri:selectBooleanCheckbox styleClass="hour x14"/></div>
+                                <div data-no="15"><pri:selectBooleanCheckbox styleClass="hour x15"/></div>
+                                <div data-no="16"><pri:selectBooleanCheckbox styleClass="hour x16"/></div>
+                                <div data-no="17"><pri:selectBooleanCheckbox styleClass="hour x17"/></div>
+                                <div data-no="18"><pri:selectBooleanCheckbox styleClass="hour x18"/></div>
+                                <div data-no="19"><pri:selectBooleanCheckbox styleClass="hour x19"/></div>
+                                <div data-no="20"><pri:selectBooleanCheckbox styleClass="hour x20"/></div>
+                                <div data-no="21"><pri:selectBooleanCheckbox styleClass="hour x21"/></div>
+                                <div data-no="22"><pri:selectBooleanCheckbox styleClass="hour x22"/></div>
+                                <div data-no="23"><pri:selectBooleanCheckbox styleClass="hour x23"/></div>
+                            </div>
+                            <div class="row-boxes">
+                                <div data-x="0" data-y="0"></div>
+                                <div data-x="1" data-y="0"></div>
+                                <div data-x="2" data-y="0"></div>
+                                <div data-x="3" data-y="0"></div>
+                                <div data-x="4" data-y="0"></div>
+                                <div data-x="5" data-y="0"></div>
+                                <div data-x="6" data-y="0"></div>
+                                <div data-x="7" data-y="0"></div>
+                                <div data-x="8" data-y="0"></div>
+                                <div data-x="9" data-y="0"></div>
+                                <div data-x="10" data-y="0"></div>
+                                <div data-x="11" data-y="0"></div>
+                                <div data-x="12" data-y="0"></div>
+                                <div data-x="13" data-y="0"></div>
+                                <div data-x="14" data-y="0"></div>
+                                <div data-x="15" data-y="0"></div>
+                                <div data-x="16" data-y="0"></div>
+                                <div data-x="17" data-y="0"></div>
+                                <div data-x="18" data-y="0"></div>
+                                <div data-x="19" data-y="0"></div>
+                                <div data-x="20" data-y="0"></div>
+                                <div data-x="21" data-y="0"></div>
+                                <div data-x="22" data-y="0"></div>
+                                <div data-x="23" data-y="0"></div>
+                            </div>
+                            <div class="row-boxes">
+                                <div data-x="0" data-y="1"></div>
+                                <div data-x="1" data-y="1"></div>
+                                <div data-x="2" data-y="1"></div>
+                                <div data-x="3" data-y="1"></div>
+                                <div data-x="4" data-y="1"></div>
+                                <div data-x="5" data-y="1"></div>
+                                <div data-x="6" data-y="1"></div>
+                                <div data-x="7" data-y="1"></div>
+                                <div data-x="8" data-y="1"></div>
+                                <div data-x="9" data-y="1"></div>
+                                <div data-x="10" data-y="1"></div>
+                                <div data-x="11" data-y="1"></div>
+                                <div data-x="12" data-y="1"></div>
+                                <div data-x="13" data-y="1"></div>
+                                <div data-x="14" data-y="1"></div>
+                                <div data-x="15" data-y="1"></div>
+                                <div data-x="16" data-y="1"></div>
+                                <div data-x="17" data-y="1"></div>
+                                <div data-x="18" data-y="1"></div>
+                                <div data-x="19" data-y="1"></div>
+                                <div data-x="20" data-y="1"></div>
+                                <div data-x="21" data-y="1"></div>
+                                <div data-x="22" data-y="1"></div>
+                                <div data-x="23" data-y="1"></div>
+                            </div>
+                            <div class="row-boxes">
+                                <div data-x="0" data-y="2"></div>
+                                <div data-x="1" data-y="2"></div>
+                                <div data-x="2" data-y="2"></div>
+                                <div data-x="3" data-y="2"></div>
+                                <div data-x="4" data-y="2"></div>
+                                <div data-x="5" data-y="2"></div>
+                                <div data-x="6" data-y="2"></div>
+                                <div data-x="7" data-y="2"></div>
+                                <div data-x="8" data-y="2"></div>
+                                <div data-x="9" data-y="2"></div>
+                                <div data-x="10" data-y="2"></div>
+                                <div data-x="11" data-y="2"></div>
+                                <div data-x="12" data-y="2"></div>
+                                <div data-x="13" data-y="2"></div>
+                                <div data-x="14" data-y="2"></div>
+                                <div data-x="15" data-y="2"></div>
+                                <div data-x="16" data-y="2"></div>
+                                <div data-x="17" data-y="2"></div>
+                                <div data-x="18" data-y="2"></div>
+                                <div data-x="19" data-y="2"></div>
+                                <div data-x="20" data-y="2"></div>
+                                <div data-x="21" data-y="2"></div>
+                                <div data-x="22" data-y="2"></div>
+                                <div data-x="23" data-y="2"></div>
+                            </div>
+                            <div class="row-boxes">
+                                <div data-x="0" data-y="3"></div>
+                                <div data-x="1" data-y="3"></div>
+                                <div data-x="2" data-y="3"></div>
+                                <div data-x="3" data-y="3"></div>
+                                <div data-x="4" data-y="3"></div>
+                                <div data-x="5" data-y="3"></div>
+                                <div data-x="6" data-y="3"></div>
+                                <div data-x="7" data-y="3"></div>
+                                <div data-x="8" data-y="3"></div>
+                                <div data-x="9" data-y="3"></div>
+                                <div data-x="10" data-y="3"></div>
+                                <div data-x="11" data-y="3"></div>
+                                <div data-x="12" data-y="3"></div>
+                                <div data-x="13" data-y="3"></div>
+                                <div data-x="14" data-y="3"></div>
+                                <div data-x="15" data-y="3"></div>
+                                <div data-x="16" data-y="3"></div>
+                                <div data-x="17" data-y="3"></div>
+                                <div data-x="18" data-y="3"></div>
+                                <div data-x="19" data-y="3"></div>
+                                <div data-x="20" data-y="3"></div>
+                                <div data-x="21" data-y="3"></div>
+                                <div data-x="22" data-y="3"></div>
+                                <div data-x="23" data-y="3"></div>
+                            </div>
+                            <div class="row-boxes">
+                                <div data-x="0" data-y="4"></div>
+                                <div data-x="1" data-y="4"></div>
+                                <div data-x="2" data-y="4"></div>
+                                <div data-x="3" data-y="4"></div>
+                                <div data-x="4" data-y="4"></div>
+                                <div data-x="5" data-y="4"></div>
+                                <div data-x="6" data-y="4"></div>
+                                <div data-x="7" data-y="4"></div>
+                                <div data-x="8" data-y="4"></div>
+                                <div data-x="9" data-y="4"></div>
+                                <div data-x="10" data-y="4"></div>
+                                <div data-x="11" data-y="4"></div>
+                                <div data-x="12" data-y="4"></div>
+                                <div data-x="13" data-y="4"></div>
+                                <div data-x="14" data-y="4"></div>
+                                <div data-x="15" data-y="4"></div>
+                                <div data-x="16" data-y="4"></div>
+                                <div data-x="17" data-y="4"></div>
+                                <div data-x="18" data-y="4"></div>
+                                <div data-x="19" data-y="4"></div>
+                                <div data-x="20" data-y="4"></div>
+                                <div data-x="21" data-y="4"></div>
+                                <div data-x="22" data-y="4"></div>
+                                <div data-x="23" data-y="4"></div>
+                            </div>
+                        </div>
+                        <div id="time-range-boxes-weekend">
+                            <div class="row-labels-y">
+                                <div class="first-top">Sat</div>
+                                <div>Sun</div>
+                            </div>
+                            <div class="row-checkboxes-days">
+                                <div data-no="5" class="first-top"><pri:selectBooleanCheckbox styleClass="day y5"/></div>
+                                <div data-no="6"><pri:selectBooleanCheckbox styleClass="day y6"/></div>
+                            </div>
+                            <div class="row-labels-x">
+                                <div>0</div>
+                                <div>1</div>
+                                <div>2</div>
+                                <div>3</div>
+                                <div>4</div>
+                                <div>5</div>
+                                <div>6</div>
+                                <div>7</div>
+                                <div>8</div>
+                                <div>9</div>
+                                <div>10</div>
+                                <div>11</div>
+                                <div>12</div>
+                                <div>13</div>
+                                <div>14</div>
+                                <div>15</div>
+                                <div>16</div>
+                                <div>17</div>
+                                <div>18</div>
+                                <div>19</div>
+                                <div>20</div>
+                                <div>21</div>
+                                <div>22</div>
+                                <div>23</div>
+                            </div>
+                            <div class="row-checkboxes-hours-week">
+                                <div data-no="0"><pri:selectBooleanCheckbox styleClass="hour x0"/></div>
+                                <div data-no="1"><pri:selectBooleanCheckbox styleClass="hour x1"/></div>
+                                <div data-no="2"><pri:selectBooleanCheckbox styleClass="hour x2"/></div>
+                                <div data-no="3"><pri:selectBooleanCheckbox styleClass="hour x3"/></div>
+                                <div data-no="4"><pri:selectBooleanCheckbox styleClass="hour x4"/></div>
+                                <div data-no="5"><pri:selectBooleanCheckbox styleClass="hour x5"/></div>
+                                <div data-no="6"><pri:selectBooleanCheckbox styleClass="hour x6"/></div>
+                                <div data-no="7"><pri:selectBooleanCheckbox styleClass="hour x7"/></div>
+                                <div data-no="8"><pri:selectBooleanCheckbox styleClass="hour x8"/></div>
+                                <div data-no="9"><pri:selectBooleanCheckbox styleClass="hour x9"/></div>
+                                <div data-no="10"><pri:selectBooleanCheckbox styleClass="hour x10"/></div>
+                                <div data-no="11"><pri:selectBooleanCheckbox styleClass="hour x11"/></div>
+                                <div data-no="12"><pri:selectBooleanCheckbox styleClass="hour x12"/></div>
+                                <div data-no="13"><pri:selectBooleanCheckbox styleClass="hour x13"/></div>
+                                <div data-no="14"><pri:selectBooleanCheckbox styleClass="hour x14"/></div>
+                                <div data-no="15"><pri:selectBooleanCheckbox styleClass="hour x15"/></div>
+                                <div data-no="16"><pri:selectBooleanCheckbox styleClass="hour x16"/></div>
+                                <div data-no="17"><pri:selectBooleanCheckbox styleClass="hour x17"/></div>
+                                <div data-no="18"><pri:selectBooleanCheckbox styleClass="hour x18"/></div>
+                                <div data-no="19"><pri:selectBooleanCheckbox styleClass="hour x19"/></div>
+                                <div data-no="20"><pri:selectBooleanCheckbox styleClass="hour x20"/></div>
+                                <div data-no="21"><pri:selectBooleanCheckbox styleClass="hour x21"/></div>
+                                <div data-no="22"><pri:selectBooleanCheckbox styleClass="hour x22"/></div>
+                                <div data-no="23"><pri:selectBooleanCheckbox styleClass="hour x23"/></div>
+                            </div>
+                            <div class="row-boxes">
+                                <div data-x="0" data-y="5"></div>
+                                <div data-x="1" data-y="5"></div>
+                                <div data-x="2" data-y="5"></div>
+                                <div data-x="3" data-y="5"></div>
+                                <div data-x="4" data-y="5"></div>
+                                <div data-x="5" data-y="5"></div>
+                                <div data-x="6" data-y="5"></div>
+                                <div data-x="7" data-y="5"></div>
+                                <div data-x="8" data-y="5"></div>
+                                <div data-x="9" data-y="5"></div>
+                                <div data-x="10" data-y="5"></div>
+                                <div data-x="11" data-y="5"></div>
+                                <div data-x="12" data-y="5"></div>
+                                <div data-x="13" data-y="5"></div>
+                                <div data-x="14" data-y="5"></div>
+                                <div data-x="15" data-y="5"></div>
+                                <div data-x="16" data-y="5"></div>
+                                <div data-x="17" data-y="5"></div>
+                                <div data-x="18" data-y="5"></div>
+                                <div data-x="19" data-y="5"></div>
+                                <div data-x="20" data-y="5"></div>
+                                <div data-x="21" data-y="5"></div>
+                                <div data-x="22" data-y="5"></div>
+                                <div data-x="23" data-y="5"></div>
+                            </div>
+                            <div class="row-boxes">
+                                <div data-x="0" data-y="6"></div>
+                                <div data-x="1" data-y="6"></div>
+                                <div data-x="2" data-y="6"></div>
+                                <div data-x="3" data-y="6"></div>
+                                <div data-x="4" data-y="6"></div>
+                                <div data-x="5" data-y="6"></div>
+                                <div data-x="6" data-y="6"></div>
+                                <div data-x="7" data-y="6"></div>
+                                <div data-x="8" data-y="6"></div>
+                                <div data-x="9" data-y="6"></div>
+                                <div data-x="10" data-y="6"></div>
+                                <div data-x="11" data-y="6"></div>
+                                <div data-x="12" data-y="6"></div>
+                                <div data-x="13" data-y="6"></div>
+                                <div data-x="14" data-y="6"></div>
+                                <div data-x="15" data-y="6"></div>
+                                <div data-x="16" data-y="6"></div>
+                                <div data-x="17" data-y="6"></div>
+                                <div data-x="18" data-y="6"></div>
+                                <div data-x="19" data-y="6"></div>
+                                <div data-x="20" data-y="6"></div>
+                                <div data-x="21" data-y="6"></div>
+                                <div data-x="22" data-y="6"></div>
+                                <div data-x="23" data-y="6"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <pri:commandButton value="Save &amp; continue"  id="continueBtn2" />
+                </div>
+            </h:form>
+            <script type="text/javascript">
+                // <![CDATA[
+                $(function () {
+                    ADT.timeRangeFields('#time-range-boxes');
+                    ADT.timeRangeFields('#time-range-boxes-weekend');
+                });
+                // ]]>
+            </script>
+        </section>
+
+        <!-- ===============================  TARGETING SECTION  =============================== -->
+        <section style="display: none;" id="targeting">
+            <h2 class="sec-title">Targeting</h2>
+            <h:form id="campaign-targeting" class="options" prependId="false" >
+                <pri:accordionPanel multiple="true">
+                    <pri:tab title="Location">
+                        <pri:selectOneRadio id="location-options" styleClass="location" value="temp" layout="pageDirection">
+                            <f:selectItem itemLabel="Target all locations" itemValue="1" />
+                            <f:selectItem itemLabel="Location by state/city/DMA (Canada, USA &amp; UK only)" itemValue="2" />
+                            <f:selectItem itemLabel="Location by country" itemValue="3" />
+                        </pri:selectOneRadio>
+
+                        <div data-no="2" class="panel-location inner-panel none">
+                            <div class="form-row">
+                                <h:outputLabel styleClass="bl" id="country-label" for="campaign-name" value="Country" />
+                                <pri:selectOneMenu id="country">
+                                    <f:selectItem itemLabel="Canada" itemValue="0" />
+                                    <f:selectItem itemLabel="USA" itemValue="1" />
+                                    <f:selectItem itemLabel="United Kingdom" itemValue="2" />
+                                </pri:selectOneMenu>
+                            </div>
+                            <div class="form-row">
+                                <h:outputLabel styleClass="bl" id="target-by-label" for="campaign-name" value="Target by" />
+                                <pri:selectOneRadio id="target-by-options" value="temp" layout="lineDirection">
+                                    <f:selectItem itemLabel="State" itemValue="1" />
+                                    <f:selectItem itemLabel="DMA" itemValue="2" />
+                                </pri:selectOneRadio>
+                            </div>
+                            <div class="form-row ovh">
+                                <div class="form-col">
+                                    <pri:selectOneMenu id="inc-excl">
+                                        <f:selectItem itemLabel="include" itemValue="0"/>
+                                        <f:selectItem itemLabel="exclude" itemValue="1"/>
+                                    </pri:selectOneMenu>
+                                </div>
+                                <div class="form-col">
+                                    <pri:inputText styleClass="bl" id="inc-excl-list" value="" required="true"/>
+                                    <a href="#">Add many</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div data-no="3" class="panel-location inner-panel none">
+                            ----------  MAP  -------------
+                        </div>
+
+                    </pri:tab>
+                    <pri:tab title="OS Platform &amp; Device">
+                        <pri:selectOneRadio id="platform-options" styleClass="device" value="temp" layout="pageDirection">
+                            <f:selectItem itemLabel="Target all platforms &amp; devices" itemValue="1" />
+                            <f:selectItem itemLabel="Target by OS platform" itemValue="2" />
+                            <f:selectItem itemLabel="Target by device" itemValue="3" />
+                        </pri:selectOneRadio>
+
+
+                        <div data-no="2" class="panel-device inner-panel none">
+                            <div class="form-row ovh">
+                                <div class="form-col">
+                                    <pri:selectManyCheckbox layout="pageDirection">
+                                        <f:selectItem itemLabel="iOS" itemValue="iOS" />
+                                        <f:selectItem itemLabel="Android" itemValue="Android" />
+                                    </pri:selectManyCheckbox>
+                                </div>
+                                <div class="form-col">
+                                    <pri:selectManyCheckbox layout="pageDirection">
+                                        <f:selectItem itemLabel="Windows Mobile" itemValue="Windows Mobile" />
+                                        <f:selectItem itemLabel="RIM" itemValue="RIM" />
+                                    </pri:selectManyCheckbox>
+                                </div>
+                                <div class="form-col">
+                                    <pri:selectManyCheckbox layout="pageDirection">
+                                        <f:selectItem itemLabel="Symbian" itemValue="Symbian" />
+                                        <f:selectItem itemLabel="JAVA MIDP" itemValue="JAVA MIDP" />
+                                    </pri:selectManyCheckbox>
+                                </div>
+                                <div class="form-col">
+                                    <pri:selectManyCheckbox layout="pageDirection">
+                                        <f:selectItem itemLabel="WebOS (Palm)" itemValue="WebOS (Palm)" />
+                                        <f:selectItem itemLabel="Other" itemValue="Other" />
+                                    </pri:selectManyCheckbox>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <h:outputLabel styleClass="bl" id="exclude-devices-label" for="exclude-devices" value="Exclude devices" />
+                                <pri:inputText styleClass="bl" id="exclude-devices" value="" required="true" />
+                                <a href="#">Add a list</a>
+                            </div>
+                        </div>
+
+                        <div data-no="3" class="panel-device inner-panel none">
+                            <div class="form-row ovh">
+                                <div class="form-col">
+                                    <pri:selectOneMenu id="inc-excl-device">
+                                        <f:selectItem itemLabel="include" itemValue="1" />
+                                        <f:selectItem itemLabel="exclude" itemValue="2" />
+                                    </pri:selectOneMenu>
+
+                                </div>
+                                <div class="form-col">
+                                    <pri:inputText styleClass="bl" id="exclude-devices2" value="" required="true" />
+                                    <pri:watermark for="exclude-devices2" value="All devices" />
+                                    <a href="#">Add a list</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </pri:tab>
+                    <pri:tab title="Connection">
+                        <pri:selectManyCheckbox layout="pageDirection" styleClass="connection">
+                            <f:selectItem itemLabel="Wi-Fi" itemValue="Wi-Fi" />
+                            <f:selectItem itemLabel="Wireless operator" itemValue="Wireless operator" />
+                            <f:selectItem itemLabel="Exclude traffic from Opera Mini browser"
+                                          itemValue="Exclude traffic from Opera Mini browser" />
+                        </pri:selectManyCheckbox>
+                        <div data-no="2" class="panel-connection inner-panel none">
+                            <div class="form-row ovh">
+                                <div class="form-col">
+                                    <pri:selectOneMenu id="inc-excl-operator">
+                                        <f:selectItem itemLabel="include" itemValue="1" />
+                                        <f:selectItem itemLabel="exclude" itemValue="2" />
+                                    </pri:selectOneMenu>
+
+                                </div>
+                                <div class="form-col">
+                                    <pri:inputText styleClass="bl" id="exclude-operator" value="" required="true" />
+                                    <a href="#">Add a list</a>
+                                </div>
+                            </div>
+                        </div>
+                    </pri:tab>
+                    <pri:tab title="Channels">
+                        <pri:selectManyCheckbox layout="pageDirection">
+                            <f:selectItem itemLabel="Entertainment" itemValue="Entertainment" />
+                            <f:selectItem itemLabel="Games" itemValue="Games" />
+                            <f:selectItem itemLabel="Lifestyle" itemValue="Lifestyle" />
+                            <f:selectItem itemLabel="News, sport &amp; information" itemValue="News, sport &amp; information" />
+                            <f:selectItem itemLabel="Social networking" itemValue="Social networking" />
+                        </pri:selectManyCheckbox>
+                    </pri:tab>
+                    <pri:tab title="RTB Exchanges">
+                        <div class="form-col">
+                            <pri:selectManyCheckbox layout="pageDirection">
+                                <f:selectItem itemLabel="Mobclix" itemValue="Mobclix" />
+                                <f:selectItem itemLabel="Nexage" itemValue="Nexage" />
+                                <f:selectItem itemLabel="Appnexus" itemValue="Appnexus" />
+                                <f:selectItem itemLabel="Mopub" itemValue="Mopub" />
+                                <f:selectItem itemLabel="Right Media" itemValue="Right Media" />
+                            </pri:selectManyCheckbox>
+                        </div>
+                        <div class="form-col">
+                            <pri:selectManyCheckbox layout="pageDirection">
+                                <f:selectItem itemLabel="Admeld" itemValue="Admeld" />
+                                <f:selectItem itemLabel="Amobee" itemValue="Amobee" />
+                                <f:selectItem itemLabel="Google Adx" itemValue="Google Adx" />
+                                <f:selectItem itemLabel="Pubmatic" itemValue="Pubmatic" />
+                                <f:selectItem itemLabel="OpenX" itemValue="OpenX" />
+                            </pri:selectManyCheckbox>
+                        </div>
+                        <div class="form-col">
+                            <pri:selectManyCheckbox layout="pageDirection">
+                                <f:selectItem itemLabel="Adiquity" itemValue="Adiquity" />
+                            </pri:selectManyCheckbox>
+                        </div>
+                    </pri:tab>
+                    <pri:tab title="Demographics">
+                        <div class="form-row">Audience Gender</div>
+                        <div class="form-row-small slider-head">
+                            <span class="f-left">Male</span>
+                            <pri:inputText value="50" id="audience-gender" disabled="true" styleClass="gender-1"/>
+                            <h:outputText value= " : "/>
+                            <pri:inputText value="50" id="audience-gender2" disabled="true" styleClass="gender-2"/>
+                            <span class="f-right">Female</span>
+                        </div>
+                        <div class="form-row-small">
+                            <pri:slider onSlideEnd="ADT.genderRangeExpander()" for="audience-gender"/>
+                        </div>
+                        <div class="form-row-big">Audience Age Range</div>
+                        <div class="form-row-small slider-head">
+                            <span class="f-left">16</span>
+                            <pri:inputText disabled="true" styleClass="date-1"/>
+                            <h:outputText value= " to "/>
+                            <pri:inputText disabled="true" styleClass="date-2"/>
+                            <span class="f-right">65</span>
+                        </div>
+                        <div class="form-row-small">
+                            <div id="audience-date-range"></div>
+                        </div>
+                    </pri:tab>
+                </pri:accordionPanel>
+                <div class="form-row">
+                    <pri:commandButton value="Save &amp; continue"  id="continueBtn3" />
+                </div>
+            </h:form>
+            <script type="text/javascript">
+                // <![CDATA[
+                $(function () {
+                    ADT.dualSlider('#audience-date-range');
+                    ADT.subElExpander('radio', 'location');
+                    ADT.subElExpander('check', 'connection');
+                    ADT.subElExpander('radio', 'device');
+                });
+                // ]]>
+            </script>
+        </section>
+
+        <!-- ===============================  CREATIVE SECTION  =============================== -->
+        <section style="display: none;" id="creative">
+            <h2 class="sec-title">Creative</h2>
+            <p>Your Targeting includes: iOS, Android</p>
+            <p>To maximize your reach we recommend that you upload in priority: MMA XLarge, MMA Large, IAB MPU</p>
+            <a href="#">More on ad formats &amp; reach</a>
+            <h:form id="campaign-creative" class="options" prependId="false" >
+
+
+
+                <header class="acc-head ui-corner-all">
+                    <span class="ui-icon"></span>
+                    <span>Summer_Promo_iOS_Canada</span>
+                    <span><h:outputText value= "MMA X-Large 300x50px"/></span>
+<!--                     <a href="#"><h:outputText value="Test link"/></a> -->
+                </header>
+                <div class="acc-content ui-shadow ui-corner-bottom none">
+                    <div class="form-row">
+                        Creative data
+                    </div>
+                </div>
+
+                <header class="acc-head ui-corner-all">
+                    <span class="ui-icon"></span>
+                    <span>Add new creative</span>
+                </header>
+                <div class="acc-content ui-shadow ui-corner-bottom none">
+                    <div class="form-row">
+                        <pri:selectOneRadio value="temp" styleClass="creative" layout="pageDirection">
+                            <f:selectItem itemLabel="Create a text banner ad" itemValue="1" />
+                            <f:selectItem itemLabel="Import via third party tag" itemValue="2" />
+                            <f:selectItem itemLabel="Upload creative" itemValue="3" />
+                        </pri:selectOneRadio>
+
+                        <div data-no="1" class="panel-creative inner-panel none">
+                            <div class="form-row">
+                                <h:outputLabel styleClass="bl" id="ad-text-label" for="ad-text" value="AD Text" />
+                                <pri:inputText styleClass="bl" id="ad-text" value="" required="true" />
+                                35 characters remaining
+                            </div>
+                            <div class="form-row">
+                                <h:outputLabel styleClass="bl" id="dest-label" for="dest" value="Destination" />
+                                <pri:selectOneMenu id="dest" styleClass="long">
+                                    <f:selectItem itemLabel="Web link" itemValue="0" />
+                                    <f:selectItem itemLabel="App Store" itemValue="1" />
+                                    <f:selectItem itemLabel="Apple iTunes Music/Video" itemValue="2" />
+                                    <f:selectItem itemLabel="Click to call" itemValue="3" />
+                                    <f:selectItem itemLabel="Click to audio file" itemValue="4" />
+                                    <f:selectItem itemLabel="Other video - TBC" itemValue="5" />
+                                </pri:selectOneMenu>
+                            </div>
+                            <div class="form-row-small">
+                                <pri:inputText styleClass="bl" id="dest-text" value="" required="true"/>
+                            </div>
+                        </div>
+
+                        <div data-no="2" class="panel-creative inner-panel none">
+                            <div class="form-row">
+                                <h:outputLabel styleClass="bl" id="vendor-label" for="vendor" value="AD Text" />
+                                <pri:selectOneMenu styleClass="bl long" id="vendor">
+                                    <f:selectItem itemLabel="Celtra" itemValue="0" />
+                                    <f:selectItem itemLabel="Crisp Wireless" itemValue="1" />
+                                    <f:selectItem itemLabel="DoubleClick online" itemValue="2" />
+                                    <f:selectItem itemLabel="DoubleClick mobile" itemValue="2" />
+                                    <f:selectItem itemLabel="vendor 4" itemValue="3" />
+                                    <f:selectItem itemLabel="vendor 5" itemValue="4" />
+                                    <f:selectItem itemLabel="vendor 6" itemValue="5" />
+                                </pri:selectOneMenu>
+                                Vendor not listed? <a href="#">Contact support.</a>
+                            </div>
+                            <div class="form-row">
+                                <h:outputLabel styleClass="bl" id="tag-label" for="tag" value="3rd Party Tag" />
+                                <pri:inputTextarea styleClass="bl" id="tag" value="" />
+                                <pri:commandButton styleClass="bl" value="Load tag"  id="tag-load" />
+                            </div>
+                        </div>
+
+                        <div data-no="3" class="panel-creative inner-panel none">
+                            <div class="form-row">
+                                <pri:commandButton styleClass="bl" value="Upload files"  id="upload-files" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <a href="#">+ Add another creative</a>
+                </div>
+                <div class="form-row">
+                    <pri:commandButton value="Save &amp; continue"  id="continueBtn4" />
+                </div>
+            </h:form>
+            <script type="text/javascript">
+            // <![CDATA[
+            $(function () {
+                ADT.subElExpander('radio', 'creative');
+                ADT.accordion('#campaign-creative');
+            });
+            // ]]>
+            </script>
+
+        </section>
+
+        <!-- ===============================  BIDDING SECTION  =============================== -->
+        <section style="display: none;" id="bidding">
+            <h2 class="sec-title">Bidding &amp; Budget</h2>
+            <h:form id="campaign-bidding" prependId="false" >
+                <div class="form-box ui-shadow ui-corner-all">
+                    <div class="form-row">
+                        <pri:selectOneRadio id="bidding-options" styleClass="bidding" value="temp" layout="pageDirection">
+                            <f:selectItem itemLabel="CPC" itemValue="1"/>
+                            <f:selectItem itemLabel="CPM" itemValue="2"/>
+                            <f:selectItem itemLabel="CPX" itemValue="3"/>
+                        </pri:selectOneRadio>
+
+                        <div data-no="1" class="panel-bidding inner-panel none">
+                            <div>
+                                <h:outputLabel styleClass="in-bl" value="Your bid price" id="cpc-price-label" for="cpc-price"/>
+                                <pri:inputText styleClass="in-bl" value="" id="cpc-price" required="true"/>
+                                <h:outputText value="per click"/>
+                            </div>
+                            <div class="ovh">
+                                <p class="f-left label"><h:outputText value="Minimum bid"/></p>
+                                <p class="f-left"><h:outputText value="$1.00"/></p>
+                            </div>
+                        </div>
+
+                        <div data-no="2" class="panel-bidding inner-panel none">
+                            <div>
+                                <h:outputLabel styleClass="in-bl" value="Your bid price" id="cpm-price-label" for="cpm-price"/>
+                                <pri:inputText styleClass="in-bl" value="" id="cpm-price" required="true"/>
+                                <h:outputText value="per 1,000 impressions"/>
+                            </div>
+                            <div class="ovh">
+                                <p class="f-left label"><h:outputText value="Minimum bid"/></p>
+                                <p class="f-left"><h:outputText value="$1.00"/></p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <h2 class="sec-title">Budget &amp; Frequency Caps</h2>
+
+                    <div class="form-row">
+                        <h:outputLabel styleClass="in-bl" id="campaign-budget-label" for="campaign-budget"
+                                       value="Campaign budget"/>
+                        <h:outputText value="$"/>
+                        <pri:inputText styleClass="in-bl" id="campaign-budget" value="" required="true"/>
+                    </div>
+                    <div class="form-row">
+                        <pri:selectBooleanCheckbox/>
+                        <h:outputText value="Send email when 80% has been spent"/>
+                    </div>
+                    <div class="form-row">
+                        <h:outputLabel styleClass="in-bl" id="daily-budget-label" for="daily-budget" value="Daily budget"/>
+                        <h:outputText value="$"/>
+                        <pri:inputText styleClass="in-bl" id="daily-budget" value="" required="true"/>
+                        <a href="#">
+                            <h:outputText value="Different on Saturday &amp; Sunday"/>
+                        </a>
+                    </div>
+                    <div class="form-row">
+                        <pri:selectBooleanCheckbox/>
+                        <h:outputText value="Send email when 80% has been spent"/>
+                    </div>
+                    <div class="form-row-big">
+                        <h:outputLabel styleClass="in-bl" id="account-budget-label" for="account-budget"
+                                       value="Account daily budget"/>
+                        <h:outputText value="$"/>
+                        <pri:inputText styleClass="in-bl" id="account-budget" value="none set" required="true"/>
+                        <a href="#">
+                            <h:outputText value="Account budget settings"/>
+                        </a>
+                    </div>
+                    <div class="form-row-big">
+                        <h:outputLabel styleClass="in-bl" id="frequency-cap-label" for="account-budget" value="Frequency cap"/>
+                        <pri:selectOneMenu id="frequency-cap">
+                            <f:selectItem itemLabel="Select One" itemValue="0"/>
+                            <f:selectItem itemLabel="Option 1" itemValue="1"/>
+                            <f:selectItem itemLabel="Option 2" itemValue="2"/>
+                            <f:selectItem itemLabel="Option 3" itemValue="3"/>
+                        </pri:selectOneMenu>
+                        <h:outputLabel styleClass="in-bl" id="time-label" for="account-budget"
+                                       value="views per unique user per"/>
+                        <pri:selectOneMenu id="time">
+                            <f:selectItem itemLabel="hour" itemValue="0"/>
+                            <f:selectItem itemLabel="day" itemValue="1"/>
+                            <f:selectItem itemLabel="week" itemValue="2"/>
+                        </pri:selectOneMenu>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <pri:commandButton value="Save &amp; continue"  id="continueBtn5" />
+                </div>
+            </h:form>
+            <script type="text/javascript">
+                // <![CDATA[
+                $(function () {
+                    ADT.subElExpander('radio', 'bidding');
+                });
+                // ]]>
+            </script>
+        </section>
+
+        <!-- ===============================  TRACKING SECTION  =============================== -->
+        <section style="display: none;" id="tracking">
+            <h2 class="sec-title">Tracking</h2>
+            <p>To get conversion tracking working you will need to add some code to your app or mobile website.</p>
+            <a href="#">More on tracking options and integration.</a>
+            <h:form id="campaign-tracking" class="options" prependId="false" >
+                <div class="form-box ui-shadow ui-corner-all">
+                    <pri:selectOneRadio id="tracking-radio" styleClass="tracking" layout="pageDirection">
+                        <f:selectItem itemLabel="No conversion tracking" itemValue="1"/>
+                        <f:selectItem itemLabel="Goal conversion tracking" itemValue="2"/>
+                        <f:selectItem itemLabel="App install tracking" itemValue="3"/>
+                    </pri:selectOneRadio>
+
+                    <div data-no="3" class="panel-tracking inner-panel none">
+                        <div class="form-row">
+                            <h:outputLabel styleClass="bl" value="Your app's unique App ID" for="uniq-id"/>
+                            <pri:inputText styleClass="bl" value="" id="uniq-id" required="true"/>
+                            <pri:watermark for="uniq-id" value="e.g. 123123123" />
+                        </div>
+                        <div class="form-row">
+                            <pri:selectOneRadio value="temp" styleClass="track-installs" layout="pageDirection">
+                                <f:selectItem itemLabel="Track installs from your ad seen in apps only" itemValue="1"/>
+                                <f:selectItem
+                                        itemLabel="Track installs from your ad seen in both apps and mobile websites"
+                                        itemValue="2"/>
+                            </pri:selectOneRadio>
+
+                            <div data-no="1" class="panel-track-installs inner-panel">
+                                <pri:selectManyCheckbox layout="lineDirection">
+                                    <f:selectItem itemLabel="iOS UDID" itemValue="iOS UDID"/>
+                                    <f:selectItem itemLabel="ODIN-1" itemValue="ODIN-1"/>
+                                    <f:selectItem itemLabel="OpenUDID" itemValue="OpenUDID"/>
+                                </pri:selectManyCheckbox>
+                            </div>
+                            <div data-no="2" class="panel-track-installs inner-panel">
+                                <pri:selectManyCheckbox layout="lineDirection">
+                                    <f:selectItem itemLabel="Adfonic Ad-X" itemValue="Adfonic Ad-X"/>
+                                </pri:selectManyCheckbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <script type="text/javascript">
+                // <![CDATA[
+                $(function () {
+                    ADT.subElExpander('radio', 'tracking');
+                    ADT.subElExpander('radio', 'track-installs', true);
+                });
+                // ]]>
+            </script>
+        </section>
+
+        <!-- ===============================  TRACKING SECTION  =============================== -->
+        <section style="display: none;" id="confirm">
+            <h2 class="sec-title">Confirm &amp; Submit</h2>
+            <h:form id="campaign-confirm" class="options" prependId="false" >
+
+                <div class="campaign-summary ui-shadow ui-corner-all">
+                    <section>
+                        <h2><span>Campaign Setup</span></h2>
+                        <div class="props">
+                            <ul>
+                                <li>
+                                    <span class="label">Name</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">IO Reference</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Targeting Adults</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><span>Scheduling</span></h2>
+                        <div class="props">
+                            <ul>
+                                <li>
+                                    <span class="label">Start Date</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">End Date</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Time period</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Time of weekday</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Time of weekend</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><span>Targeting</span></h2>
+                        <div class="props">
+                            <ul>
+                                <li>
+                                    <span class="label">Location</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Devices</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Platforms</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">iOS</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Connection</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Demographics</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Channels</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><span>Creative</span></h2>
+                        <div class="props">
+                            <ul>
+                                <li>
+                                    <span class="label">Name</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Language</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Format</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Destination</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>
+                                    <span class="label">Name</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Language</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Format</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Destination</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><span>Bidding &amp; Budget</span></h2>
+                        <div class="props">
+                            <ul>
+                                <li>
+                                    <span class="label">Network</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Bid Price</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                                <li>
+                                    <span class="label">Budget Gap</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><span>Conversion Tracking</span></h2>
+                        <div class="props">
+                            <ul>
+                                <li>
+                                    <span class="label">sample label</span>
+                                    <span class="val">None Set</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+
+                <pri:commandButton value="Submit"  id="approvalBtn" />
+                <a href="#">Save without submitting</a>
+            </h:form>
+
+        </section>
+
+        </div>
+    </div>
+</div>
+</ui:define>
+</ui:composition>
+</h:body>
+</html>

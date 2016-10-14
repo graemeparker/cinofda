@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jms="http://www.springframework.org/schema/jms"       
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+                           http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+  <!-- Don't declare beans explicitly, that's for old-school config-mongers -->
+  <context:annotation-config/>
+  
+  <tx:annotation-driven />
+  
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-webservices-test.properties"/>
+  
+  <!-- 
+  <jdbc:embedded-database id="toolsDataSource" type="H2">
+  	<jdbc:script location="file:../database/bootstrap.sql"/>
+  </jdbc:embedded-database>
+ -->
+<!-- 
+  <jdbc:initialize-database data-source="toolsDataSource">
+  	<jdbc:script location="file:../test/adfonicw.sql"/>
+  </jdbc:initialize-database>  
+  
+  <jdbc:initialize-database data-source="reportingDataSource">
+  	<jdbc:script location="file:../test/adfonicw.sql"/>
+  </jdbc:initialize-database>  
+ -->
+   
+  <bean id="toolsDataSource"
+        class="org.springframework.jdbc.datasource.SimpleDriverDataSource"
+        autowire="byName"
+        p:driverClass="${tools.jdbc.driverClassName}"
+        p:url="${tools.jdbc.url}" />
+
+  <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        p:persistenceUnitName="adfonic-domain"
+        p:packagesToScan="com.adfonic.domain"
+        p:dataSource-ref="toolsDataSource">
+    <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+            p:database="MYSQL"
+            p:showSql="false"
+            p:generateDdl="false"/>
+    </property>
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.generate_statistics">false</prop>
+        <prop key="hibernate.jdbc.fetch_size">10</prop>
+        <prop key="hibernate.jdbc.batch_size">10</prop>
+      </props>
+    </property>
+  </bean>
+  
+  <bean id="transactionManager"
+        class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+    <property name="dataSource" ref="toolsDataSource" />
+  </bean>
+ 
+  <bean id="reportingDataSource"
+        class="org.springframework.jdbc.datasource.SimpleDriverDataSource"
+        autowire="byName"
+        p:driverClass="${reporting.jdbc.driverClassName}"
+        p:url="${reporting.jdbc.url}" /><!-- REPEATABLE_READ -->  
+  
+  <!-- Need this to support OLAP queries.  Declaring this bean sets up
+       a singleton MondrianDataSource instance, which is required for
+       internal use by the OLAPQuery class.
+  -->
+  <bean id="mondrianDataSource"
+        class="com.adfonic.olap.MondrianSqlDataSource"
+        p:reportingDataSource-ref="reportingDataSource"
+        p:catalogLocation="com/adfonic/olap/mondrian-reporting.xml"/>
+
+  <bean id="jmsConnectionFactory"
+        class="org.apache.activemq.pool.PooledConnectionFactory"
+        destroy-method="stop"
+        p:maxConnections="${jms.pool.maxConnections}">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory"
+            p:brokerURL="${jms.broker.url}"/>
+    </property>
+  </bean>
+ 
+  <amq:topic id="mondrianCacheFlushTopic" physicalName="adfonic.mondrian.cache.flush"/>
+  
+  <jms:listener-container connection-factory="jmsConnectionFactory">
+    <jms:listener destination="adfonic.mondrian.cache.flush" ref="mondrianDataSource" method="onCacheFlush"/>
+  </jms:listener-container>
+  
+  <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+      <property name="mappingFiles" value="classpath*:/dozer-mapping.xml"/>
+  </bean>
+
+
+  <!-- Bean Dispatcher...required by dao impl stuff -->
+  <bean id="adfonicBeanDispatcher" class="com.byyd.middleware.utils.AdfonicBeanDispatcher"/>
+
+  <bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory" init-method="init"/>
+  
+    <!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+    <context:component-scan base-package="com.byyd.middleware">
+        <context:exclude-filter type="annotation" expression="com.byyd.middleware.iface.service.NotAutoScan"/>
+    </context:component-scan>
+  
+</beans>

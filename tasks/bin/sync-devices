@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# This is a trick that lets developers use mvn to run this locally.
+if [ -f pom.xml ]; then
+    echo "Running in developer mode"
+    exec mvn \
+        compile \
+        exec:exec \
+        -Dexec.classpathScope=runtime \
+        -Dexec.executable="java" \
+        -Dexec.args="-Xmx1024m -Djava.util.logging.config.file=conf/logging.properties -cp %classpath com.adfonic.tasks.SyncDevices"
+fi
+
+echo "Not really intended for use in production, just run this locally."
+exit 1

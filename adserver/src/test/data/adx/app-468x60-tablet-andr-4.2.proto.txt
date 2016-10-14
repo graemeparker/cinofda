@@ -1,0 +1,82 @@
+id: "U.\216\337\000\a\032\365\n\037\034\006\206\000;~"
+ip: "\263\264x"
+user_agent: "Mozilla/5.0 (Linux; U; Android 4.2.2; pt-br; TR72_KIDS Build/JDQ39) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30 (Mobile; afma-sdk-a-v7099000.6111000.1),gzip(gfe)"
+url: "https://play.google.com/store/apps/details?id=com.hapogames.BubbleParadise"
+detected_language: "pt"
+detected_vertical {
+  id: 926
+  weight: 0.33439177
+}
+detected_vertical {
+  id: 1461
+  weight: 0.33439177
+}
+detected_vertical {
+  id: 105
+  weight: 0.33121645
+}
+adslot {
+  id: 1
+  width: 468
+  height: 60
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 4958611146106206124
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEMqsP44salTRbkFclOVgnR0"
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 59
+detected_content_label: 39
+mobile {
+  platform: "android"
+  app_id: "com.hapogames.BubbleParadise"
+  is_app: true
+  mobile_device_type: TABLET
+  screen_orientation: 1
+  app_category_ids: 60031
+  app_category_ids: 60008
+  app_category_ids: 60000
+  app_category_ids: 69500
+  brand: "android"
+  model: "generic"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 2
+  }
+  screen_width: 600
+  screen_height: 976
+  carrier_id: 0
+  device_pixel_ratio_millis: 1000
+  encrypted_advertising_id: "U.\216\337\000\a\032\365\n\037\034\006\001\000;~.t\311\022\321\315\310\256\216\301,\363\202\277p\246a\311YQ"
+  24: "Bubble Worlds"
+  25: 0x4088b737
+}
+cookie_age_seconds: 661650
+geo_criteria_id: 1001538
+seller_network_id: 1
+publisher_settings_list_id: 8221458166952293557
+51: 3

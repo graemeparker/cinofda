@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.262" tests="214" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib"/>
+    <property name="java.vm.version" value="25.45-b02"/>
+    <property name="user.country.format" value="GB"/>
+    <property name="gopherProxySet" value="false"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/Users/graemeparker/Documents/workspace/byyd-tech/projects"/>
+    <property name="java.runtime.version" value="1.8.0_45-b14"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/endorsed"/>
+    <property name="os.arch" value="x86_64"/>
+    <property name="java.io.tmpdir" value="/var/folders/g6/lc2bz3_n2j72x0r9zv7byf7w0000gn/T/"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="classworlds.conf" value="/opt/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/graemeparker/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.9.5"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="user.home" value="/Users/graemeparker"/>
+    <property name="user.timezone" value="Europe/London"/>
+    <property name="java.awt.printerjob" value="sun.lwawt.macosx.CPrinterJob"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="user.name" value="graemeparker"/>
+    <property name="java.class.path" value="/Users/graemeparker/Documents/workspace/byyd-tech/projects/common-api/target/classes:"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="en"/>
+    <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_45"/>
+    <property name="java.ext.dirs" value="/Users/graemeparker/Library/Java/Extensions:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"/>
+    <property name="sun.boot.class.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/opt/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="sun.font.fontmanager" value="sun.font.CFontManager"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase name="testCheckBlockedAdvertiserDomains05_endsWith" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.014"/>
+  <testcase name="testBasicTargetingEngineImpl02_selectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.014"/>
+  <testcase name="testCheckCapabilities01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.002"/>
+  <testcase name="testCheckCapabilities02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckCapabilities03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckCapabilities04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckCapabilities05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckCapabilities06" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckCapabilities07" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckTargettedMedium02_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckTimeLimit01_null" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testBasicTargetingEngineImpl10_targetAndSelectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.004"/>
+  <testcase name="testCheckExtendedCapabilities02_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckExtendedCapabilities03_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.003"/>
+  <testcase name="testCheckExtendedCapabilities05_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentCountries07_whitelist_country_targeted" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSegmentPlatforms04_platform_not_targeted_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckMOBILEConnectionType03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.015"/>
+  <testcase name="testCheckMOBILEConnectionType04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckMOBILEConnectionType05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckMOBILEConnectionType06" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckMOBILEConnectionType07" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="matchGeotargetsForChineseProvinces" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.005"/>
+  <testcase name="test03_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.028"/>
+  <testcase name="testCheckSegmentCountries11_blacklist_country_not_blacklisted" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test01_03_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testBasicTargetingEngineImpl08_targetAndSelectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckActive01_creative_not_active" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSegmentCountries09_blacklist_country_blacklisted_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test04_02_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentPlatforms01_no_segment" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice05_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.002"/>
+  <testcase name="testCheckVendorsAndDevice09_01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedAdvertiserDomains03_equals" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testGetUniqueIdForFrequencyCounter04_deviceIdentifiersAvailable" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="test05_isEligibleBasedOnMinimumTargettedPayputRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.018"/>
+  <testcase name="testCheckSegmentPlatforms09_platform_targeted_model_not_excluded" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckStoppages02_stopped_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.003"/>
+  <testcase name="testCheckStoppages01_stopped" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="AO271_hidden_model" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.006"/>
+  <testcase name="testCheckAndroidMarketMedium01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckAndroidMarketMedium02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAndroidMarketMedium03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckAndroidMarketMedium04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAndroidMarketMedium05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckTimeLimit03_expired" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentPlatforms03_platform_not_targeted" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedDestinationAttributes03_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckBlockedDestinationAttributes04_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test05_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="test04_isEligibleBasedOnMinimumTargettedPayputRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckMOBILEConnectionType05_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckMOBILEConnectionType06_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSmsSupport01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSmsSupport02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSmsSupport03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSmsSupport04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSmsSupport05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSmsSupport06" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testGetUniqueIdForFrequencyCounter02_trackingIdBlank" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckConnectionType01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckConnectionType02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testGetUniqueIdForFrequencyCounter01_nothingAvailable" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckISPConnectionType03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckISPConnectionType04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckISPConnectionType05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckISPConnectionType06" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckISPConnectionType07" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSmsSupport05_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentCountries06_whitelist_country_not_targeted_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDisplayTypeAndAssetBundle01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDisplayTypeAndAssetBundle02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckDisplayTypeAndAssetBundle03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDisplayTypeAndAssetBundle04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDisplayTypeAndAssetBundle05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckActive02_creative_not_active_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckActive05_both_active" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="test03_isEligibleBasedOnMinimumTargettedPayputRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckPluginBased03_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testGetUniqueIdForFrequencyCounter03_trackingIdNonBlank" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckLanguage07_creative_language_blocked_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.003"/>
+  <testcase name="testCheckSegmentCountries05_whitelist_country_not_targeted" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckBlockedAdvertiserDomains02_no_advertiserDomain" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge06" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge07" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckGenderAndAge08" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge09" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge10" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckGenderAndAge11" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test02_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentCountries02_no_countries_targeted" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test01_02_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testBasicTargetingEngineImpl06_selectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.004"/>
+  <testcase name="testCheckExtendedCapabilities01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckExtendedCapabilities02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckExtendedCapabilities03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckExtendedCapabilities04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckExtendedCapabilities05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckExtendedCapabilities06" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckExtendedCapabilities07" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckActive04_campaign_not_active_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckIpAddress01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckIpAddress02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckIpAddress03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckIpAddress04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="test07_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckActive03_campaign_not_active" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test02_isEligibleBasedOnMinimumTargettedPayputRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckConnectionType01_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckConnectionType02_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentCountries10_blacklist_no_country" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckTimeLimit02_not_expired" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckLanguage06_some_blocked_but_creative_language_not_blocked" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentPlatforms06_platform_targeted_no_models_excluded" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testBasicTargetingEngineImpl07_targetAndSelectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testBasicTargetingEngineImpl05_selectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.002"/>
+  <testcase name="testCheckDisplayTypeAndAssetBundle01_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckDisplayTypeAndAssetBundle04_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSegmentPlatforms05_platform_targeted_model_null" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testBasicTargetingEngineImpl09_targetAndSelectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="test01_isEligibleBasedOnMinimumTargettedPayputRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckLanguage01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckLanguage02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckLanguage03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckLanguage04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckLanguage05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.003"/>
+  <testcase name="testCheckBrowsers01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBrowsers02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.004"/>
+  <testcase name="testCheckBrowsers03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckBrowsers04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckTargettedMedium01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckTargettedMedium02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckTargettedMedium03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentCountries04_whitelist_no_country_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedAdvertiserDomains04_equals_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="test04_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentCountries01_no_segment" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="test01_04_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentPlatforms07_platform_targeted_model_excluded" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckIsSegmentTimeTargetted01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testBasicTargetingEngineImpl04_selectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="matchGeotargetsForAustrianProvinces" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckBlockedAdvertiserDomains06_no_match" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckVendorsAndDevice01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckVendorsAndDevice03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice06" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckVendorsAndDevice07" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice08" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice09" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckVendorsAndDevice10" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice11" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice12" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckVendorsAndDevice13" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSegmentPlatforms08_platform_targeted_model_excluded_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.022"/>
+  <testcase name="testCheckDestinationBeaconUrl01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDestinationBeaconUrl03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDestinationBeaconUrl04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDestinationBeaconUrl05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckDeviceIdentifiers01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDeviceIdentifiers02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckDeviceIdentifiers03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSegmentCountries03_whitelist_no_country" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testBasicTargetingEngineImpl03_selectCreative" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckISPConnectionType05_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckISPConnectionType06_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAllowedFormats01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckAllowedFormats02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAllowedFormats03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAllowedFormats04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAllowedFormats05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckTimeLimit04_expired_with_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedDestinationAttributes01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedDestinationAttributes02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedDestinationAttributes03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedDestinationAttributes04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckBlockedDestinationAttributes05" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test01_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.021"/>
+  <testcase name="testCheckBlockedAdvertiserDomains01_no_blocked_domains" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckEndDate01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckEndDate02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckEndDate03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckEndDate04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.005"/>
+  <testcase name="testCheckPluginBased01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckPluginBased02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckPluginBased03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckClickToCallSupport01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckClickToCallSupport02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckClickToCallSupport03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckClickToCallSupport04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAdvancedScheduling01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAdvancedScheduling02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckAdvancedScheduling03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckLanguage08_creative_language_blocked_no_listener" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckBlockedCategories01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckIpAddress04_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="matchGeotargetsForSpanishProvinces" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.003"/>
+  <testcase name="testAddTargetedCreative02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testAddTargetedCreative03" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testAddTargetedCreative04" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="test06_isEligibleBasedOnMinimumTargetedEcpmRateCardOfPublicationPublisher" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckSegmentCountries08_blacklist_country_blacklisted" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckStoppages03_not_stopped" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckClickToCallSupport03_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckSegmentPlatforms02_no_platforms_targeted" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+  <testcase name="testCheckBrowsers04_02" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0"/>
+  <testcase name="testCheckDeviceIdentifiers03_01" classname="com.adfonic.adserver.impl.TestBasicTargetingEngineImpl" time="0.001"/>
+</testsuite>

@@ -1,0 +1,807 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>adfonic-adserver</artifactId>
+	<packaging>war</packaging>
+	<name>Adfonic Adserver</name>
+
+	<parent>
+		<groupId>com.adfonic</groupId>
+		<artifactId>parent</artifactId>
+		<version>5.0.38-SNAPSHOT</version>
+	</parent>
+
+	<scm>
+		<connection>scm:git:https://git.byyd-tech.com/dev/byyd-tech.git</connection>
+		<developerConnection>scm:git:git@git.byyd-tech.com:dev/byyd-tech.git</developerConnection>
+		<url>https://git.byyd-tech.com/dev/byyd-tech.git</url>
+	</scm>
+
+	<properties>
+		<aspectj.version>1.8.5</aspectj.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${org.apache.maven.plugins.maven-surefire-plugin.version}</version>
+				<configuration>
+					<additionalClasspathElements>
+						<additionalClasspathElement>src/main/webapp/WEB-INF</additionalClasspathElement>
+						<additionalClasspathElement>src/main/webapp</additionalClasspathElement>
+					</additionalClasspathElements>
+					<argLine>-Xms1g -Xmx2g</argLine>
+					<systemPropertyVariables>
+						<java.util.logging.config.file>src/test/resources/logging.properties
+						</java.util.logging.config.file>
+						<java.awt.headless>true</java.awt.headless>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.2</version>
+				<configuration>
+					<preparationGoals>clean package rpm:rpm</preparationGoals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<version>2.1-alpha-1</version>
+				<configuration>
+					<name>${project.artifactId}-${project.packaging}</name>
+					<copyright>Adfonic Proprietary</copyright>
+					<distribution>Adfonic 2012</distribution>
+					<group>Adfonic Application</group>
+					<autoProvides>false</autoProvides>
+					<autoRequires>false</autoRequires>
+					<version>${project.version}.${env.BUILD_NUMBER}</version>
+					<packager>Adfonic Jenkins</packager>
+					<prefix>/usr/local/adfonic/targets</prefix>
+					<description>
+						This is the WAR application for Adfonic Adserver.
+						Once installed, you will
+						need to create a symlink from your
+						tomcat webapps directory to this war.
+						There are different
+						configured Adservers.
+					</description>
+					<defineStatements>
+						<defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+						<defineStatement>dist .el6.adf</defineStatement>
+					</defineStatements>
+					<mappings>
+						<mapping>
+							<directory>/usr/local/adfonic/targets/</directory>
+							<filemode>644</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>target/${project.artifactId}-${project.version}.war</location>
+									<destination>${project.artifactId}.${project.packaging}</destination>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/usr/local/adfonic/targets/</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+						</mapping>
+					</mappings>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${org.apache.maven.plugins.maven-war-plugin.version}</version>
+				<configuration>
+					<packagingExcludes>
+						%regex[WEB-INF/classes/DoubleClickAdX/(?!(seller-network-id-to-name-map\.txt|ad-product-category-to-iabid-map\.txt|ad-sensitive-category-to-iabid-map\.txt)).*$],
+						%regex[WEB-INF/classes/OpenX/(?!(.+\.properties)).*$]
+					</packagingExcludes>
+					<attachClasses>true</attachClasses>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>com.redhat.rcm.maven.plugin</groupId>
+				<artifactId>buildmetadata-maven-plugin</artifactId>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>compile</goal>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<encoding>utf-8</encoding>
+					<target>1.8</target>
+					<source>1.8</source>
+					<complianceLevel>1.8</complianceLevel>
+					<verbose>false</verbose>
+					<aspectLibraries>
+						<aspectLibrary>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-aspects</artifactId>
+						</aspectLibrary>
+						<aspectLibrary>
+							<groupId>net.anthavio</groupId>
+							<artifactId>anthavio-aspects</artifactId>
+						</aspectLibrary>
+					</aspectLibraries>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjrt</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjtools</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			
+		</plugins>
+
+	</build>
+
+	<dependencies>
+
+		<!-- Logging via slf4j & Logback -->
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<!-- commons-logging ~> slf4j -->
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+
+		<!-- java.util.logging ~> slf4j -->
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+		</dependency>
+
+		<!-- Log4Jv2 ~> Slf4j -->
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-to-slf4j</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+
+		<!-- easiest way to get rid of commons-logging -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>99-empty</version>
+		</dependency>
+		
+		<!-- 
+			ArchiveV1BackupLoggerImpl used Log4J 1.2 and TimeAndSizeRollingAppender 
+			Because of that we must NOT use log4j-over-slf4j.jar
+		-->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.org.simonsite</groupId>
+			<artifactId>log4j-appender</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+
+		<!-- Provided -->
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.newrelic.agent.java</groupId>
+			<artifactId>newrelic-api</artifactId>
+		</dependency>
+		
+		<!-- Beware: AWS is quite picky about httpclient and jackson versions -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		
+		<!-- AdServer itself does not use Jackson 1 but some dependencies does 
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.13</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+-->
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>net.minidev</groupId>
+					<artifactId>json-smart</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>${kafka.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.datastax.cassandra</groupId>
+		  <artifactId>cassandra-driver-core</artifactId>
+		  <version>2.1.9</version>
+		  <exclusions>
+		  	<exclusion>
+		  		<groupId>com.codahale.metrics</groupId>
+		  		<artifactId>metrics-core</artifactId>
+		  	</exclusion>
+		  </exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-cassandra</artifactId>
+			<version>1.3.2.RELEASE</version>
+		</dependency>
+		
+		<!--
+		<dependency> 
+			<groupId>io.protostuff</groupId> 
+			<artifactId>protostuff-json</artifactId> 
+			<version>1.3.3</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>de.ruedigermoeller</groupId>
+			<artifactId>fst</artifactId>
+			<version>2.25</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.openhft</groupId>
+			<artifactId>chronicle-map</artifactId>
+			<version>2.1.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.thoughtworks.xstream</groupId>
+					<artifactId>xstream</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.jettison</groupId>
+					<artifactId>jettison</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.ops4j.pax.url</groupId>
+					<artifactId>pax-url-aether</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency> 
+		-->
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-archive</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-util</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-distro</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-adserver-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-common-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-adresponse</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-cache</artifactId>
+		</dependency>
+		
+		<!-- Need domain for various enums. Not for JPA implementation -->
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-domain</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-dbcp</groupId>
+					<artifactId>commons-dbcp</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>org.springframework.orm</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-entitymanager</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-domaincache</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.jackson</groupId>
+					<artifactId>jackson-mapper-lgpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-ddr</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.amazonaws</groupId>
+					<artifactId>aws-java-sdk</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-geo</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-jms</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-quova</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-retargeting</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-datacache</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+		</dependency>
+<!--
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+		</dependency>
+-->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-tools-generic</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${org.springframework.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.aspectj</groupId>
+					<artifactId>aspectjweaver</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.anthavio</groupId>
+			<artifactId>anthavio-aspects</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-pool</artifactId>
+		</dependency>
+<!--
+		<dependency>
+			<groupId>org.apache.xbean</groupId>
+			<artifactId>xbean-spring</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.gnu</groupId>
+			<artifactId>gnu-crypto</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+-->
+		<dependency>
+			<groupId>org.openx.market.ssrtb</groupId>
+  		<artifactId>pricecrypter</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+<!--
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xerial.snappy</groupId>
+			<artifactId>snappy-java</artifactId>
+			<version>1.1.1.6</version>
+		</dependency>
+-->
+		<dependency>
+			<groupId>org.jolokia</groupId>
+			<artifactId>jolokia-core</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<!-- 
+			kafka_2.10 is using com.yammer.metrics:metrics-core:2.2.0
+			cassandra-driver - com.codahale.metrics:metrics-core:3.0.2
+			latest is - io.dropwizard.metrics:metrics-core:3.1.2
+		-->
+		
+		<dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-servlet</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-servlets</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.doubleclick</groupId>
+			<artifactId>doubleclick-openrtb</artifactId>
+			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+		  		<groupId>com.codahale.metrics</groupId>
+		  		<artifactId>metrics-core</artifactId>
+		  	</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- test -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>1.6.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-logging-juli</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.orange.redis-embedded</groupId>
+			<artifactId>embedded-redis</artifactId>
+			<version>0.6</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.os72</groupId>
+			<artifactId>protoc-jar</artifactId>
+			<version>2.6.1.4</version>
+			<scope>test</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>${kafka.version}</version>
+			<classifier>test</classifier>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cassandra</groupId>
+			<artifactId>cassandra-all</artifactId>
+			<version>2.2.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cassandraunit</groupId>
+			<artifactId>cassandra-unit</artifactId>
+			<version>2.2.2.1</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+</project>

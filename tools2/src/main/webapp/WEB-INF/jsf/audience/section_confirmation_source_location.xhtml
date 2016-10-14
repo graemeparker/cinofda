@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:pri="http://primefaces.org/ui"
+  xmlns:p="http://ocpsoft.com/prettyfaces"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:sec="http://www.springframework.org/security/tags">
+
+  <ui:param name="audienceDtoDefined" value="#{audienceMBean.audienceSourceMBean.audienceDto != null}" />
+  <ui:param name="sumOfValidsFromS3" value="#{audienceDtoDefined ? audienceMBean.audienceSourceMBean.audienceSize : 0}" />
+  <ui:param name="segmentSizeFromFile" value="#{audienceDtoDefined ? audienceMBean.audienceSourceMBean.segmentSize : 0}" />
+  
+  <ui:param name="s3Upload" value="#{sumOfValidsFromS3 gt 0}" />
+  <ui:param name="fileUpload" value="#{segmentSizeFromFile gt 0}" />
+
+  <pri:panelGrid id="sourceTable" style="width:100%">
+    <f:facet name="header">
+      <pri:row>
+        <pri:column colspan="3">
+          <pri:commandLink id="sourceLinkId"
+            actionListener="#{audienceNavigationSessionBean.doNavigateTo}"
+            process="@this" update=":menuForm,:navigationDiv"
+            disabled="#{userSessionBean.readOnlyUser}">
+            <f:attribute name="navigateTo" value="source" />
+            <span>#{msg['page.audience.source.menu.label']}</span>
+          </pri:commandLink>
+        </pri:column>
+      </pri:row>
+    </f:facet>
+    
+    <!-- S3 Upload -->
+    <pri:row>
+      <pri:column>
+        <span><h:outputText value="#{msg['page.audience.source.label.location']}" /></span>
+      </pri:column>
+      <pri:column colspan="2">
+        <span><h:outputText value="#{sumOfValidsFromS3}" /></span>
+      </pri:column>
+    </pri:row>
+    <pri:row>
+      <pri:column>
+        <span><h:outputText value="#{msg['page.audience.source.label.upload.history.s3']}" /></span>
+      </pri:column>
+      <pri:column>
+        <span><h:outputText value="#{audienceMBean.audienceSourceMBean.getUploadHistorySummaryFromAssignedFiles(true)}" /></span>
+      </pri:column>
+    </pri:row>
+    
+  </pri:panelGrid>
+</ui:composition>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+    <h:body>
+        <ui:component id="dashboarddata">
+           <h:form id="dataTableFormId" prependId="false">
+	        	<h:panelGroup layout="block" styleClass="row btns">
+		            <pri:commandButton value="#{msg['page.dashboard.buttons.state.active.label']}" id="activeButtonId"
+		                               process="@this,dataTable" update=":dataTableFormId:dataTable,:chartsFormId" onclick="progressDialog.show()" oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+		                               actionListener="#{agencyConsoleDashboardMBean.reportingBean.doChangeStatus}"
+		                               styleClass="not-last-button">
+		                <f:attribute name="stat" value="activate" />
+		            </pri:commandButton>
+		            <pri:commandButton value="#{msg['page.dashboard.buttons.state.deactivate.label']}"
+		                               process="@this,dataTable" update=":dataTableFormId:dataTable,:chartsFormId" onclick="progressDialog.show()" oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+		                               id="stopButtonId" actionListener="#{agencyConsoleDashboardMBean.reportingBean.doChangeStatus}">
+		                <f:attribute name="stat" value="inactive" />
+		            </pri:commandButton>
+		            <pri:commandButton value="+ #{msg['page.dashboard.labels.dialog.header.newadvertiser']}" id="newAdvertiserButtonId" onclick="newAdvertiserDialog.show()" rendered="#{userSessionBean.adminAgency}"/>
+		        </h:panelGroup>
+             
+	           <!-- BEGIN REPORTING TABLE -->
+	           <div class="twelvecol last">
+	               <pri:dataTable id="dataTable" var="stc" styleClass="ui-corner-all agency dashboard-datatable"
+	                              style="display:block !important"
+	                              paginator="true" rows="25"
+	                              paginatorTemplate="Show {RowsPerPageDropdown}  per page. Showing rows {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+	                              rowsPerPageTemplate="10,25,50,100"
+	                              value="#{agencyConsoleDashboardMBean.reportingBean.lazyModel}"
+	                              lazy="true"
+	                              paginatorPosition="bottom"
+	                              rowKey="#{stc.advertiserName}"
+	                           	  selection="#{agencyConsoleDashboardMBean.reportingBean.selected}"	   
+	                          	  rowSelectMode="add"	                              
+	                    		>
+	                   <ui:remove>ajax event to sorting. primefaces sorting in columns calls an object or a function, but not
+	                   a custom made event for that.
+	                   </ui:remove>           
+	                   <pri:ajax event="sort" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+	                   <pri:ajax event="page" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+						
+					   <pri:column selectionMode="multiple" styleClass="select-col center"/>
+	                   <pri:column id="agencyStatusHeader" styleClass="sel-box stat-col tooltip">
+                           <f:facet name="header">
+                               <pri:selectOneMenu 
+                             		id="agencyStatusFilter" 
+                             		value="#{agencyConsoleDashboardMBean.reportingBean.dashboardDto.statusFilter}"
+                                   	styleClass="status-filter" 
+                                   	valueChangeListener="#{agencyConsoleDashboardMBean.reportingBean.processFilter}"
+                                   	panelStyleClass="status-icon-panel"
+                               >
+			                        <f:selectItems value="#{agencyConsoleDashboardMBean.reportingBean.statusList}" var="status" itemValue="#{status}" itemLabel="#{msg[status.advertiserStatusStr]}"/>
+			                        <pri:ajax event="change" process="@this" update="dataTable,:chartsFormId" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.insertStatIcons(); " 
+			                        		listener="#{agencyConsoleDashboardMBean.reportingBean.filter}"/>
+			                        <f:attribute name="filterBy" value="status" />
+			                   </pri:selectOneMenu>
+                           </f:facet>
+                           <div class="status #{stc.status ne 'INACTIVE' ? stc.status : 'STOPPED'}"></div>
+
+                           <div class="ui-overlaypanel none">
+                               <div class="helpInner ui-corner-all ui-shadow">
+                                   <div class="helpArrow"></div>
+                                   <span>#{msg[agencyConsoleDashboardMBean.reportingBean.convertStatus(stc.status)]}</span>
+                               </div>
+                           </div>
+
+                       </pri:column>
+	                   <pri:column id="advertiserNameHeader" sortBy="#{stc.advertiserName}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.advertisername']}" />
+	                       </f:facet>
+	                       <h:commandLink value="#{stc.advertiserName}" action="pretty:dashboard-advertiser" actionListener="#{agencyConsoleDashboardMBean.navigateToAdvertiser}">
+	                       		<f:attribute name="advertiserId" value="#{stc.advertiserId}"/>
+	                       </h:commandLink>
+	                   </pri:column>
+	                   <pri:column id="impressionsHeader" sortBy="#{stc.impressions}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.impressions']}" />
+	                       </f:facet>
+	                       <h:outputText value="#{stc.impressions}">
+	                     	  <byydtechJs:numberFormatConverter format="normal"/>
+	                       </h:outputText>
+	                   </pri:column>
+	                   <pri:column id="spendHeader" sortBy="#{stc.spend}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.spend']}">
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.spend}">
+	                      		<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+	                       </h:outputText>
+	                   </pri:column>
+	                   <pri:column id="spendYesterdayHeader" sortBy="#{stc.spendYesterday}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.spendyesterday']}">
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.spendYesterday}">
+	                      		<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+	                       </h:outputText>
+	                   </pri:column>
+	                   <pri:column id="balanceHeader" sortBy="#{stc.balance}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.balance']}">
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.balance}">
+	                       		<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+	                       </h:outputText>
+	                   </pri:column>	
+	               </pri:dataTable>
+	           </div>
+	           <!-- END REPORTING TABLE -->
+	           <!-- END MAIN CONTENT --> 
+	     		<div class="clear"></div>
+			</h:form>
+			
+			<pri:dialog header="#{msg['page.dashboard.labels.dialog.header.newadvertiser']}" modal="true" closable="true" widgetVar="newAdvertiserDialog" resizable="false">
+	           	<form id="buttonsFormId">
+	     			<div class="form-row">
+	     				<h:outputLabel value="#{msg['page.dashboard.labels.dialog.account']}" for="ad-name"/>
+			            <pri:inputText id="ad-name" value="#{agencyConsoleDashboardMBean.newAdvertiser.name}" required="true" requiredMessage="#{msg['page.dashboard.labels.dialog.namerequired']}" />     		
+	     				<pri:message id="namemsg" for="ad-name"/>
+	     			</div>
+	     			<div class="form-row">
+	     				<h:outputLabel value="#{msg['page.dashboard.labels.dialog.set']}" for="newAdvertiserStatus"/>
+	     				<pri:selectOneMenu id="newAdvertiserStatus" value="#{agencyConsoleDashboardMBean.newAdvertiser.advStatus}">
+                        	<f:selectItems value="#{agencyConsoleDashboardMBean.statusList}" 
+                        			var="status" itemValue="#{status}" itemLabel="#{msg[status.advertiserStatusStr]}"/>
+                   		</pri:selectOneMenu>
+                    </div>
+                    <div class="form-row">
+                   		<pri:commandButton id="gotoButton" actionListener="#{agencyConsoleDashboardMBean.createAdvertiser}" process="@this,ad-name,newAdvertiserStatus" onclick="progressDialog.show();" oncomplete="progressDialog.hide(); b"
+                   					action="#{agencyConsoleDashboardMBean.createAdvertiserNavigate}" value="#{msg['page.dashboard.labels.dialog.createandgo']}" update="namemsg"/>
+                   		<pri:commandButton actionListener="#{agencyConsoleDashboardMBean.createAdvertiser}" value="#{msg['page.dashboard.labels.dialog.create']}" onclick="progressDialog.show();"
+                   						process="@this,ad-name,newAdvertiserStatus" oncomplete="progressDialog.hide(); "  update="ad-name,namemsg,:dataTableFormId:dataTable,:chartsFormId,:headerForm"/>
+                   		<pri:commandLink value="#{msg['page.dashboard.labels.dialog.cancel']}" process="@this" onclick="newAdvertiserDialog.hide();" />
+                   	</div>
+	     		</form>
+     		</pri:dialog>
+        </ui:component>
+    </h:body>
+</html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<!-- Allow @Scheduled and what not on component methods -->
+	<task:executor id="executor" pool-size="20" />
+	<task:scheduler id="scheduler" pool-size="20" />
+	<task:annotation-driven executor="executor"
+		scheduler="scheduler" />
+
+	<context:annotation-config />
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tasks.properties" />
+
+   <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+      
+</beans>

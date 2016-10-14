@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Dan generated this file from DeviceAtlas devices_basic.xml using Trang.
+The "nid" element was changed from xs:integer to xs:string to make life
+slightly easier in the generated code (String instead of BigInteger).
+
+To generate JAXB source code:
+xjc -p com.adfonic.tasks.deviceatlas devices_basic.xsd
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="deviceatlas">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="device"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="device">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="nid"/>
+        <xs:element ref="vendor"/>
+        <xs:element ref="model"/>
+        <xs:element ref="title"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nid" type="xs:string"/>
+  <xs:element name="vendor" type="xs:string"/>
+  <xs:element name="model" type="xs:string"/>
+  <xs:element name="title" type="xs:string"/>
+</xs:schema>

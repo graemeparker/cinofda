@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:jawr="https://jawr.java.net/jsf/facelets">
+
+<h:head>
+    <link rel="icon" type="image/png" href="${request.contextPath}/resources/images/favicon.ico" />
+    <title>#{toolsApplicationBean.companyName}</title>
+    <h:outputText escape="false" value="&lt;!--[if lt IE 9]&gt;" />
+	<jawr:script src="/bundles/html5shiv.js"/>
+    <h:outputText escape="false" value="&lt;![endif]--&gt;" />
+</h:head>
+
+<h:body>
+    <jawr:style src="/bundles/style.css" />
+
+    <div id="page" class="login">
+
+        <ui:insert name="header">
+            <ui:include src="/WEB-INF/jsf/template/login/loginHeader.xhtml" />
+        </ui:insert>
+
+        <ui:insert name="content">
+            <ui:include src="/WEB-INF/jsf/template/common/commonContent.xhtml" />
+        </ui:insert>
+
+        <ui:insert name="footer">
+            <ui:include src="/WEB-INF/jsf/template/login/loginFooter.xhtml" />
+        </ui:insert>
+
+    </div>
+	<jawr:script src="/bundles/login.js"/>
+</h:body>
+</html>

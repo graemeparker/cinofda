@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<buildmetadata xmlns="http://www.smartics.de/project/process/implementation/buildmetadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.smartics.de/project/process/implementation/buildmetadata http://www.smartics.de/project/process/implementation/buildmetadata">
+  <name>5.0.17-20160215-SNAPSHOT</name>
+  <version>5.0.17-SNAPSHOT</version>
+  <groupId>com.adfonic</groupId>
+  <artifactId>adfonic-domainserializer</artifactId>
+  <date>2016-02-15T13:44:26</date>
+  <timestamp>1455543866910</timestamp>
+  <build-year>2016</build-year>
+  <project>
+    <copyright-year>2009-2016</copyright-year>
+  </project>
+  <scm/>
+  <runtime>
+    <build-server>Graemes-MacBook-Pro-2.local</build-server>
+    <build-user>graemeparker</build-user>
+    <os>
+      <arch>x86_64</arch>
+      <name>Mac OS X</name>
+      <version>10.9.5</version>
+    </os>
+    <java>
+      <name>Java(TM) SE Runtime Environment</name>
+      <version>1.8.0_45-b14</version>
+      <vendor>Oracle Corporation</vendor>
+      <vm>Java HotSpot(TM) 64-Bit Server VM</vm>
+      <compiler>HotSpot 64-Bit Tiered Compilers</compiler>
+    </java>
+    <maven>
+      <version>3.2.3</version>
+      <commandline>clean install</commandline>
+      <execution-project>com.adfonic:adfonic-domainserializer:jar:5.0.17-SNAPSHOT</execution-project>
+      <is-excution-root>false</is-excution-root>
+      <goals>
+        <goal>clean</goal>
+        <goal>install</goal>
+      </goals>
+    </maven>
+  </runtime>
+  <misc>
+    <metadata name="build.date.pattern">yyyy-MM-dd'T'HH:mm:ssZ</metadata>
+  </misc>
+</buildmetadata>

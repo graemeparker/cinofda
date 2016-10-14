@@ -1,0 +1,20 @@
+{ 
+	"timestamp": "2014-09-10T16:56:31.885Z", 
+	"request_id": "1b20f21d-4e2e-59ec-5b2c-8c3e90724f1d",
+	"action": "click",
+	"ext":{  
+      "byyd":{  
+         "buyer_premium": "",
+         "direct_cost": "",
+         "tech_fee": "",
+         "data_retail": "",
+         "data_wholesale": "",
+         "dsp_margin": "",
+         "cust_margin": "",
+         "payout": 0.0024,
+         "shard": "ch1",
+         "server": "ch1adserver13",
+         "campaign_discount": "0.37"
+      }
+   } 
+}

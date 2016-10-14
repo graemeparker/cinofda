@@ -1,0 +1,57 @@
+{
+  "app" : {
+    "bundle" : "472315002",
+    "cat" : [ "IAB17", "IAB9", "IAB9-30", "games", "sports" ],
+    "id" : "agltb3B1Yi1pbmNyDAsSA0FwcBiYpugVDA",
+    "name" : "Dream League Soccer",
+    "publisher" : {
+      "id" : "agltb3B1Yi1pbmNyEAsSB0FjY291bnQYluXjFAw",
+      "name" : "First Touch Games Ltd."
+    },
+    "storeurl" : "https://itunes.apple.com/us/app/dream-league-soccer/id472315002?mt=8&uo=4",
+    "ver" : "2.07"
+  },
+  "at" : 2,
+  "badv" : [ "scopely.com" ],
+  "bcat" : [ "IAB14-1", "IAB25", "IAB26", "IAB7-3", "IAB7-39", "IAB8-18", "IAB8-5", "IAB9-9" ],
+  "device" : {
+    "carrier" : "424-02",
+    "connectiontype" : 2,
+    "devicetype" : 4,
+    "dnt" : 0,
+    "geo" : {
+      "country" : "ARE"
+    },
+    "hwv" : "iPhone 6s+",
+    "ifa" : "F8DCC799-24D3-4A17-9D4C-0EF894595D9B",
+    "ip" : "217.165.183.58",
+    "js" : 1,
+    "language" : "en",
+    "make" : "Apple",
+    "model" : "iPhone",
+    "os" : "iOS",
+    "osv" : "9.2.1",
+    "ua" : "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13D15"
+  },
+  "id" : "7f20e14d-4c76-4ab5-a8ff-0cebdfa68c45",
+  "imp" : [ {
+    "banner" : {
+      "api" : [ 3, 5 ],
+      "battr" : [ 3, 6, 8, 9, 10, 13, 14 ],
+      "btype" : [ 4 ],
+      "h" : 50,
+      "pos" : 1,
+      "w" : 320
+    },
+    "bidfloor" : 0.3,
+    "displaymanager" : "mopub",
+    "displaymanagerver" : "3.3.0",
+    "ext" : {
+      "brsrclk" : 1
+    },
+    "id" : "1",
+    "instl" : 0,
+    "secure" : 1,
+    "tagid" : "agltb3B1Yi1pbmNyDQsSBFNpdGUYjtvmFQw"
+  } ]
+}

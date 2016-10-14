@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.adserver.rtb.mapper.TestOpenXMapper
+-------------------------------------------------------------------------------
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec - in com.adfonic.adserver.rtb.mapper.TestOpenXMapper

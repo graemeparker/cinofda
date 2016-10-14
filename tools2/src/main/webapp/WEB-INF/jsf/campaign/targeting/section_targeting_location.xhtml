@@ -1,0 +1,485 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<f:view contentType="text/html">
+		<pri:tab id="locationTab" title="#{msg['page.campaign.targeting.location.panel.label']}">
+			
+			<pri:outputPanel id="locationTabContent">
+				<c:choose>
+					<!-- Show warning when audience targeting were selected -->
+				    <c:when test="#{hasLocationAudience}">
+					    <pri:outputPanel styleClass="form-row warning message" style="background-position-y: 20px">
+							<p>#{msg['page.campaign.targeting.location.locationaudience.warning']}</p>
+						</pri:outputPanel>
+				    </c:when>    
+				    <c:otherwise>
+						<pri:outputPanel styleClass="form-row warning message" style="background-position-y: 30px">
+							<p>#{msg['page.campaign.targeting.location.warning']}</p>
+						</pri:outputPanel>
+						
+					    <pri:selectOneRadio 
+					    	id="location-options" 
+					    	styleClass="location" 
+					    	layout="pageDirection"
+							value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.locationTargetingType}"
+							valueChangeListener="#{campaignMBean.campaignTargetingMBean.onLocationEvent}" 
+							disabled="#{campaignMBean.liveCampaign}"
+						>
+					        <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.targetbystate.label']}" itemEscaped="false" itemValue="GEO" />
+					        <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.targetbycountry.label']}" itemValue="COUNTRY" />
+					        <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.targetbycoordinates.label']}" itemValue="COORDINATES" />
+					        <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.targetbypostcode.label']}" itemValue="POSTCODE" />
+					        <f:attribute name="type" value="targetType"/>
+					        <pri:ajax process="@this" update="accordionAgrupationTabs:exclude-mobile-operator, accordionAgrupationTabs:exclude-isp-operator,inc-excl-country,inc-excl-list,inc-excl-country-list,coun-wat-container,coun-wat-container-states"/>
+					    </pri:selectOneRadio>
+					
+						<!-- Location by geotarget (state/city/DMA®) -->
+					    <div data-no="1" class="panel-location inner-panel none">
+					        <div class="form-row">
+					        
+					        	<!-- Country -->
+					            <h:outputLabel styleClass="bl" id="country-label" for="gCountry" value="#{msg['page.campaign.targeting.location.country.label']}" />
+					            <pri:selectOneMenu 
+					            	id="gCountry" 
+									converter="com.adfonic.tools.converter.country.CountryConverter"
+									valueChangeListener="#{campaignMBean.campaignTargetingMBean.onGeotargetingCountryChangeEvent}"
+									value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetingCountry}"
+									disabled="#{campaignMBean.liveCampaign}"
+								>
+									<f:selectItems 
+									    value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetCountriesItems}"
+									    var="country"
+									    itemValue="#{country}"
+									    itemLabel="#{country.name}"
+									/>
+				                    <pri:ajax event="change" process="@this" update="gTypePanel,addListDMADialog,inc-excl-list,accordionAgrupationTabs:exclude-mobile-operator,accordionAgrupationTabs:exclude-isp-operator,inc-excl-country-list,coun-wat-container-states,addListContainer"/>
+					            </pri:selectOneMenu>
+					            <br/>            
+					            <h:panelGroup id="gTypePanel">
+					            
+					            	<!-- Target by -->
+					                <h:outputLabel 
+					                	id="type-label" 
+										styleClass="bl" 
+										for="geoType" 
+										value="#{msg['page.campaign.targeting.location.targetby.label']}"
+									/>
+					                <pri:selectOneMenu 
+					                	id="geoType" 
+										converter="com.adfonic.tools.converter.geotarget.GeotargetTypeConverter"
+										rendered="#{not empty campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetingCountry}" 
+										valueChangeListener="#{campaignMBean.campaignTargetingMBean.onGeotargetingTypeChangeEvent}"
+										value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetingType}"
+										disabled="#{campaignMBean.liveCampaign}"
+									>
+										<f:selectItems 
+											value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetTypesItems}" 
+											var="type"
+											itemLabel="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.friendlyGeotargetTypeName(type.type)}"
+											itemValue="#{type}"
+										/>
+				                      	<pri:ajax 
+				                      		event="change" 
+				                      		process="@this"
+				                      		oncomplete="ADT.escapeAutocompleteResults('.target-by-select label')" 
+				                      		update="@this,addListDMADialog,inc-excl-list,accordionAgrupationTabs:exclude-mobile-operator,accordionAgrupationTabs:exclude-isp-operator,inc-excl-country-list,coun-wat-container-states,addListContainer"
+				                      	/>
+					                </pri:selectOneMenu>
+					            </h:panelGroup>
+					        </div>
+					        
+					        <div class="form-row ovh">
+					        
+					        	<!-- Include -->
+					            <div class="form-col">
+					            	<h:outputLabel styleClass="bl targ-by-lb" id="target-by-state-label"  value="#{msg['page.campaign.targeting.location.include.label']}" />
+					            </div>
+					            <div class="form-col">
+						            <pri:autoComplete 
+						            	id="inc-excl-list" 
+						            	value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetsList}" 
+						            	scrollHeight="200" 
+						            	process="geoType,gCountry"
+						                completeMethod="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.completeState}" 
+						                onclick="" 
+						                minQueryLength="2"
+						                var="c" 
+										itemLabel="#{c.name}" 
+										itemValue="#{c.id}" 
+										multiple="true" 
+										converter="com.adfonic.tools.converter.geotarget.GeotargetConverter"
+									>
+						               <pri:ajax process="@this" event="itemUnselect" update="coun-wat-container-states,addListDMADialog,addDMAButton,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" listener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetChanges}"/>
+						               <pri:ajax process="@this" event="itemSelect" update="@this,geoTargetFocus,coun-wat-container-states,addListDMADialog,addDMAButton,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" listener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetChanges}"/>
+						            </pri:autoComplete>
+					           
+						            <h:panelGroup id="coun-wat-container-states">
+						            	<pri:watermark for="inc-excl-list" value="#{campaignMBean.campaignTargetingMBean.message}" rendered="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetListEmpty}"/>
+						           	</h:panelGroup>   
+						           	<pri:focus id="geoTargetFocus" for="inc-excl-list"/>
+						           	<h:panelGroup id="addListContainer">
+						           		<pri:commandLink 
+						           			value="#{msg['page.commons.links.addlist']}" 
+						           			onclick="addListDMA.show()" 
+						           			rendered="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.usDMA or campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.gbPostalTown}"
+						           		/>
+						           	</h:panelGroup>
+						           	<pri:dialog 
+						           		id="addListDMADialog" 
+						           		header="#{msg['page.commons.headers.addlist']}" 
+						           		widgetVar="addListDMA" 
+						           		modal="true" 
+						           		resizable="false" 
+						           		closable="false"
+										draggable="false" 
+										width="560"
+			                            styleClass="addDMAModelsDialogStyle" 
+									>
+						           		<div class="listContainer">
+							           		<pri:inputTextarea id="textAreaDMA" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geosAddList}" rows="15" cols="15" autoResize="false">
+							           		</pri:inputTextarea>
+							           		<pri:watermark value="#{msg['page.campaign.targeting.location.addlist.watermark']}" for="textAreaDMA"/>
+							           	</div>
+							           	<pri:separator/>
+						           		<pri:commandButton 
+						           			id="addDMAButton" 
+					           				value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.addButtonText}" 
+					           				oncomplete="progressDialog.hide();notRecognizedListDMA.show()"  
+					           				update="notRecognizedDMADialog,textAreaDMA"
+											actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.addGeotargets}" 
+											onclick="addListDMA.hide();progressDialog.show()" 
+										/>
+						           		<pri:commandLink 
+						           			value="#{msg['page.commons.links.cancel']}" 
+						           			onclick="addListDMA.hide()" 
+						           			actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.cancelList}"
+						           		/>
+						           	</pri:dialog>
+						           	<pri:dialog 
+						           		id="notRecognizedDMADialog" 
+					           			header="#{msg['page.commons.headers.addlist']}" 
+					           			widgetVar="notRecognizedListDMA" 
+					           			modal="true" 
+					           			resizable="false" 
+					           			closable="false"
+										draggable="false"
+										styleClass="nonMatchedDMAModelsDialogStyle"
+									>
+						           		<p><h:outputText value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.matchingMessage}" /></p>
+						           		<p><h:outputText value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.notMatchingMessage}" /></p>
+						           		<pri:outputPanel styleClass="nonMatchedDMAModelsStyle">
+						                    <ui:repeat var="model" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.notRecognizedModels}">
+						                        <fieldset>
+						                            <h:outputLabel value="#{model.name}"/>
+						                            <pri:autoComplete 
+						                            	value="#{model.dto}" 
+					                            		completeMethod="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.completeState}"
+														minQueryLength="2" var="c" 
+														itemLabel="#{c.name}" itemValue="#{c.id}" 
+														multiple="false"
+														converter="com.adfonic.tools.converter.geotarget.GeotargetConverter">
+						                            </pri:autoComplete>
+						                        </fieldset>
+						                    </ui:repeat>
+						                </pri:outputPanel>
+						           		<pri:commandButton 
+						           			value="#{msg['page.campaign.targeting.location.addlist.done.button']}" 
+						           			oncomplete="progressDialog.hide()"  
+						           			update="inc-excl-list,textAreaDMA,coun-wat-container-states,addDMAButton,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning"
+						           			actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.addGeotargetsToList}" 
+						           			onclick="notRecognizedListDMA.hide();progressDialog.show()"
+						          		/>
+						           		<pri:commandLink 
+						           			value="#{msg['page.commons.links.cancel']}" 
+						           			onclick="notRecognizedListDMA.hide()" 
+						           			actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.cancelList}"
+				  							update="addListDMADialog,notRecognizedDMADialog" 
+				  							process="@this"
+				  						/>
+						           	</pri:dialog>      
+						     	</div>  
+					        </div>
+					    </div>
+					
+						<!-- Location by country -->
+					    <div data-no="2" class="panel-location inner-panel none">
+					        <div class="form-row ovh">
+					            <div class="form-col">
+					                <pri:selectOneMenu 
+					                	id="inc-excl-country" 
+					                	styleClass="short"
+					                    value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.countryListIsWhitelist}"   
+					                >
+					                    <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.include.label']}" itemValue="true"/>
+					                    <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.exclude.label']}" itemValue="false"/>
+					                </pri:selectOneMenu>
+					            </div>
+					            <div class="form-col">
+						            <pri:autoComplete 
+						            	id="inc-excl-country-list" 
+						            	styleClass="location-select" 
+						            	value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.countryList}"
+				                        completeMethod="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.completeCountry}" 
+				                        var="c" 
+				                        widgetVar="autocompleteCountries" 
+				                        minQueryLength="2"
+				                        itemLabel="#{c.name}" 
+				                        itemValue="#{c}" 
+				                        multiple="true" 
+				                        converter="com.adfonic.tools.converter.country.CountryConverter"
+									>
+										<pri:ajax event="itemUnselect" update="coun-wat-container,accordionAgrupationTabs:exclude-mobile-operator,accordionAgrupationTabs:exclude-isp-operator,inc-excl-list,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" listener="#{campaignMBean.campaignTargetingMBean.countryChanges}"/>      
+										<pri:ajax event="itemSelect" update="@this,countryFocus,coun-wat-container,accordionAgrupationTabs:exclude-mobile-operator,accordionAgrupationTabs:exclude-isp-operator,inc-excl-list,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" listener="#{campaignMBean.campaignTargetingMBean.countryChanges}"/>
+						            </pri:autoComplete>
+						            <h:panelGroup id="coun-wat-container">
+						            	<pri:watermark for="inc-excl-country-list" value="#{msg['page.campaign.targeting.location.allcountries.placeholder']}" rendered="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.countriesEmpty}"/>
+						           	</h:panelGroup>
+						           	<pri:focus id="countryFocus" for="inc-excl-country-list"/>
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <!-- Location by coordinates -->
+					    <div data-no="3" class="panel-location inner-panel none targetlocation">
+				        	<h:panelGroup id="coord-count-container" layout="block" styleClass="form-row ovh">
+					            <div class="form-col">
+					                <h:outputLabel value="#{msg['page.campaign.targeting.location.country.label']}:" for="inc-country" />
+					            </div>
+					            <div class="form-col country">
+					            	<pri:autoComplete 
+					            		id="inc-country" 
+					            		styleClass="location-select" 
+					            		value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.selectedCountryCoordinates}"
+										completeMethod="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.completeCountry}" var="c" minQueryLength="2" 
+										itemLabel="#{c.name}" 
+										itemValue="#{c}" 
+										multiple="true" 
+										converter="com.adfonic.tools.converter.country.CountryConverter"
+									>
+										<pri:ajax event="itemSelect" listener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.handleCountrySelection}" update="@this,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning"/>
+										<pri:ajax event="itemUnselect" listener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.handleCountrySelection}" update="@this,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning"/>
+				                	</pri:autoComplete>
+				                	<pri:message id="mess-countries" for="inc-country"/>
+					            </div>
+				            </h:panelGroup>
+				            <br/>
+				            <h:panelGroup id="coor-data-container" layout="block" style="margin-top:20px">
+				          		<table style="width:70%">
+				          			<tr>
+				          				<td style="padding-right: 5px;">
+				            				<h:outputLabel value="#{msg['page.campaign.targeting.location.coordinates.name.label']}:" styleClass="coor-label"/>
+				            				<pri:inputText id="in-nam" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.newLocation.name}" styleClass="name-coordinates"/>
+				            			</td>
+				            			<td style="padding-right: 5px;">
+				            				<h:outputLabel value="#{msg['page.campaign.targeting.location.coordinates.latitude.label']}:" styleClass="coor-label"/>
+				            				<pri:inputText id="in-lat" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.newLocation.latitude}" styleClass="number-coordinates">
+				            					<f:convertNumber type="number"/>
+				            				</pri:inputText>
+				            			</td>
+				            			<td style="padding-right: 5px;">
+				            				<h:outputLabel value="#{msg['page.campaign.targeting.location.coordinates.longitude.label']}:" styleClass="coor-label"/>
+				            				<pri:inputText id="in-lon" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.newLocation.longitude}" styleClass="number-coordinates">
+				            					<f:convertNumber type="number" />
+				            				</pri:inputText>
+				            			</td>
+				            			<td>
+				            				<h:outputLabel value="#{msg['page.campaign.targeting.location.coordinates.radius.label']}:" styleClass="coor-label"/>
+				            				<pri:inputText id="in-rad" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.newLocation.radiusMiles}" styleClass="radius-coordinates">
+				            					<f:convertNumber type="number"/>
+				            				</pri:inputText>
+				            				
+					            		</td>
+					            		<td>
+					            			<h:outputText value="#{msg['page.campaign.targeting.location.coordinates.miles.label']}" />
+					            		</td>
+					            	</tr>
+				    			</table>
+				            </h:panelGroup>
+				            <div class="form-row ovh location-select-form">
+				            	<pri:commandButton 
+				            		id="addloc-but" 
+				            		value="#{msg['page.campaign.targeting.location.coordinates.button.addlocation.label']}"
+				            		actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.addCoordinatesLocation}"
+				            		onclick="progressDialog.show();" 
+				            		oncomplete="progressDialog.hide(); ADT.selectAllElement('.coordinates-table')"
+				            		update="coordinateTable,coor-data-container,coord-count-container,mess-countries,mess-name,mess-lat,mess-lon,mess-rad,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" 
+				            		process="@this,coor-data-container,coord-count-container"
+				            	/>
+				            	<pri:message id="mess-name" for="in-nam" display="text"/>
+				            	<pri:message id="mess-lat" for="in-lat" display="text"/>
+				            	<pri:message id="mess-lon" for="in-lon" display="text"/>
+				            	<pri:message id="mess-rad" for="in-rad" display="text"/>
+				            </div>
+				            <div id="coords">
+					            <pri:dataTable 
+					           		id="coordinateTable" 
+					           		var="loc" 
+					           		styleClass="ui-corner-all coordinates-table" 
+					           		value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.locationsList}"
+									paginator="true" rows="10"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									rowsPerPageTemplate="10"
+									lazy="true"
+									paginatorPosition="bottom"
+									rowSelectMode="add"
+				                   	selection="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.coordSelectedRows}"
+				                    rowKey="#{loc.name}"
+					             >
+									<pri:column styleClass="center-value" selectionMode="multiple" style="width:18px"/>
+					            	<pri:column headerText="#{msg['page.campaign.targeting.location.coordinates.name.label']}">
+					            		<h:outputText value="#{loc.name}" />
+					            	</pri:column>
+					            	<pri:column headerText="#{msg['page.campaign.targeting.location.coordinates.latitude.label']}" styleClass="center-value">
+					            		<h:outputText value="#{loc.latitude}" />
+					            	</pri:column>
+					            	<pri:column headerText="#{msg['page.campaign.targeting.location.coordinates.longitude.label']}" styleClass="center-value">
+					            		<h:outputText value="#{loc.longitude}" />
+					            	</pri:column>
+					            	<pri:column headerText="#{msg['page.campaign.targeting.location.coordinates.radius.label']}" styleClass="center-value">
+					            		<h:outputText value="#{loc.radiusMiles}">
+					            			<f:convertNumber type="number" maxFractionDigits="3"/>
+					            		</h:outputText>
+					           		</pri:column>
+					            </pri:dataTable>
+				            </div>
+				            <h:panelGroup layout="block" styleClass="form-row ovh">
+				            	<pri:commandButton 
+				            		id="removeloc-but" 
+				            		value="#{msg['page.commons.buttons.remove']}"
+				            		actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.removeLocation}"
+				            		onclick="progressDialog.show();" 
+				            		oncomplete="progressDialog.hide(); ADT.selectAllElement('.coordinates-table')"
+				            		update="coordinateTable,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" 
+				            		process="@this,coordinateTable"
+				            	/>
+				            	<pri:commandLink value="#{msg['page.campaign.targeting.location.showmap.link']}" oncomplete="mapDlg.show()" process="@this" actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.updateMap}"/>
+				            </h:panelGroup>
+				            <div class="form-row ovh uploadcoords">
+					            <pri:fileUpload 
+					            	id="uploadCoordinates" 
+					            	mode="advanced" 
+					            	label="#{msg['page.campaign.targeting.location.upload.link']}"
+					            	showButtons="false" 
+					            	auto="true" 
+					            	multiple="false" 
+					            	styleClass="change-file"
+									onstart="progressDialog.show();" 
+									oncomplete="progressDialog.hide(); ADT.selectAllElement('.coordinates-table')"
+									fileUploadListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.uploadCoordinates}" 
+									update="coordinateTable,mess-upload,mess-countries,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning"
+								>
+					            </pri:fileUpload>
+					            <pri:message id="mess-upload" for="uploadCoordinates"/>
+					        </div>
+					    </div>
+					    
+				    	<div data-no="4" class="panel-location inner-panel none targetlocation">
+					        <h:panelGroup id="code-count-container" layout="block" styleClass="form-row ovh">
+					            <div class="form-col">
+					                <h:outputLabel value="#{msg['page.campaign.targeting.location.country.label']}" for="sel-cuntry" />
+					            </div>
+					            <div class="form-col country-select">
+					            	<pri:selectOneMenu id="sel-cuntry" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.selectedCountryPostcode}"
+					            						 converter="com.adfonic.tools.converter.country.CountryConverter">
+					            		<f:selectItems value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.countriesForPostcode}" var="c" itemLabel="#{c.name}" itemValue="#{c}"/>
+					            		<pri:ajax event="change" update="lab-post,codeTable"/>
+					            	</pri:selectOneMenu>
+					            </div>
+					        </h:panelGroup>
+					        <h:panelGroup id="code-data-container" layout="block" style="margin-top:20px" styleClass="postcodeentry">
+					        	<h:outputLabel id="lab-post" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.postCodeLabel}:" styleClass="coor-label"/>
+					            <pri:inputText id="in-postcode" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.postCode}" styleClass="name-coordinates"/>
+					            <h:outputLabel value="#{msg['page.campaign.targeting.location.coordinates.radius.label']}:" styleClass="coor-label"/>
+					           	<pri:inputText id="in-postrad" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.postRadius}" styleClass="radius-coordinates"/>
+					           	<h:outputText value="#{msg['page.campaign.targeting.location.coordinates.miles.label']}" />
+					           	<pri:message id="mess-postradius" for="in-postrad"/>
+					           	<pri:message id="addmess" for="in-postcode"/>
+					      	</h:panelGroup>
+				            <div class="form-row ovh">
+								<pri:commandButton 
+									id="addpost-but" 
+									value="#{msg['page.campaign.targeting.location.coordinates.button.addlocation.label']}"
+									actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.addPostCodeLocation}"
+									onclick="progressDialog.show();"
+									oncomplete="progressDialog.hide(); ADT.selectAllElement('.postcodes-table');"
+									update="codeTable,code-data-container,code-count-container,addmess,mess-postradius,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" 
+									process="@this,code-data-container,code-count-container"
+								/>
+				            </div>
+				            <div id="postcode">
+					            <pri:dataTable 
+					            	id="codeTable" 
+					            	var="loc" 
+					            	styleClass="ui-corner-all postcodes-table" 
+				             		value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.postCodesList}"
+				            		paginator="true" 
+				            		rows="10"
+				                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				                   	selection="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.postcodeSelectedRows}"
+									rowsPerPageTemplate="10"
+				                    lazy="true"
+				                    rowKey="#{loc.name}"
+				                    paginatorPosition="bottom"
+				                    rowSelectMode="add"
+				                 >
+				                 	<pri:ajax 
+				                 		event="page" 
+				                 		onstart="progressDialog.show();" 
+				                 		oncomplete="progressDialog.hide(); ADT.selectAllElement('.postcodes-table')"
+				                 	/>  
+									<pri:column styleClass="center-value" selectionMode="multiple" style="width:18px"/>
+					            	<pri:column headerText="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.postCodeLabel}">
+					            		<h:outputText value="#{loc.name}" />
+					            	</pri:column>
+					            	<pri:column headerText="#{msg['page.campaign.targeting.location.coordinates.radius.label']}" styleClass="center-value">
+					            		<h:outputText value="#{loc.radiusMiles}">
+					            			<f:convertNumber type="number" maxFractionDigits="3"/>
+					            		</h:outputText>
+					            	</pri:column>
+					            </pri:dataTable>
+				            </div>
+				            <h:panelGroup layout="block" styleClass="form-row ovh">
+				            	<pri:commandButton 
+				            		id="removecode-but" 
+				            		value="#{msg['page.commons.buttons.remove']}"
+				            		actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.removePostCode}"
+				            		onclick="progressDialog.show();" 
+				            		oncomplete="progressDialog.hide(); ADT.selectAllElement('.postcodes-table')"
+				            		update="codeTable,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning" 
+				            		process="@this,codeTable"
+				            	/>
+				            	<pri:commandLink value="#{msg['page.campaign.targeting.location.showmap.link']}" oncomplete="mapDlg.show()" process="@this" actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.updateMap}" update="@this"/>
+				            </h:panelGroup>
+				            <div class="form-row ovh uploadcoords">
+					            <pri:fileUpload id="uploadCodes" mode="advanced" label="#{msg['page.campaign.targeting.location.upload.link']}"
+									showButtons="false" auto="true" multiple="false" styleClass="change-file"
+									onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.selectAllElement('.postcodes-table');"
+									fileUploadListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.uploadPostalcodes}" 
+									update="codeTable,mess-uploadpos,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning"
+								>
+					            </pri:fileUpload>
+					            <pri:message id="mess-uploadpos" for="uploadCodes"/>
+					        </div>
+					    </div>
+				    </c:otherwise>
+				</c:choose>
+			    
+				<!-- Explicit GPS option -->
+				<pri:outputPanel styleClass="form-row">	            
+	                <pri:selectBooleanCheckbox value="#{campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.gps}" styleClass="gpsCheckBoxStyle"/>
+		            <pri:outputLabel value="#{msg['page.campaign.targeting.location.coordinates.gpsonly.label']}" styleClass="gpsLabelStyle" />
+	                <!-- Tooltip -->
+	                <pri:outputPanel id="showMapTooltip" styleClass="helpImageRight" style="vertical-align: top;"/>
+	                <pri:tooltip for="showMapTooltip" value="#{msg['page.campaign.targeting.location.coordinates.gpsonly.tip']}" style="width:500px;" />
+                </pri:outputPanel>
+                
+			</pri:outputPanel>
+		</pri:tab>
+	</f:view>
+</ui:composition>

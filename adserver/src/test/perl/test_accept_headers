@@ -1,0 +1,47 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use LWP::UserAgent;
+
+my $url = "http://localhost:8080/adfonic-adserver/ad/blah";
+my $ua = LWP::UserAgent->new;
+
+my $testCasesFile;
+if ($#ARGV > 0) {
+    $testCasesFile = $ARGV[0];
+} else {
+    $testCasesFile = "src/test/resources/accept-header-test-cases";
+}
+print "Reading test cases from $testCasesFile\n";
+
+open(INPUT, $testCasesFile) or die "Dagbernit: $!";
+
+my $testCount = 0;
+my $lineCount = 0;
+my $errorCount = 0;
+while (<INPUT>) {
+    $lineCount++;
+    chomp $_;
+    my $acceptHeaderValue = $_;
+    if (length($acceptHeaderValue) == 0) {
+        next;
+    }
+    $testCount++;
+    print "Test $testCount...";
+    my $response = $ua->get($url, "Accept", $acceptHeaderValue);
+    if ($response->is_success) {
+        print "OK\n";
+    } else {
+        $errorCount++;
+        print "FAILED at line $lineCount:\n";
+        print "$acceptHeaderValue\n";
+    }
+}
+
+close(INPUT);
+
+print "# of errors: $errorCount\n";
+exit($errorCount);

@@ -1,0 +1,53 @@
+{
+	"id":"2f3f36982a5fb4f74a5c796947776f4dc939f44c",
+	"at":2,
+	"tmax":82,
+	"imp":[ {
+			"id":"1", "tagid":"161076", "secure":0, "iframebuster":[ ],
+			"banner":{
+				"w":320, "h":50, "pos":0,
+				"battr":[ 14018, 14019, 9, 14015, 10, 14014, 13, 1, 2, 3, 5, 8, 14 ],
+				"api":[ 5, 1001 ],
+				"topframe":0
+			},
+			"instl":0
+	} ],
+	"app":{
+		"id":"xapi:38312:aJJu0FM52doI",
+		"cat":[ "IAB24" ],
+		"storeurl":"https://itunes.apple.com/gb/app/ask.fm/id635896473?mt=8",
+		"name":"Ask.fm",
+		"domain":"http://inmobi.com",
+		"bundle":"fm.ask.askfm",
+		"publisher":{ "id":"11726" }
+	},
+	"device":{
+		"os":"iOS",
+		"model":"iPhone",
+		"geo":{
+			"country":"GBR",
+			"region":"BRY",
+			"lat":51.4072,
+			"lon":-0.0308,
+			"type":2,
+			"ext":{ "latlonconsent":1 }
+		},
+		"osv":"8.1",
+		"js":1,
+		"ext":{ "xff":"86.7.251.72" },
+		"dpidmd5":"282ea0f703c33027cba00f1ea79dec01",
+		"ip":"86.7.251.72",
+		"connectiontype":2,
+		"dpidsha1":"2951419f207a038d9a39ab24d43b6c024bc47819",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B410",
+		"carrier":"Other",
+		"devicetype":1,
+		"language":"en",
+		"make":"Apple",
+		"ifa":"BE77A759-FBE8-4832-99B0-EC88A93135AC"
+	},
+	"user":{
+		"id":"4cacf190f91e2b718be55d5e960c5ed8cc9dc677",
+		"ext":{ "sessiondepth":1 }
+	}
+}

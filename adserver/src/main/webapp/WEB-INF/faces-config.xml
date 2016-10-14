@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+	version="2.0">
+	<application>
+	<!-- 
+		<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver> -->
+			<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+			
+	</application>
+	
+	
+	<managed-bean>
+        <managed-bean-name>frequencyCapBean</managed-bean-name>
+        <managed-bean-class>com.adfonic.adserver.web.jsf.managed.beans.FrequencyCapBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+         
+        <managed-property>
+            <property-name>frequencyCounter</property-name>
+            <value>#{frequencyCounter}</value>
+        </managed-property>
+        
+        <managed-property>
+             <property-name>adserverDomainCacheManager</property-name>
+             <value>#{adserverDomainCacheManager}</value>
+        </managed-property>
+         
+        <managed-property>
+             <property-name>cacheManager</property-name>
+             <value>#{cacheManager}</value>
+        </managed-property>
+        
+    </managed-bean>
+	
+	 <managed-bean>
+		<managed-bean-name>adServerCacheBean</managed-bean-name>
+		<managed-bean-class>com.adfonic.adserver.web.jsf.managed.beans.AdServerCacheBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>adserverDomainCacheManager</property-name>
+			<value>#{adserverDomainCacheManager}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>domainCacheManager</property-name>
+			<value>#{domainCacheManager}</value>
+		</managed-property>
+
+         <managed-property>
+             <property-name>dataCacheUpdate</property-name>
+             <value>#{adserverDataCacheManager}</value>
+         </managed-property>
+		
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>platformConvertor</managed-bean-name>
+		<managed-bean-class>com.adfonic.adserver.web.jsf.managed.beans.PlatformConvertor</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>domainCacheManager</property-name>
+			<value>#{domainCacheManager}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>countryConvertor</managed-bean-name>
+		<managed-bean-class>com.adfonic.adserver.web.jsf.managed.beans.CountryConvertor</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>domainCacheManager</property-name>
+			<value>#{domainCacheManager}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	
+</faces-config>

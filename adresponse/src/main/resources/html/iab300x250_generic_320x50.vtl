@@ -1,0 +1,29 @@
+#if($adtruthjs)
+    #parse($adtruthjs)
+#end
+<div style="position:relative;width:320px;height:50px;border:0;text-align:center" onclick="location.href='${adComponents.destinationUrl}';">
+
+#if($adComponents.components.image)
+<!-- 300x250 image -->
+<a href="${adComponents.destinationUrl}"><img border="0" src="${adComponents.components.image.url}"#if($adComponents.components.image.width) width="${adComponents.components.image.width}"#end#if($adComponents.components.image.height) height="${adComponents.components.image.height}"#end /></a>
+#end
+
+</div>
+
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+#if($adtruthjs)
+    <script>
+            document.write('<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")d.adtruth_data=' + adtruth_data + '"/>');
+    </script>
+    <noscript>
+        <img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+    </noscript>
+#else
+    <img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+
+#end
+#end

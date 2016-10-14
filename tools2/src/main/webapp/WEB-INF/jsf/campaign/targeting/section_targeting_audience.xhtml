@@ -1,0 +1,353 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"
+              xmlns:sec="http://www.springframework.org/security/tags"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:pe="http://primefaces.org/ui/extensions">
+              
+    <pe:importEnum type="com.adfonic.dto.audience.enums.AudienceRecencyType" />
+    <pe:importEnum type="com.adfonic.dto.audience.enums.AudienceType" />
+
+	<!-- Variables -->
+	<!-- Location by geotarget check -->
+	<ui:param name="hasLocByGeo" value="#{not empty campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.geotargetsList}" />
+	
+	<!-- Location by country check -->
+	<ui:param name="hasLocByCountry" value="#{not empty campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.countryList}" />
+	
+	<!-- Location by coordinates check  -->
+	<ui:param name="hasLocByCountryCoord" value="#{not empty campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.selectedCountryCoordinates}" />
+	<ui:param name="hasLocations" value="#{not empty campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.locationsList}" />
+	
+	<!-- Location by postal/ZIP code check -->
+	<ui:param name="hasLocByPostal" value="#{not empty campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.postCodesList}" />
+	<ui:param name="hasLocByPostalOrZip" value="#{hasLocByPostal or hasLocations}" />
+	
+	<ui:param name="hasLocTarget" value="#{hasLocByGeo or hasLocByCountry or hasLocByCountryCoord or hasLocByPostalOrZip}" />
+	
+	<!-- Factual Audience check -->
+	<ui:param name="hasFactualAudience" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.hasFactualAudience()}" />
+
+    <pri:tab id="audienceTab" title="#{msg['page.campaign.targeting.menu.audience.label']}">
+    
+    	<!-- Show warning about override when location targeting were selected -->
+    	<pri:outputPanel id="locationOverwriteWarning" styleClass="form-row warning message #{(hasLocationAudience and hasLocTarget) ? 'show' : 'hide'}" style="background-position-y: 30px">
+			<p>#{msg['page.campaign.targeting.audience.locationoverwrite.warning']}</p>
+		</pri:outputPanel>
+		
+        <!-- Show warning about override targeting when Factual audience were selected -->
+   		<pri:outputPanel id="targetingOverwriteWarning" styleClass="form-row warning message #{(hasFactualAudience) ? 'show' : 'hide'}" style="background-position-y: 30px">
+			<p>#{msg['page.audience.source.factual.targetingoverwrite.warning']}</p>
+		</pri:outputPanel>
+	    
+        <section id="audienceSection"> 
+            <pri:outputPanel id="audienceDiv">
+    
+                <div class="genericAudienceMsg">
+                    <pri:message id="genericAudience" for="audienceListDiv"/>                           
+                </div>
+                
+                <pri:outputPanel id="audienceListDiv">
+                    <ui:repeat id="audiencesUIRepeat" var="audience" varStatus="status" 
+                               value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.campaignAudiences}">
+
+                        <ui:param name="uid" value="#{status.index}" />
+    
+                        <!-- New Audience properties -->
+                        <pri:outputPanel styleClass="repeatBgRow">
+
+	                        <pri:panelGrid styleClass="panelGrid">
+	                            <pri:row>
+	
+	                                <!-- Include/exclude -->
+	                                <pri:column>
+	                                   <h:outputLabel for="audience-type" value="#{uid + 1}. #{msg['page.campaign.targeting.audience.type.label']}" styleClass="bl b"/>
+	                                   <pri:selectOneMenu id="audience-type" styleClass="short" value="#{audience.include}">
+	                                       <f:selectItem itemLabel="#{msg['page.campaign.targeting.audience.type.include.label']}" itemValue="true"/>
+	                                       <f:selectItem itemLabel="#{msg['page.campaign.targeting.audience.type.exclude.label']}" itemValue="false"/>
+	                                   </pri:selectOneMenu>
+	                                </pri:column>
+	                              
+	                                <!-- Segment -->                
+	                                <pri:column>
+	                                    <h:outputLabel for="audience-select" value="#{msg['page.campaign.targeting.audience.segment.label']}" styleClass="bl b"/>
+	                                    <pri:selectOneMenu id="audience-select" widgetVar="segmentSelectWidget#{uid}"
+	                                                       value="#{audience.audience}" 
+	                                                       converter="com.adfonic.tools.converter.audience.AudienceConverter"
+	                                                       styleClass="medium">
+	                                        <f:selectItem itemLabel="#{msg['page.campaign.targeting.audience.selectaudience.label']}" itemValue="" itemDescription="" /> 
+	                                        <f:selectItems value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.audiences}"
+	                                                       var="a" itemLabel="#{a.name}" itemValue="#{a}" itemDescription="#{a.audienceType.name()}" />
+	                                        <pri:ajax event="change" onstart="progressDialog.show();" oncomplete="ADT.onSegmentChange(#{uid}); ADT.subElExpander('radio', 'location'); progressDialog.hide();"
+	                                        		  listener="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.onSegmentChangeListener}"
+	                                        		  update=":campaign-targeting:accordionAgrupationTabs:buttonAudienceDiv,:campaign-targeting:accordionAgrupationTabs:locationTabContent,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning,:campaign-targeting:accordionAgrupationTabs:targetingOverwriteWarning,locationsShowOnMapContent" />
+	                                    </pri:selectOneMenu>
+	                                </pri:column>
+	                                                                
+	                                <!-- Recency Type -->
+	                                <pri:column>
+	                                    <h:outputLabel for="recency-select" value="#{msg['page.campaign.targeting.audience.recency.label']}" styleClass="bl b">
+	                                        <pri:commandLink process="@this" onclick="audienceRecencyDialogId.show()" styleClass="helpImageRight" />
+	                                    </h:outputLabel>
+	                                    <pri:selectOneMenu id="recency-select" widgetVar="recencySelectWidget#{uid}"
+	                                                       value="#{audience.audienceRecencyType}"
+	                                                       styleClass="medium">
+	                                        <f:selectItems value="#{AudienceRecencyType.ALL_VALUES}"
+	                                                       var="audienceRecencyType" itemValue="#{audienceRecencyType}" itemLabel="#{msg[audienceRecencyType.label]}"
+	                                                       itemDescription="#{audienceRecencyType.name()}"
+	                                                       itemDisabled="#{audienceRecencyType == AudienceRecencyType.NA }" />
+	                                        <pri:ajax event="change" oncomplete="ADT.toggleRecencyRangeAndWindowRow(#{uid})" />
+	                                    </pri:selectOneMenu>
+	                                </pri:column>
+	                                
+	                                <!-- Remove -->
+	                                <pri:column>
+	                                    <pri:commandLink value="#{msg['page.commons.links.remove']}" 
+	                                                     process="@this" 
+	                                                     update=":campaign-targeting:accordionAgrupationTabs:audienceListDiv,:campaign-targeting:accordionAgrupationTabs:buttonAudienceDiv,:campaign-targeting:accordionAgrupationTabs:audiencePriceDiv"
+	                                                     oncomplete="ADT.updateAudienceRecencySelect(); confirmDelete.show();">                                
+	                                        <f:setPropertyActionListener value="#{status.index}" target="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.audienceIndexToRemove}" />
+	                                    </pri:commandLink>
+	                                </pri:column>
+	                            </pri:row>
+	                        
+								<!-- Location Audience segment settings -->
+                                <ui:param name="isElasticHealthy" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.isElasticHealthy()}" />
+                                <ui:param name="locationAudienceCoordsLimit" value="#{toolsApplicationBean.locationAudienceCoordsLimit}" />
+                                <ui:param name="tooManyLocations" value="#{audience.audienceSize gt locationAudienceCoordsLimit}" />
+                                <ui:param name="noLocations" value="#{audience.audienceSize eq 0}" />
+                                <ui:param name="tooManyOrNoLocations" value="#{tooManyLocations or noLocations}" />
+	                        
+	                            <pri:row id="locationSettingsRow">
+	                                <!-- Radius -->
+	                                <!--pri:column>
+	                                    <pri:outputLabel for="radiusInput" value="#{msg['page.campaign.targeting.audience.location.radius.label']}" styleClass="bl b" />
+	                                    <pri:inputText id="radiusInput" styleClass="audienceInputStyle"/>
+	                                    <pri:watermark for="radiusInput" value="#{msg['page.campaign.targeting.audience.location.radius.placeholder.custom']}" />
+	                                </pri:column-->
+	                                    
+	                                <!-- Show on Map -->
+	                                <pri:column colspan="3">
+	                                	<pri:outputPanel id="locationsShowOnMapContent" layout="inline">
+		                                	<!-- Link -->
+		                                    <pri:commandLink value="#{msg['page.campaign.targeting.audience.location.showmap.link']}"
+		                                    	actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.updateMap}"
+		                                    	disabled="#{tooManyOrNoLocations}"
+		                                    	update=":locationDialog"
+		                                    	onstart="progressDialog.show();"
+		                                    	oncomplete="progressDialog.hide(); mapDlg.show()">
+		                                    </pri:commandLink>
+		                                    
+		                                    <!-- Tooltip -->
+		                                    <pri:outputPanel id="showMapTooltip" rendered="#{tooManyOrNoLocations}" styleClass="helpImageRight" style="vertical-align: sub;">
+			                                    <pri:tooltip for="showMapTooltip" style="width:#{isElasticHealthy ? 300 : 500}px">
+			                                    
+			                                    	<!-- Too many locations -->
+				                                    <h:outputFormat value="#{msg['page.campaign.targeting.audience.location.showmap.tooltip']}" rendered="#{tooManyLocations}">
+				                                        <f:param value="#{locationAudienceCoordsLimit}" />
+				                                        <f:param value="#{audience.audienceSize}" />
+				                                    </h:outputFormat>
+				                                    
+				                                    <!-- No location points -->
+				                                    <pri:outputLabel value="#{msg['page.campaign.targeting.audience.location.showmap.tooltip.nolocations']}"
+				                                    				 rendered="#{isElasticHealthy and noLocations}" />
+				                                    
+				                                    <!-- Error during querying audience size -->
+				                                   	<pri:outputPanel styleClass="#{not isElasticHealthy ? 'show' : 'hide'}">
+														<ui:include	src="/WEB-INF/jsf/commons/elastic_down_template.xhtml" />
+													</pri:outputPanel>
+													
+			                                    </pri:tooltip>
+		                                    </pri:outputPanel>
+		                                </pri:outputPanel>
+	                                </pri:column>
+	                            </pri:row>
+	                        
+	                            <!-- Recency properties -->
+	                        
+	                            <!-- Recency Range -->
+	                            
+	                            <pri:row id="recencyRangeRow">
+	                                <!-- Recency Date From -->
+	                                <pri:column>
+	                                    <pri:outputLabel for="recencyDateFrom" value="#{msg['page.campaign.targeting.audience.recency.date.from.label']}" styleClass="bl b" />
+	                                    <pri:calendar
+	                                        id="recencyDateFrom"
+	                                        widgetVar="startDateCalendar#{uid}"
+	                                        pattern="#{languageSessionBean.getDateFormat()}" 
+	                                        mode="popup"
+	                                        value="#{audience.recencyDateFrom}"
+	                                        maxdate="#{campaignTargetingAudienceMBean.today}"
+	                                        mindate="#{campaignTargetingAudienceMBean.defaultRecencyDateFrom}"
+	                                        pages="2"
+	                                        onclick="ADT.setStartDateCalendar()"
+	                                        locale="#{languageSessionBean.locale}"
+	                                        required="false"
+	                                        requiredMessage="#{msg['page.campaign.targeting.audience.recency.date.from.required']}"
+	                                        styleClass="calendarStyle">
+	                                            <pri:ajax event="dateSelect" oncomplete="ADT.adjustEndDate(#{uid});"/>
+	                                     </pri:calendar>
+	                                     <pri:watermark for="recencyDateFrom" value="#{msg['page.campaign.targeting.audience.recency.date.from.placeholder']}" />
+	                                </pri:column>
+	                                    
+	                                <!-- Recency Date To -->
+	                                <pri:column colspan="3">
+	                                    <pri:outputLabel for="recencyDateTo" value="#{msg['page.campaign.targeting.audience.recency.date.to.label']}" styleClass="bl b" />
+	                                    <pri:calendar
+	                                        id="recencyDateTo"
+	                                        widgetVar="endDateCalendar#{uid}"
+	                                        pattern="#{languageSessionBean.getDateFormat()}" 
+	                                        mode="popup" 
+	                                        value="#{audience.recencyDateTo}"
+	                                        maxdate="#{campaignTargetingAudienceMBean.today}"                         
+	                                        pages="2"
+	                                        onclick="ADT.setEndDateCalendar(#{uid})"
+	                                        locale="#{languageSessionBean.locale}"
+	                                        required="false"
+	                                        requiredMessage="#{msg['page.campaign.targeting.audience.recency.date.to.required']}"
+	                                        styleClass="calendarStyle" />
+	                                    <pri:watermark for="recencyDateTo" value="#{msg['page.campaign.targeting.audience.recency.date.to.placeholder']}" />
+	                                </pri:column>
+	                            </pri:row>
+	                        
+	                            <!-- Recency Window -->
+	                        
+	                            <!-- Slider header -->  
+	                            <pri:row id="recencyWindowHeaderRow">
+		                            <ui:param name="defaultRecencyDaysTo" value="#{campaignTargetingAudienceMBean.defaultRecencyDaysTo}" />
+	                                <pri:column colspan="2">
+	                                    <h:outputFormat value="#{msg['page.campaign.targeting.audience.recency.type.window.template']}">
+	                                        <f:param value="0" />
+	                                    </h:outputFormat>
+	                                    
+                                        <pri:spacer width="45" height="1"/>
+                                        
+	                                    <pri:outputLabel id="recencyWindow" value="#{audience.recencyDaysFrom} to #{audience.recencyDaysTo}" />
+	                                    
+                                        <pri:spacer width="45" height="1" />
+                                        
+                                        <h:outputFormat value="#{msg['page.campaign.targeting.audience.recency.type.window.template']}">
+                                            <f:param value="#{defaultRecencyDaysTo}" />
+                                        </h:outputFormat>
+	                                </pri:column>
+	                            </pri:row>
+	                               
+	                            <!-- Slider -->
+	                            <pri:row id="recencyWindowSliderRow">
+	                                <pri:column colspan="2">
+	                                    <pri:slider for="daysFrom, daysTo" display="recencyWindow" range="true"
+	                                                maxValue="#{defaultRecencyDaysTo}" displayTemplate="{min} to {max}"
+	                                                styleClass="audienceSliderStyle" />
+	                                    <h:inputHidden id="daysFrom"  value="#{audience.recencyDaysFrom}" />
+	                                    <h:inputHidden id="daysTo"    value="#{audience.recencyDaysTo}" />
+	                                </pri:column>
+	                            </pri:row>
+	
+	                        </pri:panelGrid>
+                        
+                        </pri:outputPanel>
+                        
+                    </ui:repeat>
+                </pri:outputPanel>
+            
+                <div class="clear"></div>
+                
+                <!-- Add Audience link -->      
+                <pri:outputPanel id="buttonAudienceDiv" styleClass="form-row">
+                    <pri:commandLink id="addAudienceLink" 
+                        value="#{msg['page.campaign.targeting.audience.addaudience.link']}"
+                        actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.addAudience}" 
+                        rendered="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.audienceAddable}"
+                        process="@this,audienceListDiv"
+                        update="audienceListDiv,buttonAudienceDiv"
+                        oncomplete="ADT.updateAudienceRecencySelect();"
+                        styleClass="addIcon" />  
+                </pri:outputPanel>
+            
+                <!-- Audience Price -->
+                <h:panelGrid columns="3" id="audiencePriceDiv" styleClass="form-row">
+                    <h:outputLabel styleClass="bl b" value="#{msg['page.campaign.targeting.audience.audienceprice.label']}"/>
+                    
+                    <c:if test="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.campaignDataFee != null and not empty campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.campaignAudiences }">
+                        <h:outputText value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.campaignDataFee}">
+                            <byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front"/>
+                        </h:outputText>
+                    </c:if>
+                    <c:if test="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.campaignDataFee == null or empty campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.campaignAudiences}">
+                        <h:outputLabel value="#{msg['page.campaign.targeting.audience.audienceprice.tobecalculated']}"/>
+                    </c:if>
+                    
+                    <pri:commandLink process="@this" onclick="audiencePriceDialogId.show()" styleClass="helpImageRight" />
+                </h:panelGrid>
+
+            </pri:outputPanel>
+        </section>
+
+        <!-- Audience dialogs -->
+
+        <!-- Confirm delete Audience dialog -->
+        <pri:dialog widgetVar="confirmDelete"
+                   header="#{msg['page.campaign.targeting.audience.removeaudience.dialog.header']}" 
+                   resizable="false" 
+                   modal="true" 
+                   closable="true"  
+                   styleClass="confirm-dialog">
+             <pri:outputPanel>
+                 <h3><pri:outputLabel value="#{msg['page.campaign.targeting.audience.removeaudience.dialog.confirmation']} "/></h3>
+                 <p><pri:outputLabel value="#{msg['page.campaign.targeting.audience.removeaudience.dialog.explanation']}" /></p>
+                 <pri:outputPanel styleClass="buttons">
+                     <pri:commandButton value="#{msg['page.campaign.targeting.audience.removeaudience.dialog.btn.yes']}" 
+                                        id="removeAudienceYesBtn"
+                                        actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.removeAudience}"
+                                        onclick="confirmDelete.hide();progressDialog.show();" 
+                                        oncomplete="ADT.updateAudienceRecencySelect(); progressDialog.hide(); ADT.subElExpander('radio', 'location');"
+                                        update=":campaign-targeting:accordionAgrupationTabs:audienceListDiv,:campaign-targeting:accordionAgrupationTabs:buttonAudienceDiv,:campaign-targeting:accordionAgrupationTabs:audiencePriceDiv,:campaign-targeting:accordionAgrupationTabs:locationTabContent,:campaign-targeting:accordionAgrupationTabs:locationOverwriteWarning,:campaign-targeting:accordionAgrupationTabs:targetingOverwriteWarning,:campaign-targeting:accordionAgrupationTabs:locationTabContent" 
+                                        process="@this">
+                     </pri:commandButton>
+                     <pri:commandButton id="removeAudienceNoBtn" 
+                                        value="#{msg['page.campaign.targeting.audience.removeaudience.dialog.btn.no']}" 
+                                        update="myAudiencesPanel" 
+                                        onclick="confirmDelete.hide()" 
+                                        type="button" />
+                 </pri:outputPanel>
+             </pri:outputPanel>
+        </pri:dialog>
+                    
+        <!-- Audience price change dialog -->
+        <pri:dialog widgetVar="audiencePriceDialogId"
+                  modal="true" 
+                  resizable="false"
+                  width="600"
+                  header="#{msg['page.campaign.targeting.audience.audienceprice.dialog.header']}"
+                  onShow="ADT.togglePageScroll(true)"
+                  onHide="ADT.togglePageScroll()">
+            <p>
+                <h:outputText value="#{msg['page.campaign.targeting.audience.audienceprice.dialog.part1']}"/>
+                <br/>
+                <h:outputText value="#{msg['page.campaign.targeting.audience.audienceprice.dialog.part2']}"/>
+                <br/>
+                <h:outputText value="#{msg['page.campaign.targeting.audience.audienceprice.dialog.part3']}"/>
+                <br/>
+                <h:outputText value="#{msg['page.campaign.targeting.audience.audienceprice.dialog.part4']}"/>
+            </p>
+        </pri:dialog>
+        
+        <!-- Audience recency dialog -->
+        <pri:dialog widgetVar="audienceRecencyDialogId"
+                  modal="true" 
+                  resizable="false"
+                  width="600"
+                  header="#{msg['page.campaign.targeting.audience.recency.dialog.header']}"
+                  onShow="ADT.togglePageScroll(true)"
+                  onHide="ADT.togglePageScroll()">
+            <p><pri:outputLabel value="#{msg['page.campaign.targeting.audience.recency.dialog.part1']}" escape="false" /></p>
+            <p><pri:outputLabel value="#{msg['page.campaign.targeting.audience.recency.dialog.part2']}" escape="false" /></p>
+            <p><pri:outputLabel value="#{msg['page.campaign.targeting.audience.recency.dialog.part3']}" escape="false" /></p>
+            <p><pri:outputLabel value="#{msg['page.campaign.targeting.audience.recency.dialog.part4']}" escape="false" /></p>
+        </pri:dialog>
+    </pri:tab>
+</ui:composition>

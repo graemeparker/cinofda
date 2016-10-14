@@ -1,0 +1,84 @@
+id: "Ue\333P\000\v4\365\n~XF\343\000q{"
+ip: "\242\332\266"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70,gzip(gfe)"
+url: "https://itunes.apple.com/app/id840919914"
+detected_language: "en"
+detected_vertical {
+  id: 937
+  weight: 0.251729
+}
+detected_vertical {
+  id: 1462
+  weight: 0.251729
+}
+detected_vertical {
+  id: 926
+  weight: 0.251729
+}
+detected_vertical {
+  id: 105
+  weight: 0.244813
+}
+adslot {
+  id: 1
+  width: 320
+  height: 568
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 30
+  excluded_sensitive_category: 31
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 16719478539356991253
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEHj8TawH05Axjqbqev-gq54"
+vertical_dictionary_version: 2
+timezone_offset: -420
+detected_content_label: 59
+detected_content_label: 39
+mobile {
+  platform: "iphone"
+  app_id: "840919914"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  is_interstitial_request: true
+  app_category_ids: 60506
+  app_category_ids: 60504
+  app_category_ids: 60525
+  app_category_ids: 60533
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 8
+    os_version_minor: 3
+  }
+  screen_width: 320
+  screen_height: 568
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "Ue\333P\000\v4\365\n~XF\001\000q{)\335\226\034\002\303\331\324\212?T\337\365\324n\034\f\005\255\227"
+}
+video {
+  videoad_start_delay: 0
+  max_ad_duration: 1
+  inventory_type: 2
+  video_ad_skippable: REQUIRE_SKIPPABLE
+  allowed_video_formats: VIDEO_HTML5
+}
+cookie_age_seconds: 31669800
+postal_code: "83814"
+geo_criteria_id: 9029625
+seller_network_id: 1
+publisher_settings_list_id: 17694776254770655010
+is_predicted_to_be_ignored: true

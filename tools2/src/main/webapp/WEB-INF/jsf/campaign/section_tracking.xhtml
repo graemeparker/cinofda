@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:body>
+
+        <pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+
+        <!-- Boolean Expressions -->
+        <ui:param name="appleOnly"              value="#{campaignMBean.campaignTrackingMBean.appleOnly}" />
+        <ui:param name="androidOnly"            value="#{campaignMBean.campaignTrackingMBean.androidOnly}" />
+        <ui:param name="appleTarget"            value="#{campaignMBean.campaignTrackingMBean.appleTarget}" />
+        <ui:param name="androidTarget"          value="#{campaignMBean.campaignTrackingMBean.androidTarget}" />
+        <ui:param name="appleOrAndroidTarget"   value="#{appleTarget or androidTarget}" />
+        <ui:param name="appleOrAndroidOnly"     value="#{appleOnly or androidOnly}" />
+        <ui:param name="appTrackDisabled"       value="#{not appleOrAndroidOnly or !campaignMBean.campaignTrackingMBean.applicationDestination}" />
+        <ui:param name="appleAndAndroidTarget"  value="#{appleTarget and androidTarget}" />     
+            
+        <section class="form-box ui-corner-all" id="tracking">
+            <h2 class="sec-title">#{msg['page.campaign.conversiontracking.menu.title.label']}</h2>
+            <p>#{msg['page.campaign.conversiontracking.hint.description.title1.label']}
+                <a target="_blank" href="#{toolsApplicationBean.externalUrls['devDocsUrl']}">#{msg['page.campaign.conversiontracking.hint.description.title.link']}</a>
+               #{msg['page.campaign.conversiontracking.hint.description.title2.label']}
+            </p>
+
+            <h:form id="campaign-tracking" class="options" prependId="false" >
+            
+                <div class="form-row">
+                
+                	<h:panelGroup layout="block">
+	                	<b><h:outputLabel value="#{msg['page.campaign.conversiontracking.deviceid.type.title.label']}"/></b>
+	                	<pri:commandLink process="@this" onclick="deviceIdTypeDialogId.show()" styleClass="helpImageRight" />
+	
+	                    <pri:selectOneRadio id="trackingInstallOptionsId" value="#{campaignMBean.campaignTrackingMBean.trackingInstallOptions}" styleClass="track-installs" layout="pageDirection">
+	                        <f:selectItem itemLabel="#{msg['page.campaign.conversiontracking.tracking.install.alltraffic.nodeviceids.label']}" itemValue="#{Tools2Constants.TRACKING_INSTALL_ALLTRAFFIC_NODEVICEIDS}" />
+	                        <f:selectItem itemLabel="#{msg['page.campaign.conversiontracking.tracking.install.onlytraffic.deviceids.label']}" itemValue="#{Tools2Constants.TRACKING_INSTALL_ONLYTRAFFIC_DEVICEIDS}"
+	                                      itemDisabled="#{not appleOrAndroidTarget}" />                         
+	                    </pri:selectOneRadio>
+	
+	                    <div data-no="2" class="panel-track-installs inner-panel none" style="padding:10px;" >
+	                        <h:panelGroup id="devices-container" layout="block" rendered="#{appleOrAndroidTarget}">
+	                            <pri:message for="appleOrAndroidDeviceTypesChkId" rendered="#{appleOrAndroidTarget}" />
+	                            <pri:selectBooleanCheckbox id="select_all_devices" itemLabel="Select All" styleClass="devices-select-all select-all" />
+	                            <pri:selectManyCheckbox id="appleOrAndroidDeviceTypesChkId" layout="pageDirection" 
+	                                                    value="#{campaignMBean.campaignTrackingMBean.selectedDeviceIdentifierTypes}" 
+	                                                    converter="com.adfonic.tools.converter.deviceidentifier.DeviceIdentifierTypeConverter"
+	                                                    valueChangeListener="#{campaignMBean.campaignTrackingMBean.doChangeInstallTrackingOptions}"
+	                                                    styleClass="indent-chkbox">
+	                                    <f:selectItems value="#{campaignMBean.campaignTrackingMBean.deviceIdentifierTypesList}" var="type"
+	                                        itemLabel="#{ (type.name != 'DPID') ? type.name : ((appleAndAndroidTarget) ? 'iOS UDID / Android Device ID' : ((appleTarget) ? 'iOS UDID' : 'Android Device ID')) }"/>
+	                            </pri:selectManyCheckbox>
+	                        </h:panelGroup>
+	                    </div>
+					</h:panelGroup>
+                    
+                </div>
+
+                <div class="form-row">
+                	<b><h:outputLabel value="#{msg['page.campaign.conversiontracking.tracking.type.title.label']}"/></b>
+                	<pri:commandLink process="@this" onclick="trackingTypeDialogId.show()" styleClass="helpImageRight" />
+    
+                    <pri:selectOneRadio id="tracking-radio" value="#{campaignMBean.campaignTrackingMBean.convTrackingType}" styleClass="tracking" layout="pageDirection">
+                        <f:selectItem itemLabel="#{msg['page.campaign.conversiontracking.tracking.options.noconversion.label']}" itemValue="noconversion"/>
+                        <f:selectItem itemLabel="#{msg['page.campaign.conversiontracking.tracking.options.conversion.label']}" itemValue="goalconversion"/>
+                        <f:selectItem itemLabel="#{msg['page.campaign.conversiontracking.tracking.options.install.label']}" itemValue="apptracking" itemDisabled="#{appTrackDisabled}"/>
+                    </pri:selectOneRadio>
+                    
+                    <div id="innerPanelGoalConversion" data-no="2" class="panel-tracking inner-panel none">
+                        <h:outputText value="#{msg['page.campaign.conversiontracking.tracking.goalconversion.advertiserid']} #{campaignMBean.campaignTrackingMBean.advertiserId}"/>
+                    </div>
+
+                    <div id="innerPanelAppInstallOptions" data-no="3" class="panel-tracking inner-panel none">
+                        <div class="form-row">
+                            <h:outputLabel styleClass="bl" value="#{msg['page.campaign.conversiontracking.tracking.googleplay.label']}" for="uniq-id" rendered="#{androidOnly}"/>
+                            <h:outputLabel styleClass="bl" value="#{msg['page.campaign.conversiontracking.tracking.appid.label']}" for="uniq-id" rendered="#{appleOnly}"/>
+                            <pri:inputText id="uniq-id" styleClass="bl" value="#{campaignMBean.campaignTrackingMBean.applicationID}" rendered="#{appleOrAndroidOnly}"/> 
+                                       
+                            <pri:watermark for="uniq-id" value="#{msg['page.tracking.appid.watermark.android']}" rendered="#{androidOnly}"/>
+                            <pri:watermark for="uniq-id" value="#{msg['page.tracking.appid.watermark.ios']}" rendered="#{appleOnly}"/>
+                            <pri:message for="uniq-id"/>
+                        </div>                
+                    </div>
+                    
+                    <h:panelGroup rendered="#{appTrackDisabled}">
+                        <div class="install-tracking">
+                            <h:outputLink target="_blank" value="#{toolsApplicationBean.externalUrls['appInstallTrackingEnableUrl']}">#{msg['page.campaign.conversiontracking.tracking.enableinstalltracking.label']}</h:outputLink>
+                        </div>
+                    </h:panelGroup>
+                    
+                </div>
+                    
+                <div class="form-row">
+                    <pri:commandButton id="trackingContinueBtn" value="#{campaignMBean.continueButtonMessage}" 
+                                       actionListener="#{campaignMBean.campaignTrackingMBean.doSave}"
+                                       onclick="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.panelsTop()"
+                                       update=":navigationDiv,:menuForm:side-panel">
+                    </pri:commandButton>
+                    
+                    <pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" rendered="#{!campaignMBean.newCampaign}"
+                                     actionListener="#{campaignMBean.campaignTrackingMBean.cancel}"
+                                     onclick="progressDialog.show();" oncomplete="progressDialog.hide()"
+                                     process="@this"
+                                     update=":navigationDiv,:menuForm:side-panel">
+                    </pri:commandLink>
+                </div>
+
+            </h:form>
+
+            <!-- Dialog for deviceId type hint -->
+
+            <pri:dialog widgetVar="deviceIdTypeDialogId"
+                        modal="true" 
+                        resizable="false"
+                        width="600"
+                        header="#{msg['page.campaign.conversiontracking.deviceid.type.tooltip.title.label']}"
+                        onShow="ADT.togglePageScroll(true)"
+                        onHide="ADT.togglePageScroll()">
+                                          
+                        <p><h:outputText value="#{msg['page.campaign.conversiontracking.deviceid.type.tooltip.p1']}"/></p>
+                        <p><h:outputText value="#{msg['page.campaign.conversiontracking.deviceid.type.tooltip.p2']} "/>
+                           <h:outputLink value="#{toolsApplicationBean.externalUrls['appInstallTrackingServerSideIntegrationUrl']}" target="_blank">
+                               <h:outputText value="#{msg['page.campaign.conversiontracking.deviceid.type.tooltip.p2.link.wiki']}"/>
+                           </h:outputLink>.</p>
+                        <p><h:outputText value="#{msg['page.campaign.conversiontracking.deviceid.type.tooltip.p3']}"/></p>
+            </pri:dialog>
+
+            <!-- Dialog for tracking type hint -->
+
+            <pri:dialog widgetVar="trackingTypeDialogId"
+                        modal="true" 
+                        resizable="false"
+                        width="600"
+                        header="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.title1.label']}"
+                        onShow="ADT.togglePageScroll(true)"
+                        onHide="ADT.togglePageScroll()">
+                                                            
+                        <p><h:outputText value="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.p1']}"/></p>
+                        <p><h:outputText value="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.p2']} "/>
+                           <h:outputLink value="#{toolsApplicationBean.externalUrls['appInstallTrackingUrl']}" target="_blank">
+                               <h:outputText value="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.p2.link.code']}"/>
+                           </h:outputLink>.</p>
+                        <p><h:outputText value="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.p3']} "/>
+                           <h:outputLink value="#{toolsApplicationBean.externalUrls['mobileSiteConversionsUrl']}" target="_blank">
+                               <h:outputText value="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.p3.link.guide']}"/>
+                           </h:outputLink>.</p>
+                        <b><h:outputText value="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.title2.label']}"/></b>
+                        <p><h:outputText value="#{msg['page.campaign.conversiontracking.tracking.type.tooltip.p5']}"/></p>
+            </pri:dialog>
+
+            <script type="text/javascript">
+                $(function () {
+                    ADT.subElExpander('radio', 'tracking');
+                    ADT.subElExpander('radio', 'track-installs');
+                    ADT.selectAllElement("#devices-container");
+                });
+            </script> 
+        </section>
+    </h:body>
+</html>

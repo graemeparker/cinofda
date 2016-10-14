@@ -1,0 +1,47 @@
+{
+	"id":"FC203E1E-EC1F-43AB-A2CC-5F092E42E7A2",
+	"imp":[ {
+			"id":"1",
+			"tagid":"92820",
+			"banner":{
+				"w":320, "h":50, "topframe":0,
+				"battr":[ 1, 3, 8, 10, 44 ],
+				"api":[ 3 ]
+			}
+	} ],
+	"app":{
+		"id":"bbcd6342cf26602e",
+		"name":"zynga:wordswithfriends2android",
+		"ver":"2.510",
+		"bundle":"com.zynga.wwf2.free",
+		"domain":"http://www.xad.com",
+		"paid":0,
+		"publisher":{ "id":"48625" }
+	},
+	"device":{
+		"ip":"92.29.138.8",
+		"ua":"Mozilla/5.0 (Linux; U; Android 4.2.2; en-gb; GT-I8200N Build/JDQ39) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
+		"carrier":"TalkTalk",
+		"make":"Samsung",
+		"model":"Galaxy S3",
+		"os":"Android",
+		"Osv":"4",
+		"osv":"4",
+		"devicetype":1,
+		"geo":{ "country":"GB", "region":"Q5", "city":"York", "lat":53.9529343, "lon":-1.07607114, "type":1 },
+		"ext":{
+			"otherdeviceid":"65ebdd2f-7361-4229-aac2-7f3d55c2f3bc",
+			"hash":1,
+			"xff":"54.211.190.203",
+			"res":"-1x-1",
+			"pf":4,
+			"cat":[ 10015651, 14025812, 13027011, 12015511, 11015411 ],
+			"brand":[ 89, 113, 116, 1027, 1, 17, 3836, 1711, 268, 18 ],
+			"loccatsrc":1
+		}
+	},
+	"user":{
+		"geo":{ "lat":53.9529343, "lon":-1.07607114, "type":1, "country":"gb", "region":"york", "city":"dunnington", "zip":"yo19" }
+	},
+	"badv":[ "18exgfs.com", "gohookup.com" ]
+}

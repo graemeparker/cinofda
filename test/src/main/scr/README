@@ -1,0 +1,11 @@
+Just stuff for my local use normally.
+
+checking-in this folder only to provide the ability to load the test data provided in misc
+
+Scripts are elementary and some needs to be updated before running. 
+Any running has to be with the PWD same as the residing dir currently.
+
+set ADF_DB_ROOT to db root
+
+Just the following 3 commands should be sufficient - ignore the others
+./upd && ./dropdbs && ./load-test-data

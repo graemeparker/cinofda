@@ -1,0 +1,1560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:ad="http://byyd-tech.com/jsf/functions"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/adminTemplate.xhtml">
+                
+  <!-- Boolean Expressions -->
+  <ui:param name="isWhiteList"                   value="#{creativeAdminBean.campaign.publicationList.whiteList}" />
+  <ui:param name="hasPubList"                    value="#{creativeAdminBean.campaign.publicationList ne null}" />
+    
+  <!-- Value expressions -->
+  <ui:param name="pubListName"                   value="#{creativeAdminBean.campaign.publicationList.name}" />
+  <ui:param name="adminUser"                     value="#{adminAccountBean.user}" />
+
+  <ui:define name="title">Creative #{creativeAdminBean.creative.id} (#{creativeAdminBean.creative.name})</ui:define>
+  <ui:define name="pageContent">
+
+    <script type="text/javascript">
+    function checkValue() {
+        if ( jQuery('#mainForm\\:bidTypeSelect').val() == 'CPI' || jQuery('#mainForm\\:bidTypeSelect').val() == 'CPA') {
+            jQuery('#mainForm\\:priceOverridden').prop("checked", true);
+            jQuery('#mainForm\\:priceOverridden').attr("disabled", true);
+        }else{
+            jQuery('#mainForm\\:priceOverridden').attr("disabled", false);
+        }
+    }
+
+    jQuery(function() {
+        checkValue();
+    });
+    </script>
+    <h2>Creative Admin</h2>
+    <c:choose>
+      <c:when test="${requestScope.sessionCollision}">
+        <div class="infoError">
+          <div class="infoErrorImage"></div>
+          <div class="infoContent">
+            The creative id did not match the creative requested. This indicates a session problem, such as editing two creatives in the same browser.
+            <br/>Close any open tabs or browser windows and navigate to the creative again.
+          </div>
+        </div>
+      </c:when>
+      <c:when test="${empty creativeAdminBean.creative}">
+        <h2>Creative not found</h2>
+        <p>The referenced creative (#{creativeAdminBean.externalID}) was not found.  It may have been deleted by the advertiser.</p>
+        <p>
+          Note: you may also see this message if you have attempted to edit more than one creative at a time.
+          <br/>Close any open tabs or browser windows and navigate to the creative again.
+        </p>
+      </c:when>
+      <c:when test="${empty creativeAdminBean.creative.campaign}">
+        <h2>Campaign not found for creative #{creativeAdminBean.externalID}.</h2>
+      </c:when>
+      <c:otherwise>
+        <h:form id="mainForm">
+          <h:panelGroup rendered="#{!empty facesContext.maximumSeverity}">
+            <div class="infoError">
+              <div class="infoErrorImage"></div>
+              <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+              <div class="infoContent">#{msg['page.generic.error.box']}</div>
+            </div>
+          </h:panelGroup>
+
+          <table class="data">
+            <tr>
+              <td class="label">Status</td>
+              <td>
+                <table>
+                  <tr>
+	              <td style="text-align:right; border:none">Campaign:</td>
+	              <td align="left" style="padding:5px 20px; color: black; border:solid 1px; width: 40px; max-width: 40px; background-color:#{(creativeAdminBean.campaign.status eq 'ACTIVE' ? '#339933;' : '#ff9933;')}">
+	                #{creativeAdminBean.campaign.status}
+	              </td>
+	              <td align="right" style="padding-left:20px; border:none">Creative:</td>
+	              <td align="left" style="padding:5px 20px; color: black; border:solid 1px; width: 40px; max-width: 40px; background-color:#{(creativeAdminBean.creative.status eq 'ACTIVE' ? '#339933;' : '#ff9933;')}">
+	                #{creativeAdminBean.creative.status}
+	              </td>
+                    <td align="right" style="padding-left:20px; border:none">Total creatives for campaign:</td>
+                    <td align="left" style="padding:5px 20px; border:solid 1px;">
+                      #{creativeAdminBean.creativesCount}
+                    </td>
+                    <h:panelGroup rendered="#{!creativeAdminBean.advertiser.key}">
+                      <td align="right" style="padding-left:20px; border:none">Total campaigns for non-key advertiser:</td>
+                      <td align="left" style="padding:5px 20px; border:solid 1px;">
+                        #{creativeAdminBean.campaignsCount}
+                      </td>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{creativeAdminBean.creative.closedMode}">
+                      <td align="right" style="padding-left:20px; border:none">Closed Mode</td>
+                      <td align="left" style="padding:5px 20px; border:solid 1px; background-color:#ff9933;')}">On</td>
+                    </h:panelGroup>
+                  </tr>
+                </table>
+               </td>
+            </tr>
+            <ui:repeat var="pubAudInfo" type="none" value="#{creativeAdminBean.publishersAuditedInfo}">
+	            <tr>
+	              <td class="label">#{pubAudInfo.name} Creative Status</td>
+	              <td>
+                    <table>
+                      <tr>
+                        <td style="border: 0px; padding: 0px;">
+		                    <table>
+		                      <tr>
+	                             <td style="text-align:right; border:none; padding-left: 20px;">Status:</td>
+			                     <td align="left" style="padding:5px 20px; color: black; border:solid 1px; width: 40px; max-width: 40px; background-color:#{(pubAudInfo.status eq 'APPROVED' ? '#339933;' : '#ff9933;')}">
+			                         #{pubAudInfo.status}
+			                     </td>
+			                  </tr>
+			                </table>
+			            </td>
+			            <td style="border: 0px; padding: 0px;">
+                            <table>
+                              <tr>  
+				                  <td align="right" style="padding-left:40px; border:none;">ID:</td>
+				                  <td align="left" style="padding:5px 20px; color: black; border:solid 1px; word-wrap: break-word; width: 200px; max-width: 200px; background-color:#{(pubAudInfo.status eq 'APPROVED' ? '#339933;' : '#ff9933;')}">
+				                    #{pubAudInfo.externalReference}
+				                  </td>
+				              </tr>
+				            </table>
+				        </td>
+                        <td align="right" style="padding-left:20px; border:none">Rejection Reason:</td>
+	                    <td align="left" style="padding:5px 20px; border:solid 1px; word-wrap: break-word; width: 400px; max-width: 400px;">
+	                       #{pubAudInfo.lastAuditRemarks}
+	                    </td>
+	                  </tr>
+	                </table>
+	              </td>
+	            </tr>
+	        </ui:repeat>
+          </table>
+
+          <h2 style="margin-top:20px">History</h2>
+          <pri:dataTable var="history" value="#{creativeAdminBean.creativeHistory}">
+            <pri:column headerText="Event Time">
+              <h:outputText value="#{history.eventTime}" />
+            </pri:column>
+            <pri:column headerText="Logged By">
+              <h:outputText rendered="#{not empty history.adfonicUser}" value="#{history.adfonicUser.firstName} #{history.adfonicUser.lastName}" />
+            </pri:column>
+            <pri:column headerText="Assigned To">
+              <h:outputText rendered="#{not empty history.assignedTo}" value="#{history.assignedTo.firstName} #{history.assignedTo.lastName}" />
+            </pri:column>
+            <pri:column headerText="Approval Status">
+              <h:outputText value="#{history.status}" />
+            </pri:column>
+            <pri:column headerText="Comment">
+              <h:outputText rendered="#{not empty history.comment}" value="#{history.comment}" />
+            </pri:column>
+          </pri:dataTable>
+
+          <h2 style="margin-top:20px">Campaign details</h2>
+          <table class="data">
+            <tr>
+              <td class="label">Assigned To</td>
+              <td><h:outputText rendered="#{not empty creativeAdminBean.creative.assignedTo}" value="#{creativeAdminBean.creative.assignedTo.fullName}"/></td>
+            </tr>
+            <tr>
+              <td class="label">Company</td>
+              <td>
+                <h:outputText
+                    value="#{creativeAdminBean.advertiser.company.name}" />
+                <h:outputText
+                    value="#{creativeAdminBean.advertiser.company.accountManager.firstName}" rendered="#{creativeAdminBean.advertiser.company.name == null}" />
+                <h:outputText
+                    value="#{creativeAdminBean.advertiser.company.accountManager.lastName}" rendered="#{creativeAdminBean.advertiser.company.name == null}" />
+              </td>
+            </tr>
+            <tr>
+              <td class="label">Advertiser</td>
+              <td>#{creativeAdminBean.advertiser.name}</td>
+            </tr>
+            <tr>
+              <td class="label">Account type</td>
+              <td>
+                #{(creativeAdminBean.advertiser.key ? 'Key' : 'Standard')}
+              </td>
+            </tr>
+
+            <tr>
+              <td class="label">Campaign type</td>
+              <td>
+                <h:panelGroup rendered="#{!creativeAdminBean.campaign.houseAd}">Standard</h:panelGroup>
+                <h:panelGroup rendered="#{creativeAdminBean.campaign.houseAd}"><h3 style="color:green">HOUSE AD</h3></h:panelGroup>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="label">Campaign name</td>
+              <td>
+                <span class="error"><h:message for="newCampaignName"/></span><br/>
+                <h:inputText value="#{creativeAdminBean.newCampaignName}"
+                             id="newCampaignName"
+                             label="Campaign Name"
+                             style="width:255px"
+                             maxlength="255"/>
+              </td>
+            </tr>
+
+			<!-- Campaign description -->
+            <tr>
+              <td class="label">Campaign description</td>
+              <td><pri:inputText value="#{creativeAdminBean.campaign.description}" />
+              </td>
+            </tr>
+            
+            <!-- Campaign Opportunity ID -->
+            <tr>
+              <td class="label">Opportunity ID</td>
+              <td><pri:inputText value="#{creativeAdminBean.campaign.opportunity}" />
+              </td>
+            </tr>
+
+            <tr>
+              <td class="label">Network</td>
+              <td>
+                <c:choose>
+                  <c:when test="${creativeAdminBean.isPremium}">Premium</c:when>
+                  <c:when test="${creativeAdminBean.campaign.transparent}">Transparent Network</c:when>
+                  <c:otherwise>Performance network</c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="label">Global language support</td>
+              <td>
+                ${creativeAdminBean.campaign.disableLanguageMatch == true ? 'Yes' : 'No'}
+              </td>
+            </tr>
+
+            <tr>
+              <td class="label">Start Date</td>
+              <td>
+                <c:choose>
+                  <c:when test="${creativeAdminBean.campaign.startDate == null}">
+                    Immediately
+                  </c:when>
+                  <c:otherwise>
+                    <h:outputText value="#{creativeAdminBean.campaign.startDate}">
+                      <f:convertDateTime dateStyle="long" type="date" timeZone="#{user.company.defaultTimeZone}" />
+                    </h:outputText>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">End Date</td>
+              <td>
+                <c:choose>
+                  <c:when test="${creativeAdminBean.campaign.endDate == null}">
+                    None specified
+                  </c:when>
+                  <c:otherwise>
+                    <h:outputText value="#{creativeAdminBean.campaign.endDate}">
+                      <f:convertDateTime dateStyle="long" type="date" timeZone="#{user.company.defaultTimeZone}" />
+                    </h:outputText>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">Time periods</td>
+              <td>
+                <pri:dataTable rendered="#{not empty creativeAdminBean.campaign.sortedTimePeriods}"
+                               var="tp"
+                               value="#{creativeAdminBean.campaign.sortedTimePeriods}"
+                               styleClass="data">
+                  <pri:column width="100">
+                    <f:facet name="header">
+                      <h:outputText value="Start date"/>
+                    </f:facet>
+                    <h:outputText value="#{tp.startDate}">
+                      <f:convertDateTime type="date" dateStyle="short" timeZone="#{user.company.defaultTimeZone}" />
+                    </h:outputText>
+                  </pri:column>
+                  <pri:column width="100">
+                    <f:facet name="header">
+                      <h:outputText value="End date"/>
+                    </f:facet>
+                    <h:outputText value="#{tp.endDate}">
+                      <f:convertDateTime type="date" dateStyle="short" timeZone="#{user.company.defaultTimeZone}" />
+                    </h:outputText>
+                  </pri:column>
+                  <pri:column width="100">
+                    <f:facet name="header">
+                      <h:outputText value="Start time"/>
+                    </f:facet>
+                    <h:outputText value="#{tp.startDate}">
+                      <f:convertDateTime type="time" pattern="HH:mm" timeZone="#{user.company.defaultTimeZone}" />
+                    </h:outputText>
+                  </pri:column>
+                  <pri:column width="100">
+                    <f:facet name="header">
+                      <h:outputText value="End time"/>
+                    </f:facet>
+                    <h:outputText value="#{tp.endDate}">
+                      <f:convertDateTime type="time" pattern="HH:mm" timeZone="#{user.company.defaultTimeZone}" />
+                    </h:outputText>
+                  </pri:column>
+                </pri:dataTable>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">Scheduling</td>
+              <td>
+                Weekdays: <h:outputText value="#{creativeAdminBean.verboseWeekdays}" />
+                <br/>
+                Time of day: <h:outputText value="#{creativeAdminBean.verboseWeekdayHours}" />
+                <br/>
+                Weekends: <h:outputText value="#{creativeAdminBean.verboseWeekends}" />
+                <br/>
+                Time of day: <h:outputText value="#{creativeAdminBean.verboseWeekendHours}" />
+                <br/>
+                <h:outputText value="#{creativeAdminBean.campaign.campaignTriggersHumanReadable}" />
+              </td>
+            </tr>
+
+			<!-- Frequency capping -->
+            <tr>
+              <td class="label">Frequency capping</td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty creativeAdminBean.campaign.capImpressions}">
+                    Default
+                  </c:when>
+                  <c:when test="${creativeAdminBean.campaign.capImpressions lt 1}">
+                    No cap
+                  </c:when>
+                  <c:otherwise>
+                    <h:outputText value="#{creativeAdminBean.campaign.capImpressions}" />
+                    times per user request per
+                    <ui:repeat var="capObj" type="none" value="#{creativeAdminBean.frequencyCapPeriodValues}">
+                      <h:outputText rendered="#{capObj.seconds == creativeAdminBean.campaign.capPeriodSeconds}" value="#{capObj.description}" />
+                    </ui:repeat>
+                    . Applied per 
+                    <h:outputText value="Campaign" rendered="#{creativeAdminBean.campaign.capPerCampaign}" />
+                    <h:outputText value="Creative" rendered="#{!creativeAdminBean.campaign.capPerCampaign}" />
+                  </c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">Conversion tracking</td>
+              <td>
+                <h:outputText
+                    value="#{creativeAdminBean.campaign.conversionTrackingEnabled ||
+                           creativeAdminBean.campaign.installTrackingEnabled ? 'On' : 'Off'}"/>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="label">Brand Safety</td>
+              <td>
+                <h:selectOneMenu id="safetyLevel" value="#{creativeAdminBean.segment.safetyLevel}">
+                  <f:selectItem itemValue="OFF" itemLabel="Off"/>
+                  <f:selectItem itemValue="BRONZE" itemLabel="Bronze"/>
+                  <f:selectItem itemValue="SILVER" itemLabel="Silver"/>
+                  <f:selectItem itemValue="GOLD" itemLabel="Gold"/>
+                </h:selectOneMenu>
+                <h:outputLabel value="Off/Bronze/Silver/Gold" for="safetyLevel" />
+              </td>
+            </tr>
+
+            <tr>
+              <td class="label">Whitelist</td>
+              <td>
+                <h:outputText
+                    value="#{(isWhiteList and hasPubList) ? pubListName : msg['page.creative.approval.noneset']}"/>
+              </td>
+            </tr>
+
+            <h:panelGroup rendered="#{creativeAdminBean.campaign.conversionTrackingEnabled}">
+              <tr>
+                <td class="label">Tracking verified</td>
+                <td><h:outputText value="#{creativeAdminBean.campaign.conversionTrackingVerified ? 'Verified' : 'Unverified'}" /></td>
+              </tr>
+            </h:panelGroup>
+
+            <ui:remove>
+              // show application id if install tracking or AdX install tracking enabled
+            </ui:remove>
+            <h:panelGroup rendered="#{creativeAdminBean.campaign.installTrackingEnabled || creativeAdminBean.campaign.installTrackingAdXEnabled}">
+              <tr>
+                <td class="label">
+                  <c:choose>
+                    <c:when test="#{creativeAdminBean.campaign.installTrackingAdXEnabled}">AdX Bundle id</c:when>
+                    <c:when test="#{creativeAdminBean.appleOnly}">App store id</c:when>
+                    <c:when test="#{creativeAdminBean.androidOnly}">Android market package name</c:when>
+                  </c:choose>
+                </td>
+                <td>
+                  <span class="error"><h:message for="newApplicationId"/></span><br/>
+                  <h:inputText value="#{creativeAdminBean.newApplicationId}"
+                               id="newApplicationId"
+                               label="Application Id"
+                               style="width:255px"
+                               maxlength="255"/>
+                </td>
+              </tr>
+              <h:panelGroup rendered="#{creativeAdminBean.campaign.installTrackingEnabled}">
+                <tr>
+                  <td class="label">Tracking verified</td>
+                  <td><h:outputText value="#{creativeAdminBean.campaign.installTrackingVerified ? 'Verified' : 'Unverified'}" /></td>
+                </tr>
+              </h:panelGroup>
+            </h:panelGroup>
+
+            <tr>
+              <td class="label">Web / Apps</td>
+              <td>
+                <c:choose>
+                  <c:when test="#{creativeAdminBean.segment.medium eq 'APPLICATION'}">
+                    Apps
+                  </c:when>
+                  <c:when test="#{creativeAdminBean.segment.medium eq 'SITE'}">
+                    Web
+                  </c:when>
+                  <c:otherwise>
+                    Both web and apps
+                  </c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+
+          <tr>
+            <td class="label">Audiences</td>
+            <td>
+              <ui:repeat var="ca" value="#{creativeAdminBean.campaignAudiences}" varStatus="status" rowIndexVar="idx">
+                #{ca.include ? 'Include' : 'Exclude'}&#160;#{ca.audience.name}
+                <h:outputText rendered="#{!status.last}" escape="false" value="&#60;br&#62;" />
+              </ui:repeat>
+              <h:outputText rendered="#{empty creativeAdminBean.campaignAudiences}" value="None"/>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="label"><h:outputText value="#{msg['page.creative.approval.privateMarketPlace.label']}"/></td>
+            <td>
+                <h:outputText rendered="#{empty creativeAdminBean.campaign.privateMarketPlaceDeal}"
+                    value="#{msg['page.creative.approval.noneset']}"/>
+                <h:panelGroup rendered="#{not empty creativeAdminBean.campaign.privateMarketPlaceDeal}">
+                  <h:outputText value="#{msg['page.creative.approval.dealId.label']}:&#160;"/><h:outputText value="#{creativeAdminBean.campaign.privateMarketPlaceDeal.dealId}"/>
+                  &#160;
+                  <h:outputText value="#{msg['page.creative.approval.exchange.label']}:&#160;"/><h:outputText value="#{creativeAdminBean.campaign.privateMarketPlaceDeal.publisher.name}"/>
+                </h:panelGroup>
+            </td>
+          </tr>
+        </table>
+
+          <h2 style="margin-top:20px">Campaign status</h2>
+          <table class="data">
+            <tr>
+              <td class="label">Status</td>
+              <td>
+                #{ad:campaignStatus(creativeAdminBean.campaign)}
+              </td>
+            </tr>
+
+            <tr>
+              <td>Advertiser balance</td>
+              <td>
+                <h:outputText value="#{creativeAdminBean.advertiserBalance}" >
+                  <f:convertNumber type="currency" currencySymbol="$" />
+                </h:outputText>
+              </td>
+            </tr>
+            <tr>
+              <td>Spend today</td>
+              <td>
+                <h:outputText value="#{creativeAdminBean.budgetSpendToday}">
+                  <f:convertNumber type="currency" currencySymbol="$" />
+                </h:outputText>
+              </td>
+            </tr>
+            <tr>
+              <td>Spend yesterday</td>
+              <td>
+                <h:outputText value="#{creativeAdminBean.budgetSpendYesterday}">
+                  <f:convertNumber type="currency" currencySymbol="$" />
+                </h:outputText>
+              </td>
+            </tr>
+            <h:panelGroup rendered="#{!creativeAdminBean.campaign.houseAd}">
+            
+              <!-- Current Bid -->
+              <tr>
+                <td>Current Bid</td>
+                <td>
+                  <h:inputText value="#{creativeAdminBean.newBidAmount}"
+                               id="newBidAmount"
+                               label="Bid Price"
+                               style="width:60px"
+                               maxlength="6">
+                    <f:validateDoubleRange minimum="0.00" />
+                    <f:convertNumber type="currency" currencySymbol=""
+                                     maxFractionDigits="#{(creativeAdminBean.campaign.priceOverridden ? 3 : 2)}" />
+                  </h:inputText>
+                  <h:selectOneMenu id="bidTypeSelect"
+                                   value="#{creativeAdminBean.bidType}"
+                                   style="width:120px"
+                                   onchange="checkValue();"
+                                   >
+                    <f:selectItems value="#{creativeAdminBean.bidTypes}"/>
+                  </h:selectOneMenu>
+                </td>
+              </tr>
+              
+              <!-- Bid Deductions -->
+              <tr>
+                <td>#{msg['page.campaign.bidbudget.biddeductions.label']}</td>
+                <td>
+				  <pri:dataTable var="row" rowIndexVar="index" 
+                         value="#{creativeAdminBean.bidDeductions}"
+                         rowClasses="first, second"
+                         rendered="#{!empty creativeAdminBean.bidDeductions}">
+                    
+                    <ui:param name="payerIsByyd" value="#{row.payerIsByyd}" />
+                    
+                    <!-- Payer -->
+		            <pri:column headerText="#{msg['page.campaign.bidbudget.biddeductions.payer.label']}">
+		              <pri:outputLabel value="#{index + 1}. " styleClass="b" />
+		              <pri:outputLabel value="#{payerIsByyd ? msg['page.campaign.bidbudget.biddeductions.payer.byyd.label'] : msg['page.campaign.bidbudget.biddeductions.payer.self.label']}" />
+		            </pri:column>
+		            
+		            <!-- Third party vendor type -->
+		            <pri:column headerText="#{msg['page.campaign.bidbudget.biddeductions.vendortype.label']}">
+		              <pri:outputLabel value="#{payerIsByyd ? row.thirdPartyVendor.thirdPartyVendorType.name : '-'}" />
+		            </pri:column>
+		            
+		            <!-- Third party vendor -->
+		            <pri:column headerText="#{msg['page.campaign.bidbudget.biddeductions.vendorname.label']}">
+		              <pri:outputLabel value="#{payerIsByyd ? row.thirdPartyVendor.name : row.thirdPartyVendorFreeText}" />
+		            </pri:column>
+		            
+		            <!-- CPM -->
+		            <pri:column headerText="#{msg['page.campaign.bidbudget.biddeductions.cpm.label']}">
+		              <pri:inputText id="cpm" value="#{row.amount}"
+       					requiredMessage="#{msg['page.campaign.bidbudget.biddeductions.price.required']}"
+       					converterMessage="#{msg['page.campaign.bidbudget.biddeductions.price.converter.error']}" styleClass="in-bl tiny">
+                       	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="#{creativeAdminBean.campaign.priceOverridden ? 3 : 2}" />
+       				  </pri:inputText>
+       				  <span class="error"><h:message for="cpm" /></span>
+       				  <pri:watermark for="cpm" value="#{msg['page.campaign.bidbudget.biddeductions.price.placeholder']}" />
+		            </pri:column>
+		          </pri:dataTable>
+		          <h:outputText rendered="#{empty creativeAdminBean.bidDeductions}" value="#{msg['page.creative.approval.noneset']}" />
+                </td>
+              </tr>
+              
+              <!-- Ad Serving CPM Fee -->
+              <tr>
+                <td>#{msg['page.creative.approval.bidbudget.adservingcpmfee.label']}</td>
+                <td>
+                  <h:outputText rendered="#{empty creativeAdminBean.campaign.currentRichMediaAdServingFee}" value="#{msg['page.creative.approval.noneset']}"/>
+                  <pri:inputText id="adCpm" rendered="#{not empty creativeAdminBean.adServingCpmFee}" value="#{creativeAdminBean.adServingCpmFee}"
+                  	label="#{msg['page.creative.approval.bidbudget.adservingcpmfee.label']}">
+                    <f:convertNumber type="currency" currencySymbol="$"/>
+                  </pri:inputText>
+                  <span class="error"><h:message for="adCpm" /></span>
+                  <pri:watermark for="adCpm" value="#{msg['page.campaign.bidbudget.biddeductions.price.placeholder']}" />
+                </td>
+              </tr>
+              
+              <!-- Fixed Margin -->
+              <tr>
+                <td>#{msg['page.creative.approval.bidbudget.fixedmargin.label']}</td>
+                <td>
+                  <h:outputText rendered="#{empty creativeAdminBean.campaign.currentTradingDeskMargin}" value="#{msg['page.creative.approval.noneset']}"/>
+                  <h:outputText rendered="#{not empty creativeAdminBean.campaign.currentTradingDeskMargin}" value="#{creativeAdminBean.campaign.currentTradingDeskMargin.tradingDeskMargin}">
+                    <f:convertNumber type="percent"/>
+                  </h:outputText>
+                </td>
+              </tr>
+                   
+              <tr>
+                <td>Price Override</td>
+                <td>
+                  <h:selectBooleanCheckbox id="priceOverridden"
+                                           value="#{creativeAdminBean.campaign.priceOverridden}" />
+                  <h:outputLabel for="priceOverridden" value="Ad ops will manage this campaign's pricing" />
+                  <div class="formtip">This option is enabled automatically if the Current Bid is set below minimum or to a fractional cent price</div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Overall Budget</td>
+                <td>
+                  <h:outputText value="#{creativeAdminBean.campaign.overallBudget}" 
+                        rendered="#{creativeAdminBean.campaign.budgetType eq 'MONETARY' and not empty creativeAdminBean.campaign.overallBudget}">
+                    <f:convertNumber type="currency" currencySymbol="$" />
+                  </h:outputText>
+                  
+                  <pri:outputPanel styleClass="data" rendered="#{creativeAdminBean.campaign.budgetType eq 'CLICKS' and not empty creativeAdminBean.campaign.overallBudgetClicks}">
+                    <h:outputText value="#{creativeAdminBean.campaign.overallBudgetClicks}">
+                      <f:convertNumber groupingUsed="true" />
+                    </h:outputText> clicks
+                  </pri:outputPanel>
+                  
+                  <pri:outputPanel styleClass="data" rendered="#{creativeAdminBean.campaign.budgetType eq 'IMPRESSIONS' and not empty creativeAdminBean.campaign.overallBudgetImpressions}">
+                    <h:outputText value="#{creativeAdminBean.campaign.overallBudgetImpressions}">
+                      <f:convertNumber groupingUsed="true" />
+                    </h:outputText> impressions
+                  </pri:outputPanel>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Daily Budget</td>
+                <td>
+                  <h:outputText value="#{creativeAdminBean.campaign.dailyBudget}"
+                        rendered="#{creativeAdminBean.campaign.budgetType eq 'MONETARY' and not empty creativeAdminBean.campaign.dailyBudget}">
+                    <f:convertNumber type="currency" currencySymbol="$" />
+                  </h:outputText>
+                  
+                  <pri:outputPanel styleClass="data" rendered="#{creativeAdminBean.campaign.budgetType eq 'CLICKS' and not empty creativeAdminBean.campaign.dailyBudgetClicks}">
+                    <h:outputText value="#{creativeAdminBean.campaign.dailyBudgetClicks}">
+                      <f:convertNumber groupingUsed="true" />
+                    </h:outputText> clicks
+                  </pri:outputPanel>
+                  
+                  <pri:outputPanel styleClass="data" rendered="#{creativeAdminBean.campaign.budgetType eq 'IMPRESSIONS' and not empty creativeAdminBean.campaign.dailyBudgetImpressions}">
+                    <h:outputText value="#{creativeAdminBean.campaign.dailyBudgetImpressions}">
+                      <f:convertNumber groupingUsed="true" />
+                    </h:outputText> impressions
+                  </pri:outputPanel>
+                  
+                </td>
+              </tr>
+              
+              <tr>
+                <td>Weekday / Weekend Budgets</td>
+                <td>
+                  <table class="grouping">
+                    <tr>
+                      <td style="text-align:right">
+                        <h:panelGroup rendered="#{creativeAdminBean.campaign.budgetType eq 'MONETARY' and not empty creativeAdminBean.campaign.dailyBudgetWeekday}">
+                          <h:outputText
+                              value="#{creativeAdminBean.campaign.dailyBudgetWeekday}">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                          </h:outputText>
+                          Wday
+                        </h:panelGroup>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align:right">
+                        <h:panelGroup rendered="#{creativeAdminBean.campaign.budgetType eq 'MONETARY' and not empty creativeAdminBean.campaign.dailyBudgetWeekend}">
+                          <h:outputText
+                              value="#{creativeAdminBean.campaign.dailyBudgetWeekend}">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                          </h:outputText>
+                          Wend
+                        </h:panelGroup>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+              <tr>
+                <td>Overall Spend</td>
+                <td>
+                  <h:outputText
+                      value="#{creativeAdminBean.campaign.overallSpend}">
+                    <f:convertNumber type="currency" currencySymbol="$" />
+                  </h:outputText>
+                </td>
+              </tr>
+            </h:panelGroup>
+            <tr>
+              <td>Boost factor <span class="required">*</span></td>
+              <td>
+                <h:inputText  value="#{creativeAdminBean.campaign.boostFactor}"
+                              id="boostFactor"
+                              label="Boost factor"
+                              style="width:60px"
+                              required="true"
+                              maxlength="6">
+                  <f:validateDoubleRange minimum="0.00" />
+                </h:inputText>
+                <span class="error"><h:message for="boostFactor"/></span>
+              </td>
+            </tr>
+            
+            <!-- Bidding Strategy -->
+            <tr>
+              <td class="label">#{msg['page.creative.approval.biddingstrategy.label']}</td>
+              <td>
+                <h:selectBooleanCheckbox id="mediaCostOptimisationChkBox" value="#{creativeAdminBean.mediaCostOptimisationEnabled}" disabled="#{!creativeAdminBean.enableMediaCostOptimisationCheckbox()}" />
+                <h:outputLabel for="mediaCostOptimisationChkBox" value="#{msg['page.creative.approval.biddingstrategy.mediacost']}"/>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>Invoice Currency</td>
+              <td>
+                <h:outputText value="#{creativeAdminBean.campaign.currencyExchangeRate.toCurrencyCode}">
+                </h:outputText>
+              </td>
+            </tr>
+            <tr>
+              <td>Exchange Rate</td>
+              <td>
+                <h:inputText  value="#{creativeAdminBean.exchangeRate}"
+                              id="exchangeRate"
+                              label="Exchange Rate"
+                              style="width:60px"
+                              required="true"
+                              disabled="#{!creativeAdminBean.isCampaignNotLaunched()}">
+                  <f:convertNumber maxFractionDigits="6" minFractionDigits="6" groupingUsed="false" />
+                  <f:validateDoubleRange minimum="#{creativeAdminBean.exchangeRateMinThreshold}" maximum="#{creativeAdminBean.exchangeRateMaxThreshold}"/>
+                </h:inputText>
+                <span class="error"><h:message for="exchangeRate"/></span>
+              </td>
+            </tr>
+          </table>
+
+          <h2 style="margin-top:20px">Optimisation</h2>
+          <table class="data">
+            <tr>
+              <td class="label">Target CPA</td>
+              <td>
+                $<h:inputText id="targetCPA"
+                value="#{creativeAdminBean.targetCPA}"
+                style="width:60px"
+                maxlength="6"
+                label="Target CPA"
+                required="false">
+                <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol=""/>
+                <f:validateDoubleRange minimum="0.01" />
+                </h:inputText> Empty indicates no auto-optimisation will be performed.
+                <span class="error"><h:message for="targetCPA"/></span>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">Spend target</td>
+              <td>
+                <h:inputText id="optimizationMaxRemoval"
+                             value="#{creativeAdminBean.optimizationMaxRemoval}"
+                             style="width:60px"
+                             label="Spend target"
+                             maxlength="6"
+                             required="false">
+                  <f:convertNumber type="percent" maxIntegerDigits="2" maxFractionDigits="2" />
+                  <f:validateDoubleRange minimum=".01" maximum=".99" />
+                </h:inputText>
+                Auto-optimisation will not remove any publications that would reduce the aggregate spend by this percentage (default <h:outputText value="#{creativeAdminBean.optimizationDefaultMaxRemoval}"><f:convertNumber type="percent" minIntegerDigits="1" maxIntegerDigits="2" minFractionDigits="0" maxFractionDigits="2" />%</h:outputText>)
+                <div class="formtip">If empty the system default of: <h:outputText value="#{creativeAdminBean.optimizationDefaultMaxRemoval}"><f:convertNumber type="percent" minIntegerDigits="1" maxIntegerDigits="2" minFractionDigits="0" maxFractionDigits="2" />%</h:outputText> will be used.</div>
+                <span class="error"><h:message for="optimizationMaxRemoval"/></span>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">CPA multiplier</td>
+              <td>
+                <h:inputText id="optimizationMultiplier"
+                             value="#{creativeAdminBean.optimizationMultiplier}"
+                             style="width:60px"
+                             maxlength="6"
+                             label="CPA multiplier"
+                             required="false">
+                  <f:convertNumber minIntegerDigits="1" maxIntegerDigits="2" minFractionDigits="1" maxFractionDigits="1" />
+                  <f:validateDoubleRange minimum="0.1" />
+                </h:inputText>
+                Multiplier of the target CPA that is the maximum CPA value before campaign is removed by auto-optimisation (default <h:outputText value="#{creativeAdminBean.optimizationDefaultMultiplier}"></h:outputText>)
+                <div class="formtip">If empty the system default of: <h:outputText value="#{creativeAdminBean.optimizationDefaultMultiplier}"></h:outputText> will be used.</div>
+                <span class="error"><h:message for="optimizationMultiplier"/></span>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">Algorithm Status</td>
+              <td>
+                 <h:selectOneMenu id="algorithmStatus" value="#{creativeAdminBean.algorithmStatus}">
+                  <f:selectItem itemValue="true" itemLabel="On"/>
+                  <f:selectItem itemValue="false" itemLabel="Off"/>
+                </h:selectOneMenu>
+                <pri:commandLink value="Reset Learnings" onclick="resetLearnings.show()"/>
+              </td>
+            </tr>
+          </table>
+<!--           <pri:dialog  -->
+<!--                       modal="true"  -->
+<!--                       resizable="false"  -->
+<!--                       > -->
+<!--              -->
+<!--             <pri:commandButton id="resetLearningsButton"  -->
+<!--                                value="Yes" -->
+                               
+<!--                                onclick="resetLearnings.hide()" /> -->
+<!--             <pri:commandLink id="cancelLearningsButton"  -->
+<!--                                value="No" -->
+<!--                                style="float:right" -->
+<!--                                onclick="resetLearnings.hide()" /> -->
+<!--           </pri:dialog> -->
+          <pri:confirmDialog id="resetLearningsDialog"
+                             header="Reset Algorithm Learnings Confirmation"
+                             message="Are you sure you want to continue?" 
+                             widgetVar="resetLearnings" 
+                             closable="false"
+                             width="400"
+                             closeOnEscape="true"
+                             showEffect="fade" hideEffect="fade">
+	        <pri:commandButton value="Yes" actionListener="#{creativeAdminBean.resetCampaignLearnings}" oncomplete="resetLearnings.hide()"/>
+	        <pri:commandButton value="No" type="button" onclick="resetLearnings.hide()" />
+	      </pri:confirmDialog>
+          
+          
+          
+          <h2 style="margin-top:20px">Even Distribution</h2>
+          <table class="data">
+            <tr>
+              <td class="label">Overall Budget</td>
+              <td>
+                <h:outputText value="#{creativeAdminBean.campaign.evenDistributionOverallBudget ? 'On' : 'Off'}"/>
+              </td>
+            </tr>
+            <tr>
+              <td class="label">Daily Budget</td>
+              <td>
+               <h:outputText value="#{creativeAdminBean.campaign.evenDistributionDailyBudget ? 'On' : 'Off'}"/>
+              </td>
+            </tr>
+          </table>
+          
+          <h2 style="margin-top:20px">Creative details</h2>
+          <table class="data">
+            <tr>
+              <td class="label">Creative name</td>
+              <td>
+                <span class="error"><h:message for="newCreativeName"/></span><br/>
+                <h:inputText value="#{creativeAdminBean.newCreativeName}"
+                             id="newCreativeName"
+                             label="Creative Name"
+                             style="width:255px"
+                             maxlength="255"/>
+              </td>
+            </tr>
+            <tr>
+              <td>Language</td>
+              <td><h:outputText value="#{creativeAdminBean.creative.language.name}" /></td>
+            </tr>
+            <c:if test="${creativeAdminBean.creative.englishTranslation != null}">
+              <tr>
+                <td>English Translation</td>
+                <td><h:outputText value="#{creativeAdminBean.creative.englishTranslation}" /></td>
+              </tr>
+            </c:if>
+            <tr>
+              <td>Ad format</td>
+              <td><h:outputText value="#{creativeAdminBean.creative.format.name}" /></td>
+            </tr>
+            <tr>
+              <td>Destination type</td>
+              <td><h:outputText value="#{creativeAdminBean.creative.destination.destinationType}" /></td>
+            </tr>
+            <tr>
+              <td>Destination</td>
+              <td>
+                  <h:outputLabel value="Destination: &#160;" for="destinationData"/>
+                  <h:inputText value="#{creativeAdminBean.destinationData}"
+                      id="destinationData"
+                      label="Destination URL"
+                      style="width:200px"
+                      maxlength="#{creativeAdminBean.maxUrlLength}" />
+                   <span class="error"><h:message for="destinationData"/></span>
+                   <br/>           
+                   <h:selectBooleanCheckbox id="dataIsFinalDestination" value="#{creativeAdminBean.dataIsFinalDestination}">
+                     <f:ajax 
+                        event="click" 
+                        render=":mainForm:finalDestinationPanelWrapper" />
+                    </h:selectBooleanCheckbox>
+                    <h:outputLabel value="Destination is Final Destination?" for="dataIsFinalDestination"/>
+                            
+                    <h:panelGroup id="finalDestinationPanelWrapper">
+                      <h:panelGroup id="finalDestinationPanel" rendered="#{not creativeAdminBean.dataIsFinalDestination}" styleClass="data">
+                            <br/>                            
+                            <h:outputLabel value="Final Destination:" for="dataIsFinalDestination"/><span class="required">*</span>&#160;
+                            <pri:inputText value="#{creativeAdminBean.finalDestination}"
+                                id="finalDestination"
+                                disabled="#{creativeAdminBean.dataIsFinalDestination}"
+                                label="Final Destination"
+                                style="width:200px"
+                                converter="stringTrimConverter"
+                                maxlength="#{creativeAdminBean.maxUrlLength}" />
+                            <span class="error"><h:message for="finalDestination"/></span>
+                    </h:panelGroup>
+                    </h:panelGroup>
+              </td>
+            </tr>
+            <ui:repeat var="beacon" value="#{creativeAdminBean.beacons}" varStatus="status">
+	            <tr>
+	              <td>3rd Party Impression Tracker #{status.index + 1}</td>
+	              <td>
+	              <h:inputText value="#{beacon.url}"
+	              id="beacon"
+	              label="Beacon URL #{status.index + 1}"
+	              style="width:200px"
+	              maxlength="#{creativeAdminBean.maxUrlLength}"
+	              converter="stringTrimConverter" />              
+	              </td>
+	            </tr>          
+            </ui:repeat>  
+            <tr>
+              <td>Campaign Domain</td>
+              <td>
+                <span class="error"><h:message for="advertiserDomain"/></span><br/>
+                <h:inputText value="#{creativeAdminBean.campaign.advertiserDomain}"
+                             id="advertiserDomain"
+                             label="Campaign Domain"
+                             style="width:200px"
+                             converter="stringTrimConverter"
+                             required="false"
+                             maxlength="#{creativeAdminBean.maxUrlLength}" />
+              </td>
+            </tr>
+            <tr>
+              <td>Priority <span class="required">*</span></td>
+              <td>
+                <h:selectOneMenu id="creativePriority"
+                                 value="#{creativeAdminBean.creative.priority}"
+                                 style="width:120px"
+                                 required="true"
+                                 label="Priority">
+                  <f:selectItem itemValue="-1" itemLabel="-1 Highest" />
+                  <f:selectItem itemValue="0"  itemLabel=" 0 Normal" />
+                  <f:selectItem itemValue="1"  itemLabel=" 1" />
+                  <f:selectItem itemValue="2"  itemLabel=" 2" />
+                  <f:selectItem itemValue="3"  itemLabel=" 3" />
+                  <f:selectItem itemValue="4"  itemLabel=" 4" />
+                  <f:selectItem itemValue="5"  itemLabel=" 5 Lowest" />
+                </h:selectOneMenu>
+                <span class="error"><h:message for="creativePriority"/></span>
+              </td>
+            </tr>
+            <tr>
+              <td>Creative end date</td>
+              <td>
+                <div class="formtip">Example: enter
+                <h:outputText value="#{ad:exampleDate()}"><f:convertDateTime dateStyle="short" type="date" /></h:outputText> for <h:outputText value="#{ad:exampleDate()}"><f:convertDateTime dateStyle="long" type="date" /></h:outputText>
+                </div>
+                <div class="error"><h:message for="creativeEndDate"/></div>
+                <h:panelGroup rendered="#{creativeAdminBean.creativeEndDateEditable}">
+                  <pri:calendar id="creativeEndDate"
+                                mode="popup"
+                                styleClass="primeDatePicker"
+                                value="#{creativeAdminBean.creativeEndDate}"
+                                label="End date"
+                                size="10"
+                                maxlength="10"
+                                showOn="button"
+                                pattern="#{util.shortDatePattern}"
+                                timeZone="#{user.company.defaultTimeZone}"
+                                required="false">
+                  </pri:calendar>
+                </h:panelGroup>
+                &#160;Current value: <h:outputText value="#{creativeAdminBean.creativeEndDate}"><f:convertDateTime type="date" dateStyle="short" timeZone="#{user.company.defaultTimeZone}" /></h:outputText>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Incentivised allowed
+              </td>
+              <td>
+                <h:selectBooleanCheckbox
+                    id="incentivizedAllowed"
+                    value="#{creativeAdminBean.segment.incentivizedAllowed}" />
+                <h:outputLabel value="Yes/no" for="incentivizedAllowed" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Closed Mode (private serving)
+              </td>
+              <td>
+                <h:selectBooleanCheckbox
+                    id="closedMode"
+                    value="#{creativeAdminBean.creative.closedMode}" />
+                <h:outputLabel value="Yes/no " for="closedMode" />
+                <h:outputLink value="#{rootBean.adserverApiURL}#{rootBean.adserverApiAdSpace}?t.format=html&amp;s.creative_id=#{creativeAdminBean.creative.externalID}&amp;s.key=#{creativeAdminBean.adserverKey}&amp;h.user-agent=Mozilla%2F5.0+%28iPhone%3B+U%3B+CPU+iPhone+OS+4_0+like+Mac+OS+X%3B+en-us%29+AppleWebKit%2F532.9+%28KHTML%2C+like+Gecko%29+Version%2F4.0.4+Mobile%2F8A260b+Safari%2F531.21.1" target="_blank">Click here to test</h:outputLink>
+                
+              </td>
+            </tr>
+            <tr>
+              <td>
+                SSL compliance
+              </td>
+              <td>
+                <h:selectBooleanCheckbox
+                    id="sslCompliant"
+                    value="#{creativeAdminBean.creative.sslCompliant}" />
+                <h:outputLabel value="Yes/no " for="sslCompliant" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Allow External Audit
+              </td>
+              <td>
+                <h:selectBooleanCheckbox
+                    id="allowExternalAudit"
+                    value="#{creativeAdminBean.creative.allowExternalAudit}" />
+                <h:outputLabel value="Yes/no " for="allowExternalAudit" />
+              </td>
+            </tr>            
+
+            <h:panelGroup rendered="#{creativeAdminBean.extendedCreativeType ne null}">
+	            <ui:repeat id="contentFormLoop" value="#{creativeAdminBean.validContentFormsForExtendedCreativeType}" var="contentForm">
+		            <tr>
+		                <td>
+		                    <h:outputText value="#{contentForm}" /> Tag
+		                </td>
+		                <td>
+		                    <div class="error"><h:message for="templateOriginalValue"/></div>
+		                    <pri:inputTextarea id="templateOriginalValue" 
+		                                       rows="4" cols="60" 
+		                                       value="#{creativeAdminBean.originalTemplateValuesForContentForm[contentForm]}" 
+		                                       disabled="#{creativeAdminBean.templatesEditable}" autoResize="#{!creativeAdminBean.templatesEditable}"/>
+		                </td>
+		            </tr>
+	            </ui:repeat>
+            </h:panelGroup>
+            
+            <h:panelGroup rendered="#{creativeAdminBean.vastMetaData ne null}">
+            <tr>
+                <td>
+                    VAST Tag information
+                </td>
+                <td>
+                    <h:outputLabel value="Video Creative: " style="font-weight: bold;"/>
+		            <h:outputText value="#{creativeAdminBean.vastMetaData.videoCreative.duration} seconds"/>
+		            <br/>
+		            
+		            <h:outputLabel value="Media files" style="font-weight: bold;"/>
+		            <br/>
+		            <ui:repeat  var="vastMediaFile" value="#{creativeAdminBean.vastMetaData.videoCreative.mediaFiles}">
+		              <h:outputLabel value="Width: #{vastMediaFile.width}px, Height: #{vastMediaFile.height}px , Type: "/>
+		              <h:outputLink value="#{vastMediaFile.value}" target="_blank"><h:outputText value="#{vastMediaFile.type}"/></h:outputLink>
+		              <br/>
+		            </ui:repeat>
+		            
+		            <h:panelGroup id="vastCompanionCreativePanel" rendered="#{not empty creativeAdminBean.vastMetaData.companionCreative}" style="font-size: 10px;">
+		              <h:outputLabel value="Companion Creative" style="font-weight: bold;"/>
+		              <br/>
+		              <h:outputLabel value="Width: #{creativeAdminBean.vastMetaData.companionCreative.width}px, Height: #{creativeAdminBean.vastMetaData.companionCreative.height}px , Type: "/>
+                      <h:outputLink value="#{creativeAdminBean.vastMetaData.companionCreative.creativeUrl}" target="_blank"><h:outputText value="#{creativeAdminBean.vastMetaData.companionCreative.mimeType}"/></h:outputLink>
+                      <br/>
+		            </h:panelGroup>
+                </td>
+            </tr>
+            </h:panelGroup>
+            
+            <tr>
+                <td>Creative Attributes</td>
+                <td>
+                  <pri:selectManyMenu id="creativeAttributes" 
+                        value="#{creativeAdminBean.creative.creativeAttributes}" 
+                        converter="jpaConverter"
+                        style="width:335px" 
+                        immediate="true"
+                        collectionType="java.util.HashSet">
+                      <f:selectItems value="#{rootBean.selectItems['CreativeAttribute']}">
+                      </f:selectItems>
+                  </pri:selectManyMenu>            
+                </td>
+            </tr>
+          </table>
+
+          <h2 style="margin-top:20px">Targeting</h2>
+          <table class="data">
+            <tr>
+              <td class="label">Locations</td>
+              <td>
+                <ui:repeat var="geotarget" value="#{ad:asList(ad:sortByName(creativeAdminBean.segment.geotargets))}" varStatus="status">
+                  <h:outputText rendered="#{status.first}" value="Geotargets: " />
+                  #{geotarget.name}<h:outputText value=", " rendered="#{not status.last}" />
+                </ui:repeat>
+                 <ui:repeat var="locationTarget" value="#{ad:asList(ad:sortByName(creativeAdminBean.segment.locationTargets))}" varStatus="status">
+                  <h:outputText rendered="#{status.first}" value="Location Targets: " />
+                  #{locationTarget.name}<h:outputText value=", " rendered="#{not status.last}" />
+                </ui:repeat>
+                <ui:repeat var="country" rendered="#{empty creativeAdminBean.segment.geotargets and empty creativeAdminBean.segment.locationTargets}" value="#{ad:asList(creativeAdminBean.segment.countries)}" varStatus="status">
+                  <h:outputText rendered="#{status.first and creativeAdminBean.segment.countryListIsWhitelist}" value="Countries - Include: " />
+                  <h:outputText rendered="#{status.first and !creativeAdminBean.segment.countryListIsWhitelist}" value="Countries - Exclude: " />
+                  #{country.name}<h:outputText value=", " rendered="#{not status.last}" />
+                </ui:repeat>
+                <h:outputText value="All" rendered="#{empty creativeAdminBean.segment.geotargets and empty creativeAdminBean.segment.countries}"/>
+              </td>
+            </tr>
+            <tr>
+              <td>Connection</td>
+              <td>
+                <c:choose>
+                  <c:when test="${not creativeAdminBean.segment.connectionTargeted}">
+                    All
+                  </c:when>
+                  <c:otherwise>
+                    <c:choose>
+                      <c:when test="${creativeAdminBean.segment.connectionType eq 'WIFI'}">Wifi</c:when>
+                      <c:when test="${creativeAdminBean.segment.connectionType eq 'OPERATOR'}">Mobile operators</c:when>
+                      <c:otherwise>Wifi and Mobile operators</c:otherwise>
+                    </c:choose>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+
+            <c:if test="${not empty creativeAdminBean.ispOperators and (creativeAdminBean.segment.connectionType eq 'WIFI'|| creativeAdminBean.segment.connectionType eq 'BOTH')}">
+              <tr>
+                <td class="label" valign="top">Isp Operators</td>
+                <td>
+                  <c:choose><c:when test="${creativeAdminBean.segment.ispOperatorListIsWhitelist}">Include</c:when><c:otherwise>Exclude</c:otherwise></c:choose>
+                  <ui:repeat var="operator" value="#{ad:asList(ad:sortByName(creativeAdminBean.ispOperators))}" varStatus="status">
+                    #{operator.name}<h:outputText value=", " rendered="#{not status.last}" />
+                  </ui:repeat>
+                </td>
+              </tr>
+            </c:if>
+
+            <c:if test="${not empty creativeAdminBean.mobileOperators and (creativeAdminBean.segment.connectionType eq 'OPERATOR'|| creativeAdminBean.segment.connectionType eq 'BOTH')}">
+              <tr>
+                <td class="label" valign="top">Mobile Operators</td>
+                <td>
+                  <c:choose><c:when test="${creativeAdminBean.segment.mobileOperatorListIsWhitelist}">Include</c:when><c:otherwise>Exclude</c:otherwise></c:choose>
+                  <ui:repeat var="operator" value="#{ad:asList(ad:sortByName(creativeAdminBean.mobileOperators))}" varStatus="status">
+                    #{operator.name}<h:outputText value=", " rendered="#{not status.last}" />
+                  </ui:repeat>
+                </td>
+              </tr>
+            </c:if>
+
+            <tr><td>Device targeting</td>
+            <td>
+              <table style="border: 0 none; border-collapse: collapse;">
+                <h:panelGroup rendered="#{not empty creativeAdminBean.segment.platforms}">
+                  <tr>
+                    <td>Platforms</td>
+                    <td>
+                      <ui:repeat var="platform" value="#{ad:asList(creativeAdminBean.segment.platforms)}" varStatus="status">
+                        #{platform.name}<h:outputText value=", " rendered="#{not status.last}" />
+                      </ui:repeat>
+                      <h:panelGroup id="excludedModelsListPannel" rendered="#{creativeAdminBean.excludedModelsCount gt 0}">
+                        <br/>
+                        <div class="formtip">
+                            Models excluded: #{creativeAdminBean.excludedModelsCount}
+                            <h:panelGroup id="excludedModelsListCheckBoxPannel" 
+                             rendered="#{creativeAdminBean.excludedModelsCount gt creativeAdminBean.maxExcludedModelsForDetailDisplay}">
+                                <h:selectBooleanCheckbox
+                                   id="displayExcludedModelsList"
+                                   value="#{creativeAdminBean.displayExcludedModelsList}">
+                                    <f:ajax 
+                                        event="click" 
+                                        listener="#{creativeAdminBean.hydrateExcludedModelsInSegmentListener}"  
+                                        render=":mainForm:excludedModelsListPannel" />
+                                </h:selectBooleanCheckbox><h:outputLabel for="displayExcludedModelsList" value="Display full list"/>
+                            </h:panelGroup>
+                        </div>
+                            
+                        <h:panelGroup id="excludedModelsList" rendered="#{creativeAdminBean.mustDisplayExcludedModelsList}">
+                            <div class="formtip">
+                            <br/>Exclude:&#160; #{creativeAdminBean.excludedModelsListAsString}
+                            </div>
+                        </h:panelGroup>
+                      </h:panelGroup>
+                    </td>
+                  </tr>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{empty creativeAdminBean.segment.platforms}">
+                  <tr>
+                    <td>Devices</td>
+                    <td>
+                      <ui:repeat var="vendor" value="#{ad:asList(creativeAdminBean.segment.vendors)}" varStatus="status">
+                        <h:outputText value="All #{vendor} devices" />
+                        <h:outputText value=", " rendered="#{not status.last or not empty creativeAdminBean.segment.models}" />
+                      </ui:repeat>
+                      <ui:repeat var="model" value="#{ad:asList(creativeAdminBean.segment.models)}" varStatus="status">
+                        #{model.vendor.name} #{model.name}<h:outputText value=", " rendered="#{not status.last}" />
+                      </ui:repeat>
+                      <h:outputText value="All" rendered="#{fn:length(creativeAdminBean.segment.vendors) eq 0 and fn:length(creativeAdminBean.segment.models) eq 0}" />
+                    </td>
+                  </tr>
+                </h:panelGroup>
+                
+                <tr>
+                    <td>Device types</td>
+                    <td>
+                        <h:outputText value="#{creativeAdminBean.deviceTypes}"/>
+                    </td>
+                </tr>
+              
+              </table>
+            </td>
+            </tr>
+            
+            <tr>
+              <td>Inventory Sources</td>
+              <td>
+                  <h:outputText value="All" rendered="#{empty creativeAdminBean.segment.targettedPublishers}"/>
+                  <ui:repeat var="publisher" value="#{ad:asList(creativeAdminBean.segment.targettedPublishers)}" varStatus="status">
+                    <h:outputText value="#{publisher.name}"/>&#160;<h:outputText value="(#{(publisher.rtbEnabled ? 'RTB' : 'Non-RTB')})"/>
+                    <h:outputText value=", " rendered="#{not status.last}" />
+                  </ui:repeat>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>Inventory targeting categories</td>
+              <td>
+                  <h:outputText value="#{msg['page.creative.approval.noneset']}" rendered="#{empty creativeAdminBean.segment.includedCategories}"/>
+                  <ui:repeat var="cat" value="#{ad:asList(creativeAdminBean.segment.includedCategories)}" varStatus="status">
+                    <h:outputText value="#{cat.name}"/><h:outputText value=", " rendered="#{not status.last}" />
+                  </ui:repeat>
+              </td>
+            </tr>
+          </table>
+          
+          <table class="dataPrime">
+            <tr>
+              <td class="label">Inventory targeting list</td>
+                <td>
+                  <h:outputText rendered="#{not hasPubList}" value="#{msg['page.creative.approval.noneset']}"/>
+                    
+                  <pri:outputPanel layout="block" rendered="#{hasPubList}">
+                    <pri:dataTable id="lazyPubListTable"
+                        styleClass="primeDataTable" 
+                        style="float:left;"
+                        var="publication" 
+                        value="#{creativeAdminBean.lazyPublicationListPublicationDataModel}"
+                        lazy="true"
+                        paginator="true" 
+                        rows="5" 
+                        sortOrder="descending"
+                        sortBy="id"
+                        paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink} {RowsPerPageDropdown}"  
+                        rowsPerPageTemplate="5,10,15">
+                          
+                      <f:facet name="header">
+                        <h:outputLabel value="#{msg['page.creative.approval.inventorytargeting.listtype.label']}:&#160;"/>
+                        <h:outputText value="#{isWhiteList ? msg['page.creative.approval.inventorytargeting.whitelist.label'] : msg['page.creative.approval.inventorytargeting.blacklist.label']}"/>
+                      
+                        <h:outputLabel value="#{msg['page.creative.approval.inventorytargeting.listname.label']}:&#160;"/>
+                        <h:outputText value="#{pubListName}"/>
+                      
+                        <h:outputLabel value="#{msg['page.creative.approval.inventorytargeting.totalpublications.label']}:&#160;"/>
+                        <h:outputText value="#{creativeAdminBean.lazyPublicationListPublicationDataModel.rowCount}"/>
+                      </f:facet>      
+                        
+                      <pri:column headerText="&#160;ID" sortBy="id">
+                        <h:outputText value="#{publication.id}"/>
+                      </pri:column>
+            
+                      <pri:column headerText="&#160;Name" sortBy="name">
+                        <h:outputText value="#{publication.name}" />
+                      </pri:column>
+            
+                      <pri:column headerText="&#160;Friendly Name" sortBy="friendlyName">
+                        <h:outputText value="#{publication.friendlyName}" />
+                      </pri:column>
+
+                      <pri:column headerText="&#160;Publisher" sortBy="publisher">
+                        <h:outputText value="#{publication.publisher}" />
+                      </pri:column>
+                      
+                      <pri:column headerText="&#160;External ID" sortBy="externalID">
+                        <h:outputText value="#{publication.externalID}" />
+                      </pri:column>
+
+                      <pri:column headerText="&#160;Type" sortBy="publicationType">
+                        <h:outputText value="#{publication.publicationType}" />
+                      </pri:column>
+                            
+                    </pri:dataTable>  
+                        
+                    <pri:blockUI block="lazyPubListTable" trigger="lazyPubListTable">  
+                      <div class="progress">
+                        <pri:graphicImage value="/resources/images/ajax-loader-circle.gif" />
+                      </div>
+                    </pri:blockUI>  
+                  </pri:outputPanel>
+                </td>
+              </tr>
+          </table>
+              
+          <table class="data">
+            <h:panelGroup rendered="#{not empty creativeAdminBean.segment.ipAddresses}">
+              <tr>
+                <td class="label">IP targeting</td>
+                <td> 
+                  <h:outputText value="Type:"/> 
+                  <c:if test="#{creativeAdminBean.segment.ipAddressesListWhitelist eq true}"> Include</c:if>
+                  <c:if test="#{creativeAdminBean.segment.ipAddressesListWhitelist ne true}"> Exclude</c:if>
+                  <div style="margin-top:5px; width: 200px; height: 100px; overflow:auto; border:solid 1px">
+                    <ui:repeat var="ipAddress" value="#{ad:asList(creativeAdminBean.segment.ipAddresses)}" varStatus="status">
+                      #{ipAddress}<h:outputText value=", " rendered="#{not status.last}" />
+                    </ui:repeat>
+                  </div>
+                  <h:selectBooleanCheckbox id="removeIPTargeting" value="#{creativeAdminBean.removeIPTargeting}" />
+                  <h:outputLabel for="removeIPTargeting" value="Remove all IP targeting" />
+                </td>
+              </tr>
+            </h:panelGroup>
+
+
+            <tr>
+              <td class="label">Demographics</td>
+              <td>Male: <h:outputText
+              value="#{creativeAdminBean.segment.genderMix}">
+              <f:convertNumber type="percent" />
+              </h:outputText>, Female: <h:outputText
+              value="#{1.0-creativeAdminBean.segment.genderMix}">
+              <f:convertNumber type="percent" />
+              </h:outputText>; Age
+              <h:outputText value="#{creativeAdminBean.segment.minAge}" /> to <h:outputText value="#{creativeAdminBean.segment.maxAge}" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Channels
+              </td>
+              <td>
+                <h:selectManyCheckbox
+                    id="channels"
+                    value="#{creativeAdminBean.channels}"
+                    converter="jpaConverter"
+                    layout="pageDirection"
+                    layoutWidth="3">
+                  <f:selectItems value="#{rootBean.selectItems['Channel']}" />
+                </h:selectManyCheckbox>
+              </td>
+            </tr>
+          </table>
+
+          <h2 style="margin-top:20px">Browser targeting</h2>
+          <table class="data">
+            <tr>
+              <td class="label">
+                <pri:commandLink value="Browsers" onclick="addBrowser.show()"/>
+              </td>
+              <td>
+                <h:panelGroup id="browserListContainer" styleClass="data">
+                  <h:outputText rendered="#{empty creativeAdminBean.browsers}" value="All"/>
+                  <ui:repeat var="browser" value="#{creativeAdminBean.browsers}" varStatus="status">
+                    #{browser.name}<h:outputText value="; " rendered="#{not status.last}" />
+                  </ui:repeat>
+                </h:panelGroup>
+              </td>
+            </tr>
+          </table>
+          <pri:dialog id="browserListDialog" 
+                      header="Operating systems and browsers" 
+                      widgetVar="addBrowser" 
+                      modal="true" 
+                      resizable="false" 
+                      closable="false"
+                      draggable="false" 
+                      width="400" 
+                      height="400"
+                      closeOnEscape="true">
+            <pri:selectManyCheckbox
+                id="browsers"
+                value="#{creativeAdminBean.browsers}"
+                converter="jpaConverter"
+                styleClass="admin"
+                layout="pageDirection">
+              <f:selectItems value="#{rootBean.selectItems['Browser']}" />
+            </pri:selectManyCheckbox>
+            <pri:separator/>
+            <pri:commandButton id="addBrowserButton" 
+                               value="Ok"
+                               process="browserListDialog"
+                               update="browserListDialog, browserListContainer"
+                               onclick="addBrowser.hide()" />
+            <pri:commandLink id="cancelBrowserButton" 
+                               value="Cancel"
+                               style="float:right"
+                               process="browserListDialog"
+                               update="browserListDialog, browserListContainer"
+                               actionListener="#{creativeAdminBean.cancelBrowserDialog}"
+                               onclick="addBrowser.hide()" />
+          </pri:dialog>
+
+          <h2 style="margin-top:20px">Assets</h2>
+          <pri:dataTable type="none" id="assetDisplay" var="row"
+                         value="#{ad:asList(creativeAdminBean.assets)}" styleClass="data"
+                         rowClasses="first,second"
+                         rendered="#{!empty creativeAdminBean.assets}">
+            <pri:column>
+              <f:facet name="header">
+                <h:outputText value="Display Type" />
+              </f:facet>
+              <h:outputText value="#{row.displayType}" />
+            </pri:column>
+            <pri:column>
+              <f:facet name="header">
+                <h:outputText value="Component" />
+              </f:facet>
+              <h:outputText value="#{row.component}" />
+            </pri:column>
+            <pri:column headerText="Asset External ID">
+              <h:outputText value="#{row.asset.externalID}" />
+            </pri:column>
+            <pri:column>
+              <f:facet name="header">
+                <h:outputText value="Asset" />
+              </f:facet>
+              <h:outputText rendered="#{row.text ne null}" value="#{row.text}" />
+              <h:graphicImage rendered="#{row.URL ne null}" value="#{row.URL}" />
+            </pri:column>
+          </pri:dataTable>
+
+          <c:if test="${creativeAdminBean.advertiser.company.backfill}">
+            <h2 style="margin-top:20px">Plugin / Exchange </h2>
+            <table class="admin">
+              <tr>
+                <td>Plugin Based<br/></td>
+                <td>
+                  <h:selectBooleanCheckbox
+                      id="pluginBased"
+                      value="#{creativeAdminBean.creative.pluginBased}" />
+                  <h:outputLabel for="pluginBased">Yes</h:outputLabel>
+                </td>
+              </tr>
+              <tr>
+                <td>Move onto Mobclix<br/></td>
+                <td>
+                  <h:selectBooleanCheckbox
+                      id="onMobclix"
+                      value="#{creativeAdminBean.onMobclix}" />
+                  Yes
+                </td>
+              </tr>
+            </table>
+          </c:if>
+          
+          <h2 style="margin-top:20px">IAB Categories</h2>
+          <div style="width:80%; margin-left:5px">
+            <div style="width:50%; float:left; display:inline">
+              <span class="label">Campaign IAB Category</span>
+              <div class="formSection" style="margin-top:0">
+                <h:message styleClass="error" for="campaignCategory"/>
+                <pri:autoComplete
+                    id="campaignCategory"
+                    value="#{categoryQueryBean.search}"
+                    completeMethod="#{categoryQueryBean.doQuery}"
+                    minQueryLength="1"
+                    queryDelay="100"
+                    size="60"
+                    scrollHeight="200"
+                    multiple="false"
+                    forceSelection="true"
+                    var="c"
+                    itemValue="#{c}"
+                    itemLabel=""
+                    converter="jpaConverter">
+                  <pri:ajax event="itemSelect" listener="#{creativeAdminBean.handleSelectedCategory}" update="selectedCategoryDisplay" />
+                  <pri:column style="width:100%">
+                    #{categoryQueryBean.labelMap[c]}
+                  </pri:column>
+                </pri:autoComplete>
+                <pri:outputPanel id="selectedCategoryDisplay">
+                  IAB Category
+                  <br/>
+                  #{creativeAdminBean.campaignCategoryHierarchyName}
+                  <br/><br/>
+                  Channel Mapping
+                  <br/>
+                  #{creativeAdminBean.campaign.category.channel.name}
+                </pri:outputPanel>
+              </div>
+            </div>
+
+            <div style="width:50%; float:left; display:inline">
+              <span class="label">Publication IAB Category Blacklist</span>
+              <div class="formSection" style="margin-top:0">
+                <pri:autoComplete
+                    value="#{categoryQueryBean.search}"
+                    completeMethod="#{categoryQueryBean.doQuery}"
+                    minQueryLength="1"
+                    queryDelay="100"
+                    size="60"
+                    scrollHeight="200"
+                    multiple="false"
+                    forceSelection="true"
+                    var="c"
+                    itemValue="#{c}"
+                    itemLabel=""
+                    converter="jpaConverter">
+                  <pri:ajax event="itemSelect" listener="#{creativeAdminBean.handleSelectedExcludedCategory}" update="selectedExcludedCategoryDisplay"/>
+                  <pri:column style="width:100%">
+                    #{categoryQueryBean.labelMap[c]}
+                  </pri:column>
+                </pri:autoComplete>
+                <pri:outputPanel id="selectedExcludedCategoryDisplay"><br/>
+                Blacklisted Categories
+                <div id="selectedExcludedCats" style="height:150px; width:300px; overflow:auto; border:1px solid grey; padding:5px;">
+                  <pri:dataList type="none" value="#{creativeAdminBean.excludedCategories}" var="category" rowCountVar="rowMax" rowIndexVar="rowIndex">
+                    <pri:column>
+                      <span style="white-space: nowrap">
+                        <h:outputText value="#{creativeAdminBean.excludedCategoryLabelMap[category]}" />
+                        <pri:commandLink update=":mainForm:selectedExcludedCategoryDisplay"
+                                         actionListener="#{creativeAdminBean.doRemoveExcludedCategory(category)}">
+                          <span class="tagDeleteIcon"></span>
+                        </pri:commandLink>
+                        <h:outputText value=" " rendered="#{!(rowIndex == rowMax - 1)}" />
+                      </span>
+                    </pri:column>
+                  </pri:dataList>
+                </div>
+                </pri:outputPanel>
+              </div>
+            </div>
+            <div class="clear"></div>
+          </div>
+
+          <h:message styleClass="error" for="status"/>
+          <pri:panelGrid columns="2">
+            <f:facet name="header">Approval</f:facet>
+
+            <h:outputLabel for="status" value="Status" />
+            <pri:selectOneMenu id="status" value="#{creativeAdminBean.newStatus}">
+              <f:selectItems value="#{creativeAdminBean.statusOptions}"/>
+            </pri:selectOneMenu>
+
+            <h:outputLabel for="assignTo" value="Assign To" />
+            <pri:selectOneMenu id="assignTo" converter="jpaConverter" value="#{creativeAdminBean.creative.assignedTo}">
+              <f:selectItems value="#{creativeAdminBean.assignToOptions}"/>
+            </pri:selectOneMenu>
+
+            <h:outputLabel for="comment" value="Comment" />
+            <pri:inputTextarea id="comment" rows="4" cols="60" value="#{creativeAdminBean.comment}"/>
+
+            <h:outputText for="watchers" value="Watchers"/>
+            <pri:scrollPanel style="height:300px">
+              <pri:selectManyCheckbox value="#{creativeAdminBean.watchers}" converter="jpaConverter" layout="pageDirection">
+                <f:selectItems value="#{creativeAdminBean.adfonicUserOptions}"/>
+              </pri:selectManyCheckbox>
+            </pri:scrollPanel>
+
+            <h:outputText for="notifyWatchers" value="Email Watchers" />
+            <pri:selectBooleanCheckbox id="notifyWatchers" value="#{creativeAdminBean.notifyWatchers}" />
+
+            <h:outputText for="notifyAdvertiser" value="Email Advertiser" />
+            <pri:selectBooleanCheckbox id="notifyAdvertiser" value="#{creativeAdminBean.notifyAdvertiser}" />
+
+            <h:outputText/>
+            <h:commandButton value="Save Changes" onclick="return validateForm();" action="#{creativeAdminBean.doSubmitNew}"/>
+
+          </pri:panelGrid>
+
+        </h:form>
+      </c:otherwise>
+    </c:choose>
+    <div class="clear"></div>
+  </ui:define>
+</ui:composition>

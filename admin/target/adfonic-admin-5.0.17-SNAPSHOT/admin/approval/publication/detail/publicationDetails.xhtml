@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:pe="http://primefaces.org/ui/extensions">
+   
+	<h2><pri:outputLabel value="#{msg['page.approval.publication.detail.header']}" /></h2>
+	<pri:panelGrid styleClass="panelGrid">
+			    	
+    	<!-- Publication Status -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.status.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel id="publicationStatus" value="#{publicationApprovalDetailMBean.publicationDetails.status}"
+    							 styleClass="publicationStatus-#{publicationApprovalDetailMBean.publicationDetails.status}" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Internal ID -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.internalid.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.internalId}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- External ID -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.externalid.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.externalId}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- RTB ID -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.rtbid.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.rtbId}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Bundle ID -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.bundle.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.bundle}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Seller Network ID -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.sellernetworkid.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.sellerNetworkId}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Account Type -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.accounttype.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:selectOneMenu value="#{publicationApprovalDetailMBean.publicationDetails.accountType}" disabled="true"
+    							   styleClass="approvalDetailWidth">
+		            <f:selectItems value="#{publicationApprovalDashboardMBean.publicationAccountTypes}"
+		            			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.name}" />
+			    </pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Company -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.company.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.company}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Supplier Name -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.supplier.name.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.supplierName}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Supplier User Name -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.supplier.username.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.supplierUserName}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Publication Name -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.name.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.name}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Publication Type -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.type.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:selectOneMenu value="#{publicationApprovalDetailMBean.publicationDetails.type}"
+    							   styleClass="approvalDetailWidth">
+    				<f:selectItems value="#{publicationApprovalDashboardMBean.publicationTypes}"
+    							   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.name}" />
+    			</pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Publication URL -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.url.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pe:switch value="#{publicationApprovalDetailMBean.publicationDetails.url}">
+    				<pe:case value=""><pri:outputLabel value="#{msg['page.approval.publication.none.placeholder']}" /></pe:case>
+    				<pe:defaultCase>
+    					<ui:param name="url" value="#{publicationApprovalDetailMBean.publicationDetails.url}" />
+    					<ui:param name="urlWithProtocol" value="#{(fn:startsWith(url, 'http')) ? url : 'http://'.concat(url)}" />
+    					<!-- Force use 'http' protocol before url during click to prevent www.xyz.xxx handle as a relative path -->
+		    			<pri:commandLink value="#{url}" onclick="window.open('#{urlWithProtocol}')" styleClass="commandLinkStyle" />
+    				</pe:defaultCase>
+    			</pe:switch>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Revenue Share -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.revenue.share.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.revenueShare}"
+    							 styleClass="outputLabelStyle">
+    				<f:convertNumber type="percent" />
+    			</pri:outputLabel>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Stated Category -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.stated.category.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:outputLabel value="#{publicationApprovalDetailMBean.publicationDetails.statedCategory}"
+    							 styleClass="outputLabelStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Disclose Identity -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.disclose.identity.label']}" />
+    		</pri:column>
+    		<pri:column>
+					<pri:selectBooleanButton value="#{publicationApprovalDetailMBean.publicationDetails.discloseIdentity}"
+											 onLabel="#{msg['page.approval.publication.yes.label']}" onIcon="ui-icon-check"
+											 offLabel="#{msg['page.approval.publication.no.label']}" offIcon="ui-icon-close" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Friendly Name -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.friendlyname.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:inputText value="#{publicationApprovalDetailMBean.publicationDetails.friendlyName}"
+    						   placeholder="#{msg['page.approval.publication.notset.placeholder']}"
+    						   styleClass="inputTextStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Safety Level -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.safety.level.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:selectOneMenu value="#{publicationApprovalDetailMBean.publicationDetails.safetyLevel}"
+    							   styleClass="approvalDetailWidth">
+                    <f:selectItems value="#{PublicationSafetyLevel.ALL_VALUES}" var="publicationSafetyLevel"
+                    			   itemValue="#{publicationSafetyLevel}" itemLabel="#{msg[publicationSafetyLevel.label]}" />
+                </pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Soft Floor -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.soft.floor.label']}" />
+    		</pri:column>
+    		<pri:column>
+					<pri:selectBooleanButton value="#{publicationApprovalDetailMBean.publicationDetails.softFloor}"
+											 onLabel="#{msg['page.approval.publication.yes.label']}" onIcon="ui-icon-check"
+											 offLabel="#{msg['page.approval.publication.no.label']}" offIcon="ui-icon-close" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Algorithm Status -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.algorithm.status.label']}" />
+    		</pri:column>
+    		<pri:column>
+   				<pri:selectOneMenu value="#{publicationApprovalDetailMBean.publicationDetails.algorithmStatus}" disabled="true"
+   								   styleClass="approvalDetailWidth">
+                    <f:selectItems value="#{publicationApprovalDashboardMBean.publicationAlgorithmStatuses}"
+                    			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.name}"/>
+                </pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Dead Zone Status -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.deadzone.status.label']}" />
+    		</pri:column>
+    		<pri:column>
+   				<pri:selectOneMenu value="#{publicationApprovalDetailMBean.publicationDetails.deadZoneStatus}" disabled="true"
+   								   styleClass="approvalDetailWidth">
+                    <f:selectItems value="#{publicationApprovalDashboardMBean.publicationDeadZoneStatuses}"
+                    			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.name}" />
+                </pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Sampling Rate -->
+    	<pri:row>
+    		<pri:column>
+    			<pri:outputLabel value="#{msg['page.approval.publication.sampling.rate.label']}" />
+    		</pri:column>
+    		<pri:column>
+    			<pri:spinner value="#{publicationApprovalDetailMBean.publicationDetails.samplingRate}" min="1" max="255"
+    						 placeholder="#{msg['page.approval.publication.sampling.rate.placeholder']}"
+    						 styleClass="spinnerStyle" />
+    		</pri:column>
+    	</pri:row>
+    	
+    </pri:panelGrid>
+	
+</ui:composition>

@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+    <pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+    <pe:importConstants className="com.adfonic.tools.beans.campaign.history.CampaignHistoryValueTransformer" var="CampaignHistoryConstants" />
+
+	<section class="form-box ui-corner-all" id="history">
+		<h2 class="sec-title">#{msg['page.campaign.history.title']}</h2>
+		<p>
+			<h:panelGroup layout="block" id="lastTenToolTip" />
+			<h:outputFormat value="#{msg['page.campaign.history.header.lastchanges']}"> 
+				<f:param value="#{campaignHistoryMBean.lastChangesCount}" />
+			</h:outputFormat>
+			<pri:tooltip for="lastTenToolTip" style="width:250px;">#{msg['page.campaign.history.header.tooltip']}</pri:tooltip>
+		</p>
+		
+		<c:set var="valueTransformer" value="#{campaignHistoryMBean.newValueTransformer}" scope="request" />
+
+		<pri:dataTable id="auditLogTable" var="auditLog"
+			value="#{campaignHistoryMBean.lazyModel}" 
+			lazy="true" 
+			rows="#{campaignHistoryMBean.lastChangesCount}"
+			sortOrder="descending" rowIndexVar="rowIndex">
+
+            <!-- Timestamp -->
+			<pri:column headerText="#{msg['page.campaign.history.table.header.time']}" styleClass="time-col">
+				<h:outputText value="#{valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_TIMESTAMP, auditLog.getTimestamp())}"/>
+			</pri:column>
+			
+			<!-- User -->
+			<pri:column headerText="#{msg['page.campaign.history.table.header.user.name']}" styleClass="user-col">
+				<h:outputText id="userName" value="#{valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_USER_NAME, auditLog)}" />
+				<pri:outputPanel rendered="#{not empty valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_USER_EMAIL, auditLog)}" >
+		            <h:outputText value="#{valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_USER_EMAIL, auditLog)}" styleClass="user-email"/>
+	            </pri:outputPanel>
+			</pri:column>
+			
+			<!-- Field Changed -->
+            <pri:column headerText="#{msg['page.campaign.history.table.header.field']}" styleClass="field-col" >
+            	<h:panelGroup layout="block" id="helpTab" styleClass="helpImage" rendered="#{not empty valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_TOOLTIP, auditLog)}"/>
+	            <div class="field-name"><h:outputText value="#{valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_NAME, auditLog)}"/></div>
+	            <pri:tooltip for="helpTab" style="width:250px;">
+	            	<h:outputText value="#{valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_TOOLTIP, auditLog)}" escape="false"/>
+	            </pri:tooltip>
+            </pri:column>
+
+            <!-- From -->
+            <pri:column headerText="#{msg['page.campaign.history.table.header.from']}" styleClass="from-to-col" >
+                <h:outputText value="#{valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_OLD_VALUE, auditLog)}" styleClass="from-to-col"/>
+            </pri:column>
+
+            <!-- To -->            
+            <pri:column headerText="#{msg['page.campaign.history.table.header.to']}" styleClass="from-to-col">
+                <h:outputText value="#{valueTransformer.transform(CampaignHistoryConstants.COLUMN_KEY_NEW_VALUE, auditLog)}" styleClass="from-to-col"/>
+            </pri:column>
+
+		</pri:dataTable>
+
+		<h:form style="margin-top: 10px;">
+			<pri:commandLink
+				value="#{msg['page.commons.labels.export.excel']}"
+				ajax="false"
+				rendered="#{campaignHistoryMBean.lazyModel.rowCount gt 0}">
+				<pri:fileDownload
+					value="#{campaignHistoryMBean.exportCampaignHistoryToExcel()}" />
+			</pri:commandLink>
+		</h:form>
+		
+		<div class="footer">
+			<h:outputText value="#{msg['page.campaign.history.footer']}" escape="false"/>
+		</div>
+
+	</section>
+
+</ui:composition>

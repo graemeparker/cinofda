@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://dozer.sourceforge.net
+                      http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+  <configuration>
+    <stop-on-errors>true</stop-on-errors><!--
+    <date-format>MM/dd/yyyy HH:mm</date-format> -->
+    <wildcard>true</wildcard>
+    <custom-converters>
+      <converter type="com.adfonic.webservices.dto.mapping.CategoryConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Category</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.ChannelConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Channel</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.CountryConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Country</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.ModelConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Model</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.OperatorConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Operator</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.PlatformConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Platform</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.VendorConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Vendor</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.InventoryTargetedCategoryConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Category</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.TargetPublisherConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.Publisher</class-b>
+      </converter>
+      <converter type="com.adfonic.webservices.dto.mapping.PublicationListObjConverter">
+        <class-a>java.lang.String</class-a>
+        <class-b>com.adfonic.domain.PublicationList</class-b>
+      </converter>
+    </custom-converters>
+  </configuration>
+
+  <mapping map-null="false">
+    <class-a>com.adfonic.webservices.dto.CampaignDTO</class-a>
+    <class-b>com.adfonic.domain.Campaign</class-b>
+    <field-exclude type="one-way">
+      <a>id</a>
+      <b>externalID</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>defaultLanguage</a>
+      <b>defaultLanguage.isoCode</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>status</a>
+      <b>status</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>dailyBudget</a>
+      <b>dailyBudget</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>overallBudgetImpressions</a>
+      <b>overallBudgetImpressions</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>overallBudgetClicks</a>
+      <b>overallBudgetClicks</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>dailyBudgetImpressions</a>
+      <b>dailyBudgetImpressions</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>dailyBudgetClicks</a>
+      <b>dailyBudgetClicks</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>evenDistributionOverallBudget</a>
+      <b>evenDistributionOverallBudget</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>evenDistributionDailyBudget</a>
+      <b>evenDistributionDailyBudget</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>dailyBudgetWeekday</a>
+      <b>dailyBudgetWeekday</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>dailyBudgetWeekend</a>
+      <b>dailyBudgetWeekend</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>installTrackingEnabled</a>
+      <b>installTrackingEnabled</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>applicationID</a>
+      <b>applicationID</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>bid</a>
+      <b>currentBid</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>segment</a>
+      <b>segments[0]</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>publicationList</a>
+      <b>publicationList</b>
+    </field-exclude>
+  </mapping>
+
+  <mapping map-null="false">
+    <class-a>com.adfonic.domain.CampaignBid</class-a>
+    <class-b>com.adfonic.webservices.dto.CampaignBidDTO</class-b>
+    <field>
+      <a>bidType</a>
+      <b>type</b>
+    </field>
+  </mapping>
+
+  <mapping map-null="false">
+    <class-a>com.adfonic.webservices.dto.SegmentDTO</class-a>
+    <class-b>com.adfonic.domain.Segment</class-b>
+    <field-exclude type="one-way">
+      <a>daysOfWeek</a>
+      <b>daysOfWeek</b>
+      <!-- <b is-accessible="true">daysOfWeek</b> -->
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>hoursOfDay</a>
+      <b>hoursOfDay</b>
+      <!-- <b is-accessible="true">hoursOfDay</b> -->
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>hoursOfDayWeekend</a>
+      <b>hoursOfDayWeekend</b>
+      <!-- <b is-accessible="true">hoursOfDayWeekend</b> -->
+    </field-exclude>
+    <field>
+      <a get-method="isCountryWhitelist">countryWhitelist</a>
+      <b>countryListIsWhitelist</b>
+    </field>
+    <field>
+      <a get-method="isOperatorWhitelist">operatorWhitelist</a>
+      <b>operatorListIsWhitelist</b>
+    </field>
+    <field-exclude type="one-way">
+      <a>geotargets</a>
+      <b>geotargets</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>ipAddresses</a>
+      <b>ipAddresses</b>
+    </field-exclude>
+    <field>
+      <a get-method="isIpAddressesWhitelist">ipAddressesWhitelist</a>
+      <b>ipAddressesListWhitelist</b>
+    </field>
+    <field custom-converter="com.adfonic.webservices.dto.mapping.ExcludeOperaMiniConverter">
+      <a get-method="isExcludeOperaMini">excludeOperaMini</a>
+      <b>browsers</b>
+    </field>
+    <field>
+      <a>targetedPublishers</a>
+      <b>targettedPublishers</b>
+    </field>
+  </mapping>
+
+  <mapping map-null="false">
+    <class-a>com.adfonic.domain.Geotarget</class-a>
+    <class-b>com.adfonic.webservices.dto.GeoTargetDTO</class-b>
+    <field type="one-way">
+      <a>geotargetType</a>
+      <b set-method="setTypeByGeotargetType">type</b>
+    </field>
+  </mapping>
+
+  <mapping map-null="false">
+    <class-a>com.adfonic.webservices.dto.CreativeDTO</class-a>
+    <class-b>com.adfonic.domain.Creative</class-b>
+    <field-exclude type="one-way">
+      <a>id</a>
+      <b>externalID</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>campaignID</a>
+      <b>campaign.externalID</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>format</a>
+      <b>format.systemName</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>destination</a>
+      <b>destination</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>status</a>
+      <b>status</b>
+    </field-exclude>
+  </mapping>
+
+  <mapping map-null="false">
+    <class-a>com.adfonic.webservices.dto.DestinationDTO</class-a>
+    <class-b>com.adfonic.domain.Destination</class-b>
+    <field>
+      <a>type</a>
+      <b>destinationType</b>
+    </field>
+  </mapping>
+
+  <mapping map-null="false">
+    <class-a>com.adfonic.webservices.dto.AssetDTO</class-a>
+    <class-b>com.adfonic.domain.Asset</class-b>
+    <field-exclude type="one-way">
+      <a>id</a>
+      <b>externalID</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>creativeId</a>
+      <b>creative.externalID</b>
+    </field-exclude>
+    <field-exclude type="one-way">
+      <a>contentType</a>
+      <b>contentType.name</b>
+    </field-exclude>
+  </mapping>
+
+</mappings>

@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# Path where we download the updated .zip file from DeviceAtlas
+ZIP_FILE=devicedata-`date +'%Y%m%d'`.zip
+# Path where we download the updated MD5 checksum of the .zip file from DeviceAtlas
+MD5_FILE=${ZIP_FILE}.md5
+# Path where we'll store the unzipped updated JSON data locally (i.e. on proc)
+if [ `hostname` = "lon3proc03" -o `hostname` = "lon3proc03.adfonic.com" -o `hostname` = "lon3proc04" -o `hostname` = "lon3proc04.adfonic.com" ]; then
+    JSON_FILE=/srv/data/DeviceAtlas.json
+else
+    JSON_FILE=/usr/local/adfonic/data/DeviceAtlas.json
+fi
+
+# Grab the "deviceAtlas.licenseKey" from our properties file
+LICENSE_KEY=`sed '/^\#/d' /usr/local/adfonic/config/adfonic-tasks.properties | grep 'deviceAtlas.licenseKey'  | tail -n 1 | sed 's/^.*=//;s/^[[:space:]]*//;s/[[:space:]]*$//'`
+
+echo "Downloading updated zip from DeviceAtlas...."
+wget "http://deviceatlas.com/getJSON.php?licencekey=${LICENSE_KEY}&format=zip" -O ${ZIP_FILE} 2>&1
+EXIT_CODE=$?
+if [ ${EXIT_CODE} != 0 ]; then
+   echo "ERROR: download of ${ZIP_FILE} failed"
+   exit ${EXIT_CODE}
+fi
+
+echo "Downloading updated md5 from DeviceAtlas..."
+wget "http://deviceatlas.com/getJSON.php?licencekey=${LICENSE_KEY}&format=zip&md5=1" -O ${MD5_FILE} 2>&1
+EXIT_CODE=$?
+if [ ${EXIT_CODE} != 0 ]; then
+   echo "ERROR: download of ${MD5_FILE} failed"
+   exit ${EXIT_CODE}
+fi
+
+echo "Validating md5..."
+# 2 spaces
+echo "`cat ${MD5_FILE}`  ${ZIP_FILE}" | md5sum --status -c
+EXIT_CODE=$?
+if [ ${EXIT_CODE} != 0 ]; then
+    echo "ERROR: checksum validation failed, correct=`cat ${MD5_FILE}`, actual=`md5sum ${ZIP_FILE}`"
+    exit ${EXIT_CODE}
+fi
+# We don't need the md5 anymore
+rm -f ${MD5_FILE}
+
+echo "Validated, unzipping..."
+# Unzip to a temp file since the live file is being watched for updates
+TEMP_FILE=/tmp/DeviceAtlas-$$.json
+unzip -p ${ZIP_FILE} > ${TEMP_FILE}
+# We don't need the zip anymore
+rm -f ${ZIP_FILE}
+
+# Save the previous JSON file if it exists
+if [ -e $JSON_FILE ]; then
+    echo "Saving previous versions"
+    # We use cp here instead of mv, because we don't want the current
+    # data file to disappear, even for an instant.
+	rm -f ${JSON_FILE}.6 2>/dev/null
+    cp -f ${JSON_FILE}.5 ${JSON_FILE}.6 2>/dev/null
+    cp -f ${JSON_FILE}.4 ${JSON_FILE}.5 2>/dev/null
+    cp -f ${JSON_FILE}.3 ${JSON_FILE}.4 2>/dev/null
+    cp -f ${JSON_FILE}.2 ${JSON_FILE}.3 2>/dev/null
+    cp -f ${JSON_FILE}.1 ${JSON_FILE}.2 2>/dev/null
+    cp -f ${JSON_FILE}.0 ${JSON_FILE}.1 2>/dev/null
+    cp -f ${JSON_FILE} ${JSON_FILE}.0 2>/dev/null
+fi
+echo "Moving temp file to ${JSON_FILE}"
+mv -f ${TEMP_FILE} ${JSON_FILE}

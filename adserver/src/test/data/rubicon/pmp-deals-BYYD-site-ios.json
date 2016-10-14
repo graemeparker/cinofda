@@ -1,0 +1,81 @@
+{
+	"id":"897066070e18a741ac51bf2be11f7d020ca06526",
+	"at":2,
+	"tmax":112,
+	"pmp":{
+		"deals":[ {
+				"id":"BYD-7845-002d6",
+				"at":2,
+				"bidfloor":1.3662,
+				"bidfloorcur":"USD",
+				"wseat":[ "54c53f0f-bdfe-453c-b9fe-b244ef8b9f6c" ]
+			},
+			{
+				"id":"AFN-7845-001b4",
+				"at":2,
+				"bidfloor":1.3662,
+				"bidfloorcur":"USD"
+			}
+		],
+		"private":0
+	},
+	"imp":[ {
+			"id":"1",
+			"tagid":"91915",
+			"secure":0,
+			"iframebuster":[ ],
+			"banner":{
+				"w":320,
+				"h":50,
+				"pos":3,
+				"battr":[ 14018, 14019, 1, 3, 5, 6, 7, 8, 9, 10, 12, 13, 14, 14005, 14015, 14014 ],
+				"api":[ ],
+				"topframe":0
+			},
+			"pmp":{
+				"deals":[ {
+						"id":"BYD-7845-002d6",
+						"at":2,
+						"bidfloor":1.3662,
+						"bidfloorcur":"USD",
+						"wseat":[ "54c53f0f-bdfe-453c-b9fe-b244ef8b9f6c" ]
+					},
+					{	"id":"AFN-7845-001b4",
+						"at":2,
+						"bidfloor":1.3662,
+						"bidfloorcur":"USD"
+					}
+				],
+				"private_auction":0
+			},
+			"instl":0
+		}
+	],
+	"site":{
+		"id":"24187",
+		"domain":"http://m.theguardian.com",
+		"name":"Guardian UK Mobile - Mobile-R.F.M",
+		"cat":[ "IAB12", "IAB3", "IAB13" ],
+		"page":"http://www.theguardian.com/football/live/2015/apr/27/bournemouth-v-bolton-championship-live",
+		"publisher":{ "id":"7845" },
+		"ext":{ "mopt":1 }
+	},
+	"device":{
+		"os":"Android",
+		"model":"GT-I9505",
+		"connectiontype":0,
+		"geo":{ "country":"GBR", "region":"WNM" },
+		"osv":"4.2.2",
+		"js":1,
+		"ua":"Mozilla/5.0 (Linux; Android 4.4.2; en-gb; SAMSUNG GT-I9505 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/1.5 Chrome/28.0.1500.94 Mobile Safari/537.36",
+		"devicetype":1,
+		"language":"en",
+		"make":"Samsung",
+		"ext":{ "xff":"", "res":"360x640" },
+		"ip":"94.197.120.202"
+	},
+	"user":{
+		"id":"c13908bec086cf185044a0cbec6f30957c1a065f",
+		"ext":{ "sessiondepth":1 }
+	}
+}

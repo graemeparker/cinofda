@@ -1,0 +1,128 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.byyd.newrelic</groupId>
+	<artifactId>adfonic-cassandra-newrelic</artifactId>
+	<name>Byyd Cassandra Newrelic Plugin</name>
+
+	<parent>
+		<groupId>com.adfonic</groupId>
+		<artifactId>parent</artifactId>
+		<version>5.0.38-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<shortName>adfonic-cassandra-newrelic</shortName>
+	</properties>
+
+	<build>
+		<plugins>
+
+			<!-- Set a compiler level -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>distribution.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>dist-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<preparationGoals>clean package rpm:rpm</preparationGoals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<version>2.1-alpha-1</version>
+				<configuration>
+					<name>${project.artifactId}-${project.packaging}</name>
+					<copyright>Adfonic Proprietary</copyright>
+					<distribution>Adfonic 2012</distribution>
+					<group>Adfonic Application</group>
+					<autoProvides>false</autoProvides>
+					<autoRequires>false</autoRequires>
+					<version>${project.version}.${env.BUILD_NUMBER}</version>
+					<revision>123</revision>
+					<packager>Adfonic Jenkins</packager>
+					<prefix>/usr/local/adfonic</prefix>
+					<description>
+						This is the NewRelic Plugin.
+					</description>
+					<defineStatements>
+						<defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+						<defineStatement>dist .el6.adf</defineStatement>
+					</defineStatements>
+					<mappings>
+						<mapping>
+							<directory>/usr/local/adfonic/${shortName}/bin</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>${project.basedir}/bin</location>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/usr/local/adfonic/${shortName}/lib</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<dependency />
+							<artifact />
+						</mapping>
+					</mappings>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.newrelic.metrics.publish</groupId>
+			<artifactId>metrics_publish</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

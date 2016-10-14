@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.byyd.newrelic.plugin.AdserverAgentTest
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.216 sec

@@ -1,0 +1,25 @@
+NOTE: logging.properties is no longer built into our webapps.
+
+Prior to this change, logging.properties lived in src/main/resources, and it
+ended up getting deployed into WEB-INF/classes in the expanded war.  Going
+forward, we want to be able to control logging properties independently of
+the build and release process, i.e. to make ad-hoc troubleshooting easier.
+
+To enable this "externalization" of logging.properties, our new <Context>
+(which lives in src/main/webapp/META-INF/context.xml) declares a "virtual
+classpath" that Tomcat scans prior to loading our webapp.  For example:
+
+<Context>
+  <Loader className="org.apache.catalina.loader.VirtualWebappLoader"
+          virtualClasspath="${catalina.base}/virtualcp/adfonic-adserver" />
+</Context>
+
+So, in order to control logging levels for this webapp, you simply need to
+create that directory structure and either symlink or copy logging.properties
+into that directory.  Here are some commands you can use to do that:
+
+$ mkdir -p $TOMCAT_HOME/virtualcp/adfonic-adserver
+$ ln -s /path/to/etc/logging.properties $TOMCAT_HOME/virtualcp/adfonic-adserver
+
+If you don't have symlinks available (i.e. on Windows), you can simply copy
+etc/logging.properties and make changes directly to that file.

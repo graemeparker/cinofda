@@ -1,0 +1,115 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Digest::MD5 qw(md5_hex);
+use JSON;
+use LWP::UserAgent;
+use HTTP::Request::Common;
+use Data::UUID;
+
+my $numArgs = $#ARGV + 1;
+
+my $winMode = 0;
+if ($numArgs >= 1 && $ARGV[0] eq "win") {
+    $winMode = 1;
+}
+print "*** Win mode: " . ($winMode ? "ENABLED" : "DISABLED") . "\n";
+
+my $uuid = new Data::UUID();
+
+my $bidRequest;
+
+# +-------+---------------------+--------------------------------------+
+# | ID    | NAME                | EXTERNAL_ID                          |
+# +-------+---------------------+--------------------------------------+
+# |  7481 | Nexage              | 924146eb-ae41-41b1-bacb-4e445faa99a3 |
+# | 17270 | Adiquity            | b5489eb7-8300-439e-8c97-c69ff2eabc1a |
+# | 17487 | Switch Concepts Ltd | c350591b-40ae-4e94-b2f9-6a8ae2d1c86b |
+# | 17593 | MoPub Inc           | 62e77526-8f80-4224-a07e-7d851f87048e |
+# +-------+---------------------+--------------------------------------+
+my $publisherExternalID = "62e77526-8f80-4224-a07e-7d851f87048e";
+
+my $trackingId = "0123456789abcdef0123456789abcdef01234567"; # 40-char iPhone UDID
+my $ipAddress= "67.32.183.150"; # home Georgetown, KY
+my $userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+my $siteOrApp;
+my $sidOrAidKey;
+#$siteOrApp = "site"; $sidOrAidKey = "sid";
+$siteOrApp = "app"; $sidOrAidKey = "aid";
+
+my $pid = "agltb3B1Yi1pbmNyEAsSB0FjY291bnQYsvLVEgw";
+my $sidOrAid = "agltb3B1Yi1pbmNyDAsSA0FwcBj54pMUDA";
+my $publicationName = "Lemondo LLC - Rage Wars Android";
+
+my $bidRequestId = $uuid->to_string($uuid->create());
+my $impid = $uuid->to_string($uuid->create());
+
+$bidRequest = '{"tmax":99999,"' . $siteOrApp . '":{"pid":"' . $pid . '","' . $sidOrAidKey . '":"' . $sidOrAid . '","name":"' . $publicationName . '","cat":["IAB1","IAB3","IAB5"]},"id":"' . $bidRequestId . '","imp":[{"impid":"' . $impid . '"}],"device":{"ip":"' . $ipAddress . '","ua":"' . $userAgent . '"},"user":{"uid":"' . $trackingId . '"}}';
+
+# Parse it just to be sure it's valid json
+my $jsonRequest = JSON->new->decode($bidRequest);
+
+print "*** Posting JSON bid request:\n$bidRequest\n";
+
+my $urlBase = "http://localhost:8080/adfonic-adserver";
+#$urlBase = "http://byyd.net";
+#$urlBase = "http://dc1.byyd.net";
+#$urlBase = "http://dc1adserver01";
+
+my $url = $urlBase . "/rtb/bid/" . $publisherExternalID;
+print "*** Posting to URL: $url\n";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+# We want JSON back
+#$ua->default_header("Accept" => "application/json");
+
+my $response = $ua->request(POST $url, Content_Type => "application/json", Content => $bidRequest);
+
+print "*** HTTP Status: ".$response->status_line."\n";
+#$response->headers->scan(sub { my ($key, $value) = @_; print "*** Response Header: $key: $value\n"; });
+
+my $content = $response->decoded_content;
+print "*** Response Content:\n$content\n";
+
+if (!$response->is_success) {
+    exit(1);
+}
+
+# Parse the JSON response
+my $json = JSON->new->decode($content);
+if ($json->{"seatbid"}) {
+    my $seatbids = $json->{"seatbid"};
+    foreach my $seatbid (@$seatbids) {
+        my $bids = $seatbid->{"bid"};
+        foreach my $bid (@$bids) {
+            # There will be a "price" if there was a bid
+            if ($bid->{"price"}) {
+                print "*** Got bid for \$" . $bid->{"price"} . " for impid=" . $bid->{"impid"} . "\n";
+                my $winNoticeUrl = $bid->{"nurl"};
+                if (defined $winNoticeUrl) {
+                    $winNoticeUrl =~ s/\${AUCTION_PRICE}/$bid->{"price"}/g;
+                    if ($winMode) {
+                        print "*** Hitting win notice URL:\n$winNoticeUrl\n";
+                        $response = $ua->get($winNoticeUrl);
+                        print "*** HTTP Status: ".$response->status_line."\n";
+                        if (!$response->is_success) {
+                            exit(1);
+                        }
+                        $content = $response->decoded_content;
+                        print "*** Win notice response:\n$content\n";
+                    } else {
+                        print "*** Win mode disabled, not hitting win notice URL:\n$winNoticeUrl\n";
+                    }
+                }
+            } else {
+                print "*** No bid\n";
+            }
+        }
+    }
+}

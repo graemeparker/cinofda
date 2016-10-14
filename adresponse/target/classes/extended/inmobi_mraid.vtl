@@ -1,0 +1,13 @@
+<script src="mraid.js"></script>
+<div id="Sprout_${adComponents.components.extendedData.ad}_div"></div>
+<script type="text/javascript">var _Sprout=_Sprout||{};_Sprout.querystring={'exit_to_site':'${adComponents.destinationUrl}?redir=${adComponents.components.extendedData.landpage}','rl':''};
+</script>
+<script type="text/javascript" src="http://edgy.sproutbuilder.com/load/${adComponents.components.extendedData.ad}.html.js">
+</script>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

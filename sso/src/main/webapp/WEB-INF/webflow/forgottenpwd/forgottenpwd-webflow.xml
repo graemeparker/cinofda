@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.springframework.org/schema/webflow"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd"
+      start-state="forgottenPwdFormView">
+    
+   	<var name="forgottenPwdModel" class="com.adfonic.sso.flows.forgottenpwd.ForgottenPasswordModel"/>
+   	
+	<view-state id="forgottenPwdFormView" view="forgottenpwd" model="forgottenPwdModel">
+        <transition on="submit" to="forgottenPasswordAction"></transition>
+    </view-state>
+    
+    <action-state id="forgottenPasswordAction">
+    	<on-entry>
+            <set name="requestScope.email" value="flowScope.forgottenPwdModel.email" />
+        </on-entry>
+    	<evaluate expression="forgottenPasswordAction"/>
+        <transition on="success" to="forgottenPwdCompletedView" />
+		<transition on="error" to="forgottenPwdFormView" />
+    </action-state>
+    
+    <view-state id="forgottenPwdCompletedView" view="forgottenpwdcompleted" model="forgottenPwdModel">
+        <transition on="resend" to="forgottenPasswordAction"></transition>
+    </view-state>
+</flow>

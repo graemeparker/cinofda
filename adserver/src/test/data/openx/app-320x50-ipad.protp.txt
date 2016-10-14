@@ -1,0 +1,70 @@
+api_version: 15
+auction_id: "abe5daed-7972-40ed-acf6-b2cf85000a22"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537185135"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "f61cd6c9-9965-e306-f495-72ff4bf5fc2f"
+user_ip_address: "\027vs\003"
+user_geo_country: "us"
+user_geo_state: "mississippi"
+user_geo_dma: 673
+user_agent: "Mozilla/5.0 (iPad; CPU OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F69"
+url: "http://itunes.apple.com/us/app/nextplus-free-sms-text-messaging/id920869470?mt=8"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2028
+pub_blocked_cat: 34
+pub_blocked_cat: 1
+pub_blocked_cat: 8
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_cat: 31
+pub_blocked_content: 1
+pub_blocked_content: 3
+pub_blocked_content: 6
+pub_blocked_content: 8
+pub_blocked_content: 9
+pub_blocked_content: 11
+pub_blocked_content: 14
+pub_blocked_content: 15
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (iPad; CPU OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F69"
+  ip: "23.118.115.3"
+  os: "iOS"
+  osv: "8"
+  make: "Apple"
+  model: "iPad"
+  connectiontype: "wifi"
+  geo {
+    lat: 34.194305
+    lon: -88.70855
+    country: "us"
+    city: "verona"
+    type: 1
+    continent: "north america"
+    state: "mississippi"
+    dma: 673
+  }
+  browser: "Mobile Safari"
+  idforad: "19D63A3F-6C87-4480-86B5-DCCD96FCDC29"
+  idforad_enabled: true
+  category: "tablet"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+  yob: 1956
+  gender: "M"
+}

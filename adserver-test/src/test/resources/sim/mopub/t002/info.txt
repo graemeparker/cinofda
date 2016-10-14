@@ -1,0 +1,5 @@
+MAD-952 - RTB Banner Size Issue
+This test includes:
+    - a rtb request for a banner with size 300x50 (req.json).
+    - a 320x50 creative banner configuration (sim320x50.json)
+    - a 300x50 creative banner configuration (sim300x50.json)

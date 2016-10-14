@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h4>#{msg['page.campaign.inventory.menu.marketplace.label']}</h4>
+	<div class="form-row">
+		<h:outputLabel styleClass="bl b" value="#{msg['page.campaign.inventory.marketplace.exchange.label']}" for="sel-exchange"/>
+		<pri:selectOneMenu 
+			id="sel-exchange" 
+			value="#{campaignMBean.campaignInventoryTargetingMBean.exchange}" 
+            converter="com.adfonic.tools.converter.targetpublisher.TargetPublisherConverter"
+            styleClass="medium"
+	    >
+		    <f:selectItems var="rtbVar" value="#{campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.rtbListForPmp}"
+				   itemLabel="#{rtbVar.name}" itemValue="#{rtbVar}" />
+	    </pri:selectOneMenu>
+	</div>
+	<div class="form-row">
+		<h:outputLabel styleClass="bl b" value="#{msg['page.campaign.inventory.marketplace.dealid.label']}" for="in-dealid"/>
+		<pri:inputText id="in-dealid" value="#{campaignMBean.campaignInventoryTargetingMBean.dealId}" required="true" requiredMessage="#{msg['page.campaign.inventory.marketplace.emptyid.message']}"></pri:inputText>
+		<pri:message for="in-dealid"/>
+	</div>
+</ui:composition>

@@ -1,0 +1,74 @@
+id: "U.\216\337\000\n\242\031\n\037,\302\233\000q\032"
+ip: "2v\254"
+user_agent: "Mozilla/5.0 (Linux; Android 4.1.2; GT-N8013 Build/JZO54K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Safari/537.36,gzip(gfe)"
+url: "http://www.apkmirror.com/apk/google-inc/google-play-store/google-play-store-5-2-12-2-android-apk-download/"
+detected_language: "en"
+detected_vertical {
+  id: 1461
+  weight: 0.5226634
+}
+detected_vertical {
+  id: 5
+  weight: 0.2585277
+}
+detected_vertical {
+  id: 1071
+  weight: 0.21880887
+}
+adslot {
+  id: 1
+  width: 728
+  height: 90
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  excluded_sensitive_category: 5
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  excluded_product_category: 10016
+  ad_block_key: 2937861448
+  publisher_settings_list_id: 12967169416841912854
+  17: 1136
+  18: 800
+  19: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEPpg4R01OcoowWbkTb7L64M"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 39
+mobile {
+  platform: "android"
+  mobile_device_type: TABLET
+  brand: "samsung"
+  model: "gt-n8013"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 1
+  }
+  screen_width: 800
+  screen_height: 1232
+  carrier_id: 0
+}
+cookie_age_seconds: 53365464
+geo_criteria_id: 1023191
+seller_network_id: 1
+publisher_settings_list_id: 13476977608972183159
+51: 3

@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:util="http://java.sun.com/jsf/composite/components/util">
+
+<h:head>
+    <title>Frequency Cap</title>
+    <style type="text/css">
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #CEE3F6;
+}
+
+.ui-widget {
+    font-size: 13px !important;
+}
+.topAlignPanel td {
+    vertical-align: top;
+}
+</style>
+</h:head>
+<h:body>
+    
+    
+    
+    
+<h:form id="form">  
+    <p:panel id="panel" header="">    
+
+		<h:panelGrid columns="6" cellpadding="5">
+		    <h:outputLabel for="uniqueIdentifier" value="DeviceIdentifierTypeId.DeviceIdentifier *" />
+			<p:inputText id="uniqueIdentifier"
+			             value="#{frequencyCapBean.uniqueIdentifierForFrequencyCap}"
+			             required="true" label="uniqueIdentifier"/>
+		    <p:message for="uniqueIdentifier" autoUpdate="true"/>
+		        
+		    <h:outputLabel for="creativeId" value="Creative Id *" />
+		    <p:inputText id="creativeId"
+		                 value="#{frequencyCapBean.creativeIdForFrequencyCap}"
+		                 required="true" label="creativeId"/>
+		    <p:message for="creativeId" autoUpdate="true"/>
+		        
+		    <h:outputLabel for="windowSeconds" value="Window Seconds" />
+		    <p:inputText id="windowSeconds" readonly="true"
+		                 value="#{frequencyCapBean.windowSecondsForFrequencyCap}"
+		                 label="windowSeconds"/>
+		    <p:message for="windowSeconds" autoUpdate="true"/>
+		    
+		    <h:outputLabel for="frequencyCap" value="Frequency Cap" />
+		    <p:inputText id="frequencyCap" readonly="true"
+		                 value="#{frequencyCapBean.frequencyCap}"
+		                 label="frequencyCap"/>
+		    <p:message for="frequencyCap" autoUpdate="true"/>
+		    
+		    <h:outputLabel for="capApplied" value="Cap Applied per" />
+		    <p:inputText id="capApplied" readonly="true"
+		                 value="#{(empty frequencyCapBean.capApplied) ? '-' : frequencyCapBean.capApplied}"
+		                 label="capApplied"/>
+		</h:panelGrid>
+
+		<p:commandButton value="Get Frequency Cap" update="panel"  actionListener="#{frequencyCapBean.getFrequencyCap}" id="btnGet" /> 
+		<p:commandButton value="Increment Frequency Cap" update="panel"  actionListener="#{frequencyCapBean.incFrequencyCap}" id="btnInc" /> 
+		<p:commandButton value="Decrement Frequency Cap" update="panel"  actionListener="#{frequencyCapBean.decFrequencyCap}" id="btnDec" />
+		
+		<h:panelGrid>
+            <p:dataTable var="prop" value="#{frequencyCapBean.cacheInfo}">
+                <p:column headerText="Cache Info Properties">
+                    <h:outputText value="#{prop}" />
+                </p:column>
+            </p:dataTable>
+        </h:panelGrid> 
+    
+    </p:panel>
+</h:form>
+</h:body>
+</html>

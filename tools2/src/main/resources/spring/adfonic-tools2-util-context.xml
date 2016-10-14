@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- http://cagataycivici.wordpress.com/2010/02/17/port-jsf-2-0s-viewscope-to-spring-3-0/ 
+		to get the beauty of the view scope in JSF managed by spring -->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="view">
+					<bean class="com.adfonic.tools.scope.ViewScope" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="toolsApplicationBean" scope="singleton" class="com.adfonic.tools.beans.application.ToolsApplicationBean">
+		<property name="datePickerPresetsMap" ref="datePickerPresetsMap" />
+		<property name="externalUrls" ref="externalUrls" />
+	</bean>
+	
+	<bean id="toolsSecurityBean" scope="singleton" class="com.adfonic.tools.beans.application.ToolsSecurityBean" >
+		<property name="userDetailsService" ref="adfonicUserDetailsServiceForUsers" />
+		<property name="userDetailsServiceAdmin" ref="adfonicUserDetailsServiceForAdfonicUsers" />
+	</bean>
+	
+	<util:map id="externalUrls" map-class="java.util.HashMap">
+		<!-- Wiki URLs -->
+		<entry key="devDocsUrl" value="${wiki.url}"/>
+		<entry key="downloadSDKUrl" value="${wiki.url}${wiki.downloadSDK}"/>
+		
+		<!-- Wiki template downloads -->
+		<entry key="devModelsListUrl" value="${wiki.url}${wiki.devModelsList}"/>
+        <entry key="thirdPartyTagsUrl" value="${wiki.url}${wiki.thirdPartyTags}"/>
+        <entry key="uploadPubListUrl" value="${wiki.url}${wiki.uploadPubList}"/>
+        <entry key="uploadCoordTemplateUrl" value="${wiki.url}${wiki.uploadCoordTemplate}"/>
+        <entry key="uploadCodesTemplateUrl" value="${wiki.url}${wiki.uploadCodesTemplate}"/>
+        <entry key="uploadAudienceDeviceIdsTemplateUrl" value="${wiki.url}${wiki.uploadAudienceDeviceIdsTemplate}"/>
+        
+        <!-- Wordpress URLs-->
+		<entry key="creativeSpecsUrl" value="${wp.baseurl}${wp.adspecs}"/>
+		<entry key="appInstallTrackingUrl" value="${wp.baseurl}${wp.appInstallTracking}"/>
+		<entry key="appInstallTrackingEnableUrl" value="${wp.baseurl}${wp.appInstallTracking}"/>
+		<entry key="appInstallTrackingServerSideIntegrationUrl" value="${wp.baseurl}${wp.appInstallTracking}"/>
+		<entry key="brandSafety" value="${wp.baseurl}${wp.brandSafety}"/>
+		<entry key="mobileSitesUrl" value="${wp.baseurl}${wp.mobileSites}"/>
+		<entry key="mobileSiteConversionsUrl" value="${wp.baseurl}${wp.mobileSiteConversions}"/>
+        <entry key="devDocsTokensUrl" value="${wp.baseurl}${wp.clickTokens}"/>
+        <entry key="termsAndConditionsUrl" value="${wp.baseurl}${wp.termsconditions}"/>
+        <entry key="privacyPolicyUrl" value="${wp.baseurl}${wp.privacyPolicy}"/>
+        <entry key="endUserPrivacyPolicyUrl" value="${wp.baseurl}${wp.endUserPrivacyPolicy}"/>
+	</util:map>	
+	
+	<util:map id="datePickerPresetsMap" map-class="java.util.LinkedHashMap">
+		<entry key="page.dashboard.labels.datepicker.options.today" value="1"/>
+		<entry key="page.dashboard.labels.datepicker.options.yesterday" value="2"/>
+		<entry key="page.dashboard.labels.datepicker.options.last7days" value="3"/>
+		<entry key="page.dashboard.labels.datepicker.options.thismonth" value="4"/>
+		<entry key="page.dashboard.labels.datepicker.options.lastmonth" value="5"/>
+	</util:map>
+  
+    <util:map id="optmmisationDatePickerPresetsMap" map-class="java.util.LinkedHashMap">
+        <entry key="page.optmisation.labels.datepicker.options.today" value="1"/>
+        <entry key="page.optmisation.labels.datepicker.options.yesterday" value="2"/>
+        <entry key="page.optmisation.labels.datepicker.options.last7days" value="3"/>
+        <entry key="page.optmisation.labels.datepicker.options.last14days" value="4"/>
+        <entry key="page.optmisation.labels.datepicker.options.thismonth" value="5"/>
+        <entry key="page.optmisation.labels.datepicker.options.lastmonth" value="6"/>
+    </util:map>
+	
+	<bean id="contactConfiguration" scope="singleton" class="com.adfonic.tools.beans.contact.ContactUsMBean.ContactConfiguration">
+		<property name="salesforceCasesUrl" value="${contact.salesforce.casesUrl}"/>
+		<property name="salesforceLeadsUrl" value="${contact.salesforce.leadsUrl}"/>
+		<property name="salesforceOrgId" value="${contact.salesforce.orgid}"/>
+		<property name="leadSource" value="${contact.salesforce.leadsource}"/>
+		<property name="debug" value="${contact.salesforce.debug}"/>
+		<property name="debugEmail" value="${contact.salesforce.debug.email}"/>
+	</bean>
+</beans>

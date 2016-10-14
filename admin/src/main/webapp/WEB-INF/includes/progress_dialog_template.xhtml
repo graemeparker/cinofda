@@ -1,0 +1,16 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Byyd Progress Dialog template (Busy indicator) -->
+
+    <h:form id="dialogForm" prependId="false">
+        <pri:dialog widgetVar="progressDialog" modal="true" showHeader="false" resizable="false" draggable="false" >
+            LOADING<br/>
+            <pri:graphicImage value="/resources/images/ajax-loader-circle.gif" />
+        </pri:dialog>
+    </h:form>
+            
+</ui:composition>

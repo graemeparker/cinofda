@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+]>
+
+<project name="adfonic-admin" basedir=".">
+
+<property name="module" value="adfonic-admin"/>
+
+<property environment="env."/>
+
+<property name="webapp.home" value="${env.TOMCAT_HOME}/webapps/${module}"/>
+
+<target name="get-version">
+  <exec executable="bash" outputproperty="projectVersion">
+    <arg value="-c"/>
+    <arg value="grep '&lt;version&gt;' pom.xml | head -1 | cut -d '&gt;' -f2 | cut -d '&lt;' -f1"/>
+    </exec>
+  <echo message="project version is ${projectVersion}"/>
+</target>
+
+<target name="web" depends="get-version">
+  <exec executable="mvn">
+    <arg value="-DskipTests=true"/>
+    <arg value="package"/>
+  </exec>
+  <mkdir dir="${webapp.home}"/>
+  <copy todir="${webapp.home}">
+    <fileset dir="target/${module}-${projectVersion}"/>
+  </copy>
+</target>
+
+<target name="distclean">
+  <delete dir="${webapp.home}" failonerror="false"/>
+  <exec executable="mvn">
+    <arg value="clean"/>
+  </exec>
+</target>
+
+<target name="deploy_web_resources" description="copy reloadable web resources only">
+  <copy todir="${webapp.home}">
+    <fileset dir="src/main/webapp">
+        <exclude name="**/WEB-INF/**"/>
+        <exclude name="**/META-INF/**"/>
+    </fileset>
+  </copy>
+  <copy todir="${webapp.home}/WEB-INF">
+    <fileset dir="src/main/webapp/WEB-INF">
+        <filename name="**/*.jsp"/>
+        <filename name="**/*.xhtml"/>
+    </fileset>
+  </copy>
+  <copy todir="${webapp.home}/WEB-INF/templates">
+    <fileset dir="src/main/webapp/WEB-INF/templates">
+      <filename name="**/*.xhtml"/>
+    </fileset>
+  </copy>
+  <copy todir="${webapp.home}/WEB-INF/includes">
+    <fileset dir="src/main/webapp/WEB-INF/includes">
+      <filename name="**/*.xhtml"/>
+    </fileset>
+  </copy>
+</target>
+
+</project>

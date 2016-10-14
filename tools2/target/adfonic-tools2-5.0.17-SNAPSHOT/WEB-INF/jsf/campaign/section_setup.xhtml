@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<section id="setup" class="form-box ui-corner-all">
+
+    <h2 class="sec-title">
+    	#{msg['page.campaign.setup.header.label']}            
+    </h2>
+	<pri:outputPanel layout="block" rendered="#{campaignMBean.savedCampaign}">
+		<span class="b1 b">#{msg["page.campaign.setup.campaignid.label"]}:</span>
+		<span>#{campaignMBean.campaignSetupMBean.campaignDto.externalID}</span>
+	</pri:outputPanel>
+    <h:form id="campaignForm" prependId="false">
+        <!-- Copy cmapaign link
+       <a href="#">#{msg['page.campaign.setup.copy.label']}</a>
+        -->
+		<pri:outputPanel styleClass="form-row" layout="block" rendered="#{!campaignMBean.savedCampaign}">
+            <h:outputLabel styleClass="bl b" id="copy-campaign-label" for="campaignTypeAheadId" value="#{msg['page.campaign.setup.copy.label']}"/>
+            <pri:autoComplete id="campaignTypeAheadId"
+                    widgetVar="campaignTypeAheadWidget"
+                    value="#{campaignMBean.campaignSetupMBean.campaignToLoad}"  
+                    completeMethod="#{campaignMBean.campaignSetupMBean.completeCampaigns}"  
+                    minQueryLength="1"
+                    dropdown="true" 
+                    var="c"  
+                    itemLabel="#{c.name}"  
+                    itemValue="#{c}"  
+                    multiple="false"
+                    style="width: 250px;"
+                    styleClass="campaignSelect"  
+                    required="true"
+                    requiredMessage="#{msg['page.optimisation.error.nocampaign']}"
+                    converter="com.adfonic.tools.converter.campaign.CampaignConverter"
+                	oncomplete="ADT.escapeAutocompleteResults();">
+                <pri:ajax event="itemSelect"  oncomplete="ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);" />
+                <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);" />
+            </pri:autoComplete> 
+            <pri:message for="campaignTypeAheadId"/>
+            <pri:watermark widgetVar="campaignTypeAheadWatermark" for="campaignTypeAheadId" value="#{msg['page.optimisation.labels.selectcampaign']}" />
+            <pri:commandButton 
+            	id="copy-but"
+            	value="#{msg['page.campaign.setup.copy.button']}" 
+            	process="@this,campaignTypeAheadId" 
+            	update=":menuForm:panelSectionGroup,:navigationDiv" 
+            	action="#{campaignMBean.campaignSetupMBean.copyCampaign}" 
+            	onclick="progressDialog.show();" 
+            	oncomplete="progressDialog.hide();"
+            	widgetVar="copyButton"
+            />
+        </pri:outputPanel>
+        
+        <!-- Campaign Name -->
+        <ui:param name="maxLength" value="255" />
+        <div class="form-row">
+            <h:outputLabel id="campaign-name-label" for="campaign-name" value="#{msg['page.campaign.setup.name.label']}" styleClass="bl b"/>
+            <pri:inputText id="campaign-name" widgetVar="nameWidget"
+            				value="#{campaignMBean.campaignSetupMBean.name}"
+							required="true" requiredMessage="#{msg['page.campaign.validation.name.required']}"
+            				validator="CampaignNameValidator" validatorMessage="#{msg['page.error.validation.invalidname']}"
+            				styleClass="bl campaignName">
+            	<pri:ajax event="blur" onstart="(PF('nameWidget').jq.val().length > #{maxLength}) ? PF('continueBtnWidget').disable() : PF('continueBtnWidget').enable()" /> 
+            </pri:inputText>
+            <pri:message id="campaignErrorMessage" for="campaign-name" />
+            <pri:watermark for="campaign-name" value="#{msg['page.campaign.setup.name.placeholder']}" />
+            <pri:outputPanel styleClass="characters char-count">
+                 <span class="count"></span>
+                 <h:outputFormat value="#{msg['page.campaign.setup.name.maxcharacters.label']}">
+                 	<f:param value="#{maxLength}"/>
+                 </h:outputFormat>
+                 <script type="text/javascript">
+                   ADT.charCount('.campaignName', '.characters .count', #{maxLength}, 355);
+               	</script>
+           	</pri:outputPanel>
+        </div>
+        
+        <!-- IO Reference -->
+        <div class="form-row">
+            <pri:outputLabel for="io-ref" value="#{msg['page.campaign.setup.reference.label']}" styleClass="bl b" />
+            <pri:inputText id="io-ref" value="#{campaignMBean.campaignSetupMBean.reference}" styleClass="bl" />
+            <pri:watermark for="io-ref" value="#{msg['page.label.optional']}" />
+        </div>
+        
+        <!-- Opportunity ID -->
+        <pri:outputPanel rendered="#{IS_ADMIN}" styleClass="form-row">
+            <pri:outputLabel for="opp-id" value="#{msg['page.campaign.setup.opportunity.label']}" styleClass="bl b">
+	            <pri:outputPanel layout="inline" styleClass="admin status-indicator" />
+            </pri:outputLabel>
+            <pri:inputText id="opp-id" value="#{campaignMBean.campaignSetupMBean.opportunity}" styleClass="bl" />
+            <pri:watermark for="opp-id" value="#{msg['page.label.optional']}" />
+        </pri:outputPanel>
+        
+        <!-- Commit changes -->
+        <div class="form-row">
+            <pri:commandButton id="continueBtn" widgetVar="continueBtnWidget"
+            				   value="#{campaignMBean.continueButtonMessage}"
+             				   disabled="#{userSessionBean.readOnlyUser}"
+            				   onclick="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.panelsTop()"
+                               action="#{campaignMBean.campaignSetupMBean.doSave}"
+                               update=":menuForm:panelSectionGroup,:navigationDiv" process="@this,io-ref,opp-id,campaign-name">
+            	<f:param value=""></f:param>
+            </pri:commandButton>
+			
+			<pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" actionListener="#{campaignMBean.campaignSetupMBean.cancel}" rendered="#{!campaignMBean.newCampaign}"
+	       				process="@this" update=":navigationDiv,:menuForm:side-panel" onclick="progressDialog.show();" oncomplete="progressDialog.hide()">
+	       </pri:commandLink>
+        </div>
+    </h:form>
+</section>
+        <script type="text/javascript">
+			// <![CDATA[         
+				$(".campaignSelect input").on("propertychange keyup input paste", function(){
+					var _self = this;
+					copyButton.disable();
+					$("#campaignTypeAheadId_panel li").each(function(){
+						if($.trim($(this).text()) == $.trim($(_self).val())){
+							copyButton.enable();
+						}
+					})
+				});
+				
+				$("body").on("click", "#campaignTypeAheadId_panel", function(){
+					copyButton.enable();
+				    ADT.toggleAutoCompleteWatermark(campaignTypeAheadWidget, campaignTypeAheadWatermark);
+				})
+			// ]]>
+		</script>
+
+</ui:composition>
+

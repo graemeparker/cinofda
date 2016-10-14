@@ -1,0 +1,26 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <!-- Generate Button Template -->
+   
+    <pri:commandButton widgetVar="generateButtonWidget" value="#{msg['page.reporting.commons.button.generate']}"
+                       actionListener="#{reportingMBean.generateReport}"
+                       onstart="ADT.showLoadingIcon(generateButtonWidget);"
+                       oncomplete="ADT.hideLoadingIcon(generateButtonWidget);"
+                       disabled="#{reportingMBean.reportRunning}"
+                       styleClass="ui-priority-primary"
+                       update="reports, startDateMessage, endDateMessage" async="true" />
+                       
+     <script type="text/javascript">
+         // <![CDATA[                                    
+         $(function(){
+        	 if (generateButtonWidget.jq.is('[disabled=disabled]')) {
+        		  ADT.showLoadingIcon(generateButtonWidget);
+        	 }
+         });
+         // ]]>
+     </script>
+    
+</ui:composition>

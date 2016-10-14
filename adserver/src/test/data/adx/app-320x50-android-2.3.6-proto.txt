@@ -1,0 +1,74 @@
+id: "U.\216\337\000\vkw\n\037,\211\262\000\017m"
+ip: "\203H\243"
+user_agent: "Mozilla/5.0 (Linux; U; Android 2.3.6; pt-br; GT-S6802B Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 (Mobile; afma-sdk-a-v7099000.6587000.1),gzip(gfe)"
+url: "https://play.google.com/store/apps/details?id=com.baiwang.PhotoFeeling"
+detected_language: "pt"
+detected_vertical {
+  id: 577
+  weight: 0.29324597
+}
+detected_vertical {
+  id: 439
+  weight: 0.29324597
+}
+detected_vertical {
+  id: 1461
+  weight: 0.29324597
+}
+detected_vertical {
+  id: 5
+  weight: 0.12026204
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 22
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 15540543459004981927
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEBWqCOKf1SgAkykjxIm5TUY"
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 39
+mobile {
+  platform: "android"
+  app_id: "com.baiwang.PhotoFeeling"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60018
+  app_category_ids: 60000
+  app_category_ids: 69500
+  brand: "samsung"
+  model: "gt-s6802b"
+  os_version {
+    os_version_major: 2
+    os_version_minor: 3
+  }
+  screen_width: 320
+  screen_height: 480
+  carrier_id: 0
+  device_pixel_ratio_millis: 1000
+  encrypted_advertising_id: "U.\216\337\000\vkw\n\037,\211\001\000\017m\274q\023\201h\366M!\376\340Uq\312\004\017%Gz\000\205"
+  24: "Photo Editor by Lidow"
+  25: 0x4089faa9
+}
+cookie_age_seconds: 3266507
+geo_criteria_id: 1031705
+seller_network_id: 1
+publisher_settings_list_id: 7921534702189173477
+51: 3

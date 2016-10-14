@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.byyd.middleware.common.service.jpa.TestCachingCategoryService
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.194 sec - in com.byyd.middleware.common.service.jpa.TestCachingCategoryService

@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:pe="http://primefaces.org/ui/extensions">
+              
+<pe:importEnum type="com.adfonic.dto.audience.enums.AudienceType" />              
+              
+<section id="setup" class="form-box ui-corner-all">
+    <h2 class="sec-title">#{msg['page.audience.setup.menu.label']}</h2>
+    <h:form id="audienceForm" prependId="false">
+    
+    	<!-- Audience Name -->
+        <div class="form-row">
+            <h:outputLabel id="audience-name-label" 
+                    for="audience-name"
+                    styleClass="bl b" 
+                    value="#{msg['page.audience.setup.name.label']}"/>
+            <pri:inputText id="audience-name" 
+                    styleClass="bl" 
+                    value="#{audienceMBean.audienceSetupMBean.name}" 
+                    required="true" 
+                    converter="stringTrimConverter"
+                    disabled="#{!audienceMBean.newAudience}"
+                    maxlength="255"
+                    requiredMessage="#{msg['page.audience.validation.name.required']}" 
+                    validator="NameValidCharacterValidator" 
+                    validatorMessage="#{msg['page.error.validation.invalidname']}">
+                <f:validateLength maximum="255" />
+                <pri:ajax process="@this" update="audienceNameErrorMessage"/>                           
+            </pri:inputText>
+            <pri:message id="audienceNameErrorMessage" for="audience-name"/>
+            <pri:watermark for="audience-name" value="#{msg['page.audience.setup.name.placeholder']}" />
+        </div>
+        
+        <!-- Audience Type -->
+        <div class="form-row">
+        	<ui:param name="isAudienceCreated" value="#{not empty audienceMBean.audienceDto.id}"/>
+            <pri:outputLabel id="audience-type-label" 
+                    for="audience-type"
+                    styleClass="bl b" 
+                    value="#{msg['page.audience.setup.type.label']}"/>
+            <pri:selectOneRadio id="audience-type"
+                    layout="pageDirection"
+                    required="#{!isAudienceCreated}"
+                    disabled="#{audienceMBean.definedAudience}"
+                    requiredMessage="#{msg['page.audience.validation.type.required']}"
+                    value="#{audienceMBean.audienceSetupMBean.type}">
+                    <pri:ajax 
+                        process="@this" 
+                        update="audienceTypeErrorMessage"/>
+                    <f:selectItems value="#{audienceSetupMBean.availableTypes}"
+                     	var="audienceType" itemValue="#{audienceType}" itemLabel="#{msg[audienceType.label]}" />
+            </pri:selectOneRadio>        
+            <pri:message id="audienceTypeErrorMessage" for="audience-type"/>
+        </div>
+        
+        <!-- Save & Continue -->    
+        <div class="form-row">
+            <pri:commandButton value="#{audienceMBean.continueButtonMessage}" id="continueBtn" disabled="#{userSessionBean.readOnlyUser}"
+                               onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.panelsTop()"
+                               action="#{audienceMBean.audienceSetupMBean.doSave}"
+                               update=":menuForm:panelSectionGroup,:navigationDiv" process="@form">
+                <f:param value=""></f:param>
+            </pri:commandButton>
+            
+            <pri:commandLink value="#{msg['page.audience.cancel.label']}" actionListener="#{audienceMBean.audienceSetupMBean.cancel}" rendered="#{!audienceMBean.newAudience}"
+                        process="@this" update=":navigationDiv,:menuForm:side-panel" onclick="progressDialog.show();" oncomplete="progressDialog.hide()">
+           </pri:commandLink>                               
+        </div>
+
+    </h:form>
+</section>
+</ui:composition>

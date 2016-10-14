@@ -1,0 +1,43 @@
+{
+   "id":"f1f35e71f5cddd528f1cadfe37ec812d",
+   "timestamp":"2014-09-10T16:57:22.874Z",
+   "bcat":[],
+   "bid_request":{  
+      "at": 2, 
+      "device":{  
+         "model":"16515",
+         "carrier":"null",
+         "connectiontype":"2",
+         "geo":{  
+            
+            "city": "",
+            "type": "", 
+            "country": "MX"
+         },
+         "ext":{  
+            "didtypes":[]
+         }
+      },
+      "user":{  
+         "id":""
+      },
+      "imp":[  
+         {  
+            "tagid":"f9bc9872-5d27-4dd7-a09d-5213d804b6f0"
+         }
+      ],
+       "app" : {  
+         "id":"15700",
+         "domain":"bundle.name"
+      }
+   },
+   "bid_responses":[ ],
+   "exchange_id": "18039",
+   "ext":{  
+	  "nobid_reason": "7",
+      "byyd":{  
+         "shard": "ch1",
+         "server": "ch1adserver13"
+      }
+   }
+}

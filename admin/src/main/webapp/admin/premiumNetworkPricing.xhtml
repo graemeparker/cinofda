@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Premium network pricing"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+<ui:define name="pageContent">
+
+ <!-- Show error box if there are any errors -->
+ <h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+     <div class="infoError">
+     <div class="infoErrorImage"></div>
+     <div class="infoErrorHeader">${msg['page.generic.error.label']}</div>
+     <div class="infoContent">${msg['page.generic.error.box']}</div>
+     </div>
+ </h:panelGroup>
+
+  <!-- Green box if we just updated -->
+ <h:panelGroup layout="block" styleClass="infoOK" rendered="#{requestScope.didUpdateRateCard}">
+   <div class="infoOKImage"></div>
+   <div class="infoOKHeader">Saved</div>
+   <div class="infoContent">
+     Your changes have been saved.
+   </div>
+ </h:panelGroup>
+
+ <h2>#{pageTitle}</h2>
+
+ <p>Default floor bid prices for campaigns using the Premium performance network.</p>
+
+ <hr/>
+ <h:form id="setMinimumForm">
+   <h4>CPC Default Minimum</h4>
+   <p>Enter amount without currency signs.  Example: 1750.00</p>
+   <h:inputText
+   		id="CPCMinimumInput" 
+   		value="#{adminPerformanceNetwork.minCPC}"
+   		validatorMessage="#{msg['error.generic.currency']}">
+        <f:validateDoubleRange minimum="0.01" maximum="9999999999.99" />
+   </h:inputText>
+
+   <h4>CPM Default Minimum</h4>
+   <p>Enter amount without currency signs.  Example: 1750.00</p>
+   <h:inputText
+   		id="CPMMinimumInput"
+   		value="#{adminPerformanceNetwork.minCPM}"
+   		validatorMessage="#{msg['error.generic.currency']}">
+        <f:validateDoubleRange minimum="0.01" maximum="9999999999.99" />
+   </h:inputText>
+
+   <div style="margin-top:10px;">
+     <!-- button start -->
+           <h:commandLink id="saveMinimumsButton" action="#{adminPerformanceNetwork.doSaveMinimums}" styleClass="largeButton">
+               <span>Save</span><span class="go"></span>
+           </h:commandLink>
+     <!-- button end -->
+   </div>
+ </h:form>
+
+ <div class="clear"></div>
+
+</ui:define>
+</ui:composition>

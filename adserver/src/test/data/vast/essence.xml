@@ -1,0 +1,137 @@
+<VAST xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vast.xsd" version="2.0">
+<Ad id="289517973">
+<InLine>
+<AdSystem>DCM</AdSystem>
+<AdTitle>In-Stream Video</AdTitle>
+<Survey>
+<![CDATA[
+https://c.betrad.com/surly.js?;ad_wxh=;coid=1783;nid=12231;
+]]>
+</Survey>
+<Error>
+<![CDATA[
+https://pagead2.googlesyndication.com/pagead/gen_204?id=xfa_video_error&aid=289517973&cid=62115433&advid=4314836
+]]>
+</Error>
+<Impression>
+<![CDATA[
+https://googleads4.g.doubleclick.net/pcs/view?xai=AKAOjss9n3QQFd9MfUDkR6kvMKd99lo_tUXEFq0xi3V-0zxGaCZYaroG0oH-ao9Y1_-JSLErMVPeo_50vr6PEgflYEOoxeqzuI7JuKrEMAAV6qWpGrhHPg&sig=Cg0ArKJSzNwopRkhPRN0EAE&adurl=
+]]>
+</Impression>
+<Creatives>
+<Creative id="62115433" sequence="1">
+<Linear>
+<Duration>00:00:20</Duration>
+<TrackingEvents>
+<Tracking event="start">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=11;
+]]>
+</Tracking>
+<Tracking event="firstQuartile">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=960584;
+]]>
+</Tracking>
+<Tracking event="midpoint">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=18;
+]]>
+</Tracking>
+<Tracking event="thirdQuartile">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=960585;
+]]>
+</Tracking>
+<Tracking event="complete">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=13;
+]]>
+</Tracking>
+<Tracking event="mute">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=16;
+]]>
+</Tracking>
+<Tracking event="unmute">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=149645;
+]]>
+</Tracking>
+<Tracking event="pause">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=15;
+]]>
+</Tracking>
+<Tracking event="fullscreen">
+<![CDATA[
+https://ad.doubleclick.net/ddm/activity/dc_oe=ChMIsobQ5t_AxAIVSyrbCh23PgDnEAAYAA;met=1;ecn1=1;etm1=0;eid1=19;
+]]>
+</Tracking>
+<Tracking event="start">
+<![CDATA[
+https://ad.doubleclick.net/activity;src=2542116;type=searc340;cat=srchapp3;ord=1?
+]]>
+</Tracking>
+</TrackingEvents>
+<VideoClicks>
+<ClickThrough>
+<![CDATA[
+https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjss9n3QQFd9MfUDkR6kvMKd99lo_tUXEFq0xi3V-0zxGaCZYaroG0oH-ao9Y1_-JSLErMVPeo_50vr6PEgflYEOoxeqzuI7JuKrEMAAV6qWpGrhHPg&sig=Cg0ArKJSzOICU8o_wpkmEAE&adurl=https://itunes.apple.com/gb/app/id284815942%3Fmt%3D8
+]]>
+</ClickThrough>
+</VideoClicks>
+<MediaFiles>
+<MediaFile delivery="progressive" width="640" height="480" type="application/x-shockwave-flash" apiFramework="VPAID">
+<![CDATA[
+https://imasdk.googleapis.com/flash/sdkloader/vpaid1video.swf?adTagUrl=embedded&embedAdsResponse=1
+]]>
+</MediaFile>
+<MediaFile delivery="progressive" width="640" height="360" type="video/mp4" bitrate="272" scalable="false" maintainAspectRatio="false">
+<![CDATA[
+https://gcdn.2mdn.net/videoplayback/id/d0230c988586a2ec/itag/18/source/doubleclick_dmm/ratebypass/yes/ip/0.0.0.0/ipbits/0/expire/3568720922/sparams/id,itag,source,ratebypass,ip,ipbits,expire/signature/2CFA0F8F951B24AA5CD4C9431E131420CA3F3442.A576007CBC555CD5BC09D26EB4E525D294E2F42E/key/ck2/file/file.mp4
+]]>
+</MediaFile>
+<MediaFile delivery="progressive" width="1280" height="720" type="video/mp4" bitrate="930" scalable="false" maintainAspectRatio="false">
+<![CDATA[
+https://gcdn.2mdn.net/videoplayback/id/d0230c988586a2ec/itag/22/source/doubleclick_dmm/ratebypass/yes/ip/0.0.0.0/ipbits/0/expire/3568720894/sparams/id,itag,source,ratebypass,ip,ipbits,expire/signature/90B73B8E4BEF0630A233C12C6F64E4AE1BD84EEF.6E0C985AA981CAABBC95891488C459E425EA9F15/key/ck2/file/file.mp4
+]]>
+</MediaFile>
+<MediaFile delivery="progressive" width="640" height="360" type="video/webm" bitrate="439" scalable="false" maintainAspectRatio="false">
+<![CDATA[
+https://gcdn.2mdn.net/videoplayback/id/d0230c988586a2ec/itag/43/source/doubleclick_dmm/ratebypass/yes/ip/0.0.0.0/ipbits/0/expire/3568720887/sparams/id,itag,source,ratebypass,ip,ipbits,expire/signature/22077563C228007DDF3CB2B0FAE9B9D9B368C5A0.4C91FF1786B143FE7F1D915631129EDBA87D1CCC/key/ck2/file/file.webm
+]]>
+</MediaFile>
+<MediaFile delivery="progressive" width="854" height="480" type="video/webm" bitrate="637" scalable="false" maintainAspectRatio="false">
+<![CDATA[
+https://gcdn.2mdn.net/videoplayback/id/d0230c988586a2ec/itag/44/source/doubleclick_dmm/ratebypass/yes/ip/0.0.0.0/ipbits/0/expire/3568720888/sparams/id,itag,source,ratebypass,ip,ipbits,expire/signature/7615430ED8ED7EF2E3B3720F0AB04FC7EB78305F.7BE7FB607423985272A82D21180B03930C94EE9C/key/ck2/file/file.webm
+]]>
+</MediaFile>
+<MediaFile delivery="progressive" width="1280" height="720" type="video/webm" bitrate="1325" scalable="false" maintainAspectRatio="false">
+<![CDATA[
+https://gcdn.2mdn.net/videoplayback/id/d0230c988586a2ec/itag/45/source/doubleclick_dmm/ratebypass/yes/ip/0.0.0.0/ipbits/0/expire/3568720933/sparams/id,itag,source,ratebypass,ip,ipbits,expire/signature/214C580EE8656F668DAC7E3F6B59E3F7B0F59330.60F1709CB1BE9229508ACC190DCE5DD060604FE2/key/ck2/file/file.webm
+]]>
+</MediaFile>
+<MediaFile delivery="progressive" width="256" height="144" type="application/x-mpegURL" bitrate="92" scalable="false" maintainAspectRatio="false">
+<![CDATA[
+https://manifest.googlevideo.com/api/manifest/hls_variant/source/doubleclick_dmm/id/d0230c988586a2ec/itag/0/playlist_type/LIVE/ip/0.0.0.0/ipbits/0/expire/3568720866/sparams/ip,ipbits,expire,source,id,itag,playlist_type/signature/9D9EF88FB98548167EFD1BB918F754C3F749A10F.408CA4F024CFD597919B99A1E15E2D3A007E2847/key/ck2/file/index.m3u8
+]]>
+</MediaFile>
+</MediaFiles>
+</Linear>
+</Creative>
+</Creatives>
+<Extensions>
+<Extension type="dart">
+<AdServingData>
+<DeliveryData>
+<GeoData>
+<![CDATA[ ct=UK&st=&city=3711&dma=0&zp=&bw=4 ]]>
+</GeoData>
+</DeliveryData>
+</AdServingData>
+</Extension>
+</Extensions>
+</InLine>
+</Ad>
+</VAST>

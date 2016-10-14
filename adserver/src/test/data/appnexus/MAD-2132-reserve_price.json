@@ -1,0 +1,47 @@
+{
+	"id":"8970450726379207790",
+	"imp":[ {
+			"id":"1",
+			"tagid":"4227780",
+			"reserve_price":3.70000,
+			"instl":0,
+			"banner":{
+				"w":320, "h":50,
+				"api":[ 3 ],
+				"id":"1",
+				"battr":[ 7, 6, 1, 3, 8, 9, 14 ]
+			}
+	} ],
+	"user":{ "id":"3217006463592096635", "gender":"O" },
+	"app":{
+		"id":"1033437",
+		"bundle":"tunein.player",
+		"publisher":{ "id":"291795" }
+	},
+	"at":2,
+	"device":{
+		"dnt":0,
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B440",
+		"ip":"194.75.78.40",
+		"geo":{ "lat":51.45000, "lon":-2.58330, "country":"GBR", "city":"Bristol" },
+		"dpidsha1":"fb292134ea10dfaab163a5b0a210ae2a81dd62ac",
+		"dpidmd5":"8bbd190311f3554786944f278c119dfb",
+		"ifa":"d683cd40-12ab-4b02-b15e-b951bfa363a3",
+		"language":"en",
+		"make":"Apple",
+		"model":"iPhone",
+		"os":"iPhone",
+		"devicetype":1,
+		"connectiontype":2
+	},
+	"bcat":[ ],
+	"badv":[ ],
+	"tmax":100,
+	"ext":{
+		"udi":{ "idfa":"d683cd40-12ab-4b02-b15e-b951bfa363a3" },
+		"appnexus":{
+			"seller_member_id":2066,
+			"certified_supply":true
+		}
+	}
+}

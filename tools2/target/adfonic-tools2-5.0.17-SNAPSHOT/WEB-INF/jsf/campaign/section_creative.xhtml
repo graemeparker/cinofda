@@ -1,0 +1,100 @@
+
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets"> 
+ 
+ 	<pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+	<pe:importConstants className="com.adfonic.domain.Role" var="RoleConstants" />
+ 
+	<section id="creative" class="form-box ui-shadow ui-corner-all">
+	    <h2 class="sec-title" >#{msg['page.campaign.creative.menu.label']}</h2>
+	    <h:outputLink id="link1" value="#{toolsApplicationBean.externalUrls['creativeSpecsUrl']}" target="_blank">
+			    <h:outputText value="#{msg['page.campaign.creative.formatshelp.link.label']}" />
+		</h:outputLink>
+		<h:panelGroup id="creatives-container" layout="block">
+	        <ui:repeat  var="creative" value="#{campaignCreativeMBean.campaignDto.creatives}" varStatus="status">
+				<h:form id="campaign-creative" class="options" prependId="false" enctype="multipart/form-data">
+		        	<h:panelGroup 
+		        		styleClass="acc-head no#{status.index} #{creative.hiddenHeader} #{creative.state==0?campaignCreativeMBean.statusToClass(creative.creativeStatus.creativeStatusStr):''} #{creative.state==1?'INCOMPLETE':''} #{creative.state==2?'ERROR':''}" 
+		        		layout="block" 
+		        		rendered="#{!creative.opened}"
+		        	>
+	                	<ui:insert name="sectionHeader" >
+	                		<ui:include src="/WEB-INF/jsf/campaign/creative/section_creative_header.xhtml" />
+	            		</ui:insert>
+		        	</h:panelGroup>
+		        	<h:panelGroup id="contentPanel">
+			        	<pri:panel 
+			        		id="edit-panel" 
+		        			styleClass="acc-content no#{status.index} #{creative.hiddenClass} #{creative.state==2?'ERROR':''}"
+                           	rendered="#{campaignCreativeMBean.creativeTableRendered and creative.opened}"
+                        >
+							<ui:insert name="sectionContent">
+	                			<ui:include src="/WEB-INF/jsf/campaign/creative/section_creative_content.xhtml" />
+	            			</ui:insert>
+				        </pri:panel>
+			        </h:panelGroup>
+		        </h:form>
+	        </ui:repeat> 
+		</h:panelGroup>     
+		
+		<h:panelGroup layout="block" id="buttons-container">
+            <ui:include src="/WEB-INF/jsf/campaign/creative/section_creative_buttons.xhtml" />
+		</h:panelGroup>
+		
+	  	<h:form id="submitForm" prependId="false" enctype="multipart/form-data">
+	   		<pri:message for="submitForm" id="generic" escape="false" />
+	        <div class="form-row">
+	            <pri:commandButton 
+	            	value="#{campaignMBean.campaignCreativeMBean.continueButtonMessage}"  
+	            	id="continueBtn4" 
+					update=":navigationDiv,:menuForm:side-panel"
+	            	disabled="#{campaignCreativeMBean.editing || campaignCreativeMBean.allCreativesCompleted}"
+	            	onclick="progressDialog.show();" 
+            		oncomplete="progressDialog.hide(); ADT.panelsTop()"
+					actionListener="#{campaignMBean.campaignCreativeMBean.doSave}" 
+				/>                              
+	        </div>
+	        
+	        <pri:remoteCommand 
+	        	name="submitTag" 
+	        	process="@form" 
+	        	actionListener="#{campaignMBean.campaignCreativeMBean.changeTemplate}"
+	        ></pri:remoteCommand>
+	       	
+	        <h:inputHidden id="creatId" value="#{campaignMBean.campaignCreativeMBean.creativeId}"/>
+	       	<h:inputHidden id="temId" value="#{campaignMBean.campaignCreativeMBean.templateId}"/>
+	       	<h:inputHidden id="cont" value="#{campaignMBean.campaignCreativeMBean.tag}"/>
+	       	
+	        <pri:remoteCommand 
+	        	name="openPanel" 
+	        	process="@form" 
+	        	update=":submitForm,:uploadBtnForm:creativeFileUpload, :buttons-container" 
+	        	actionListener="#{campaignMBean.campaignCreativeMBean.openPanel}">
+	        </pri:remoteCommand>
+	        
+	        <h:inputHidden id="submitStatus" value="#{campaignMBean.campaignCreativeMBean.submitStatus}"/>
+	        <h:inputHidden id="submitIndex" value="#{campaignMBean.campaignCreativeMBean.submitedIndex}"/>
+	  	</h:form>
+	    <script type="text/javascript">
+	   		$(function(){
+		        ADT.subElExpander('radio', 'creative');
+		        $("body").off("click");
+		        ADT.fileUploadMod();
+		    });
+		
+		    function prepareForSubmitTag(creativeId,templateId,textArea) {
+		        document.getElementById('creatId').value = creativeId;  				 //setting the hidden input field with the parameter required to be passed .....
+		        document.getElementById('temId').value = templateId;                //setting the hidden input field with the parameter required to be passed .....
+		        document.getElementById('cont').value = textArea.value;                //setting the hidden input field with the parameter required to be passed .....
+		        submitTag();                                                             // calling remoteCommand to submit the tag
+		    }
+	    </script>
+	</section>
+</ui:composition>

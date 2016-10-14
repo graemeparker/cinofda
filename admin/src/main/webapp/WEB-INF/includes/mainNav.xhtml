@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+		      xmlns:c="http://java.sun.com/jsp/jstl/core"
+		      xmlns:h="http://java.sun.com/jsf/html"
+		      xmlns:p="http://ocpsoft.com/prettyfaces"
+		      xmlns:ui="http://java.sun.com/jsf/facelets">
+      
+  <div class="main">
+    <c:choose>
+      <c:when test="#{empty adfonicUser}">
+        <div class="mainNavHorizBar"></div>
+        <div class="top">
+          <div class="logo"><p:link mappingId="home" styleClass="logoLink"></p:link></div>
+          <div class="topNav">
+            <div class="topNavContent">
+              <h:panelGroup rendered="#{adfonicUser != null}">
+                <span class="NavEmail">#{adfonicUser.email}</span>
+                <span class="topNavContent"><h:graphicImage url="/resources/images/topNavDiv.gif" /></span>
+                <span><p:link mappingId="logout" styleClass="NavSmall">Log out</p:link></span>
+              </h:panelGroup>
+            </div>
+            <div style="height:100%;"><h1 style="line-height:70px">Admin</h1></div>
+          </div>
+        </div>
+        <div class="mainNavShadow"></div>
+      </c:when>
+      <c:otherwise>      
+        <ui:include src="/WEB-INF/includes/nav.xhtml"/>
+      </c:otherwise>
+    </c:choose>
+  </div>
+</ui:component>

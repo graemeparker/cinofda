@@ -1,0 +1,51 @@
+{
+	"id":"100219224313895925820",
+	"at":2,
+	"allimps":0,
+	"imp":[ {
+			"id":"1",
+			"bidfloorcur":"USD",
+			"pmp":{ "private_auction":1, "deals":[ ]
+			},
+			"banner":{
+				"w":300, "h":250, "pos":3,
+				"battr":[ 1, 3, 6, 8, 9, 10, 13, 14 ],
+				"api":[ 5, 3 ],
+				"id":"banner_1"
+			},
+			"tagid":"1362534054",
+			"bidfloor":2
+	} ],
+	"device":{
+		"dnt":0,
+		"geo":{
+			"country":"NLD", "city":"swifterbant", "zip":"8255", "lat":52.565498352051, "lon":5.6519999504089, "type":2, "regionfips104":"NL16"
+		},
+		"ua":"Mozilla\/5.0 (iPhone; CPU iPhone OS 8_1_3 like Mac OS X) AppleWebKit\/600.1.4 (KHTML, like Gecko) Mobile\/12B466 Safari\/9537.53",
+		"ip":"77.248.135.32",
+		"make":"Apple",
+		"model":"iPhone",
+		"os":"iOS",
+		"osv":"8.1.3",
+		"carrier":"chello",
+		"devicetype":4,
+		"language":"nl",
+		"connectiontype":2,
+		"dpidsha1":"344bb5e4a3a268c11aa0d8db756c59459acddf7f",
+		"dpidmd5":"58c5f4863ff1bc5b5765c71dc54d2e91",
+		"ifa":"5F5CC32D-C91C-482E-8809-859E1BA6572B"
+	},
+	"user":{ "id":"5F5CC32D-C91C-482E-8809-859E1BA6572B" },
+	"app":{
+		"id":"4054",
+		"name":"Telegraaf iPhone App",
+		"domain":"http:\/\/www.telegraaf.nl",
+		"cat":[ "IAB12", "IAB12-3" ],
+		"publisher":{ "id":"9836128013", "name":"De Telegraaf" },
+		"content":{ "id":"1", "qagmediarating":1 },
+		"bundle":"nl.telegraaf.iphone",
+		"storeurl":"https:\/\/itunes.apple.com\/nl\/app\/de-telegraaf\/id385263418?mt=8",
+		"paid":0
+	},
+	"bcat":[ "IAB11", "IAB23", "IAB25", "IAB26" ]
+}

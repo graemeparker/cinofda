@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+    <h:body>
+        <ui:component id="agencyDashboardHeader">
+            
+           <!-- MAIN CONTENT -->
+           <div class="ninecol">
+               <!-- TEMPORARY MARKUP: -->
+               <h:form id="typeAheadFormId" prependId="false" >
+                <div class="f-left">    
+                    <pri:autoComplete 
+	                    	id="advertiserId"
+	                    	widgetVar="advertiserTypeAheadWidget"
+	                    	value="#{agencyConsoleDashboardMBean.dashboardDto.advertisers}" 
+	                    	completeMethod="#{agencyConsoleDashboardMBean.complete}" 
+	                        styleClass="search-advertiser-autocomplete"
+							panelStyleClass="search-advertiser-dropdown"
+	                    	oncomplete="ADT.escapeAutocompleteResults(); ADT.setFullsizeMenuDropdown('search-advertiser-autocomplete', 'search-advertiser-dropdown');"
+	                        var="c" 
+	                        itemLabel="#{c.name}" 
+	                        itemValue="#{c}" 
+	                        multiple="true" 
+	                        converter="com.adfonic.tools.converter.advertiser.AdvertiserConverter">
+                        <pri:ajax event="itemSelect"   oncomplete="ADT.toggleAutoCompleteWatermark(advertiserTypeAheadWidget, advertiserTypeAheadWatermark);" />
+                        <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(advertiserTypeAheadWidget, advertiserTypeAheadWatermark);" />
+                   	</pri:autoComplete>
+                    <pri:watermark widgetVar="advertiserTypeAheadWatermark" for="advertiserId" value="#{msg['page.dashboard.agency.alladvertisers.placeholder']}" />
+                </div>
+                <pri:commandButton value="#{msg['page.dashboard.labels.campaign.search.button']}" id="applyAdvertiserButtonId" onclick="progressDialog.show();"
+                                   oncomplete="ADT.toggleAutoCompleteWatermark(advertiserTypeAheadWidget, advertiserTypeAheadWatermark);progressDialog.hide();"
+                                   actionListener="#{agencyConsoleDashboardMBean.advertiserFilter}" update="typeAheadFormId,:chartsFormId,:dataTableFormId" />
+               </h:form>                   
+           </div>
+           <div class="threecol last">
+               <ui:include src="../dashboarddatepicker.xhtml">
+               </ui:include>
+           </div><!-- END SIX COL -->
+           <div class="clear"></div>
+           <script type="text/javascript">
+            // <![CDATA[
+            $(function(){
+                ADT.toggleAutoCompleteWatermark(advertiserTypeAheadWidget, advertiserTypeAheadWatermark);
+            });
+            // ]]>
+           </script>
+        </ui:component> 
+    </h:body>
+</html>

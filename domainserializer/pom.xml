@@ -1,0 +1,390 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>adfonic-domainserializer</artifactId>
+	<name>Adfonic Domainserializer</name>
+	<packaging>jar</packaging>
+
+	<!-- Shared base POM configuration -->
+	<parent>
+		<groupId>com.adfonic</groupId>
+		<artifactId>parent</artifactId>
+		<version>5.0.38-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<vaadin.version>7.5.9</vaadin.version>
+	</properties>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	
+		<!-- Logging via Logback -->
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		
+		<!-- commons-logging ~> slf4j -->
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		
+		<!-- java.util.logging ~> slf4j -->
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+		</dependency>
+		
+		<!-- Log4Jv2 ~> Slf4j -->
+		
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-to-slf4j</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+		
+		<!-- commons-logging + provided = excluded -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+
+		<!-- Adfonic -->
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-common-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-util</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>*</artifactId>
+					<groupId>*</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-adserver-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-domaincache</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-jms</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-logging</artifactId>
+		</dependency>
+
+		<!-- Non-Adfonic / Third party -->
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-actuator</artifactId>
+			<version>${spring-boot.version}</version>
+		</dependency>
+		
+		<!-- https://vaadin.com/directory#!addon/vaadin-spring -->
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-spring</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!-- https://vaadin.com/directory#!addon/vaadin-spring-boot -->
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-spring-boot</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-themes</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-server</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-client-compiled</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jolokia</groupId>
+			<artifactId>jolokia-core</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-servlet</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-servlets</artifactId>
+			<version>3.1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-pool</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- test scope -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.adfonic</groupId>
+			<artifactId>adfonic-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>1.6.1</version>
+			<scope>test</scope>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>distribution.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>dist-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.2</version>
+				<configuration>
+					<preparationGoals>clean package rpm:rpm</preparationGoals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<version>2.1-alpha-1</version>
+				<configuration>
+					<name>${project.artifactId}-${project.packaging}</name>
+					<copyright>Adfonic Proprietary</copyright>
+					<distribution>Adfonic 2012</distribution>
+					<group>Adfonic Application</group>
+					<autoProvides>false</autoProvides>
+					<autoRequires>false</autoRequires>
+					<version>${project.version}.${env.BUILD_NUMBER}</version>
+					<packager>Adfonic Jenkins</packager>
+					<prefix>/usr/local/adfonic</prefix>
+					<description>
+						This is the Domain Serializer Application which
+						create
+						a snapshot of the
+						domain objects for the Adserver to use.
+					</description>
+					<defineStatements>
+						<defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+						<defineStatement>dist .el6.adf</defineStatement>
+						<defineStatement>__jar_repack 0></defineStatement>
+					</defineStatements>
+					<mappings>
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}/bin</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>${project.basedir}/bin</location>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}/lib</directory>
+							<filemode>644</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<dependency />
+							<artifact />
+						</mapping>
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}/</directory>
+							<filemode>644</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>${project.basedir}/dist_build.xml</location>
+									<destination>build.xml</destination>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}/bin</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+						</mapping>
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}/lib</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+						</mapping>
+						<!--
+						nothing in conf anymore
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}/conf</directory>
+							<filemode>644</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<sources>
+								<source>
+									<location>${project.basedir}/conf</location>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}/conf</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+						</mapping>
+						-->
+						<mapping>
+							<directory>/usr/local/adfonic/${project.artifactId}</directory>
+							<filemode>755</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+						</mapping>
+					</mappings>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>com.redhat.rcm.maven.plugin</groupId>
+				<artifactId>buildmetadata-maven-plugin</artifactId>
+			</plugin>
+			
+		</plugins>
+	</build>
+	
+</project>

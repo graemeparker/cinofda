@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+	<display-name>Tools2</display-name>
+	<description>Madison</description>
+	
+	<session-config>
+		<session-timeout>120</session-timeout>
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+	
+	<!-- Change to "Production" when you are ready to deploy -->
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Production</param-value>
+	</context-param>
+	
+	<!-- Tell Spring where to find the context config -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring/adfonic-tools2-context.xml</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>none</param-value>
+	</context-param>
+
+	<!-- When using jsf and f:convertDateTime and then ouputText tries to format 
+		that date, the day rolls one day off the selected datePicker. http://ocpsoft.org/java/undocumented-jsf/ 
+		http://forum.primefaces.org/viewtopic.php?f=3&t=1659 -->
+	<context-param>
+		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+		<param-value>/WEB-INF/tools2.taglib.xml;/WEB-INF/tools2.security.taglib.xml</param-value>
+	</context-param>
+	
+	<context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    
+    <!--  Allows to restore the view after server restart -->
+    <context-param>
+	   <param-name>com.sun.faces.enableRestoreView11Compatibility</param-name>
+	   <param-value>true</param-value>
+	</context-param>
+
+	<!-- PrimeFaces client side validation -->
+	<context-param>
+		<param-name>primefaces.CLIENT_SIDE_VALIDATION</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- Context loader listeners -->
+
+	<listener>
+		<listener-class>com.adfonic.tools.listener.AdfonicApiVersionContextListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
+	<!-- PrimeFaces upload filter -->
+	<filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+	</filter>
+	  
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+	
+	<!-- Spring Security -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	
+	<!-- Need for CAS Logout - See - http://static.springsource.org/spring-security/site/docs/3.1.x/reference/cas.html#cas-singlelogout -->
+	<listener> 
+		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class> 
+	</listener>
+	
+	<filter> 
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 
+		<init-param>
+			<param-name>encoding</param-name> 
+			<param-value>UTF-8</param-value> 
+		</init-param>
+	 </filter>
+	 
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name> 
+		<url-pattern>/*</url-pattern> 
+	</filter-mapping>
+
+	<!-- Pretty Filter -->
+
+	<filter>
+		<filter-name>Pretty Filter</filter-name>
+		<filter-class>com.ocpsoft.pretty.PrettyFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>Pretty Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+	</filter-mapping>
+
+	<!-- Welcome page -->
+	<welcome-file-list>
+		<welcome-file>/dashboard</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/jsf/error/error404.xhtml</location>
+	</error-page>
+
+	<!-- JSF mapping -->
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Map these files with JSF -->
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>/faces/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.faces</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	
+	<!-- JAWR Javascript Servlet -->
+	<servlet>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		<!-- Location in classpath of the config file -->
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr/jawr.properties</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JavascriptServlet</servlet-name>
+		<url-pattern>*.js</url-pattern>
+	</servlet-mapping> 
+	
+	<!-- JAWR CSS Servlet -->
+	<servlet>
+		<servlet-name>CSSServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+		
+		<!-- Location in classpath of the config file -->
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+		        <param-name>type</param-name>
+		        <param-value>css</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CSSServlet</servlet-name>
+		<url-pattern>*.css</url-pattern>
+	</servlet-mapping> 
+	
+	<!-- JAWR Images Servlet -->
+	<servlet>
+		<servlet-name>ImageServlet</servlet-name>
+		<servlet-class>net.jawr.web.servlet.JawrServlet</servlet-class>
+	        
+		<!-- Location in classpath of the config file -->
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>/jawr/jawr.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>type</param-name>
+			<param-value>binary</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.png</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.gif</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+
+</web-app>

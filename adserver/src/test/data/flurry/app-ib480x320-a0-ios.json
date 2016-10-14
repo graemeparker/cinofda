@@ -1,0 +1,62 @@
+{
+	"id":"49c8eccd-a661-44cb-abe1-831190a27005",
+	"imp":[ {
+			"id":"03c0acc2-3906-4270-968f-319725a38235",
+			"banner":{ "w":480, "h":320, "pos":0,
+				"btype":[ 1, 2 ],
+				"battr":[ 7 ]
+			},
+			"instl":1
+	} ],
+	"app":{
+		"id":"2b42ba167ba8f1c45499b758f35d52f1ae6a9177",
+		"name":"Deer Hunter 2014 (iOS)",
+		"domain":"DeerHunter(iOS).GluGamesInc.com",
+		"cat":[ "IAB9-30" ],
+		"privacypolicy":0,
+		"publisher":{
+			"id":"743ee5f46a7ded49001eaf3654cfa8209a637099",
+			"name":"Glu Games Inc.",
+			"domain":"http://www.glu.com/"
+		},
+		"ext":{ "flurrycategory":"Games - Action" }
+	},
+	"device":{
+		"dnt":0,
+		"ip":"174.252.145.33",
+		"geo":{ "type":2 },
+		"didsha1":"C1976429369BFE063ED8B3409DB7C7E7D87196D9",
+		"dpidsha1":"0f0c0b20117a62f36f047c06b78c9229113ba5a2",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257",
+		"language":"es",
+		"model":"iPhone4,1",
+		"os":"iOS",
+		"osv":"7.1.2",
+		"connectiontype":5,
+		"devicetype":1,
+		"ext":{
+			"density":2.0,
+			"flurryDpid":"C1FC39D5-1B35-4BB5-BB05-94E946AE3324",
+			"agentVersion":"138"
+		}
+	},
+	"user":{
+		"gender":"M",
+		"data":[ {
+				"id":"Flurry",
+				"name":"Flurry",
+				"segment":[
+					{ "id":"2", "name":"GenderEstimate", "value":"Male" },
+					{ "id":"1", "name":"AgeEstimate", "value":"Unknown" }
+				]
+		} ]
+	},
+	"bcat":[ ],
+	"badv":[ ],
+	"ext":{
+		"device_geo_country_alpha2":"US",
+		"udi":{ "idfa":"C1FC39D5-1B35-4BB5-BB05-94E946AE3324" }
+	},
+	"at":2,
+	"tmax":270
+}

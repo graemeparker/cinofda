@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.weve.controller.BeaconControllerTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.644 sec - in com.adfonic.weve.controller.BeaconControllerTest

@@ -1,0 +1,308 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Digest::SHA1 qw(sha1_hex);
+use JSON;
+use LWP::UserAgent;
+use HTTP::Cookies;
+use Time::HiRes qw(usleep);
+
+my $adSpaceID = "19ffa850-8774-4ec2-a153-6ab35be63fa5"; # iPhone App
+#$adSpaceID = "fdfbe056-4230-4907-bf66-a8ec1851ff44"; # AdSpace id=1, belonging to Publication id=1 (Locatable, tralfamadore)
+#$adSpaceID = "2325cc5d-f040-482a-94ec-e4eea190a76a"; # pub with non-default publication rate card
+#$adSpaceID = "fdfbe056-4230-4907-bf66-a8ec1851ff44"; # company with default rate card
+
+my $trackingId;
+#$trackingId = "myUserId";
+
+my $ipAddress;
+#$ipAddress = "32.128.108.158"; # AT&T US
+$ipAddress = "149.254.200.236"; # T-Mobile UK
+
+my $userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+my $clickUserAgent = $userAgent;
+
+my %params = ();
+#$params{"s.test"} = "1";
+$params{"r.ip"} = $ipAddress;
+#$params{"r.client"} = "danfoo";
+if ($trackingId) {
+    $params{"r.id"} = $trackingId;
+}
+
+my $androidId = "0123456789abcdef"; # 16-char Android device ID
+my $udid = "0123456789abcdef0123456789abcdef01234567"; # 40-char iPhone UDID
+my $dpid = sha1_hex($udid);
+my $openudid = "1111111111222222222233333333334444444444"; # fake OpenUDID
+my $odin1 = "9999999999888888888877777777776666666666"; # fake ODIN-1
+my $ifa = "17d8fa16-1095-4bf6-901a-ba2b694905e2"; # fake Apple IFA (identifierForAdvertising)
+
+$params{"d.udid"} = $udid;
+#$params{"d.dpid"} = $dpid;
+#$params{"d.openudid"} = $openudid;
+#$params{"d.odin-1"} = $odin1;
+#$params{"d.android"} = $androidId;
+$params{"d.ifa"} = $ifa;
+
+#$params{"r.nettype"} = "wifi";
+#$params{"r.nettype"} = "gprs";
+#$params{"r.mccmnc"} = "310090";
+#$params{"r.mccmnc"} = "310481-9";
+#$params{"r.mccmnc"} = "000000";
+
+$params{"h.user-agent"} = $userAgent;
+#$params{"u.latitude"} = "38.228625"; $params{"u.longitude"} = "-84.6885";
+#$params{"u.latitude"} = "34.0"; $params{"u.longitude"} = "-117.0";
+#$params{"u.latitude"} = "0"; $params{"u.longitude"} = "0";
+#$params{"d.latitude"} = "38.228625"; $params{"d.longitude"} = "-84.6885";
+#$params{"d.latitude"} = "34.0"; $params{"d.longitude"} = "-117.0";
+#$params{"d.latitude"} = "0"; $params{"d.longitude"} = "0";
+#$params{"o.country"} = "US";
+#$params{"o.state"} = "MA";
+#$params{"o.postalCode"} = "91709";
+#$params{"o.dma"} = "800";
+#$params{"u.gender"} = "m";
+#$params{"u.dob"} = "19740509";
+#$params{"u.age"} = "36";
+#$params{"u.ageLow"} = "30";
+#$params{"u.ageHigh"} = "40";
+#$params{"u.lang"} = "en";
+#$params{"t.colorScheme"} = "purple";
+#$params{"t.pretty"} = "0";
+#$params{"t.constraints"} = "width=300;height=50";
+#$params{"t.constraints"} = "width=300;height=250";
+#$params{"p.tags"} = "sports,football";
+#$params{"h.x-forwarded-for"} = "192.168.1.100,10.1.100.40, 201.88.16.12";
+#$params{"o.format"} = "image728x90";
+#$params{"o.format"} = "banner";
+
+# We want a JSON response
+$params{"t.format"} = "json";
+# We'll piece it together ourselves
+$params{"t.markup"} = "false";
+
+my $host = "localhost";
+my $port = "8080";
+my $urlBase = "http://$host:$port/adfonic-adserver";
+#$urlBase = "http://byyd.net";
+#$urlBase = "http://rfadserver23";
+#$urlBase = "http://95.172.8.135";
+#$urlBase = "http://ad1.mobaloo.com:8080/adfonic-adserver";
+my $trackerUrlBase = "http://$host:$port/adfonic-tracker";
+
+my $queryString = "";
+#print "*** Request Parameters:\n";
+foreach my $key (sort(keys(%params))) {
+#    print "$key = $params{$key}\n";
+    if (length($queryString) > 0) {
+        $queryString .= '&';
+    }
+    $queryString .= $key;
+    $queryString .= '=';
+    $queryString .= CGI::escape($params{$key});
+}
+
+my $url = $urlBase . "/ad/" . $adSpaceID . '?' . $queryString;
+print "*** Hitting URL: $url\n";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+
+my $response = $ua->get($url);
+if (!$response->is_success) {
+    print "*** HTTP Status: ".$response->status_line."\n";
+    exit(1);
+}
+
+my $content = $response->decoded_content;
+#print "*** Response Content:\n$content\n";
+
+# Parse the JSON response
+my $json = JSON->new->decode($content);
+unless ($json->{"status"} eq "success") {
+    print "*** ERROR: status=".$json->{"status"}.", error=".$json->{"error"}."\n";
+    exit(1);
+}
+
+my $adId = $json->{"adId"};
+my $destinationType = $json->{"destination"}->{"type"};
+my $destinationUrl = $json->{"destination"}->{"url"};
+my $components = $json->{"components"};
+
+my @beaconUrls = ();
+
+# Display the response attributes
+print "------------------------------------------------------------\n";
+print "*** adId = $adId\n";
+if ($json->{"trackingId"}) {
+    print "*** trackingId = ".$json->{"trackingId"}."\n";
+}
+print "*** format = ".$json->{"format"}."\n";
+print "*** destination = $destinationUrl\n";
+if ($components) {
+    foreach my $compKey (keys(%$components)) {
+        my $component = $components->{$compKey};
+        foreach my $attr (keys(%$component)) {
+            my $value = $component->{$attr};
+            if ($value =~ /^(data:[^;]+;base64,).+/) {
+                print "*** $compKey.$attr = $1...(data not shown)\n";
+            }
+            else {
+                print "*** $compKey.$attr = ".$component->{$attr}."\n";
+            }
+            if ($compKey eq "beacons" && $attr =~ /^beacon(\d+)/) {
+              push(@beaconUrls, $component->{$attr});
+            }
+        }
+    }
+}
+
+# Load the internal/impression.jsp data to show details on the impression
+#print "------------------------------------------------------------\n";
+#print "*** Impression Data:\n";
+my $uaWithBasicAuth = LWP::UserAgent->new;
+$uaWithBasicAuth->timeout(30);
+$uaWithBasicAuth->credentials("$host:$port", "Internal Adserver Tools", "adfonic", "adfon1c");
+$response = $uaWithBasicAuth->get("$urlBase/internal/impression.jsp?impressionExternalID=$adId");
+my $key;
+my $applicationID;
+for (split /^/, $response->decoded_content) {
+    chomp($_);
+    if ($_ =~ /<th[^>]*>([^:<]+):?<\/th>/) {
+        $key = $1;
+#        print "$1: ";
+    }
+    elsif ($_ =~ /<td[^>]*>([^<]+)<\/td>/) {
+#        print "$1\n";
+        if ($key eq "Application ID") {
+            $applicationID = $1;
+        }
+    }
+}
+
+# Provide a beacon/click URL that passes the same IP and User-Agent as the
+# impression so it won't bump into a 401 due to mismatch
+$queryString = "?r.ip=$ipAddress&h.user-agent=" . CGI::escape($clickUserAgent);
+foreach (@beaconUrls) {
+    my $beaconUrl = $_ . $queryString;
+    print "------------------------------------------------------------\n";
+    print "*** Hitting Beacon URL:\n$beaconUrl\n";
+    $response = $ua->get($beaconUrl);
+    print "*** HTTP Status: ".$response->status_line."\n";
+#    if (!$response->is_success) {
+#        exit(1);
+#    }
+}
+
+print "------------------------------------------------------------\n";
+my $clickUrl = $destinationUrl . $queryString;
+print "*** Hitting Click URL:\n$clickUrl\n";
+
+# Set up a "cookie jar" so the click will be identified when we hit the conversion service
+my $cookie_jar = HTTP::Cookies->new();
+$ua->max_redirect(0);
+$ua->cookie_jar($cookie_jar);
+
+$response = $ua->get($clickUrl);
+if (!$response->is_redirect) {
+    print "*** HTTP Status: ".$response->status_line."\n";
+    exit(1);
+}
+print "*** Destination URL: " . $response->header("Location") . "\n";
+my $clickId;
+$cookie_jar->scan(sub {
+    my ($version, $key, $val, $path, $domain, $port, $path_spec, $secure, $expires, $discard, $hash) = @_;
+    if ($key eq "byyd-Click-ID") {
+        $clickId = $val;
+    }
+                  });
+if ($clickId) {
+    print "*** Click ID: $clickId\n";
+} else {
+    # This isn't a warning/error condition.  We stopped cookieing
+    # for ads that don't have conversion tracking enabled.
+#    print "*** WARNING: byyd-Click-ID cookie not found!\n";
+}
+
+if ($clickId || defined($applicationID)) {
+    # Since click tracking is now async, we need to pause for a short
+    # period of time to let datacollector track the click.  Let's give
+    # datacollector 200ms
+    usleep(200000);
+    
+    if ($clickId) {
+        print "------------------------------------------------------------\n";
+        my $conversionTrackingUrl = $trackerUrlBase . "/cs/" . $clickId . $queryString;
+        print "*** Hitting Conversion Tracking URL:\n$conversionTrackingUrl\n";
+        $ua->max_redirect(0);
+        $response = $ua->get($conversionTrackingUrl);
+        if (!$response->is_success) {
+            print "*** HTTP Status: ".$response->status_line."\n";
+        } else {
+            $content = $response->decoded_content;
+            print "*** Conversion Tracking Response: $content\n";
+        }
+
+        # Track a video view
+        my $clipMs = int(rand(200000));
+        my $viewMs;
+        if ($clipMs % 3 eq 0) {
+          $viewMs = $clipMs;
+        } else {
+          $viewMs = int(rand($clipMs));
+        }
+        print "------------------------------------------------------------\n";
+        my $videoViewTrackingUrl = $trackerUrlBase . "/vs/" . $clickId . $queryString . "&viewMs=" . $viewMs . "&clipMs=" . $clipMs;
+        print "*** Hitting Video View Tracking URL:\n$videoViewTrackingUrl\n";
+        $ua->max_redirect(0);
+        $response = $ua->get($videoViewTrackingUrl);
+        if (!$response->is_success) {
+            print "*** HTTP Status: ".$response->status_line."\n";
+        } else {
+            $content = $response->decoded_content;
+            print "*** Video View Tracking Response: $content\n";
+        }
+    }
+    
+    if (defined($applicationID)) {
+        print "------------------------------------------------------------\n";
+#        my $installTrackingUrl = $trackerUrlBase . "/is/" . $applicationID . "/" . $udid;
+#        print "*** Hitting OLD Install Tracking URL:\n$installTrackingUrl\n";
+#        $ua->max_redirect(0);
+#        $response = $ua->get($installTrackingUrl);
+#        $content = $response->decoded_content;
+#        print "*** OLD Install Tracking Response: $content\n";
+        
+        %params = ();
+        #$params{"d.udid"} = $udid;
+        $params{"d.dpid"} = $dpid;
+        #$params{"d.openudid"} = $openudid;
+        #$params{"d.odin-1"} = $odin1;
+        #$params{"d.android"} = $androidId;
+        $params{"d.ifa"} = $ifa;
+        $queryString = "";
+        foreach my $key (sort(keys(%params))) {
+          if (length($queryString) > 0) {
+            $queryString .= '&';
+          }
+          $queryString .= $key;
+          $queryString .= '=';
+          $queryString .= CGI::escape($params{$key});
+        }
+        my $installTrackingUrl = $trackerUrlBase . "/is/" . $applicationID . "?" . $queryString; # . "&claim=1";
+        print "*** Hitting NEW Install Tracking URL:\n$installTrackingUrl\n";
+        $ua->max_redirect(0);
+        $response = $ua->get($installTrackingUrl);
+        if (!$response->is_success) {
+            print "*** HTTP Status: ".$response->status_line."\n";
+        } else {
+            $content = $response->decoded_content;
+            print "*** Install Tracking Response: $content\n";
+        }
+    }
+}

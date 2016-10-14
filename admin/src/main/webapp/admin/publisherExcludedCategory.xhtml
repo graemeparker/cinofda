@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Publisher IAB excluded categories"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+<h:form id="mainForm">
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+    <div class="infoContent">#{msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+<h:panelGroup layout="block" styleClass="infoOK" rendered="#{requestScope.didUpdate}">
+  <div class="infoOKImage"></div>
+  <div class="infoOKHeader">Saved</div>
+  <div class="infoContent">
+    Your changes have been saved.
+  </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+<hr/>
+<table>
+  <tr>
+    <td>IAB category exclusions</td>
+    <td>
+      <pri:autoComplete
+          value="#{categoryQueryBean.search}"
+          completeMethod="#{categoryQueryBean.doQuery}"
+          minQueryLength="1"
+          queryDelay="100"
+          size="50"
+          scrollHeight="200"
+          multiple="false"
+          forceSelection="true"
+          var="c"
+          itemValue="#{c}"
+          itemLabel=""
+          converter="jpaConverter">
+          <pri:ajax event="itemSelect" listener="#{publisherExcludedCategoryBean.handleSelectedExcludedCategory}" update="selectedExcludedCategoryDisplay"/>
+          <pri:column style="width:100%">
+              #{categoryQueryBean.labelMap[c]}
+          </pri:column>
+      </pri:autoComplete>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    </td>
+    <td>
+      <pri:outputPanel id="selectedExcludedCategoryDisplay">
+          Current exclusions:
+          <h:panelGroup rendered="#{empty publisherExcludedCategoryBean.excludedCategories}">
+            None
+          </h:panelGroup>
+          <pri:dataList rendered="#{not empty publisherExcludedCategoryBean.excludedCategories}" type="none" value="#{publisherExcludedCategoryBean.excludedCategories}" var="category" rowCountVar="rowMax" rowIndexVar="rowIndex">
+            <pri:column>
+              <span style="white-space: nowrap">
+              <h:outputText value="#{publisherExcludedCategoryBean.excludedCategoryLabelMap[category]}" />
+                <pri:commandLink update=":mainForm:selectedExcludedCategoryDisplay"
+                     actionListener="#{publisherExcludedCategoryBean.doRemoveExcludedCategory(category)}">
+                       <span class="tagDeleteIcon"></span>
+                </pri:commandLink>
+              <h:outputText value=" " rendered="#{!(rowIndex == rowMax - 1)}" /></span>
+            </pri:column>
+            </pri:dataList>
+      </pri:outputPanel>
+    </td>
+  </tr>
+</table>
+
+<div class="bottomButton">
+  <pri:commandButton action="#{publisherExcludedCategoryBean.doSave}" update="mainForm" id="iconOnly" icon="ui-icon-disk" value="Save"/>  
+</div>
+</h:form>
+
+</ui:define>
+</ui:composition>

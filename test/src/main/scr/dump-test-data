@@ -1,0 +1,66 @@
+#!/bin/bash
+
+DUMP_FIL=adfonic-test-dump.sql
+
+mysqldump $* --single-transaction --no-create-info --skip-triggers --insert-ignore --extended-insert=FALSE \
+        --ignore-table=adfonic.AD_ACTION \
+        --ignore-table=adfonic.ADMIN_ROLE \
+        --ignore-table=adfonic.BROWSER \
+        --ignore-table=adfonic.BROWSER_HEADER_MAP \
+        --ignore-table=adfonic.CAPABILITY \
+        --ignore-table=adfonic.CATEGORY \
+        --ignore-table=adfonic.FORMAT \
+        --ignore-table=adfonic.COMPONENT \
+        --ignore-table=adfonic.CONTENT_SPEC \
+        --ignore-table=adfonic.CONTENT_TYPE \
+        --ignore-table=adfonic.CONTENT_SPEC_CONTENT_TYPE \
+        --ignore-table=adfonic.DISPLAY_TYPE \
+        --ignore-table=adfonic.COMPONENT_CONTENT_SPEC_MAP \
+        --ignore-table=adfonic.REGION \
+        --ignore-table=adfonic.COUNTRY \
+        --ignore-table=adfonic.FORMAT_DISPLAY_TYPE_LIST \
+        --ignore-table=adfonic.INTEGRATION_TYPE \
+        --ignore-table=adfonic.INTEGRATION_TYPE_FEATURE \
+        --ignore-table=adfonic.LANGUAGE \
+        --ignore-table=adfonic.OPERATOR_GROUP \
+        --ignore-table=adfonic.OPERATOR \
+        --ignore-table=adfonic.MOBILE_NETWORK \
+        --ignore-table=adfonic.PLATFORM \
+        --ignore-table=adfonic.PUBLICATION_TYPE \
+        --ignore-table=adfonic.PUBLICATION_TYPE_PLATFORM \
+        --ignore-table=adfonic.ROLE \
+        --ignore-table=adfonic.TIME_HIERARCHY \
+        --ignore-table=adfonic.ADSERVER_PLUGIN \
+        --ignore-table=adfonic.MARKETING_LINK \
+        --ignore-table=adfonic.GEOTARGET \
+        --ignore-table=adfonic.GEOTARGET_POINT \
+        --ignore-table=adfonic.VENDOR \
+        --ignore-table=adfonic.MODEL \
+        --ignore-table=adfonic.MODEL_PLATFORM \
+        --ignore-table=adfonic.VENDOR_ALIAS \
+        --ignore-table=adfonic.MOBILE_IP_ADDRESS_RANGE \
+        --ignore-table=adfonic.OPERATOR_ALIAS \
+        --ignore-table=adfonic.DEFAULT_RATE_CARD \
+        --ignore-table=adfonic.CHANNEL  \
+        --ignore-table=adfonic.RATE_CARD \
+        --ignore-table=adfonic.RATE_CARD_MINIMUM_BID_MAP \
+        --ignore-table=adfonic.GB_POSTAL_CODE \
+        --ignore-table=adfonic.ZIPLIST5 \
+        --ignore-table=adfonic.ZIP_TO_DMA  \
+        --ignore-table=adfonic.AGGREGATE  \
+        --ignore-table=adfonic.AGGREGATION_STATUS  \
+        --ignore-table=adfonic.DEVICE_IDENTIFIER_TYPE  \
+        --ignore-table=adfonic.EXTENDED_CREATIVE_TYPE  \
+        --ignore-table=adfonic.EXTENDED_CREATIVE_TYPE_TEMPLATE_MAP  \
+        --ignore-table=adfonic.DEVICE_GROUP  \
+        --ignore-table=adfonic.FORMAT_DEVICE_GROUP  \
+        --ignore-table=adfonic.TRANSPARENT_NETWORK  \
+        --ignore-table=adfonic.TRANSPARENT_NETWORK_RATE_CARD_MAP  \
+        adfonic > ${DUMP_FIL}
+
+RSVD_NW="__RESERVED_ADFONIC_PERFORMANCE_NETWORK"
+mysqldump $* --single-transaction --no-create-info --skip-triggers adfonic TRANSPARENT_NETWORK --where "NAME!='${RSVD_NW}'" >> ${DUMP_FIL}
+mysqldump $* --single-transaction --no-create-info --skip-triggers adfonic TRANSPARENT_NETWORK_RATE_CARD_MAP --where "TRANSPARENT_NETWORK_ID!=(SELECT ID FROM TRANSPARENT_NETWORK WHERE NAME='${RSVD_NW}')" >> ${DUMP_FIL}
+
+mysqldump $* --single-transaction --no-create-info --skip-triggers adfonic RATE_CARD --where "ID not in (select RATE_CARD_ID from DEFAULT_RATE_CARD UNION SELECT RATE_CARD_ID FROM TRANSPARENT_NETWORK_RATE_CARD_MAP WHERE TRANSPARENT_NETWORK_ID=(SELECT ID FROM TRANSPARENT_NETWORK WHERE NAME='${RSVD_NW}'))" >> ${DUMP_FIL}
+mysqldump $* --single-transaction --no-create-info --skip-triggers adfonic RATE_CARD_MINIMUM_BID_MAP --where 'RATE_CARD_ID not in (select RATE_CARD_ID from DEFAULT_RATE_CARD)' >> ${DUMP_FIL}

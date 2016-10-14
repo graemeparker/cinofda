@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- S3 Assigned Files -->
+	
+	<!-- Variables -->
+	<ui:param name="pageSize" value="#{audienceSourceS3MBean.s3AssignedFilesLazyDataModel.pageSize}" />
+	<ui:param name="isElasticHealthy" value="#{audienceSourceS3MBean.isElasticHealthy()}" />
+	<ui:param name="muidOrAudEngStatusPrefix" value="#{isS3Devices ? 'page.audience.source.common.s3.muid.status.' : 'page.audience.source.common.s3.audeng.status.'}" />
+
+	<pri:outputLabel value="#{msg['page.audience.source.common.s3.assigned.label']}" styleClass="b" />
+	
+	<!-- Tooltip for Devices or GeoPoints -->
+	<pri:outputPanel id="assignedToolTip#{id}" styleClass="helpImageRight" style="vertical-align: sub;" />
+	<pri:tooltip for="assignedToolTip#{id}" rendered="#{isS3Devices or isS3GeoPoints}" style="width:500px;">
+	    <pri:outputLabel value="#{msg['page.audience.source.common.s3.tooltip.status.label']}" styleClass="b" /><br />
+	    
+	    <!-- Devices case -->
+		<pri:outputPanel rendered="#{isS3Devices}" style="padding-top: 5px;">
+			<ui:repeat var="status" value="#{MuidStatus.ALL_ENUM_VALUES}">
+				<pri:outputPanel layout="inline" rendered="#{status != MuidStatus.CANCELLING}">
+		        	<pri:outputLabel value="#{msg[muidOrAudEngStatusPrefix.concat(status)]} - " styleClass="b" />
+		        	<pri:outputLabel value="#{msg['page.audience.source.common.s3.tooltip.muid.session.'.concat(status)]}" /><br />
+		        </pri:outputPanel>
+			</ui:repeat>
+	    </pri:outputPanel>
+	    
+	    <!-- GeoPoints case -->
+	    <pri:outputPanel rendered="#{isS3GeoPoints}">
+			<ui:repeat var="status" value="#{AudienceEngineStatus.ALL_ENUM_VALUES}">  
+		        <pri:outputLabel value="#{msg[muidOrAudEngStatusPrefix.concat(status)]} - " styleClass="b" />
+		        <pri:outputLabel value="#{msg['page.audience.source.common.s3.tooltip.audeng.session.'.concat(status)]}" /><br />
+			</ui:repeat>
+	    </pri:outputPanel>
+	</pri:tooltip>
+	
+	<!-- Upload Data Table -->
+	<pri:dataTable id="s3AssignedFilesTable#{id}"
+		var="audienceFile"
+		lazy="true"
+		value="#{audienceSourceS3MBean.s3AssignedFilesLazyDataModel}"
+		selection="#{audienceSourceS3MBean.selectedS3AssignedFiles}"
+		rowIndexVar="rowIndex"
+		rowKey="#{audienceFile.id}"
+		rows="10"
+		paginator="true"
+		rowsPerPageTemplate="10,25,50,100"
+		paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+		paginatorPosition="bottom"
+		sortOrder="ascending"
+		emptyMessage="#{msg['page.audience.source.common.s3.noassigned.label']}"
+		styleClass="ui-corner-all big-data s3FilesTableStyle #{isElasticHealthy ? 'show' : 'hide'}">
+		
+		<pri:ajax event="sort" onstart="progressDialog.show();"	oncomplete="progressDialog.hide();" />
+		<pri:ajax event="page" onstart="progressDialog.show();"	oncomplete="progressDialog.hide();" />
+		
+		<!-- Header -->
+		<f:facet name="header">
+			<h:outputFormat value="#{msg['page.audience.source.common.s3.assigned.header']}">
+				<f:param value="#{audienceSourceS3MBean.totalFilesAssigned}" />
+			</h:outputFormat>
+		</f:facet>
+		
+		<!-- Row specific Variables -->
+		<ui:param name="hasSessionId" value="#{not empty audienceFile.sessionId}" />
+		
+		<!-- Selection column -->
+		<pri:column selectionMode="multiple" disabledSelection="#{(hasSessionId) ? true : false}" styleClass="#{(hasSessionId) ? 'hide-chkbox select-col' : 'select-col'}" />
+		
+		<!-- Date column -->
+        <pri:column sortBy="#{FileFields.S3_MOD_DATE}" styleClass="#{FileFields.S3_MOD_DATE}-col">
+            <!-- Column header -->         
+            <f:facet name="header"><pri:outputLabel value="#{msg['page.audience.source.common.s3.table.header.statusLastModified']}" /></f:facet>
+            
+            <!-- Column value -->
+            <pri:outputLabel value="#{audienceSourceS3MBean.fastDateFormat.format(audienceFile.date)}" />
+        </pri:column>
+        
+        <!-- Filename column -->
+        <pri:column sortBy="#{FileFields.NAME}" styleClass="#{FileFields.NAME}-col">
+            <!-- Column header -->         
+            <f:facet name="header"><pri:outputLabel value="#{msg['page.audience.source.common.s3.table.header.name']}" /></f:facet>
+            
+            <!-- Column value -->
+            <pri:outputLabel value="#{audienceFile.fileName}" />
+        </pri:column>
+        
+        <!-- Status column -->
+        <pri:column styleClass="#{FileFields.STATUS}-col">
+            <!-- Column header -->         
+            <f:facet name="header"><pri:outputLabel value="#{msg['page.audience.source.common.s3.table.header.status']}" /></f:facet>
+            
+            <!-- Column value -->
+            <pri:outputLabel value="#{hasSessionId ? msg[muidOrAudEngStatusPrefix.concat(audienceFile.audienceStatus)]  : '-'}" />
+        </pri:column>
+        
+        <!-- Valid column -->
+        <pri:column sortBy="#{FileFields.VALIDS}" styleClass="#{FileFields.VALIDS}-col">
+            <!-- Column header -->         
+            <f:facet name="header"><pri:outputLabel value="#{msg['page.audience.source.common.s3.table.header.valids']}" /></f:facet>
+            
+            <!-- Column value -->
+            <pri:outputLabel value="#{audienceFile.valids}" />
+        </pri:column>
+        
+        <!-- Total column -->
+        <pri:column sortBy="#{FileFields.TOTALS}" styleClass="#{FileFields.TOTALS}-col">
+            <!-- Column header -->         
+            <f:facet name="header"><pri:outputLabel value="#{msg['page.audience.source.common.s3.table.header.totals']}" /></f:facet>
+            
+            <!-- Column value -->
+            <pri:outputLabel value="#{audienceFile.totals}" />
+        </pri:column>
+        
+        <!-- Stored column -->
+        <pri:column styleClass="STORED-col">
+            <!-- Column header -->         
+            <f:facet name="header"><pri:outputLabel value="#{msg['page.audience.source.common.s3.table.header.stored']}" /></f:facet>
+            
+            <!-- Column value -->
+            <pri:outputLabel value="#{hasSessionId ? audienceFile.audienceTotals  : '-'}" />
+        </pri:column>
+        
+        <!-- Datatype column (just for devices files) -->
+        <pri:column rendered="#{isS3Devices}" sortBy="#{FileFields.SUBTYPE}" styleClass="#{FileFields.SUBTYPE}-col">
+            <!-- Column header -->         
+            <f:facet name="header"><pri:outputLabel value="#{msg['page.audience.source.common.s3.table.header.subtype']}" /></f:facet>
+            
+            <!-- Column value -->
+            <pri:outputLabel value="#{audienceFile.subType}" />
+        </pri:column>
+		
+	</pri:dataTable>
+	
+	<!-- Assign -->
+	<pri:commandButton id="assignForAssignedButton#{id}" value="#{msg['page.audience.source.common.s3.unassign.button']}"
+					   actionListener="#{audienceSourceS3MBean.unassign}"
+                       onstart="progressDialog.show();" oncomplete="progressDialog.hide();" update="s3AssignedFilesTable#{id}, s3UnassignedFilesTable#{id}"
+                       styleClass="#{isElasticHealthy ? 'show' : 'hide'}" />
+    
+    <!-- Elastic Down section -->     
+    <pri:outputPanel id="elasticIsDownForAssignedPanel#{id}" styleClass="form-row #{not isElasticHealthy ? 'show' : 'hide'}">
+		<ui:include	src="/WEB-INF/jsf/commons/elastic_down_template.xhtml" />
+	</pri:outputPanel>
+	
+</ui:composition>

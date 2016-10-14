@@ -1,0 +1,53 @@
+{
+	"id":"03eafdf9-1f6f-4d47-a3ee-274f28ca9b94",
+	"imp":[ {
+			"id":"712503b3-46f6-4cbf-badd-444e762c28b1",
+			"banner":{
+				"w":320, "h":50,
+				"ext":{
+					"rewarded":0,
+					"vendors":[ "Crisp", "Medialets", "Celtra" ]
+				},
+				"pos":0,
+				"battr":[ 7 ],
+				"api":[ 3 ]
+			},
+			"instl":0,
+			"displaymanager":"FlurryAndroid",
+			"displaymanagerver":"172"
+	} ],
+	"app":{
+		"id":"bd6b685d5ccc8e667848cb4240c221ba2f6ab51c",
+		"name":"9GAG Android",
+		"domain":"9GAGAndroid.9GAG.com",
+		"cat":[ "IAB1" ],
+		"bundle":"com.ninegag.android.app",
+		"privacypolicy":0,
+		"publisher":{ "id":"39155a0b97d132926fe242fdedb858d6c36cadb4", "name":"9GAG" },
+		"ext":{ "flurrycategory":"Entertainment" }
+	},
+	"device":{
+		"dnt":1,
+		"ip":"84.155.166.214",
+		"geo":{ "city":"Augsburg", "type":2 },
+		"dpidsha1":"b23c71b75faccf84f30f1e1b85a0c2f19bcc566e",
+		"ua":"Mozilla/5.0 (Linux; Android 5.0; LG-D855 Build/LRX21R.A1421650137) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile Safari/537.36",
+		"language":"de",
+		"model":"g3",
+		"os":"Android",
+		"osv":"5.0",
+		"connectiontype":2,
+		"devicetype":1,
+		"ext":{ "density":4.0, "flurryDpid":"0ad70515-f0e9-442c-8a6c-4e75658c48a4", "agentVersion":"172" }
+	},
+	"user":{ "data":[ ]
+	},
+	"bcat":[ ],
+	"badv":[ ],
+	"ext":{
+		"device_geo_country_alpha2":"DE",
+		"udi":{ "androidadvid":"0ad70515-f0e9-442c-8a6c-4e75658c48a4" }
+	},
+	"at":2,
+	"tmax":270
+}

@@ -1,0 +1,81 @@
+api_version: 15
+auction_id: "1336990a-2e6a-40cf-b978-77e026c566d7"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537076000"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "ac3a4b95-6173-473b-be31-6e0a0c30edaf"
+user_ip_address: "I\021d\320"
+user_screen_height: 1024
+user_screen_width: 768
+user_geo_country: "us"
+user_geo_state: "new hampshire"
+user_geo_dma: 506
+user_agent: "Mozilla/5.0 (iPad; CPU OS 8_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12D508 [FBAN/FBIOS;FBAV/28.0.0.10.10;FBBV/8930087;FBDV/iPad3,4;FBMD/iPad;FBSN/iPhone OS;FBSV/8
+.2;FBSS/2; FBCR/;FBID/tablet;FBLC/en_US;FBOP/1]"
+user_lang: "en"
+url: "http://www.patheos.com/blogs/davewillis/the-5-things-your-kids-will-remember-about-you/"
+http_referer: "http://m.facebook.com"
+ox_cat_tier_1: 34
+ox_cat_tier_2: 0
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 20
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 3
+pub_blocked_content: 4
+pub_blocked_content: 6
+pub_blocked_content: 8
+pub_blocked_content: 10
+pub_blocked_content: 11
+pub_blocked_content: 12
+pub_blocked_content: 14
+pub_blocked_content: 15
+pub_blocked_type: 5
+pub_blocked_type: 10
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (iPad; CPU OS 8_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12D508 [FBAN/FBIOS;FBAV/28.0.0.10.10;FBBV/8930087;FBDV/iPad3,4;FBMD/iPad;FBSN/iPhone OS;FBSV/8.2;FBS
+S/2; FBCR/;FBID/tablet;FBLC/en_US;FBOP/1]"
+  ip: "73.17.100.208"
+  os: "iOS"
+  osv: "8"
+  language: "en"
+  make: "Apple"
+  model: "iPad"
+  geo {
+    lat: 43.067
+    lon: -70.8
+    country: "us"
+    city: "portsmouth"
+    zip: "03801"
+    type: 2
+    continent: "north america"
+    state: "new hampshire"
+    dma: 506
+  }
+  browser: "Mobile Safari"
+  idforad_enabled: false
+  category: "tablet"
+}
+is_test: false
+is_mobile_site: true
+is_application: false
+tp_key_val {
+  key: "rv.data"
+  value: "a"
+}
+ssl_enabled: false
+user {
+}

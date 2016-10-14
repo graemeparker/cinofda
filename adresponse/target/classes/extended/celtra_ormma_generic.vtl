@@ -1,0 +1,13 @@
+<srcipt>
+(function() {
+    var c = "";
+    document.write('<script src="http://api.celtra.com/v1/creatives/${adComponents.components.extendedData.id}/compiled/ExpandableBanner/ormma-pre1.js?channel=${adComponents.components.extendedData.channel}&c='+encodeURIComponent(c)+'&rnd='+(Math.random()+'').slice(2)+'"></scr'+'ipt>');
+})();
+</script>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

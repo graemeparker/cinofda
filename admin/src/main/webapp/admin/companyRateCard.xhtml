@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Company rate card"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+
+<!-- Show error box if there are any errors -->
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+    <div class="infoContent">#{msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+ <!-- Green box if we just updated -->
+<h:panelGroup layout="block" styleClass="infoOK" rendered="#{requestScope.didUpdateRateCard}">
+  <div class="infoOKImage"></div>
+  <div class="infoOKHeader">Saved</div>
+  <div class="infoContent">
+    Your changes have been saved.
+  </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+<hr/>
+
+<h:form id="rateCardForm">
+<div class="form">
+    <div class="formSection">
+        <p class="label">CPC Default Minimum</p>
+        <div class="error"><h:message for="defaultCPC" styleClass="error" /></div>
+        <div class="formtip">#{msg['page.generic.tip.currency']}</div>
+        <div class="formtip">
+            <h:panelGroup rendered="#{empty companyRateCardBean.lowestRateCardBidMap[ad:enum('com.adfonic.domain.BidType','CPC')]}">
+                No country minimums
+            </h:panelGroup>
+            <h:panelGroup rendered="#{not empty companyRateCardBean.lowestRateCardBidMap[ad:enum('com.adfonic.domain.BidType','CPC')]}">
+                Current lowest country rate: <h:outputText value="#{companyRateCardBean.lowestRateCardBidMap[ad:enum('com.adfonic.domain.BidType','CPC')]}"/>
+            </h:panelGroup>
+        </div>
+        <h:inputText id="defaultCPC"
+            value="#{companyRateCardBean.defaultMinimumCPC}"
+            size="14"
+            maxlength="14"
+            style="width:100px"
+            validatorMessage="#{msg['error.generic.currency']}">
+           <f:validateDoubleRange minimum="0.01" maximum="9999999999.99" />
+        </h:inputText>
+    </div>
+
+    <div class="formSection">
+        <p class="label">CPM Default Minimum</p>
+        <div class="error"><h:message for="defaultCPM" styleClass="error" /></div>
+        <div class="formtip">${msg['page.generic.tip.currency']}</div>
+        <div class="formtip">
+            <h:panelGroup rendered="#{empty companyRateCardBean.lowestRateCardBidMap[ad:enum('com.adfonic.domain.BidType','CPM')]}">
+                No country minimums
+            </h:panelGroup>
+            <h:panelGroup rendered="#{not empty companyRateCardBean.lowestRateCardBidMap[ad:enum('com.adfonic.domain.BidType','CPM')]}">
+                Current lowest country rate: <h:outputText value="#{companyRateCardBean.lowestRateCardBidMap[ad:enum('com.adfonic.domain.BidType','CPM')]}"/>
+            </h:panelGroup>
+        </div>
+        <h:inputText id="defaultCPM"
+            value="#{companyRateCardBean.defaultMinimumCPM}"
+            size="14"
+            maxlength="14"
+            style="width:100px"
+            validatorMessage="#{msg['error.generic.currency']}">
+           <f:validateDoubleRange minimum="0.01" maximum="9999999999.99" />
+        </h:inputText>
+    </div>
+
+    <div class="formSection">
+        <p class="label">eCPM Default Target</p>
+        <div class="error"><h:message for="defaultEcpmTarget" styleClass="error" /></div>
+        <div class="formtip">#{msg['page.generic.tip.currency']}</div>
+        <h:inputText id="defaultEcpmTarget"
+            value="#{companyRateCardBean.defaultEcpmTarget}"
+            size="14"
+            maxlength="14"
+            style="width:100px"
+            validatorMessage="#{msg['error.generic.currency']}">
+           <f:validateDoubleRange minimum="0.01" maximum="9999999999.99" />
+        </h:inputText>
+    </div>
+</div>
+
+<div class="bottomButton">
+  <!-- button start -->
+        <h:commandLink action="#{companyRateCardBean.doSave}" styleClass="largeButton">
+            <span>Save rate card</span><span class="go"></span>
+        </h:commandLink>
+  <!-- button end -->
+</div>
+
+</h:form>
+</ui:define>
+</ui:composition>
+

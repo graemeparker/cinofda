@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      template="/WEB-INF/templates/template.xhtml">
+
+	<ui:param name="pageTitle" value="Page not found"/>
+	<ui:define name="title">#{pageTitle}</ui:define>
+
+	<ui:define name="pageContent">
+		<h2>HTTP Error 404</h2>
+		
+		<h3>Whoops!</h3>
+		
+		<p>We're sorry.  The web address you entered is not a functioning part of our website.</p>
+		  
+		<p><p:link mappingId="home">Click here to visit the ${rootBean.companyName} homepage</p:link></p>
+	</ui:define>
+</ui:composition>

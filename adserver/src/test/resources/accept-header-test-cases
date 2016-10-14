@@ -1,0 +1,37 @@
+*/*;q=0.001,identity;q=0.000
+
+identity;q=0.000
+
+application/xml,application/vnd.wap.xhtml+xml,application/xhtml+xml;profile='http://www.wapforum.org/xhtml',text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
+application/xhtml+xml; profile=http://www.wapforum.org/xhtml, application/vnd.wap.xhtml+xml, application/vnd.wap.wmlc, application/vnd.wap.wmlscriptc, text/vnd.wap.wml, text/vnd.sun.j2me.app-descriptor, application/java-archive, image/vnd.wap.wbmp, image/gif, image/bmp, image/png, audio/amr, audio/imelody, audio/midi, audio/wav, application/vnd.wap.wtls-ca-certificate, application/x-x509-ca-cert, application/vnd.wap.hashed-certificate, application/vnd.wap.signed-certificate, */*, text/html
+
+application/xml,application/vnd.wap.xhtml+xml,application/xhtml+xml;profile='http://www.wapforum.org/xhtml',text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
+application/xhtml+xml; profile=http://www.wapforum.org/xhtml, application/vnd.wap.xhtml+xml, application/vnd.wap.wmlc, application/vnd.wap.wmlscriptc, text/vnd.wap.wml, image/vnd.wap.wbmp, image/gif, image/bmp, image/png, audio/amr, audio/imelody, audio/midi, audio/wav, application/vnd.wap.wtls-ca-certificate, application/x-x509-ca-cert, application/vnd.wap.hashed-certificate, application/vnd.wap.signed-certificate, */*, text/html
+
+application/xhtml+xml; profile=http://www.wapforum.org/xhtml, application/vnd.wap.xhtml+xml, application/vnd.wap.wmlc, application/vnd.wap.wmlscriptc, text/vnd.wap.wml, text/vnd.sun.j2me.app-descriptor, application/java-archive, image/vnd.wap.wbmp, image/gif, image/bmp, image/png, audio/amr, audio/imelody, audio/midi, audio/wav, application/vnd.wap.wtls-ca-certificate, application/x-x509-ca-cert, application/vnd.wap.hashed-certificate, application/vnd.wap.signed-certificate, */*, text/html
+
+*/*,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,;q=0.5,image/gif;q=0.125,image/jpeg;q=0.125,image/vnd.wap.wbmp;q=0.125,image/bmp;q=0.125,image/x-bmp;q=0.125
+
+text/html, text/vnd.wap.wml, text/x-vcalendar, text/x-vcard, text/x-imelody, text/css, image/jpeg, image/gif, image/bmp, image/vnd.wap.wbmp, audio/midi, audio/x-midi, audio/mid, audio/wav, audio/x-wav, audio/sp-midi, audio/amr, application/vnd.wap.wmlc, application/vnd.oma.drm.message, application/vnd.oma.drm.content, application/vnd.wap.xhtml+xml, application/vnd.wap.hashed-certificate, application/vnd.wap.signed-certificate, application/vnd.wap.wtls-ca-certifcate, application/x-x509-ca-cert, application/vnd.oma.dd+xml, application/xhtml+xml;profile="http://www.wapforum.org/xhtml", application/vnd.wap.mms-message, application/vnd.wap.wbxml, , audio/mp3, audio/mpeg, */*
+
+text/html, text/vnd.wap.wml, text/x-vcalendar, text/x-vcard, text/x-imelody, text/css, image/jpeg, image/gif, image/bmp, image/vnd.wap.wbmp, audio/midi, audio/x-midi, audio/mid, audio/wav, audio/x-wav, audio/sp-midi, audio/amr, application/vnd.wap.wmlc, application/vnd.oma.drm.message, application/vnd.oma.drm.content, application/vnd.wap.xhtml+xml, application/vnd.wap.hashed-certificate, application/vnd.wap.signed-certificate, application/vnd.wap.wtls-ca-certifcate, application/x-x509-ca-cert, application/vnd.oma.dd+xml, application/xhtml+xml; profile="http://www.wapforum.org/xhtml", application/vnd.wap.mms-message, application/vnd.wap.wbxml, , audio/mp3, audio/mpeg, */*
+
+tep
+
+*/*,text/xml, text/html, application/xhtml+xml, image/png, text/plain, ;q=0.8,image/gif;q=0.125,image/jpeg;q=0.125,image/vnd.wap.wbmp;q=0.125,image/bmp;q=0.125,image/x-bmp;q=0.125,
+
+*/*,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,;q=0.5,image/gif;q=0.125,image/jpeg;q=0.125,image/vnd.wap.wbmp;q=0.125,image/bmp;q=0.125,image/x-bmp;q=0.125
+
+*/*,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,;q=0.5,image/gif;q=0.125,image/jpeg;q=0.125,image/vnd.wap.wbmp;q=0.125,image/bmp;q=0.125,image/x-bmp;q=0.125,
+
+application/vnd.wap.xhtml+xmlяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяяя, application/xhtml+xml, text/html, application/vnd.wap.wmlc, image/png, image/jpeg, image/gif
+
+text/html,application/xhtml+xml,application/xml,application/x-javascript,*/*;q=0,5
+
+*;q=0.001,*/*
+
+text/html; q=0.5, text/css, image/vnd.wap.wbmp, image/png, image/jpeg, image/gif, image/bmp, application/vnd.wap.wmlc, application/vnd.wap.xhtml+xml; q=0.8, application/xhtml+xml; profile=http://www.wapforum.org/xhtml; q=1.0, application/vnd.wap.multipart.mixed, multipart/mixed, text/vnd.wap.wml; q=0.7, application/vnd.oma.dd+xml, text/vnd.sun.j2me.app-descriptor, application/java-archive, application/java, application/x-java-archive, application/x-javascript, text/ecmascript, application/vnd.oma.drm.message, application/vnd.oma.drm.content, application/vnd.oma.drm.rights+xml, application/vnd.oma.drm.rights+wbxml, */*
+
+application/vnd.wap.xhtml+xml; q=0.8, application/xhtml+xml; profile=http://www.wapforum.org/xhtml; q=1.0, text/vnd.wap.wml; q=0.7, application/xhtml+xml; q=0.6, text/html; q=0.5, text/css, multipart/mixed, application/java-archive, application/java, application/x-java-archive, text/vnd.sun.j2me.app-descriptor, application/x-javascript, text/ecmascript, application/vnd.wap.wmlc, image/gif, image/jpeg, image/png, image/vnd.wap.wbmp, image/bmp, application/vnd.wap.multipart.mixed, application/vnd.oma.dd+xml, application/vnd.oma.drm.message, application/vnd.oma.drm.content, application/vnd.oma.drm.rights+wbxml, application/vnd.oma.drm.rights+xml, */*

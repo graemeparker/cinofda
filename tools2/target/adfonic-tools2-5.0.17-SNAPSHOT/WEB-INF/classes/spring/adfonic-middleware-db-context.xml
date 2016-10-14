@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+  
+    <!-- ToolsDB (EntityManagerFactory) -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="domainDataSource" />
+        <property name="packagesToScan" value="com.adfonic.domain" />
+        <property name="persistenceUnitName" value="adfonic-domain" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+                p:database="${tools.jdbc.jpaVendorAdapter.dialect}" 
+                p:showSql="${tools.jdbc.jpaVendorAdapter.showSql}" 
+                p:generateDdl="false" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${tools.jdbc.jpaProperties.hibernate.dialect}</prop>
+                <prop key="hibernate.format_sql">${tools.jdbc.jpaProperties.hibernate.format_sql}</prop>
+                <prop key="hibernate.generate_statistics">${tools.jdbc.jpaProperties.hibernate.generate_statistics}</prop>
+                <prop key="hibernate.jdbc.fetch_size">${tools.jdbc.jpaProperties.hibernate.jdbc.fetch_size}</prop>
+                <prop key="hibernate.jdbc.batch_size">${tools.jdbc.jpaProperties.hibernate.jdbc.batch_size}</prop>
+                <prop key="hibernate.max_fetch_depth">${tools.jdbc.jpaProperties.hibernate.max_fetch_depth}</prop>
+                <prop key="hibernate.connection.isolation">${tools.jdbc.jpaProperties.hibernate.connection.isolation}</prop> 
+            </props>
+        </property>
+    </bean>
+
+    <!-- ToolsDB (Database Connection) -->
+    <bean id="domainDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          autowire="byName" 
+          destroy-method="close"
+          lazy-init="true">
+        <property name="driverClassName" value="${tools.jdbc.driverClassName}" />
+        <property name="url" value="${tools.jdbc.url}" />
+        <property name="username" value="${tools.jdbc.username}" />
+        <property name="password" value="${tools.jdbc.password}" />
+        <property name="initialSize" value="${tools.jdbc.initialSize}" />
+        <property name="maxActive" value="${tools.jdbc.maxActive}" />
+        <property name="maxWait" value="${tools.jdbc.maxWait}" />
+        <property name="minIdle" value="${tools.jdbc.minIdle}" />
+        <property name="maxIdle" value="${tools.jdbc.maxIdle}" />
+        <property name="validationQuery" value="${tools.jdbc.validationQuery}" />
+        <property name="validationQueryTimeout" value="${tools.jdbc.validationQueryTimeout}" />
+        <property name="testOnReturn" value="${tools.jdbc.testOnReturn}" />
+        <property name="testWhileIdle" value="${tools.jdbc.testWhileIdle}" />
+        <property name="testOnBorrow" value="${tools.jdbc.testOnBorrow}" />
+        <property name="defaultTransactionIsolation" value="${tools.jdbc.defaultTransactionIsolation}" />
+        <property name="removeAbandoned" value="${tools.jdbc.removeAbandoned}" />
+        <property name="removeAbandonedTimeout" value="${tools.jdbc.removeAbandonedTimeout}" />
+        <property name="logAbandoned" value="${tools.jdbc.logAbandoned}" />
+        <property name="timeBetweenEvictionRunsMillis" value="${tools.jdbc.timeBetweenEvictionRunsMillis}" />
+        <property name="numTestsPerEvictionRun" value="${tools.jdbc.numTestsPerEvictionRun}" />
+        <property name="minEvictableIdleTimeMillis" value="${tools.jdbc.minEvictableIdleTimeMillis}" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="dataSource" ref="domainDataSource" />
+    </bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    
+</beans>

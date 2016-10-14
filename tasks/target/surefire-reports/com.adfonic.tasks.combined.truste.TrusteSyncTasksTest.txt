@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.tasks.combined.truste.TrusteSyncTasksTest
+-------------------------------------------------------------------------------
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.304 sec - in com.adfonic.tasks.combined.truste.TrusteSyncTasksTest

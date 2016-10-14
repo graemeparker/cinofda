@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset class="java.nio.charset.Charset">UTF-8</charset>
+			<pattern>%d|%-10t|%-5p|%c{40}: %m%n</pattern>
+		</encoder>
+
+	</appender>
+
+	<logger name="org.apache.activemq">
+		<level value="INFO" />
+	</logger>
+	
+	<logger name="org.apache.http">
+		<level value="INFO" />
+	</logger>
+	
+	<logger name="org.apache.http.wire">
+		<level value="INFO" />
+	</logger>
+	
+	<logger name="org.hibernate.SQL">
+		<level value="INFO"/>
+	</logger>
+	
+	<logger name="org.springframework">
+		<level value="INFO" />
+	</logger>
+	
+	<logger name="org.springframework.web">
+		<level value="INFO" />
+	</logger>
+
+	<!-- Adfonic loggers -->
+	
+	<logger name="com.adfonic.domain">
+		<level value="INFO" />
+	</logger>
+
+	<logger name="com.adfonic.email">
+		<level value="INFO" />
+	</logger>
+	
+	<logger name="com.byyd.middleware">
+		<level value="INFO" />
+	</logger>
+	
+	<logger name="com.adfonic.adserver">
+		<level value="debug" />
+	</logger>
+	
+	<logger name="com.adfonic.adresponse">
+		<level value="DEBUG" />
+	</logger>
+	
+	
+	<!-- Combined Tasks loggers -->
+	
+	<logger name="com.adfonic.tasks">
+		<level value="DEBUG" />
+	</logger>
+	
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  
+</configuration>

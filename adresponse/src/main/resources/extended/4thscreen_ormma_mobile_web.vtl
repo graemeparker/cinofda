@@ -1,0 +1,11 @@
+${adComponents.components.extendedData.preclick}
+	adUnit.clickUrl = '${adComponents.destinationUrl}';
+	adUnit.cacheBusterToken = '${macros.timestamp}';
+${adComponents.components.extendedData.postclick}
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

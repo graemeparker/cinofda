@@ -1,0 +1,47 @@
+{
+	"id":"64E1462C-239E-4019-81B7-FFBE264344EA",
+	"imp":[ {
+			"id":"1",
+			"tagid":"132407",
+			"banner":{ 
+				"w":320, "h":50, "pos":1, "topframe":0,
+				"battr":[ 3, 1, 10, 6, 44, 5, 9, 8, 11, 7 ]
+			}
+		}
+	],
+	"app":{
+		"id":"418987775",
+		"name":"TuneIn Radio - Stream free music, sports and news stations, podcasts, songs and tracks",
+		"ver":"6.4.1",
+		"bundle":"com.tunein.TuneInRadio",
+		"domain":"https://itunes.apple.com/us/app/tunein-radio/id418987775?mt=8",
+		"cat":[ "IAB1", "IAB1-6" ],
+		"paid":0,
+		"storeurl":"https://itunes.apple.com/us/app/tunein-radio/id418987775?mt=8",
+		"publisher":{ "id":"55760" }
+	},
+	"device":{
+		"ip":"78.43.41.32",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70",
+		"carrier":"Kabel BW GmbH",
+		"language":"de-de",
+		"make":"Apple",
+		"model":"iPhone",
+		"os":"iOS",
+		"Osv":"8",
+		"osv":"8",
+		"js":1,
+		"devicetype":1,
+		"geo":{ "country":"DE", "region":"01", "city":"Sindelfingen", "lat":48.7691994, "lon":8.93455315, "type":1, "zip":"71065" },
+		"ext":{
+			"otherdeviceid":"7212CA65-01D1-4E91-9923-A442A222D865", 
+			"hash":0, "res":"320x568", "pf":4
+		}
+	},
+	"user":{
+		"id":"5D9D10A1-A983-4B0C-8383-B605FCD69D47",
+		"geo":{ "lat":48.7691994, "lon":8.93455315, "type":1 }
+	},
+	"badv":[ "18exgfs.com", "gohookup.com" ],
+	"ext":{ "bidguidefloor":0.2 }
+}

@@ -1,0 +1,31 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	
+	<pri:dialog 
+		id="contact-form"
+		header="Contact Us"
+		widgetVar="contactForm" 
+		width="625" 
+		height="370px" 
+		modal="true" 
+		resizable="false" 
+		appendTo="@(body)" 
+		position="center center" 
+		closeOnEscape="true"
+		onShow="ADT.togglePageScroll(true);"
+		onHide="ADT.togglePageScroll();">
+		
+		<h:form id="customer-contact-form" class="margin-top--35 margin-lft-20">
+			<ui:include src="/WEB-INF/jsf/template/common/contact-form.xhtml"/>
+		</h:form>
+	</pri:dialog>
+	
+ </ui:composition>

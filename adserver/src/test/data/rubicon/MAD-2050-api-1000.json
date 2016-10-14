@@ -1,0 +1,54 @@
+{
+	"id":"5cf58e7e77e4be3d6f256c1408dea2ee029d0835",
+	"at":2,
+	"tmax":110,
+	"imp":[
+		{
+			"id":"1",
+			"tagid":"115642",
+			"secure":0,
+			"iframebuster":[ "ALL" ],
+			"banner":{
+				"w":320,
+				"h":50,
+				"pos":0,
+				"battr":[14018,14019,1,2,3,5,8,9,10,13,14,14005,14015,14014],
+				"api":[3,1000],
+				"topframe":1
+			},
+			"instl":0
+		}
+	],
+	"app":{
+		"id":"28694",
+		"cat":[ "IAB1" ],
+		"name":"The Mirror",
+		"domain":"http://www.mirror.co.uk",
+		"bundle":"com.mirror.news",
+		"ver":"12",
+		"privacypolicy":1,
+		"publisher":{ "id":"7949" },
+		"ext":{ "storerating":4.3 }
+	},
+	"device":{
+		"os":"Android",
+		"model":"GT-I9505",
+		"geo":{ "country":"GBR", "region":"BST", "lat":51.5, "lon":-0.13, "type":2, "ext":{ "latlonconsent":1 } },
+		"osv":"4.4.2",
+		"js":1,
+		"ext":{ "pixelratio":3.0 },
+		"dpidmd5":"4b7c0b9eba9f747d24dde9a6720d7dcc",
+		"ip":"213.205.252.95",
+		"connectiontype":3,
+		"dpidsha1":"bc1c4631d1c55b0e01fa595f8fd7204858e22a36",
+		"carrier":"EE",
+		"ua":"Mozilla/5.0 (Linux; Android 4.4.2; GT-I9505 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36",
+		"devicetype":1,
+		"language":"en",
+		"make":"Samsung"
+	},
+	"user":{
+		"id":"57df4a1c63d12c4a7a1d46893aba0a14637963e6",
+		"ext":{ "sessiondepth":1, "identities":[ ] }
+	}
+}

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Affiliate Programs"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+ <h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+     <div class="infoError">
+     <div class="infoErrorImage"></div>
+     <div class="infoErrorHeader">${msg['page.generic.error.label']}</div>
+     <div class="infoContent">${msg['page.generic.error.box']}</div>
+     </div>
+ </h:panelGroup>
+
+ <h:panelGroup layout="block" styleClass="infoOK" rendered="#{requestScope.didUpdate}">
+   <div class="infoOKImage"></div>
+   <div class="infoOKHeader">Saved</div>
+   <div class="infoContent">
+     Your changes have been saved.
+   </div>
+ </h:panelGroup>
+
+ <h2>#{pageTitle}</h2>
+
+ <h:form id="summaryForm">
+     <pri:dataTable
+          id="linkTable"
+          var="row"
+          value="#{adminAffiliateProgramBean.affiliatePrograms}"
+          paginator="true"
+          rows="10"
+          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+          rowsPerPageTemplate="10,20,50,100"
+          styleClass="data">         
+
+         <pri:column headerstyleClass="center" styleClass="left" sortBy="name">
+             <f:facet name="header"><h:outputText value="Name" /></f:facet>
+             <h:outputText value="#{row.name}" />
+         </pri:column>
+         <pri:column headerstyleClass="center" styleClass="left" sortBy="affiliateId">
+             <f:facet name="header"><h:outputText value="Affiliate ID" /></f:facet>
+             <h:outputText value="#{row.affiliateId}" />
+         </pri:column>
+         <pri:column headerstyleClass="center" styleClass="right" sortBy="depositBonus">
+             <f:facet name="header"><h:outputText value="Bonus" /></f:facet>
+             <h:outputText value="#{row.depositBonus}">
+              <f:convertNumber
+                 type="percent"
+                 minIntegerDigits="1"
+                 maxIntegerDigits="2"
+                 minFractionDigits="0"
+                 maxFractionDigits="2" />
+             </h:outputText>
+         </pri:column>
+         <pri:column headerstyleClass="center" styleClass="left">
+             <f:facet name="header"><h:outputText value="Logo (scaled)" /></f:facet>
+             <h:outputText rendered="#{empty row.logo}" value="[none]" />
+             <h:graphicImage rendered="#{not empty row.logo}"
+                 style="height:20px; width:60px"
+                 url="/showContent/#{row.logo.externalID}" />
+         </pri:column>
+         <pri:column headerstyleClass="center" styleClass="center" style="width:150px">
+            <pri:commandButton id="editButton" ajax="false" value="Edit" icon="ui-icon-pencil" title="Edit" action="#{adminAffiliateProgramBean.doEdit}">  
+              <f:setPropertyActionListener target="#{adminAffiliateProgramBean.affiliateProgram}" value="#{row}" />
+              <f:setPropertyActionListener target="#{adminAffiliateProgramBean.editMode}" value="true" />
+            </pri:commandButton>         
+
+            <pri:commandButton id="deleteButton" update=":summaryForm:confirmAffiliateProgramDialog" oncomplete="deleteAffiliateProgramConfirmation.show()" value="Delete" icon="ui-icon-trash" title="Delete" style="margin-left:5px">  
+               <f:setPropertyActionListener target="#{adminAffiliateProgramBean.affiliateProgram}" value="#{row}" />
+            </pri:commandButton>         
+         </pri:column>
+     </pri:dataTable>
+     
+     <pri:confirmDialog id="confirmAffiliateProgramDialog" message="Are you sure you want to delete #{adminAffiliateProgramBean.affiliateProgram.name}?"  
+            closeOnEscape="true" header="Delete #{adminAffiliateProgramBean.affiliateProgram.name}" severity="alert" widgetVar="deleteAffiliateProgramConfirmation">  
+      <pri:commandButton id="confirm" value="Yes" update="messages" oncomplete="deleteAffiliateProgramConfirmation.hide()"  
+              action="#{adminAffiliateProgramBean.doDelete}" ajax="false"/>  
+      <pri:commandButton id="decline" value="No" onclick="deleteAffiliateProgramConfirmation.hide()" type="button" />   
+    </pri:confirmDialog>  
+     
+     <div class="bottomButton">
+       <!-- button start -->
+             <h:commandLink id="addAffiliateProgram" action="#{adminAffiliateProgramBean.doEdit}" styleClass="largeButton">
+                 <f:setPropertyActionListener target="#{adminAffiliateProgramBean.editMode}" value="false" />
+                 <span>Add new affiliate program</span><span class="go"></span>
+             </h:commandLink>
+       <!-- button end -->
+     </div>
+ </h:form>
+<div class="clear"></div>
+</ui:define>
+</ui:composition>

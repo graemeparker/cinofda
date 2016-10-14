@@ -1,0 +1,105 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <!-- Devices reporting options -->
+    
+    <h:form prependId="false">
+	    <section id="devices" class="form-box ui-corner-all">
+	        <h2 class="sec-title">#{msg['page.reporting.devices.menu.label']}</h2>
+	            <pri:panelGrid id="grid" styleClass="panelGrid">
+	                
+	                <pri:row>
+	                    <!-- Campaign selection -->
+	                    <pri:column colspan="2">
+	                        <ui:include src="/WEB-INF/jsf/reporting/commons/campaigns_template.xhtml">
+	                            <ui:param name="reportingMBean" value="#{advertiserDeviceReportingMBean}" />
+	                        </ui:include>
+	                    </pri:column>
+	                </pri:row>
+	                
+	                <pri:row>
+                        <!-- Detailed statistic for period -->
+	                    <pri:column colspan="2">
+	                        <pri:selectBooleanCheckbox id="detailedByDay" value="#{advertiserDeviceReportingMBean.detailedByDay}"
+	                                                   itemLabel="#{msg['page.reporting.commons.detailed.by.day.label']}"/>
+	                    </pri:column>
+	                </pri:row>
+	                
+	                <pri:row>
+	                    <!-- Start Date -->
+	                    <pri:column>
+		                    <ui:include src="/WEB-INF/jsf/reporting/commons/start_date_template.xhtml">
+		                        <ui:param name="reportingMBean" value="#{advertiserDeviceReportingMBean}" />
+		                    </ui:include>
+	                    </pri:column>
+
+	                    <!-- End Date -->
+	                    <pri:column>
+		                    <ui:include src="/WEB-INF/jsf/reporting/commons/end_date_template.xhtml">
+		                        <ui:param name="reportingMBean" value="#{advertiserDeviceReportingMBean}" />
+		                    </ui:include>
+	                    </pri:column>
+	                </pri:row>
+	                
+	                <pri:row>
+	                    <!-- Device Name -->
+	                    <pri:column colspan="2">
+	                        <h:outputLabel for="deviceModels" value="#{msg['page.reporting.devices.devicename.label']}" styleClass="bl b" />                      
+				            <ui:include src="/WEB-INF/jsf/commons/devicemodels_template.xhtml">
+	                            <ui:param name="deviceModelsMBean" value="#{advertiserDeviceReportingMBean.deviceModelsMBean}" />
+	                        </ui:include>
+	                    </pri:column>
+	                </pri:row>
+	
+	                <pri:row>
+	                    <!-- Report View -->
+	                    <pri:column colspan="2">
+	                        <h:outputLabel for="reportView" value="#{msg['page.reporting.commons.reportview.label']}" styleClass="bl b" />
+	                        <pri:selectOneMenu id="reportView" value="#{advertiserDeviceReportingMBean.reportView}"
+	                                           styleClass="reportViewStyle" panelStyleClass="reportViewOverlayStyle">
+	                            <f:selectItem itemLabel="#{msg['page.reporting.devices.reportview.item.vendor']}"   itemValue="#{Tools2Constants.REPORTING_VIEW_OPTION_VENDOR}" />
+	                            <f:selectItem itemLabel="#{msg['page.reporting.devices.reportview.item.platform']}" itemValue="#{Tools2Constants.REPORTING_VIEW_OPTION_PLATFORM}" />
+	                            <f:selectItem itemLabel="#{msg['page.reporting.devices.reportview.item.all']}"      itemValue="#{Tools2Constants.REPORTING_VIEW_OPTION_ALL}" />
+	                        </pri:selectOneMenu>
+	                    </pri:column>
+	                </pri:row>
+	                
+	                <pri:row>
+	                    <!-- Location Breakdown -->
+	                    <pri:column colspan="2">
+	                        <h:outputLabel for="locationBreakdown" value="#{msg['page.reporting.devices.loc.breakdown.label']}" styleClass="bl b" />
+	                        <pri:selectOneMenu id="locationBreakdown" value="#{advertiserDeviceReportingMBean.locationBreakdown}"
+	                                           styleClass="reportViewStyle" panelStyleClass="reportViewPanelStyle">
+	                            <f:selectItem itemLabel="#{msg['page.reporting.devices.reportview.item.summary']}"  itemValue="#{Tools2Constants.LOCATION_BREAKDOWN_OPTION_SUMMARY}" />
+	                            <f:selectItem itemLabel="#{msg['page.reporting.devices.reportview.item.country']}"  itemValue="#{Tools2Constants.LOCATION_BREAKDOWN_OPTION_COUNTRY}" />
+	                        </pri:selectOneMenu>
+	                    </pri:column>
+	                </pri:row>
+	                
+	                <pri:row>
+	                    <!-- Generate Report -->
+	                    <pri:column colspan="2">
+	                        <ui:include src="/WEB-INF/jsf/reporting/commons/generate_button_template.xhtml">
+	                            <ui:param name="reportingMBean" value="#{advertiserDeviceReportingMBean}" />
+	                        </ui:include>
+	                    </pri:column>
+	                </pri:row>
+	
+	            </pri:panelGrid>
+	    </section>
+    
+   		<!-- Reporting tables -->
+    
+    	<pri:outputPanel id="reports">
+    		<ui:include src="/WEB-INF/jsf/reporting/commons/tables_template.xhtml">
+        		<ui:param name="reportingMBean" value="#{advertiserDeviceReportingMBean}" />
+    		</ui:include>
+    	</pri:outputPanel>
+
+	</h:form>
+
+</ui:composition>

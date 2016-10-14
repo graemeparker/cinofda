@@ -1,0 +1,250 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+	<!-- Variables -->
+	<ui:param name="maxFractionDigits" value="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden ? 3 : 2}" />
+
+	<pri:panelGrid id="biddingTable" style="width:100%">
+		<f:facet name="header">  
+	    	<pri:row>
+	       		<pri:column colspan="3">
+	        		<pri:commandLink id="biddingLinkId" 
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv"
+								disabled="#{userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="bid"/>                    
+                    	#{msg['page.campaign.bidbudget.menu.label']}
+                    </pri:commandLink>
+	       		</pri:column>
+	       	</pri:row>
+	 	</f:facet>
+	 	
+	 	<!-- Bid Type -->
+	 	<pri:row>
+	    	<pri:column>
+	       		<h:outputText value="#{msg['page.campaign.confirmation.bidding.bidtype.label']}" />
+			</pri:column>
+	      	<pri:column colspan="2">
+		      	<h:outputText value="#{campaignMBean.campaignBidMBean.campaignDto.currentBid.bidType}">
+				</h:outputText>
+			</pri:column>
+		</pri:row>
+		
+		<!-- Bid -->
+	  	<pri:row>
+	    	<pri:column>
+	       		<h:outputText value="#{msg['page.campaign.confirmation.bidding.bid.label']}" />
+			</pri:column>
+	      	<pri:column colspan="2">
+		      	<h:outputText value="#{(campaignMBean.campaignBidMBean.campaignDto.currentBid!=null and campaignMBean.campaignBidMBean.campaignDto.currentBid.amount!=null)?campaignMBean.campaignBidMBean.campaignDto.currentBid.amount:msg['page.campaign.menu.noneset.label']}">
+			        <f:convertNumber currencyCode="USD" type="currency" maxFractionDigits="#{maxFractionDigits}" />             
+				</h:outputText>
+			</pri:column>
+		</pri:row>
+		
+		<!-- CTR/CPA Goal -->
+		<pri:row rendered="#{campaignMBean.campaignBidMBean.targeted}">
+	    	<pri:column>
+	       		<h:outputText value="#{campaignMBean.campaignBidMBean.targetLabel}" />
+			</pri:column>
+	      	<pri:column colspan="2">
+		      	<h:outputText value="#{campaignMBean.campaignBidMBean.externalCTR}" rendered="#{campaignMBean.campaignBidMBean.CPM}">
+						<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+				</h:outputText><h:outputText value="%" rendered="#{campaignMBean.campaignBidMBean.CPM}"/>
+				<h:outputText value="#{campaignMBean.campaignBidMBean.externalCVR}" rendered="#{campaignMBean.campaignBidMBean.CPC}">
+						<f:convertNumber currencyCode="USD" type="currency" />
+				</h:outputText>
+			</pri:column>
+		</pri:row>
+		
+		<!-- Campaign Budget -->
+		<pri:row>
+		  	<pri:column>
+		    	<h:outputText value="#{msg['page.campaign.confirmation.bidding.budget.label']}" />
+		 	</pri:column>
+		   	<pri:column colspan="2">
+		    	<h:outputText value="#{campaignMBean.campaignBidMBean.overallBudgetSummary}">
+		    	</h:outputText>
+		   	</pri:column>
+		</pri:row>
+		
+		<!-- Daily Budget -->
+		<pri:row>
+		  	<pri:column>
+		    	<h:outputText value="#{msg['page.campaign.confirmation.bidding.dailybudget.label']}" />
+		 	</pri:column>
+		   	<pri:column colspan="2">
+				<c:choose>
+				    <c:when test="#{(campaignMBean.campaignBidMBean.evenDistributionOverallBudget eq 'EVEN') or
+				                    (campaignMBean.campaignBidMBean.evenDistributionOverallBudget eq 'EVEN_DAY')}">
+				        <h:outputText value="#{msg['page.campaign.bidbudget.menu.evenspacing.label']}"/>
+				    </c:when>
+				    <c:otherwise>
+				        <h:outputText value="#{campaignMBean.campaignBidMBean.dailyBudgetSummary}"/>
+				    </c:otherwise>
+				</c:choose>
+		   	</pri:column>
+		</pri:row>
+		
+		<!-- Daily Budget (Sat-Sun) -->
+		<pri:row rendered="#{campaignMBean.campaignBidMBean.renderWeekDay}">
+		  	<pri:column>
+		    	<h:outputText value="#{msg['page.campaign.confirmation.bidding.weekendbudget.label']}" />
+		 	</pri:column>
+		   	<pri:column colspan="2">
+		    	<h:outputText value="#{campaignMBean.campaignConfirmationMBean.campaignDto.dailyBudgetWeekend!=null?campaignMBean.campaignConfirmationMBean.campaignDto.dailyBudgetWeekend:msg['page.campaign.menu.noneset.label']}">
+		    		<f:convertNumber currencyCode="USD" type="currency" />
+		    	</h:outputText>
+		   	</pri:column>
+		</pri:row>
+		
+		<!-- Bidding Strategy -->
+		<pri:row>
+		  	<pri:column>
+		    	<pri:outputLabel value="#{msg['page.campaign.bidbudget.biddingstrategy.mediacost']}" />
+		 	</pri:column>
+		 	<pri:column colspan="2">
+			   	<c:if test="#{campaignMBean.campaignBidMBean.mediaCostOptimisationEnabled}">#{msg['page.campaign.targeting.connection.ipaddresses.menu.value.on']}</c:if>
+                <c:if test="#{!campaignMBean.campaignBidMBean.mediaCostOptimisationEnabled}">#{msg['page.campaign.targeting.connection.ipaddresses.menu.value.off']}</c:if>
+	        </pri:column>
+		</pri:row>
+		
+		<!-- Bid Deductions -->
+		<ui:param name="bidDeductions" value="#{campaignMBean.campaignConfirmationMBean.campaignDto.currentBidDeductions}" />
+		<pri:row rendered="#{IS_BETA_OR_ADMIN}">
+			<pri:column>
+				<pri:outputLabel value="#{msg['page.campaign.bidbudget.biddeductions.label']}" />
+				<pri:outputPanel layout="inline" styleClass="status-indicator beta f-right" />
+			</pri:column>
+			<pri:column colspan="2" rendered="#{empty bidDeductions}">
+				<h:outputText value="#{msg['page.campaign.menu.noneset.label']}" />
+			</pri:column>
+		</pri:row>
+		<pri:row rendered="#{IS_BETA_OR_ADMIN and not empty bidDeductions}">
+			<pri:column colspan="3">
+				<pri:panelGrid styleClass="bidDeductionsPanelGrid">
+					
+					<!-- Header -->
+					<pri:row>
+						<pri:column styleClass="payer-col"><pri:outputLabel value="#{msg['page.campaign.confirmation.bidding.biddeductions.payer.label']}" styleClass="b" /></pri:column>
+						<pri:column styleClass="vendorType-col"><pri:outputLabel value="#{msg['page.campaign.confirmation.bidding.biddeductions.vendortype.label']}" styleClass="b" /></pri:column>
+						<pri:column><pri:outputLabel value="#{msg['page.campaign.confirmation.bidding.biddeductions.vendorname.label']}" styleClass="b" /></pri:column>
+						<pri:column><pri:outputLabel value="#{msg['page.campaign.confirmation.bidding.biddeductions.cpm.label']}" styleClass="b f-right" /></pri:column>
+					</pri:row>
+					
+					<c:forEach var="row" value="#{bidDeductions}" items="#{bidDeductions}" varStatus="status">
+						<ui:param name="payerIsByyd" value="#{row.payerIsByyd}" />
+						<pri:row>
+						
+							<!-- Payer -->
+							<pri:column styleClass="payer-col">
+								<pri:outputLabel value="#{status.index + 1}. " styleClass="b" />
+								<pri:outputLabel value="#{payerIsByyd ? msg['page.campaign.bidbudget.biddeductions.payer.byyd.label'] : msg['page.campaign.bidbudget.biddeductions.payer.self.label']}" />
+							</pri:column>
+							
+							<!-- Third party vendor type -->
+							<pri:column styleClass="vendorType-col">
+								<pri:outputLabel value="#{payerIsByyd ? row.thirdPartyVendor.thirdPartyVendorType.name : '-'}" />
+							</pri:column>
+							
+							<!-- Third party vendor -->
+							<ui:param name="maxLenToShow" value="40" />
+			                <ui:param name="vft" value="#{row.thirdPartyVendorFreeText}"></ui:param>
+			                <ui:param name="vendorFreeText" value="#{(fn:length(vft) gt maxLenToShow) ? fn:substring(vft, 0, maxLenToShow-3).concat('...') : vft}" />
+							<pri:column>
+								<pri:outputLabel value="#{payerIsByyd ? row.thirdPartyVendor.name : vendorFreeText}" />
+							</pri:column>
+							
+							<!-- CPM -->
+							<pri:column>
+								<h:outputText value="#{row.amount}" styleClass="f-right">
+									<f:convertNumber type="currency" currencyCode="USD" minFractionDigits="2" maxFractionDigits="#{maxFractionDigits}" />
+								</h:outputText>
+							</pri:column>
+						</pri:row>
+					</c:forEach>
+					
+					<!-- Footer -->
+					<pri:row>
+						<pri:column colspan="4">
+							<pri:outputLabel value="#{msg['page.campaign.confirmation.bidding.biddeductions.total.label']}" styleClass="b" />
+							<h:outputText value="#{campaignMBean.campaignConfirmationMBean.campaignDto.totalBidDeductions}" styleClass="b f-right">
+				            	<f:convertNumber type="currency" currencyCode="USD" minFractionDigits="2" maxFractionDigits="#{maxFractionDigits}" />
+				            </h:outputText>
+						</pri:column>
+					</pri:row>
+				</pri:panelGrid>
+			</pri:column>
+		</pri:row>
+
+		<!-- Ad Serving CPM Fee -->
+		<sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE},#{RoleConstants.COMPANY_ROLE_AD_SERVING_CPM_FEE}">
+			<pri:row>
+			  	<pri:column>
+			    	<h:outputText value="#{msg['page.campaign.bidbudget.adservingcpmfee.label']}" />
+			 	</pri:column>
+			   	<pri:column colspan="2">
+			    	<h:outputText value="#{campaignMBean.campaignConfirmationMBean.campaignDto.currentRichMediaAdServingFee.richMediaAdServingFee!=null?campaignMBean.campaignConfirmationMBean.campaignDto.currentRichMediaAdServingFee.richMediaAdServingFee:msg['page.campaign.menu.noneset.label']}">
+			    		<f:convertNumber currencyCode="USD" type="currency" />
+			    	</h:outputText>
+			   	</pri:column>
+			</pri:row>
+		</sec:authorize>
+		
+		<!-- Fixed Margin -->
+		<sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE},#{RoleConstants.COMPANY_ROLE_FIXED_MARGIN}"> 
+			<pri:row>
+			  	<pri:column>
+			    	<h:outputText value="#{msg['page.campaign.bidbudget.fixedmargin.label']}" />
+			 	</pri:column>
+			   	<pri:column colspan="2">
+			    	<h:outputText value="#{campaignMBean.campaignConfirmationMBean.fixedMargin!=null?campaignMBean.campaignConfirmationMBean.fixedMargin:msg['page.campaign.menu.noneset.label']}">
+			    		<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+			    	</h:outputText>
+			   	</pri:column>
+			</pri:row>
+		</sec:authorize>
+
+		<!-- Agency Discount -->
+		<pri:row>
+			  	<pri:column>
+			    	<h:outputText value="#{msg['page.campaign.bidbudget.agencydiscount.label']}" />
+			 	</pri:column>
+			   	<pri:column colspan="2">
+			    	<h:outputText value="#{campaignMBean.campaignConfirmationMBean.agencyDiscount!=null?campaignMBean.campaignConfirmationMBean.agencyDiscount:msg['page.campaign.menu.noneset.label']}">
+			    		<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+			    	</h:outputText>
+			    	<h:outputText value="#{campaignMBean.campaignConfirmationMBean.agencyDiscount!=null?'%':''}"/>
+			   	</pri:column>
+		</pri:row>
+		
+		<!-- Frequency Cap -->	
+		<pri:row>
+			<pri:column>
+		    	<h:outputText value="#{msg['page.campaign.confirmation.bidding.frequency.label']}" />
+		 	</pri:column>
+		   	<pri:column colspan="2">
+				<h:outputText value="#{campaignMBean.campaignBidMBean.frecuencySummary}" />
+		   	</pri:column>
+		</pri:row>
+		
+		
+		<!-- Invoice Currency -->   
+        <pri:row>
+            <pri:column>
+                <h:outputText value="#{msg['page.campaign.confirmation.bidding.invoicecurrency.label']}" />
+            </pri:column>
+            <pri:column colspan="2">
+                <h:outputText value="#{campaignMBean.campaignBidMBean.invoiceCurrencySummary}" />
+            </pri:column>
+        </pri:row>
+	</pri:panelGrid>
+</ui:composition>

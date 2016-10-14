@@ -1,0 +1,51 @@
+{
+	"id":"adb6c76bb844cfb2248ad33ea929e1355dea8f64",
+	"at":2,
+	"tmax":10,
+	"imp":[ {
+			"id":"1",
+			"tagid":"193782",
+			"secure":0,
+			"iframebuster":[ ],
+			"banner":{
+				"w":320, "h":50,
+				"pos":0,
+				"battr":[ ],
+				"api":[ ],
+				"topframe":0
+			},
+			"instl":0
+	} ],
+	"app":{
+		"id":"xapi:43290:z64aX96xRFDQ",
+		"cat":[ "IAB24" ],
+		"storeurl":"https://play.google.com/store/apps/details?id=com.myyearbook.m&amp;hl=en",
+		"name":"MeetMe",
+		"domain":"http://www.gamut.media",
+		"bundle":"com.myyearbook.m",
+		"ext":{ },
+		"publisher":{ "id":"12060" }
+	},
+	"device":{
+		"os":"Android",
+		"model":"XT912",
+		"geo":{ "country":"USA", "region":"OR", "lat":0.0, "lon":0.0 },
+		"osv":"4.4.2",
+		"js":1,
+		"ext":{ "xff":"" },
+		"dpidmd5":"47068f91f7c79ba510fa4094f83b5cd0",
+		"ip":"74.78.183.98",
+		"connectiontype":0,
+		"dpidsha1":"f0193b03998e8ee28eea2c72cd4e87712a54cd1a",
+		"ua":"Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; DROID RAZR HD Build/KDA20.62-15.1) AppleWebKit/525.10  (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.",
+		"carrier":"Other",
+		"devicetype":1,
+		"language":"en",
+		"make":"Motorola",
+		"ifa":"35f41aab-812a-4db0-87fd-623ef7be14b3"
+	},
+	"user":{
+		"id":"3d03f9e3f5a1cc537ec11568b31e573102ed95be",
+		"ext":{ "sessiondepth":15 }
+	}
+}

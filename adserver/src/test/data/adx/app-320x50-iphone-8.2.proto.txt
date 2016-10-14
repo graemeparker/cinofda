@@ -1,0 +1,93 @@
+id: "U.\216\337\000\f\034j\n\f\aO\313\000!z"
+ip: "\246\211\370"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13D15"
+url: "https://itunes.apple.com/app/id386426585"
+detected_language: "en"
+detected_vertical {
+  id: 63
+  weight: 1.0
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 48
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    billing_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 500413478602890480
+  click_through_rate: 0.007297901
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESENWRwBlh2Xi-xR5_xF_ZiWI"
+timezone_offset: 0
+detected_content_label: 39
+detected_content_label: 87
+detected_content_label: 87
+mobile {
+  DEPRECATED_platform: "iphone"
+  app_id: "386426585"
+  is_app: true
+  DEPRECATED_mobile_device_type: HIGHEND_PHONE
+  DEPRECATED_screen_orientation: 1
+  app_category_ids: 60520
+  app_category_ids: 60514
+  app_category_ids: 60500
+  app_category_ids: 69500
+  DEPRECATED_brand: "apple"
+  DEPRECATED_model: "iphone"
+  DEPRECATED_os_version {
+    os_version_major: 9
+    os_version_minor: 2
+    os_version_micro: 1
+  }
+  DEPRECATED_screen_width: 320
+  DEPRECATED_screen_height: 568
+  DEPRECATED_carrier_id: 70062
+  DEPRECATED_device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "V\272\361\353\000\003\2758\n\030HQ\001\t<\360\2718\362_Hb\2003J$\304\360e\265\260J\246\352i\202"
+  advertising_id: "uHy\006D\212G0\260\311?\002\364u\003\341"
+}
+cookie_age_seconds: 31104000
+postal_code_prefix: "N1"
+geo_criteria_id: 9045999
+seller_network_id: 1
+publisher_settings_list_id: 8344779096162652736
+publisher_type: GOOGLE_REPRESENTED
+partner_id: 8344779096162652736
+device {
+  device_type: HIGHEND_PHONE
+  platform: "iphone"
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    major: 9
+    minor: 2
+    micro: 1
+  }
+  carrier_id: 70062
+  screen_width: 320
+  screen_height: 568
+  screen_pixel_ratio_millis: 2000
+  screen_orientation: PORTRAIT
+  hardware_version: "iphone 5"
+}

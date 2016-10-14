@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+]>
+
+<project name="adfonic-archive" default="run" basedir=".">
+
+  <property name="home" value="."/>
+  <property name="parent" value=".." />
+  <property name="args" value="" />
+  <property environment="env."/>
+
+  <path id="main.run.classpath">
+    <fileset dir="lib" />
+    <pathelement location="conf" />
+  </path>
+
+  <target name="push-cont-s3" description="Synchronize device DB" depends="taskprep">
+    <java classname="net.byyd.archive.model.v1.ContinuousPushS3BackupLog"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+      <arg value="/opt/tomcat/logs/adserver-backup"/>
+      <arg value="AKIAJRQDOV4DMY47DKPQ"/>
+      <arg value="kldAIrcq+lUVbWqOMO6FDOoIbhTC3syuOAliqBq/"/>
+    </java>
+  </target>
+
+  <target name="push-cont-mmx" description="Synchronize device DB" depends="taskprep">
+    <java classname="net.byyd.archive.model.v1.ContinuousPushMMXBackupLog"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+      <arg value="/opt/tomcat/logs/adserver-backup"/>
+      <arg value="byyd:1s9WmYZ3QG2sabXbN6O8GyMBa1ZBC4/Qpsu6HZ8FUr/04tqjhAf9Pg== "/>
+      <arg value="https://rt-test.mmx.io/events/byyd-auction-test"/>
+      <arg value="https://rt-test.mmx.io/events/byyd-impression-test"/>
+    </java>
+  </target>
+  
+</project>

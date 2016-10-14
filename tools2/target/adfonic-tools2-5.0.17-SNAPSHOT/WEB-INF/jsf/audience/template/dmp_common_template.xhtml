@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- Variables -->
+	<ui:param name="isDefaultSegments" value="#{audienceMBean.audienceSourceMBean.dmpType eq AudienceSourceMBean.DMP_DEFAULT_SEGMENTS_TYPE}" />
+	<ui:param name="isCustomSegment" value="#{audienceMBean.audienceSourceMBean.dmpType eq AudienceSourceMBean.DMP_CUSTOM_SEGMENT_TYPE}" />
+
+	<!-- Segments vs. Custom Segment ID -->
+	<pri:selectOneRadio id="dmp-options"
+		value="#{audienceMBean.audienceSourceMBean.dmpType}"
+		rendered="#{not empty audienceMBean.audienceSourceMBean.dmpVendor}"
+		valueChangeListener="#{audienceMBean.audienceSourceMBean.onDmpTypeChangedEvent}"
+		layout="custom">
+		<f:selectItem itemLabel="#{msg['page.audience.source.label.option.defaultsegments']}" itemValue="#{AudienceSourceMBean.DMP_DEFAULT_SEGMENTS_TYPE}" />
+		<f:selectItem itemLabel="#{msg['page.audience.source.label.option.customsegment']}" itemValue="#{AudienceSourceMBean.DMP_CUSTOM_SEGMENT_TYPE}" />
+		<pri:ajax process="@this" update="dmpPanel" />
+	</pri:selectOneRadio>
+
+	<!-- Segments -->
+	<pri:radioButton id="opt1" for="dmp-options" itemIndex="0" onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	<h:outputLabel for="opt1" value="#{msg['page.audience.source.label.option.defaultsegments']}" />
+
+	<!-- Custom Segment ID -->
+	<pri:radioButton id="opt2" for="dmp-options" itemIndex="1" onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	<h:outputLabel for="opt2" value="#{msg['page.audience.source.label.option.customsegment']}" />
+
+	<pri:message id="dmpSelectorErrorMessage" for="dmpVendorPanel" />
+	
+	<!-- Segments part -->
+	<h:panelGroup id="dmpVendorPanel" styleClass="inner-panel" layout="block" rendered="#{isDefaultSegments}">
+		<ui:repeat var="attrib"	value="#{audienceMBean.audienceSourceMBean.DMPAttributes}">
+			<div class="form-row">
+				<h:outputLabel styleClass="bl b" value="#{attrib.name}" />
+				<ui:repeat var="selector" value="#{attrib.DMPSelectors}">
+
+					<!-- ExternalId + DmpVendorId is unique for a selector -->
+					<ui:param name="selectorKey" value="#{selector.externalID.concat(AudienceSourceMBean.DASH).concat(selector.dmpVendorId)}" />
+
+					<pri:selectBooleanCheckbox id="selectorCheckboxId"
+						style="display: inline" rendered="#{not empty selector}"
+						valueChangeListener="#{audienceMBean.audienceSourceMBean.selectorChangedEvent}"
+						value="#{audienceMBean.audienceSourceMBean.selectedOptions[selectorKey]}" />
+					<h:outputLabel styleClass="bl" style="display: inline;margin-left: 5px;" value="#{selector.name}" />
+					<br />
+				</ui:repeat>
+			</div>
+		</ui:repeat>
+	</h:panelGroup>
+
+	<!-- Custom Segment ID part -->
+	<h:panelGroup id="dmpSegmentPanel" styleClass="inner-panel" layout="block" rendered="#{isCustomSegment}">
+		<pri:autoComplete id="customSegmentId"
+			value="#{audienceMBean.audienceSourceMBean.customSegmentId}"
+			completeMethod="#{audienceMBean.audienceSourceMBean.completeSelector}"
+			minQueryLength="1" queryDelay="100" size="255" scrollHeight="200"
+			multiple="true" forceSelection="true" var="s" itemValue="#{s}"
+			itemLabel="#{s.externalID}"
+			oncomplete="ADT.escapeAutocompleteResults();"
+			converter="dmpSelectorConverter">
+			<pri:ajax event="itemSelect" listener="#{audienceMBean.audienceSourceMBean.handleSelectedSelector}"	update="@this,custWatermark" />
+			<pri:ajax event="itemUnselect" listener="#{audienceMBean.audienceSourceMBean.handleUnSelectedSelector}"	update="@this,custWatermark" />
+		</pri:autoComplete>
+		<pri:watermark id="custWatermark" for="customSegmentId" value="#{msg['page.audience.source.customSegmentId.placeholder']}"
+			rendered="#{audienceMBean.audienceSourceMBean.customSelector == null}" />
+		<!-- Error section -->
+		<pri:outputPanel style="margin-left: 120px;">
+		   	<pri:message id="customSegmentIdErrorMessage" for="customSegmentId" />
+		</pri:outputPanel>
+	</h:panelGroup>
+		
+</ui:composition>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!-- Include all Context as its included in adfonic-adserver-context.xml -->
+
+  <context:annotation-config/>
+
+  <context:mbean-export/>
+  
+<!--   <import resource="classpath:adfonic-in-memory-cache-context.xml"/>
+  <import resource="classpath:adfonic-jms-context.xml"/>
+  <import resource="classpath:adfonic-adserver-context-core.xml"/>
+  <import resource="classpath:adfonic-tracker-context.xml"/>
+  <import resource="classpath:adfonic-domain-cache-context.xml"/>
+  <import resource="classpath:adfonic-status-change-manager-context.xml"/>
+  <import resource="classpath:adfonic-adserver-test-stoppage-manager-context.xml"/>
+  <import resource="classpath:test-adfonic-adserver-adevent-context.xml"/> -->
+  <import resource="classpath:adfonic-adserver-test-citrusleaf.xml"/>
+  <import resource="classpath:adfonic-adserver-citrusleaf.xml"/>
+  
+</beans>

@@ -1,0 +1,372 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<h:panelGroup layout="block" styleClass="form-row">
+		<c:choose>
+			<c:when
+				test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.whiteListMBean}">
+				<h2 class="sec-title">#{msg['page.campaign.inventory.list.tittle']}</h2>
+			</c:when>
+			<c:otherwise>
+				<h2 class="sec-title">#{msg['page.campaign.inventory.list.blacklist']}</h2>
+			</c:otherwise>
+		</c:choose>
+		<h:outputLabel styleClass="bl b" id="list-label" for="select-list"
+			value="#{msg['page.campaign.inventory.list.saved.label']}" />
+		<pri:selectOneMenu id="select-list" value="#{listBean.selectedList}"
+			converter="com.adfonic.tools.converter.publicationlist.PublicationListInfoConverter"
+			style="width:250px">
+			<f:selectItem
+				itemLabel="#{msg['page.campaign.inventory.select.emptylist.label']}" noSelectionOption="true"/>
+			<f:selectItems value="#{listBean.publicationsList}" var="pl"
+				itemLabel="#{pl.name}" itemValue="#{pl}" />
+			<pri:ajax event="change" update="@parent:pubs-container"
+				onstart="PF('progressDialog').show();" oncomplete="PF('progressDialog').hide()"></pri:ajax>
+		</pri:selectOneMenu>
+		<pri:message id="select-list-message" for="select-list" />
+	</h:panelGroup>
+	<h:panelGroup layout="block" styleClass="form-row">
+		<pri:commandButton id="newListButton"
+			value="#{msg['page.campaign.inventory.newlist.label']}"
+			actionListener="#{listBean.newList}" process="@this"
+			oncomplete="editList.show()" update="searchDialog" />
+		<pri:commandButton id="deleteListButton"
+			value="#{msg['page.campaign.inventory.list.delete']}"
+			actionListener="#{listBean.checkDelete}" process="@this,select-list"
+			update="select-list,pubs-container,confirmationDeleteDialog,:menuForm" 
+			onclick="PF('progressDialog').show();"
+			oncomplete="PF('progressDialog').hide()" />
+	</h:panelGroup>
+	<h:panelGroup layout="block" styleClass="form-row">
+		<h:panelGroup id="pubs-container" layout="block" styleClass="form-row">
+			<h3 class="sec-title">#{msg['page.campaign.inventory.list.search.selected']}</h3>
+			<pri:dataTable id="publicationsDataTable" var="pub"
+				styleClass="ui-corner-all pub-table" 
+				paginator="true" rows="10"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				value="#{listBean.selectedListLazyModel}"
+				rowsPerPageTemplate="10" 
+				paginatorPosition="bottom"
+				rowKey="#{pub.displayName}"
+				lazy="true"
+				disabledSelection="true"
+				sortBy="friendlyName">
+				<pri:ajax event="page" onstart="PF('progressDialog').show();"
+					oncomplete="PF('progressDialog').hide();" />
+				<pri:column id="pubName">
+					<h:outputText value="#{pub.displayName}" />
+				</pri:column>
+			</pri:dataTable>
+			<pri:commandButton id="edit-button"
+				value="#{msg['page.campaign.inventory.editlist.label']}"
+				actionListener="#{listBean.editList}" widgetVar="editButton"
+				disabled="#{!listBean.listEditable}"
+				process="@this,publicationsDataTable" update="dialogContainer"
+				onclick="PF('progressDialog').show();"
+				oncomplete="PF('progressDialog').hide();editList.show()" />
+
+		</h:panelGroup>
+	</h:panelGroup>
+	<pri:dialog id="searchDialog"
+		header="#{msg['page.campaign.inventory.edit.header']}"
+		widgetVar="editList" modal="true" resizable="false" closable="true"
+		draggable="false" width="1200" minWidth="600" height="600"
+		position="center" styleClass="search-dialog" minHeight="450"
+		onShow="ADT.togglePageScroll(true); ADT.centreDialog();"
+		onHide="ADT.togglePageScroll()">
+		<h:panelGroup id="dialogContainer" layout="block"
+			styleClass="form-row dialog-container">
+			<h3 class="sec-title">#{msg['page.campaign.inventory.list.search.tittle']}</h3>
+			<h:panelGroup layout="block" styleClass="form-row">
+				<h:outputLabel styleClass="bl b" id="in-label" for="in-search"
+					value="#{msg['page.campaign.inventory.list.search.name.label']}" />
+				<pri:inputText id="in-search"
+					value="#{listBean.searchName}">
+				</pri:inputText>
+				<div class="search-div">
+					<h:outputLabel styleClass="bl b" id="select-type-label"
+						for="select-type"
+						value="#{msg['page.campaign.inventory.list.search.publication.type.label']}" />
+
+					<pri:selectOneMenu id="select-type"
+						styleClass="publication-type-select"
+						value="#{listBean.searchType}"
+						style="width:120px">
+						<f:selectItem
+							itemLabel="#{msg['page.campaign.inventory.list.search.publication.type.both']}"
+							itemValue="0" />
+						<f:selectItem
+							itemLabel="#{msg['page.campaign.inventory.list.search.publication.type.sites']}"
+							itemValue="1" />
+						<f:selectItem
+							itemLabel="#{msg['page.campaign.inventory.list.search.publication.type.apps']}"
+							itemValue="2" />
+					</pri:selectOneMenu>
+					<pri:commandButton
+						id="search-button"
+						value="#{msg['page.campaign.inventory.list.search.tittle']}"
+						update="dialogContainer" process="@this,in-search,select-type,listName"
+						widgetVar="searchButton" onclick="PF('progressDialog').show();"
+						oncomplete="PF('progressDialog').hide(); ADT.selectAllElement('.publisher-search-table'); ADT.selectAllElement('.publisher-select-table')"
+						style="position:absolute;margin-top:0;" />
+				</div>
+				<pri:commandLink
+					value="+#{msg['page.campaign.inventory.addlist.link']}"
+					process="@this" onclick="addListPublications.show()"
+					styleClass="add-list-link" />
+			</h:panelGroup>
+			<table>
+				<tr>
+					<td class="table-container"><h:panelGroup
+							id="results-container" layout="block" styleClass="form-row">
+							<h3 class="sec-title">#{msg['page.campaign.inventory.list.search.results']}</h3>
+							<div id="searched-publications">
+								<pri:dataTable id="dataTable" var="pub"
+									styleClass="ui-corner-all pub-dialog-table publisher-search-table"
+									paginator="true" rows="10"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									value="#{listBean.searchedPublicationsLazyModel}" rowsPerPageTemplate="10"
+									rowKey="#{pub.publicationId}" lazy="true"
+									paginatorPosition="bottom"
+									selection="#{listBean.selectedSearchedPublications}">
+									<pri:ajax event="page" onstart="PF('progressDialog').show();"
+										oncomplete="PF('progressDialog').hide();" />
+
+									<pri:column selectionMode="multiple" style="width:18px; text-align:center;" />
+
+									<pri:column id="publicationName">
+										<h:outputText value="#{pub.displayName}" />
+									</pri:column>
+								</pri:dataTable>
+							</div>
+						</h:panelGroup></td>
+					<td class="central-div">
+						<div class="form-row">
+							<pri:commandButton
+								id="add-publications-button" 
+								value="&gt;"
+								actionListener="#{listBean.addPublications}"
+								process="@this,dataTable,listName" update="dialogContainer"
+								onclick="PF('progressDialog').show();"
+								oncomplete="PF('progressDialog').hide();" />
+						</div>
+						<div class="form-row">
+							<pri:commandButton
+							 	id="remove-publications-button" 
+								value="&lt;"
+								actionListener="#{listBean.removePublications}"
+								process="@this,selectedDataTable,listName" update="dialogContainer"
+								onclick="PF('progressDialog').show();"
+								oncomplete="PF('progressDialog').hide();" />
+						</div>
+					</td>
+					<td class="table-container"><h:panelGroup
+							id="publications-container" layout="block" styleClass="form-row">
+							<h3 class="sec-title">#{msg['page.campaign.inventory.list.search.selected']}</h3>
+							<div id="selected-publications">
+								<pri:dataTable id="selectedDataTable" var="pub"
+									styleClass="ui-corner-all pub-dialog-table publisher-select-table"
+									paginator="true" rows="10"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									value="#{listBean.loadedListPublications}"
+									rowsPerPageTemplate="10" rowKey="#{pub.id}"
+									paginatorPosition="bottom" lazy="true"
+									selection="#{listBean.selectedPublications}" sortBy="friendlyName">
+									<pri:ajax event="page" onstart="PF('progressDialog').show();"
+										oncomplete="PF('progressDialog').hide();" />
+
+									<pri:column selectionMode="multiple" style="width:18px; text-align:center;" />
+
+									<pri:column id="publicationName">
+										<h:outputText value="#{pub.displayName}" />
+									</pri:column>
+								</pri:dataTable>
+							</div>
+						</h:panelGroup></td>
+				</tr>
+			</table>
+			<h:panelGroup id="save-list-container" layout="block" styleClass="form-row">
+				<h:outputLabel styleClass="bl b" id="name-label" for="listName"
+					value="#{msg['page.campaign.inventory.listname.label']}" />
+				<pri:inputText id="listName" value="#{listBean.listName}"/>
+				<pri:message id="listNameMessage" for="listName" />
+				<div class="form-row">
+					<pri:commandButton
+						id="search-save-button" 
+						value="#{msg['page.campaign.inventory.list.search.save.label']}"
+						actionListener="#{listBean.checkUpdate}" styleClass="save-button"
+						process="@this,listName"
+						update="save-list-container,publicationsDataTable,confirmationUpdateDialog,select-list,pubs-container"
+						onclick="PF('progressDialog').show();"
+						oncomplete="PF('progressDialog').hide();" />
+					<pri:commandLink
+						id="search-cancel-button" 
+						value="#{msg['page.commons.links.cancel']}"
+						process="@this"
+						update = "@this,dataTable,selectedDataTable,listName"
+						actionListener="#{listBean.cleanSearchDialog}" 
+						oncomplete="editList.hide();" />
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+	</pri:dialog>
+	<pri:dialog id="addListPublicationDialog" widgetVar="addListPublications" 
+		header="#{msg['page.commons.headers.addlist']}"
+		modal="true" resizable="false" styleClass="add-list-dialog"
+		closable="false" draggable="false" width="560">
+		<div class="listContainer">
+			<c:if
+				test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.whiteListMBean}">
+				<pri:inputTextarea id="textAreaPublications"
+					value="#{campaignMBean.campaignInventoryTargetingMBean.whiteListMBean.idsList}"
+					rows="15" cols="15">
+				</pri:inputTextarea>
+			</c:if>
+			<c:if
+				test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean}">
+				<pri:inputTextarea id="textAreaPublications"
+					value="#{campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean.idsList}"
+					rows="15" cols="15">
+				</pri:inputTextarea>
+			</c:if>
+			<c:if
+				test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean}">
+				<pri:inputTextarea id="textAreaPublications"
+					value="#{campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean.idsList}"
+					rows="15" cols="15">
+				</pri:inputTextarea>
+			</c:if>
+			<pri:watermark
+				value="#{msg['page.campaign.inventory.addlist.watermark']}"
+				for="textAreaPublications" />
+		</div>
+		<pri:separator />
+		<c:if
+			test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.whiteListMBean}">
+			<pri:commandButton id="addPublicationButton"
+				value="#{msg['page.campaign.inventory.addlist.save.label']}"
+				oncomplete="progressDialog.hide()"
+				update="textAreaPublications,dialogContainer"
+				process="@this,textAreaPublications"
+				actionListener="#{campaignMBean.campaignInventoryTargetingMBean.whiteListMBean.addIds}"
+				onclick="addListPublications.hide();progressDialog.show()"
+				style="width:150px" />
+			<pri:commandLink
+				value="#{msg['page.commons.links.cancel']}"
+				onclick="addListPublications.hide()"
+				actionListener="#{campaignMBean.campaignInventoryTargetingMBean.whiteListMBean.cancelAdd}"
+				update="textAreaPublications" process="@this" />
+		</c:if>
+		<c:if
+			test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean}">
+			<pri:commandButton id="addPublicationButton"
+				value="#{msg['page.campaign.inventory.addlist.save.label']}"
+				oncomplete="progressDialog.hide()"
+				update="textAreaPublications,dialogContainer"
+				process="@this,textAreaPublications"
+				actionListener="#{campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean.addIds}"
+				onclick="addListPublications.hide();progressDialog.show()"
+				style="width:150px" />
+			<pri:commandLink
+				value="#{msg['page.commons.links.cancel']}"
+				onclick="addListPublications.hide()"
+				actionListener="#{campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean.cancelAdd}"
+				update="textAreaPublications" process="@this" />
+		</c:if>
+		<c:if
+			test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean}">
+			<pri:commandButton id="addPublicationButton"
+				value="#{msg['page.campaign.inventory.addlist.save.label']}"
+				oncomplete="progressDialog.hide()"
+				update="textAreaPublications,dialogContainer"
+				process="@this,textAreaPublications"
+				actionListener="#{campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean.addIds}"
+				onclick="addListPublications.hide();progressDialog.show()"
+				style="width:150px" />
+			<pri:commandLink
+				value="#{msg['page.commons.links.cancel']}"
+				onclick="addListPublications.hide()"
+				actionListener="#{campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean.cancelAdd}"
+				update="textAreaPublications" process="@this" />
+		</c:if>
+	</pri:dialog>
+	<pri:dialog id="confirmationUpdateDialog" widgetVar="confirmationUpdateDialog"
+		modal="true" resizable="false" closable="false" draggable="false"
+		minWidth="560" minHeight="200" header="Warning!"
+		styleClass="over-dialog">
+		<p style="max-width: 500px">
+			<h:outputText value="#{listBean.confirmationUpdateMessage}" />
+		</p>
+		<h:panelGroup layout="block" style="text-align:center">
+			<pri:commandButton
+				id="confirm-save-button"
+				value="#{msg['page.campaign.creative.savecreative.label']}"
+				actionListener="#{listBean.saveList}"
+				process="@this"
+				update=":navigationDiv" 
+				onclick="PF('progressDialog').show();"
+				oncomplete="PF('progressDialog').hide();PF('confirmationUpdateDialog').hide();ADT.togglePageScroll()" />
+			<pri:commandLink
+				id="confirm-cancel-update-button"
+				value="#{msg['page.commons.links.cancel']}"
+				process="@this" onclick="PF('confirmationUpdateDialog').hide()"/>
+			
+		</h:panelGroup>
+	</pri:dialog>
+	<pri:dialog id="confirmationDeleteDialog" widgetVar="confirmationDeleteDialog"
+		modal="true" resizable="false" closable="false" draggable="false"
+		minWidth="560" minHeight="200" header="Warning!"
+		styleClass="over-dialog">
+		<p style="max-width: 500px">
+			<h:outputText value="#{listBean.confirmationDeleteMessage}" />
+		</p>
+		<h:panelGroup layout="block" style="text-align:center">
+			<c:if test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.whiteListMBean}">
+				<pri:commandButton id="confirm-whitelist-ok-button"
+								   value="#{msg['page.campaign.inventory.list.ok']}"
+								   onclick="PF('confirmationDeleteDialog').hide();" />
+			</c:if>
+			<c:if test="#{listBean eq campaignMBean.campaignInventoryTargetingMBean.exchangeInventoryBlackListMBean 
+						  or listBean eq campaignMBean.campaignInventoryTargetingMBean.categoriesBlackListMBean}">
+				<pri:commandButton
+					id="confirm-delete-button"
+					value="#{msg['page.campaign.inventory.list.delete']}"
+					actionListener="#{listBean.deleteList}"
+					process="@this"
+					update=":navigationDiv" 
+					onclick="PF('progressDialog').show();"
+					oncomplete="PF('progressDialog').hide();PF('confirmationDeleteDialog').hide();" />
+				<pri:commandLink
+					id="confirm-cancel-delete-button"
+					value="#{msg['page.commons.links.cancel']}"
+					process="@this" onclick="PF('confirmationDeleteDialog').hide()"/>
+			</c:if>
+		</h:panelGroup>
+	</pri:dialog>
+	<script type="text/javascript">
+	// <![CDATA[
+		$(document).ready(function() {
+			$(window).keydown(function(event){
+				if(event.keyCode == 13) {
+					if(
+					event.target.id == 'categoriesBlacklist:in-search' || 
+					event.target.id == 'whiteList:in-search' || 
+					event.target.id == 'networkBlacklist:in-search'
+					){
+						event.preventDefault();
+						return false;
+					}
+				}
+			});
+			ADT.selectAllElement(".publisher-search-table");
+			ADT.selectAllElement(".publisher-select-table");
+		});
+		$(window).on("resize", function(){ ADT.centreDialog(true); })
+	//]]>
+	</script>
+</ui:composition>

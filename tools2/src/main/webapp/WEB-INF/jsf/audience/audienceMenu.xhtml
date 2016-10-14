@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+<!-- Constants, enums -->
+<pe:importEnum type="com.adfonic.dto.audience.enums.AudienceType" var="AudienceType" />
+<pe:importConstants className="com.adfonic.tools.beans.audience.source.AudienceSourceMBean" var="AudienceSourceMBean" />
+
+<!-- Variables -->
+<ui:param name="isFactualAudience" value="#{audienceMBean.audienceSourceMBean.factualAudience}" />
+
+<h:form id="menuForm" prependId="false">
+  <h:panelGroup id="panelSectionGroup" layout="block" class="fourcol">  
+    <h:panelGroup layout="block" id="side-panel" class="ui-corner-all #{audienceNavigationSessionBean.menuStyleClass['section']}">
+    
+      <section class="#{audienceNavigationSessionBean.menuStyleClass['setupClass']}">
+        <h2>
+          <pri:commandLink id="setupMenuLinkId" disabled="#{userSessionBean.readOnlyUser}"
+              actionListener="#{audienceNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv">
+            <f:attribute name="navigateTo" value="setup"/>
+            <span>#{msg['page.audience.setup.menu.label']}</span>
+          </pri:commandLink>  
+        </h2>
+        
+        <h:panelGroup layout="block" class="props t1">
+            <ul>
+                <li>
+                    <span class="label">#{msg['page.audience.setup.name.label']}</span>
+                    <span class="val">#{audienceMBean.audienceSetupMBean.audienceDto.name}</span>
+                </li>
+                <li>
+                    <span class="label">#{msg['page.audience.setup.type.label']}</span>
+                    <span class="val">#{audienceMBean.audienceSetupMBean.audienceType}</span>
+                </li>
+            </ul>
+        </h:panelGroup>
+        
+      </section>
+  
+      <section class="#{audienceNavigationSessionBean.menuStyleClass['sourceClass']}">
+        <h2>
+          <pri:commandLink id="sourceMenuLinkId" disabled="#{audienceNavigationSessionBean.sourceDisabled || userSessionBean.readOnlyUser}"
+              actionListener="#{audienceNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv"
+              onstart="progressDialog.show();" oncomplete="progressDialog.hide();">
+            <f:attribute name="navigateTo" value="source"/>
+            <span>#{msg['page.audience.source.menu.label']}</span>
+          </pri:commandLink>  
+        </h2>
+        
+        <h:panelGroup layout="block" class="props t2">
+          <ul>
+            <h:panelGroup rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.DMP}">
+              <!-- DMP Vendor -->
+              <li>
+                  <span class="label">#{msg['page.audience.source.label.dmpvendor']}</span>
+                  <span class="val">#{audienceMBean.audienceSourceMBean.dmpVendor.name}</span>
+              </li>
+              
+              <!-- Factual DMP -->
+              <pri:outputPanel rendered="#{isFactualAudience}">
+              
+	              <!-- Factual Audiences -->
+	              <h:panelGroup rendered="#{audienceMBean.audienceSourceMBean.dmpFactualType eq AudienceSourceMBean.DMP_FACTUAL_AUDIENCE_TYPE}">
+	                <li>
+	                    <span class="label">#{msg['page.audience.source.label.option.factual.audience.segments']}</span>
+	                    <span class="val">#{toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.getFactualAudiencesSummary(),21)}</span>
+	                </li>
+	              </h:panelGroup>
+	              
+	              <!-- Factual Proximity -->
+	              <h:panelGroup rendered="#{audienceMBean.audienceSourceMBean.dmpFactualType eq AudienceSourceMBean.DMP_FACTUAL_PROXIMITY_TYPE}">
+	                <li>
+	                    <span class="label">#{msg['page.audience.source.label.option.factual.proximity.segment']}</span>
+	                    <span class="val">#{not empty audienceMBean.audienceSourceMBean.customFactualProximitySelector.externalID?toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.customFactualProximitySelector.externalID,21):'None Set'}</span>
+	                </li>
+	              </h:panelGroup>
+              </pri:outputPanel>
+              
+              <!-- Custom DMP -->
+              <pri:outputPanel rendered="#{not isFactualAudience}">
+              
+	              <!-- Segments -->
+	              <h:panelGroup rendered="#{audienceMBean.audienceSourceMBean.dmpType eq AudienceSourceMBean.DMP_DEFAULT_SEGMENTS_TYPE}">
+	                <li>
+	                    <span class="label">#{msg['page.audience.source.label.option.defaultsegments']}</span>
+	                    <span class="val">#{toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.getAttributeSummary(false),21)}</span>
+	                </li>
+	              </h:panelGroup>
+	              
+	              <!-- Custom Segment ID -->
+	              <h:panelGroup rendered="#{audienceMBean.audienceSourceMBean.dmpType eq AudienceSourceMBean.DMP_CUSTOM_SEGMENT_TYPE}">
+	                <li>
+	                    <span class="label">#{msg['page.audience.source.label.option.customsegment']}</span>
+	                    <span class="val">#{audienceMBean.audienceSourceMBean.customSegmentId!=null?toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.customSelector.externalID,21):'None Set'}</span>
+	                </li>
+	              </h:panelGroup>
+              </pri:outputPanel>
+              
+            </h:panelGroup>
+            
+            <h:panelGroup rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.CAMPAIGN_EVENT}">
+              <li>
+                <span class="label">#{msg['page.audience.source.label.type']}</span>
+                <span class="val">#{msg[audienceMBean.audienceSourceMBean.campaignEventType.label]}</span>
+              </li>
+              <li>
+                <span class="label">#{msg['page.audience.source.label.sourcecampaigns']}</span>
+                <span class="val">#{toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.getCampaignSummary(false),21)}</span>
+              </li>
+            </h:panelGroup>
+            
+            <ui:param name="audienceDtoDefined" value="#{audienceMBean.audienceSourceMBean.audienceDto != null}" />
+            <ui:param name="sumOfValidsFromS3" value="#{audienceDtoDefined ? audienceMBean.audienceSourceMBean.audienceSize : 0}" />
+            <ui:param name="segmentSizeFromFile" value="#{audienceDtoDefined ? audienceMBean.audienceSourceMBean.segmentSize : 0}" />
+            
+            <ui:param name="fileUpload" value="#{segmentSizeFromFile gt 0}" />
+            <ui:param name="s3Upload" value="#{sumOfValidsFromS3 gt 0}" />
+            
+            <!-- File upload DEVICE -->
+            <h:panelGroup rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.DEVICE and fileUpload}">
+              <li>
+                <span class="label">#{msg['page.audience.source.label.deviceid.file']}</span>
+                <span class="val">#{segmentSizeFromFile}</span>
+              </li>
+              <li>
+                <span class="label">#{msg['page.audience.source.label.upload.history']}</span>
+                <span class="val">#{toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.getUploadHistorySummary(false),21)}</span>
+              </li>
+            </h:panelGroup>
+            
+            <!-- S3 upload DEVICE -->
+            <h:panelGroup rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.DEVICE and s3Upload}">
+              <li>
+                <span class="label">#{msg['page.audience.source.label.deviceid.s3']}</span>
+                <span class="val">#{sumOfValidsFromS3}</span>
+              </li>
+              <li>
+                <span class="label">#{msg['page.audience.source.label.upload.history.s3']}</span>
+                <span class="val">#{toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.getUploadHistorySummaryFromAssignedFiles(false),21)}</span>
+              </li>
+            </h:panelGroup>
+            
+            <!-- S3 upload LOCATION -->
+            <h:panelGroup rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.LOCATION}">
+              <li>
+                <span class="label">#{msg['page.audience.source.label.location']}</span>
+                <span class="val">#{sumOfValidsFromS3}</span>
+              </li>
+              <li>
+                <span class="label">#{msg['page.audience.source.label.upload.history.s3']}</span>
+                <span class="val">#{toolsApplicationBean.shortMessage(audienceMBean.audienceSourceMBean.getUploadHistorySummaryFromAssignedFiles(false),21)}</span>
+              </li>
+            </h:panelGroup>
+
+            <!-- <h:panelGroup rendered="#{audienceMBean.audienceSetupMBean.type eq AudienceType.SITE_APP}">
+              <li>
+                <span class="label">#{msg['page.audience.source.label.type']}</span>
+                <span class="val">#{msg['page.audience.source.label.type.siteapp']}</span>
+              </li>
+            </h:panelGroup> -->
+          </ul>
+        </h:panelGroup>
+      </section>
+  
+      <section class="#{audienceNavigationSessionBean.menuStyleClass['confirmationClass']}">
+        <h2>
+          <pri:commandLink id="confirmationMenuLinkId" oncomplete="ADT.panelsTop()"
+              actionListener="#{audienceNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+              disabled="#{audienceNavigationSessionBean.confirmationDisabled || userSessionBean.readOnlyUser}">
+            <f:attribute name="navigateTo" value="confirmation"/>                    
+            <span>#{msg['page.audience.confirmation.menu.label']}</span>
+          </pri:commandLink>
+        </h2>
+      </section>
+  
+    </h:panelGroup>
+  </h:panelGroup>
+</h:form>
+</h:body>
+</html>

@@ -1,0 +1,12 @@
+{
+    "timestamp": "@{dateFmt(adEvent.eventTime)}",
+    "request_id": "@{adEvent.impressionExternalID}",
+    "winning_bidder_id": "@{adEvent.advertiserCompanyId}",
+    "action": "beacon",
+    "ext":{  
+      "byyd":{
+         "shard": "@{adEvent.shard}",
+         "server": "@{adEvent.serverName}"
+      }
+   }
+}

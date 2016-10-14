@@ -1,0 +1,10 @@
+2015-12-21 13:54:53,178 WARN [main|net.byyd.archive.transform.MVELTransformer] - Unable to locate template C in version v2 
+2015-12-21 13:54:53,179 WARN [main|net.byyd.archive.transform.MVELTransformer] - Unable to locate template I in version v2 
+2015-12-21 13:54:53,180 WARN [main|net.byyd.archive.transform.MVELTransformer] - Unable to locate template UR in version v2 
+2015-12-21 13:54:53,180 WARN [main|net.byyd.archive.transform.MVELTransformer] - Unable to locate template RF in version v2 
+2015-12-21 13:54:53,181 WARN [main|net.byyd.archive.transform.MVELTransformer] - Unable to locate template RL in version v2 
+2015-12-21 13:54:53,201 WARN [main|net.byyd.archive.transform.MVELTransformer] - Unparsable result: {
+   "id":"2dd5a4b0-58b4-ce1c-1964-1d112fd29b45",
+   "timestamp":"2014-09-10T17:24:06.010Z",
+   INAVALID JSON {},
+} 

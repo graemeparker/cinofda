@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.springframework.org/schema/webflow"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd"
+      start-state="verifyAction">
+    
+    <var name="verifyModel" class="com.adfonic.sso.flows.verify.VerifyModel"/>
+    
+    <action-state id="verifyAction">
+    	<on-entry>
+    		<set name="flowScope.verifyModel.code" value="requestParameters.code" />
+        </on-entry>
+    	<evaluate expression="verifyAction" result="flowScope.user"/>
+		<transition on="error" to="verifiyErrorView" />
+		<transition on="gohome" to="goHomeAction" />
+		<transition on="signupcompleted" to="signupCompletedView" />
+		<transition on="signuperror" to="signupErrorView" />
+		<transition on="pwdreset" to="pwdResetFormView" />
+		<transition on="changeemailcompleted" to="changeeMailCompletedView" />
+    </action-state>
+    
+	<!-- Reset password flow -->
+	<view-state id="pwdResetFormView" view="resetpwd" model="verifyModel">
+        <transition on="submit" to="resetPwdAction"></transition>
+    </view-state>
+    
+    <action-state id="resetPwdAction">
+    	<evaluate expression="resetPasswordAction"/>
+        <transition on="success" to="resetPasswordCompletedView" />
+		<transition on="error" to="pwdResetFormView" />
+    </action-state>
+    
+    <!--  End states -->
+    <end-state id="resetPasswordCompletedView" view="resetpwdcompleted" />
+    
+    <end-state id="verifiyErrorView" view="verifyerror" />
+    
+    <end-state id="goHomeAction" view="externalRedirect:${configurationBean.tools2BaseUrl}" />
+    
+    <end-state id="signupCompletedView" view="verifysignupcompleted" />
+    
+    <end-state id="signupErrorView" view="signuperror" />
+    
+    <end-state id="changeeMailCompletedView" view="changeemailcompleted" />
+</flow>

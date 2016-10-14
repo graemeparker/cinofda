@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://service.adfonic.com/" xmlns:tns="http://service.adfonic.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="getEligibleCreativesForAdSpaces" type="tns:getEligibleCreativesForAdSpaces"/>
+
+  <xs:element name="getEligibleCreativesForAdSpacesResponse" type="tns:getEligibleCreativesForAdSpacesResponse"/>
+
+  <xs:element name="getEligibleCreativesForPublication" type="tns:getEligibleCreativesForPublication"/>
+
+  <xs:element name="getEligibleCreativesForPublicationResponse" type="tns:getEligibleCreativesForPublicationResponse"/>
+
+  <xs:complexType name="getEligibleCreativesForAdSpaces">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:long" minOccurs="0"/>
+      <xs:element name="arg1" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getEligibleCreativesForAdSpacesResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getEligibleCreativesForPublication">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:long" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getEligibleCreativesForPublicationResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

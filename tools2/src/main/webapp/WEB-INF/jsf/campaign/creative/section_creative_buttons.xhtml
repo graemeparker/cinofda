@@ -1,0 +1,88 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:sec="http://www.springframework.org/security/tags">
+                
+                
+    <section class="form-row-small btnsOuter">
+        <h1>#{msg['page.campaign.creative.buttons.header']}</h1>
+        
+        <pri:panelGrid columns="3">
+        
+        	<!-- Upload Creative Assets -->
+	        <h:form id="uploadBtnForm" prependId="false" enctype="multipart/form-data">
+	            <pri:fileUpload 
+	                id="creativeFileUpload" 
+	                mode="advanced"
+	                label="#{msg['page.campaign.creative.buttons.uploadassets']}" 
+	                auto="true"
+	                multiple="true" 
+	                fileUploadListener="#{campaignCreativeMBean.multipleFileUpload}" 
+	                update=":creatives-container,:submitForm"
+	                onstart="progressDialog.show();" 
+	                oncomplete="ADT.hideDialog();"
+	                disabled="#{campaignCreativeMBean.editing}" />
+	            <pri:poll interval="5000" update=":creatives-container" />
+	        </h:form>
+	        
+	        <!-- Create Text Ad -->
+	        <h:form id="textAdBtnForm" prependId="false" enctype="multipart/form-data">
+	           <pri:commandButton  
+	                id="textAddbutton" 
+	                actionListener="#{campaignCreativeMBean.addNew}"
+	                value="#{msg['page.campaign.creative.buttons.textad']}" 
+	                update=":navigationDiv"
+	                disabled="#{campaignCreativeMBean.editing}" />
+	        </h:form>
+	        
+	        <!-- 3rd party standard tag -->
+            <h:form id="thirdPartyBtnForm" prependId="false" enctype="multipart/form-data" rendered="#{IS_ADMIN_OR_THIRD_PARTY_TAGS}">
+               <pri:commandButton  
+                    id="thirdPartyButton" 
+                    actionListener="#{campaignCreativeMBean.addNew}"
+                    value="#{msg['page.campaign.creative.buttons.thirdparty']}"
+                    update=":navigationDiv"
+                    disabled="#{campaignCreativeMBean.editing}" />
+            </h:form>
+            
+            <!-- 3rd party Rich Media tag -->
+            <h:form id="richMediaBtnForm" prependId="false" enctype="multipart/form-data" rendered="#{IS_ADMIN_OR_THIRD_PARTY_TAGS}">
+               <pri:commandButton  
+                    id="richmediaButton" 
+                    actionListener="#{campaignCreativeMBean.addNew}"
+                    value="#{msg['page.campaign.creative.buttons.richmedia']}" 
+                    update=":navigationDiv"
+                    disabled="#{campaignCreativeMBean.editing}" />
+            </h:form>
+            
+            <!-- VAST video tag -->
+            <h:form id="vastBtnForm" prependId="false" enctype="multipart/form-data" rendered="#{IS_ADMIN_OR_THIRD_PARTY_TAGS}">
+            	<pri:commandButton  
+                    id="vastButton" 
+                    actionListener="#{campaignCreativeMBean.addNew}"
+                    value="#{msg['page.campaign.creative.buttons.vast']}" 
+                    update=":navigationDiv"
+                    disabled="#{campaignCreativeMBean.editing}" />
+                <pri:outputPanel id="vastHint" styleClass="help" />
+				<pri:tooltip for="vastHint" value="#{msg['page.campaign.creative.buttons.vast.hint']}" style="width:250px;" />
+            </h:form>
+	      
+	      	<!-- Create Native ad -->
+	        <h:form id="nativeAdBtnForm" prependId="false" enctype="multipart/form-data" rendered="#{IS_ADMIN_OR_THIRD_PARTY_TAGS}">
+	            <pri:commandButton  
+	                id="nativeadButton" 
+	                actionListener="#{campaignCreativeMBean.addNew}"
+	                value="#{msg['page.campaign.creative.buttons.nativead']}" 
+	                update=":navigationDiv"
+	                disabled="#{campaignCreativeMBean.editing}"/>
+	        </h:form>
+        </pri:panelGrid>
+        
+    </section>
+	        	
+</ui:composition>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<h:body>
+	<section style="display: block;" id="addslotids-app" class="form-box ui-corner-all">
+          	<h2 class="sec-title">#{msg['page.publication.create.label.addslotids']}</h2>
+	            <h:form id="addapp-addslotids" prependId="false" >
+	            	<pri:outputPanel id="adspaces">
+	            	<pri:outputPanel rendered="#{publicationMBean.appAddSlotsMBean.slotTableRendered}">
+	            	<ui:repeat var="adspace" value="#{publicationMBean.appAddSlotsMBean.publicationDto.adSpaces}" varStatus="status" >
+	            		<div class="part-b-wrapper">
+							
+                            <header class="acc-head ui-corner-all">
+                                <span class="ui-icon exec"></span>
+                                <span class="exec">#{adspace.name}</span>
+                                <span><h:outputText value= "#{adspace.formats.get(0).name}" /></span>
+                                <pri:spacer width="10"/>
+                                <span><h:outputText value= "ID:"/></span>
+                                <input type="text" value='${adspace.externalId}' class="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all in-bl" readonly="readonly"/>
+                            </header>
+                            <div class="acc-content ui-shadow ui-corner-bottom none">
+                                <div class="form-row">
+	                        <h:outputLabel styleClass="bl" id="slot-name-label" for="slot-name"
+	                                       value="#{msg['page.publication.settings.label.app.slot.name']}"/>
+	                        <pri:inputText styleClass="bl" id="slot-name" value="#{adspace.name}" required="true" requiredMessage="#{msg['page.publication.message.name.required']}"/>
+	                        <pri:message for="slot-name"/>
+	                        <pri:watermark for="slot-name" value="#{msg['page.publication.settings.label.app.slot.egname']}" />
+	                    </div>
+	                    <div class="form-row ovh">
+	                        <div class="form-col">
+	                            <h:outputLabel styleClass="in-bl" id="slot-size-label" for="slot-size"
+	                                           value="#{msg['page.publication.settings.label.app.slot.size']}"/>
+	                            <a href="#{toolsApplicationBean.externalUrls['creativeSpecsUrl']}" target="_blank">#{msg['page.publication.settings.label.app.slot.help']}</a>
+	                            <pri:selectOneRadio id="slot-size" value="#{adspace.format}" styleClass="slot-size" layout="pageDirection"
+	                            					converter="com.adfonic.tools.converter.format.FormatConverter"  required="true" requiredMessage="#{msg['page.publication.message.size.required']}">
+	                            	<f:attribute name="adSpaceId" value="#{adspace.id}"/>
+	                                <f:selectItems value="#{publicationMBean.appAddSlotsMBean.lFormats}" var="format" itemLabel="#{format.name}" itemValue="#{format}"/>
+	                            </pri:selectOneRadio>
+	                            <pri:message for="slot-size"/>
+	
+	                            <div class="form-row">
+	                                <!--temp onclick handler-->
+	                                <pri:commandButton value="#{msg['page.publication.settings.label.app.slot.update']}" actionListener="#{publicationMBean.appAddSlotsMBean.doUpdate}"
+	                                					update=":navigationDiv" process="@this,slot-size,slot-name">
+	                               		<f:attribute name="adSpaceId" value="#{status.index}"/>
+	                                </pri:commandButton>
+	                                <pri:commandLink value="#{msg['page.campaign.creative.changes.warning.cancel']}" actionListener="#{publicationMBean.appAddSlotsMBean.cancelAdSpace}" 
+                                    				onclick="progressDialog.show();" oncomplete="progressDialog.hide()" process="@this" update=":navigationDiv">
+                                    </pri:commandLink>
+	                            </div>
+	                        </div>
+	                    </div>
+                            </div>
+							
+                            
+
+                            <script type="text/javascript">
+                                // <![CDATA[
+                                $(function () {
+                                    ADT.accordion('#addslotids-app');
+                                });
+                                // ]]>
+                            </script>
+						</div>
+                    	</ui:repeat>
+                    	</pri:outputPanel>
+                   	</pri:outputPanel>
+                   	
+                   	<pri:spacer height="20"></pri:spacer>
+                   	
+                   	<h:panelGrid id="addNew">
+						<h:panelGroup rendered="#{!publicationMBean.appAddSlotsMBean.showNewSlot}">
+                            	<div class="form-box ui-shadow ui-corner-all">
+                                <div class="form-row">
+                                	<pri:commandLink actionListener="#{publicationMBean.appAddSlotsMBean.showNew}" value="+ #{msg['page.publication.settings.label.app.slot.add']}"
+                                					update="addNew,:addapp-addslotids:newSlot" process="@this">
+                                		
+                                	</pri:commandLink>
+                                </div>
+                                <div class="form-row-big">
+                                    <h:outputText value= "#{msg['page.publication.settings.label.app.slot.next']}"/>
+                                    <ul>
+                                        <li>
+                                        <span class="in-bl">
+                                            <h:outputText value="#{msg['page.publication.settings.label.app.slot.incode']}"/>
+                                        </span>
+                                            <pri:inputText styleClass="in-bl" value="#{publicationMBean.appAddSlotsMBean.testId}" size="50" readonly="true"/>
+                                        <span class="in-bl">
+                                            <h:outputText value="#{msg['page.publication.settings.label.app.slot.with']}."/>
+                                        </span>
+                                        </li>
+                                        <li>
+                                            <h:outputText value= "#{msg['page.publication.settings.label.app.slot.notintegrated']} "/>
+                                            <a href="#{publicationMBean.appAddSlotsMBean.link}" target="_blank"><h:outputText value="#{publicationMBean.appAddSlotsMBean.linkText}"/></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                          </h:panelGroup>
+						</h:panelGrid>
+	            	
+			     	<h:panelGrid id="newSlot">
+			         	<h:panelGroup rendered="#{publicationMBean.appAddSlotsMBean.showNewSlot}">
+			         		<h2 class="sec-title">#{msg['page.publication.settings.label.app.slot.newslot']}</h2>
+			                <div class="form-box ui-shadow ui-corner-all">
+			                    <div class="form-row">
+			                        <h:outputLabel styleClass="bl" id="slot-name-label" for="slot-name"
+			                                       value="#{msg['page.publication.settings.label.app.slot.name']}"/>
+			                        <pri:inputText styleClass="bl" id="slot-name" value="#{publicationMBean.appAddSlotsMBean.newAdspace.name}" required="true"
+			                        				requiredMessage="#{msg['page.publication.message.name.required']}"/>
+			                        <pri:message for="slot-name"/>
+			                        <pri:watermark for="slot-name" value="#{msg['page.publication.settings.label.app.slot.egname']}" />
+			                    </div>
+			                    <div class="form-row ovh">
+			                        <div class="form-col">
+			                            <h:outputLabel styleClass="in-bl" id="slot-size-label" for="slot-size"
+			                                           value="#{msg['page.publication.settings.label.app.slot.size']}"/>
+			                            <a href="#{toolsApplicationBean.externalUrls['creativeSpecsUrl']}" target="_blank">#{msg['page.publication.settings.label.app.slot.help']}</a>
+			                            <pri:selectOneRadio id="slot-size" value="#{publicationMBean.appAddSlotsMBean.format}" styleClass="slot-size" layout="pageDirection"
+			                            					converter="com.adfonic.tools.converter.format.FormatConverter" required="true" requiredMessage="#{msg['page.publication.message.size.required']}">
+			                                <f:selectItems value="#{publicationMBean.appAddSlotsMBean.lFormats}" var="format" itemLabel="#{format.name}" itemValue="#{format}"/>
+			                            </pri:selectOneRadio>
+			                            <pri:message for="slot-size"/>
+			
+			                            <div class="form-row">
+			                                <!--temp onclick handler-->
+			                                <pri:commandButton value="#{msg['page.publication.settings.label.app.slot.getid']}" actionListener="#{publicationMBean.appAddSlotsMBean.doSave}"
+			                                					update=":navigationDiv" process="@this,slot-size,slot-name"/>
+			                                					
+			                                <pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" actionListener="#{publicationMBean.appAddSlotsMBean.cancelNew}"
+									    		process="@this" update="addNew,newSlot" onclick="progressDialog.show();" oncomplete="progressDialog.hide()">
+									       	</pri:commandLink> 
+			                            </div>
+			                        </div>
+			                    </div>
+			                </div>
+			              </h:panelGroup>
+		             </h:panelGrid>
+		             <pri:message id="butMessage" for="submitButton" display="text"/>
+		             <div class="form-row-big">
+                         <pri:commandButton id="submitButton" value="#{publicationMBean.appAddSlotsMBean.buttonText}" action="#{publicationMBean.appAddSlotsMBean.launch}" process="@this"
+                         					update="butMessage" disabled="#{publicationMBean.appAddSlotsMBean.adSpacesEmpty}"/>
+                     </div>
+	            </h:form>
+	            <script type="text/javascript">
+	                // <![CDATA[
+	                $(function () {
+	                    ADT.subElExpander('radio', 'slot-size');
+	                });
+	                // ]]>
+	            </script>
+      </section>  
+</h:body>
+</html>
+

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<!-- Block UI while giving 2 seconds for replication to be updated -->
+	<pe:blockUI widgetVar="blockPage">
+		<pri:outputLabel value="#{msg['page.approval.publication.approval.replication.refresh.label']}"/>
+	</pe:blockUI>
+	
+	<!-- Bulk Assigned To User -->
+	<ui:param name="assignIcon" value="ui-icon-contact" />
+	<pri:commandButton widgetVar="assignedToButtonWidget#{id}"
+					   value="#{msg['page.approval.publication.button.assignedto.label']}"
+					   actionListener="#{publicationApprovalDashboardMBean.bulkAssignToUser}"
+					   onstart="ADT.showLoadingIcon(assignedToButtonWidget#{id}, '#{assignIcon}'); PF('blockPage').block()"
+					   oncomplete="ADT.hideLoadingIcon(assignedToButtonWidget#{id}, '#{assignIcon}'); PF('blockPage').unblock()"
+					   update="@form, publicationResult"
+					   icon="#{assignIcon}" />
+	<pri:selectOneMenu value="#{publicationApprovalDashboardMBean.bulkAssignedToUserId}"
+					   filter="true" filterMatchMode="contains"
+                   	   styleClass="approvalDetailWidth approvalAlignment">
+        <f:selectItem itemLabel="#{msg['page.approval.publication.approval.assignedto.unassign.label']}"
+                	  itemValue="#{publicationApprovalDashboardMBean.noAssignedToId}" />
+        <f:selectItems value="#{publicationApprovalDashboardMBean.assignedToUsers}"
+        			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+   	</pri:selectOneMenu>
+   	
+   	<pri:spacer styleClass="horizontalDoubleSpace" />
+   	
+   	<!-- Bulk Status Change -->	
+   	<ui:param name="statusIcon" value="ui-icon-tag" />
+	<pri:commandButton widgetVar="statusChangeButtonWidget#{id}"
+					   value="#{msg['page.approval.publication.button.statusto.label']}"
+					   actionListener="#{publicationApprovalDashboardMBean.bulkStatusTo}"
+					   onstart="ADT.showLoadingIcon(statusChangeButtonWidget#{id}, '#{statusIcon}'); PF('blockPage').block()"
+					   oncomplete="ADT.hideLoadingIcon(statusChangeButtonWidget#{id}, '#{statusIcon}'); PF('blockPage').unblock()"
+					   update="@form, publicationResult"
+					   icon="#{statusIcon}" />
+	<pri:selectOneMenu value="#{publicationApprovalDashboardMBean.bulkStatusTo}"
+					   styleClass="approvalDetailWidth approvalAlignment">
+			<c:forEach items="#{PublicationStatus.ALL_VALUES}" var="publicationStatus">
+				<!-- Hide ALL predefined option -->
+				<c:if test="#{PublicationStatus.ALL != publicationStatus.name()}">
+					<f:selectItem itemValue="#{publicationStatus.name()}" itemLabel="#{msg[publicationStatus.publicationStatusStr]}" />
+				</c:if>
+			</c:forEach>
+	</pri:selectOneMenu>
+   	
+   	<pri:spacer styleClass="horizontalDoubleSpace" />
+   	   	
+	<!-- Excel Export -->
+	<ui:param name="exportSize" value="#{publicationApprovalDashboardMBean.exportRecordSize}" />
+	<ui:param name="exportFrom" value="#{publicationApprovalDashboardMBean.exportRecordFrom}" />
+	<ui:param name="exportTo" value="#{publicationApprovalDashboardMBean.exportRecordTo}" />
+	<ui:param name="exportIcon" value="ui-icon-document" />
+   	<pri:commandButton id="exportExcelButton#{id}" widgetVar="excelExportButtonWidget#{id}"
+   					   value="#{msg['page.commons.labels.export.excel']} (#{exportFrom} - #{exportTo})"
+					   onclick="PrimeFaces.monitorDownload(start, stop);"
+					   disabled="#{publicationApprovalDashboardMBean.exportRunning}"
+					   icon="#{exportIcon}"
+					   ajax="false"
+					   styleClass="#{publicationApprovalDashboardMBean.exportRemaining ? 'show-inline' : 'hide'}">
+		<pri:fileDownload value="#{publicationApprovalDashboardMBean.exportPublications()}" />
+	</pri:commandButton>
+
+	<pri:remoteCommand name="start" oncomplete="ADT.showLoadingIcon(excelExportButtonWidget#{id}, '#{exportIcon}')" />
+	<pri:remoteCommand name="stop" oncomplete="ADT.hideLoadingIcon(excelExportButtonWidget#{id}, '#{exportIcon}')" update="exportExcelButton#{id}" />
+
+     <script type="text/javascript">
+         // <![CDATA[                                    
+         $(function(){
+        	 
+        	 // Keep export button loading while refresh coming from backend
+        	 if (excelExportButtonWidget#{id}.jq.is('[disabled=disabled]')) {
+        		  ADT.showLoadingIcon(excelExportButtonWidget#{id}, '#{exportIcon}');
+        	 }
+        	 
+        	 // Set the record number on the export excel button
+        	 ADT.setButtonText(excelExportButtonWidget#{id},
+        			 '#{msg["page.approval.publication.button.export.excel"]}', (#{recordCount} > #{exportSize}) ? ['first', '#{exportSize}'] : ['all ', '#{recordCount}']);
+         });
+         // ]]>
+     </script>
+
+</ui:composition>
+

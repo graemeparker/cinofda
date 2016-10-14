@@ -1,0 +1,483 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+              	xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<section id="scheduling" class="form-box ui-corner-all">
+
+<!-- Scheduling -->
+<h2 class="sec-title">
+	<pri:outputLabel value="#{msg['page.campaign.scheduling.header.label']}" />
+	
+	<!-- Date and times tool tip -->
+	<pri:commandLink id="schedulingHint" styleClass="helpImageRight" />
+	<pri:tooltip for="schedulingHint" value="#{msg['page.campaign.scheduling.date.hint']}" />
+</h2>
+
+<h:form id="campaignForm" prependId="false">
+    <h:panelGroup id="schedulingDiv" layout="block" >
+    	<pri:message id="generic" for="schedulingDiv"/>
+        <h:panelGroup id="schedulingListDiv" layout="block">
+            <ui:repeat var="cdate" value="#{campaignMBean.campaignSchedulingMBean.timePeriods}" varStatus="status">
+                <div class="form-row">
+                    <div>
+
+                    	<!-- Start -->
+                        <div class="form-col">
+                            <pri:outputLabel styleClass="bl b" id="start-date-label" for="start-date" value="#{msg['page.campaign.scheduling.date.start.label']}"/>
+                            <pri:calendar 
+                            	widgetVar="startDateCalendar"
+                            	pattern="#{languageSessionBean.getDateFormat()}" 
+                            	mode="popup" 
+                            	id="start-date"
+	                            value="#{cdate.startDate}" 
+	                            mindate="#{campaignMBean.campaignSchedulingMBean.today}" 
+	                            pages="2"
+	                            onclick="ADT.setStartDateCalendar()"
+	                            locale="#{languageSessionBean.locale}" 
+	                            valueChangeListener="#{campaignMBean.campaignSchedulingMBean.changeStartDate}"
+	                            disabled="#{!campaignMBean.campaignSchedulingMBean.scheduleEditable or (!campaignMBean.newCampaign and cdate.startDate lt campaignMBean.campaignSchedulingMBean.today)}"
+	                            styleClass="calendarStyle"
+                            >
+                                <f:attribute name="index" value="#{status.index}"/>
+                            </pri:calendar>
+                            <pri:watermark for="start-date" value="#{msg['page.campaign.scheduling.date.start.placeholder']}"/>
+                        </div>
+                        <h:panelGroup id="startDateHours" layout="block" class="time form-col">
+				            <pri:selectOneMenu id="start-date-time-period" rendered="#{campaignMBean.campaignSchedulingMBean.displayHourAndMinutesSelector}" 
+				            				   value="#{cdate.startTimeOffset}"
+				            				   disabled="#{!campaignMBean.campaignSchedulingMBean.scheduleEditable or (!campaignMBean.newCampaign and cdate.startDate lt campaignMBean.campaignSchedulingMBean.today)}">
+				            		<ui:include src="/WEB-INF/jsf/campaign/scheduling/section_scheduling_timeperiod_start_options.xhtml" />
+				            	<f:attribute name="index" value="#{status.index}"/>
+                                <pri:ajax process="@this" />
+				            </pri:selectOneMenu>                        	
+                        </h:panelGroup>
+                        
+                        <!-- End -->                 
+                        <div class="form-col">
+                            <pri:outputLabel styleClass="bl b" id="end-date-label" for="end-date" value="#{msg['page.campaign.scheduling.date.end.label']}"/>
+                            <pri:calendar styleClass="endcal#{status.index} calendarStyle"
+                            			  onclick="ADT.setEndDateCalendar()"
+                                          pattern="#{languageSessionBean.getDateFormat()}" mode="popup" showOn="focus" pages="2" id="end-date"
+                                          value="#{cdate.endDate}" mindate="#{campaignMBean.campaignSchedulingMBean.todayLate}"
+                                          locale="#{languageSessionBean.locale}" widgetVar="endcal#{status.index}" valueChangeListener="#{campaignMBean.campaignSchedulingMBean.changeEndDate}"
+                                          disabled="#{!campaignMBean.campaignSchedulingMBean.scheduleEditable or (!campaignMBean.newCampaign and cdate.endDate lt campaignMBean.campaignSchedulingMBean.today)}">
+                                <f:attribute name="index" value="#{status.index}"/>
+                                <pri:ajax process="@this" />
+                            </pri:calendar>
+                            <pri:watermark for="end-date" value="#{msg['page.campaign.scheduling.date.end.placeholder']}"/>
+                        </div>
+                        <h:panelGroup id="endDateHours" layout="block" class="time form-col">
+				            <pri:selectOneMenu id="end-date-time-period" rendered="#{campaignMBean.campaignSchedulingMBean.displayHourAndMinutesSelector}"
+				            				   value="#{cdate.endTimeOffset}"
+				            				   disabled="#{!campaignMBean.campaignSchedulingMBean.scheduleEditable or (!campaignMBean.newCampaign and cdate.endDate lt campaignMBean.campaignSchedulingMBean.today)}">
+				            		<ui:include src="/WEB-INF/jsf/campaign/scheduling/section_scheduling_timeperiod_end_options.xhtml" />
+				            </pri:selectOneMenu>                        	
+                        </h:panelGroup>
+                        
+                        <h:panelGroup id="schedulingAddHourAndMinuteDiv" layout="block"  class="set-time form-col">
+		                    <!-- Set start and end times -->
+	            			<pri:commandLink id="schedulingAddHourAndMinute" rendered="#{status.index eq 0 and !campaignMBean.campaignSchedulingMBean.displayHourAndMinutesSelector}"
+	                              actionListener="#{campaignMBean.campaignSchedulingMBean.doDisplayHoursAndMinutesEvent}"
+	                              process="@this,:campaignForm:schedulingListDiv"  update=":campaignForm:schedulingListDiv"
+	                              value="#{msg['page.campaign.scheduling.link.displayhours']}">
+	                              <f:attribute name="index" value="#{status.index}"/>
+	                        </pri:commandLink>
+                        </h:panelGroup>
+                        
+                        <!-- Remove -->                
+                        <h:panelGroup layout="block" id="removeLinkDiv" class="form-col set-dates">
+                            <pri:commandLink id="removePeriodLink" rendered="#{status.index ne 0}" process="@this,:campaignForm:schedulingListDiv"
+                                             update=":campaignForm:schedulingListDiv,:campaignForm:buttonLayoutDiv"
+                                             value="Remove" actionListener="#{campaignMBean.campaignSchedulingMBean.doRemovePeriod}">
+                                <f:attribute name="index" value="#{status.index}"/>
+                            </pri:commandLink>
+                        </h:panelGroup>
+                        
+                        <div class="clear"></div>
+                    </div>
+                    <div class="msg no#{status.index}">
+                        <pri:message for="start-date"/>
+                        <pri:message for="end-date"/>
+                        <pri:message for="end-date-label"/>
+                    </div>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+        <h:panelGroup layout="block" id="buttonLayoutDiv" class="form-row">
+        	<pri:message for="campaignForm"/>
+            <pri:commandLink id="schedulingAddPeriod" styleClass="addIcon"
+                              actionListener="#{campaignMBean.campaignSchedulingMBean.doAddPeriod}"
+                              process="@this,:campaignForm:schedulingListDiv"  update=":campaignForm:schedulingListDiv,buttonLayoutDiv"
+                              value="#{msg['page.campaign.scheduling.link.addperiod.label']}"
+                              />
+        </h:panelGroup>
+        <h:panelGroup id="controlLinkContent" styleClass="form-row" layout="block">
+            <pri:commandLink id="controlLinkId" onsuccess="ADT.runDateTimeRange();" rendered="#{!campaignMBean.campaignSchedulingMBean.showTimeDayControl}"
+                             value="#{msg['page.campaign.scheduling.link.control.label']}"
+                             actionListener="#{campaignMBean.campaignSchedulingMBean.doAddControlTime}" process="@this,schedulingDiv"
+                             update="campaignForm"/>
+                             <!-- update="controlTimeWeekDivId,controlLinkContent"-->
+                             
+        </h:panelGroup>
+
+        <h:panelGroup id="controlTimeWeekDivId" layout="block" class="form-row" rendered="#{campaignMBean.campaignSchedulingMBean.showTimeDayControl}">
+            <div id="time-range-boxes">
+                <div class="row-labels-y">
+                    <!-- ui:repeat var="weekDay" value="#{campaignMBean.campaignSchedulingMBean.weekDaysStr}" varStatus="status">
+                        <h:panelGroup layout="block" styleClass="first-top" rendered="#{status.index eq 0}">#{msg[weekDay.i18n]}</h:panelGroup>
+                        <h:panelGroup layout="block" rendered="#{status.index ne 0}">#{msg[weekDay.i18n]}</h:panelGroup>
+                    </ui:repeat -->
+
+                        <div class="first-top">#{msg['page.campaign.scheduling.controltime.weekday.mon.label']}</div>
+                        <div>#{msg['page.campaign.scheduling.controltime.weekday.tue.label']}</div>
+                        <div>#{msg['page.campaign.scheduling.controltime.weekday.wed.label']}</div>
+                        <div>#{msg['page.campaign.scheduling.controltime.weekday.thu.label']}</div>
+                        <div>#{msg['page.campaign.scheduling.controltime.weekday.fri.label']}</div>
+                </div>
+                <div class="row-checkboxes-days">
+                        <div data-no="0" class="first-top"><pri:selectBooleanCheckbox styleClass="day y0" value="#{campaignMBean.campaignSchedulingMBean.daysOfWeek[1]}"/></div>
+                        <div data-no="1"><pri:selectBooleanCheckbox styleClass="day y1" value="#{campaignMBean.campaignSchedulingMBean.daysOfWeek[2]}"/></div>
+                        <div data-no="2"><pri:selectBooleanCheckbox styleClass="day y2" value="#{campaignMBean.campaignSchedulingMBean.daysOfWeek[3]}"/></div>
+                        <div data-no="3"><pri:selectBooleanCheckbox styleClass="day y3" value="#{campaignMBean.campaignSchedulingMBean.daysOfWeek[4]}"/></div>
+                        <div data-no="4"><pri:selectBooleanCheckbox styleClass="day y4" value="#{campaignMBean.campaignSchedulingMBean.daysOfWeek[5]}"/></div>
+                </div>
+                <div class="row-labels-x">
+                    <ui:repeat var="hourList" value="#{campaignMBean.campaignSchedulingMBean.hoursList}" varStatus="status">
+                            <div><h:outputText value="#{hourList}"/></div>
+                    </ui:repeat>
+                </div>
+                <div class="row-checkboxes-hours-week">
+                    <div data-no="0"><pri:selectBooleanCheckbox styleClass="hour x0" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[0]}"/></div>
+                    <div data-no="1"><pri:selectBooleanCheckbox styleClass="hour x1" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[1]}"/></div>
+                    <div data-no="2"><pri:selectBooleanCheckbox styleClass="hour x2" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[2]}"/></div>
+                    <div data-no="3"><pri:selectBooleanCheckbox styleClass="hour x3" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[3]}"/></div>
+                    <div data-no="4"><pri:selectBooleanCheckbox styleClass="hour x4" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[4]}"/></div>
+                    <div data-no="5"><pri:selectBooleanCheckbox styleClass="hour x5" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[5]}"/></div>
+                    <div data-no="6"><pri:selectBooleanCheckbox styleClass="hour x6" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[6]}"/></div>
+                    <div data-no="7"><pri:selectBooleanCheckbox styleClass="hour x7" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[7]}"/></div>
+                    <div data-no="8"><pri:selectBooleanCheckbox styleClass="hour x8" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[8]}"/></div>
+                    <div data-no="9"><pri:selectBooleanCheckbox styleClass="hour x9" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[9]}"/></div>
+                    <div data-no="10"><pri:selectBooleanCheckbox styleClass="hour x10" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[10]}"/></div>
+                    <div data-no="11"><pri:selectBooleanCheckbox styleClass="hour x11" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[11]}"/></div>
+                    <div data-no="12"><pri:selectBooleanCheckbox styleClass="hour x12" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[12]}"/></div>
+                    <div data-no="13"><pri:selectBooleanCheckbox styleClass="hour x13" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[13]}"/></div>
+                    <div data-no="14"><pri:selectBooleanCheckbox styleClass="hour x14" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[14]}"/></div>
+                    <div data-no="15"><pri:selectBooleanCheckbox styleClass="hour x15" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[15]}"/></div>
+                    <div data-no="16"><pri:selectBooleanCheckbox styleClass="hour x16" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[16]}"/></div>
+                    <div data-no="17"><pri:selectBooleanCheckbox styleClass="hour x17" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[17]}"/></div>
+                    <div data-no="18"><pri:selectBooleanCheckbox styleClass="hour x18" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[18]}"/></div>
+                    <div data-no="19"><pri:selectBooleanCheckbox styleClass="hour x19" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[19]}"/></div>
+                    <div data-no="20"><pri:selectBooleanCheckbox styleClass="hour x20" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[20]}"/></div>
+                    <div data-no="21"><pri:selectBooleanCheckbox styleClass="hour x21" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[21]}"/></div>
+                    <div data-no="22"><pri:selectBooleanCheckbox styleClass="hour x22" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[22]}"/></div>
+                    <div data-no="23"><pri:selectBooleanCheckbox styleClass="hour x23" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDay[23]}"/></div>
+                </div>
+                <div class="row-boxes">
+                    <div data-x="0" data-y="0"></div>
+                    <div data-x="1" data-y="0"></div>
+                    <div data-x="2" data-y="0"></div>
+                    <div data-x="3" data-y="0"></div>
+                    <div data-x="4" data-y="0"></div>
+                    <div data-x="5" data-y="0"></div>
+                    <div data-x="6" data-y="0"></div>
+                    <div data-x="7" data-y="0"></div>
+                    <div data-x="8" data-y="0"></div>
+                    <div data-x="9" data-y="0"></div>
+                    <div data-x="10" data-y="0"></div>
+                    <div data-x="11" data-y="0"></div>
+                    <div data-x="12" data-y="0"></div>
+                    <div data-x="13" data-y="0"></div>
+                    <div data-x="14" data-y="0"></div>
+                    <div data-x="15" data-y="0"></div>
+                    <div data-x="16" data-y="0"></div>
+                    <div data-x="17" data-y="0"></div>
+                    <div data-x="18" data-y="0"></div>
+                    <div data-x="19" data-y="0"></div>
+                    <div data-x="20" data-y="0"></div>
+                    <div data-x="21" data-y="0"></div>
+                    <div data-x="22" data-y="0"></div>
+                    <div data-x="23" data-y="0"></div>
+                </div>
+                <div class="row-boxes">
+                    <div data-x="0" data-y="1"></div>
+                    <div data-x="1" data-y="1"></div>
+                    <div data-x="2" data-y="1"></div>
+                    <div data-x="3" data-y="1"></div>
+                    <div data-x="4" data-y="1"></div>
+                    <div data-x="5" data-y="1"></div>
+                    <div data-x="6" data-y="1"></div>
+                    <div data-x="7" data-y="1"></div>
+                    <div data-x="8" data-y="1"></div>
+                    <div data-x="9" data-y="1"></div>
+                    <div data-x="10" data-y="1"></div>
+                    <div data-x="11" data-y="1"></div>
+                    <div data-x="12" data-y="1"></div>
+                    <div data-x="13" data-y="1"></div>
+                    <div data-x="14" data-y="1"></div>
+                    <div data-x="15" data-y="1"></div>
+                    <div data-x="16" data-y="1"></div>
+                    <div data-x="17" data-y="1"></div>
+                    <div data-x="18" data-y="1"></div>
+                    <div data-x="19" data-y="1"></div>
+                    <div data-x="20" data-y="1"></div>
+                    <div data-x="21" data-y="1"></div>
+                    <div data-x="22" data-y="1"></div>
+                    <div data-x="23" data-y="1"></div>
+                </div>
+                <div class="row-boxes">
+                    <div data-x="0" data-y="2"></div>
+                    <div data-x="1" data-y="2"></div>
+                    <div data-x="2" data-y="2"></div>
+                    <div data-x="3" data-y="2"></div>
+                    <div data-x="4" data-y="2"></div>
+                    <div data-x="5" data-y="2"></div>
+                    <div data-x="6" data-y="2"></div>
+                    <div data-x="7" data-y="2"></div>
+                    <div data-x="8" data-y="2"></div>
+                    <div data-x="9" data-y="2"></div>
+                    <div data-x="10" data-y="2"></div>
+                    <div data-x="11" data-y="2"></div>
+                    <div data-x="12" data-y="2"></div>
+                    <div data-x="13" data-y="2"></div>
+                    <div data-x="14" data-y="2"></div>
+                    <div data-x="15" data-y="2"></div>
+                    <div data-x="16" data-y="2"></div>
+                    <div data-x="17" data-y="2"></div>
+                    <div data-x="18" data-y="2"></div>
+                    <div data-x="19" data-y="2"></div>
+                    <div data-x="20" data-y="2"></div>
+                    <div data-x="21" data-y="2"></div>
+                    <div data-x="22" data-y="2"></div>
+                    <div data-x="23" data-y="2"></div>
+                </div>
+                <div class="row-boxes">
+                    <div data-x="0" data-y="3"></div>
+                    <div data-x="1" data-y="3"></div>
+                    <div data-x="2" data-y="3"></div>
+                    <div data-x="3" data-y="3"></div>
+                    <div data-x="4" data-y="3"></div>
+                    <div data-x="5" data-y="3"></div>
+                    <div data-x="6" data-y="3"></div>
+                    <div data-x="7" data-y="3"></div>
+                    <div data-x="8" data-y="3"></div>
+                    <div data-x="9" data-y="3"></div>
+                    <div data-x="10" data-y="3"></div>
+                    <div data-x="11" data-y="3"></div>
+                    <div data-x="12" data-y="3"></div>
+                    <div data-x="13" data-y="3"></div>
+                    <div data-x="14" data-y="3"></div>
+                    <div data-x="15" data-y="3"></div>
+                    <div data-x="16" data-y="3"></div>
+                    <div data-x="17" data-y="3"></div>
+                    <div data-x="18" data-y="3"></div>
+                    <div data-x="19" data-y="3"></div>
+                    <div data-x="20" data-y="3"></div>
+                    <div data-x="21" data-y="3"></div>
+                    <div data-x="22" data-y="3"></div>
+                    <div data-x="23" data-y="3"></div>
+                </div>
+                <div class="row-boxes">
+                    <div data-x="0" data-y="4"></div>
+                    <div data-x="1" data-y="4"></div>
+                    <div data-x="2" data-y="4"></div>
+                    <div data-x="3" data-y="4"></div>
+                    <div data-x="4" data-y="4"></div>
+                    <div data-x="5" data-y="4"></div>
+                    <div data-x="6" data-y="4"></div>
+                    <div data-x="7" data-y="4"></div>
+                    <div data-x="8" data-y="4"></div>
+                    <div data-x="9" data-y="4"></div>
+                    <div data-x="10" data-y="4"></div>
+                    <div data-x="11" data-y="4"></div>
+                    <div data-x="12" data-y="4"></div>
+                    <div data-x="13" data-y="4"></div>
+                    <div data-x="14" data-y="4"></div>
+                    <div data-x="15" data-y="4"></div>
+                    <div data-x="16" data-y="4"></div>
+                    <div data-x="17" data-y="4"></div>
+                    <div data-x="18" data-y="4"></div>
+                    <div data-x="19" data-y="4"></div>
+                    <div data-x="20" data-y="4"></div>
+                    <div data-x="21" data-y="4"></div>
+                    <div data-x="22" data-y="4"></div>
+                    <div data-x="23" data-y="4"></div>
+                </div>
+            </div>
+            <div id="time-range-boxes-weekend">
+                <div class="row-labels-y">
+                    <div class="first-top">#{msg['page.campaign.scheduling.controltime.weekday.sat.label']}</div>
+                    <div>#{msg['page.campaign.scheduling.controltime.weekday.sun.label']}</div>
+                </div>
+                <div class="row-checkboxes-days">
+                    <div data-no="5" class="first-top"><pri:selectBooleanCheckbox styleClass="day y5" value="#{campaignMBean.campaignSchedulingMBean.daysOfWeek[6]}"/></div>
+                    <div data-no="6"><pri:selectBooleanCheckbox styleClass="day y6" value="#{campaignMBean.campaignSchedulingMBean.daysOfWeek[0]}"/></div>
+                </div>
+                <div class="row-labels-x">
+                    <ui:repeat var="hourList" value="#{campaignMBean.campaignSchedulingMBean.hoursList}" varStatus="status">
+                            <div><h:outputText value="#{hourList}"/></div>
+                    </ui:repeat>
+                </div>
+                <div class="row-checkboxes-hours-week">
+                    <div data-no="0"><pri:selectBooleanCheckbox styleClass="hour x0" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[0]}"/></div>
+                    <div data-no="1"><pri:selectBooleanCheckbox styleClass="hour x1" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[1]}"/></div>
+                    <div data-no="2"><pri:selectBooleanCheckbox styleClass="hour x2" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[2]}"/></div>
+                    <div data-no="3"><pri:selectBooleanCheckbox styleClass="hour x3" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[3]}"/></div>
+                    <div data-no="4"><pri:selectBooleanCheckbox styleClass="hour x4" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[4]}"/></div>
+                    <div data-no="5"><pri:selectBooleanCheckbox styleClass="hour x5" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[5]}"/></div>
+                    <div data-no="6"><pri:selectBooleanCheckbox styleClass="hour x6" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[6]}"/></div>
+                    <div data-no="7"><pri:selectBooleanCheckbox styleClass="hour x7" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[7]}"/></div>
+                    <div data-no="8"><pri:selectBooleanCheckbox styleClass="hour x8" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[8]}"/></div>
+                    <div data-no="9"><pri:selectBooleanCheckbox styleClass="hour x9" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[9]}"/></div>
+                    <div data-no="10"><pri:selectBooleanCheckbox styleClass="hour x10" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[10]}"/></div>
+                    <div data-no="11"><pri:selectBooleanCheckbox styleClass="hour x11" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[11]}"/></div>
+                    <div data-no="12"><pri:selectBooleanCheckbox styleClass="hour x12" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[12]}"/></div>
+                    <div data-no="13"><pri:selectBooleanCheckbox styleClass="hour x13" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[13]}"/></div>
+                    <div data-no="14"><pri:selectBooleanCheckbox styleClass="hour x14" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[14]}"/></div>
+                    <div data-no="15"><pri:selectBooleanCheckbox styleClass="hour x15" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[15]}"/></div>
+                    <div data-no="16"><pri:selectBooleanCheckbox styleClass="hour x16" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[16]}"/></div>
+                    <div data-no="17"><pri:selectBooleanCheckbox styleClass="hour x17" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[17]}"/></div>
+                    <div data-no="18"><pri:selectBooleanCheckbox styleClass="hour x18" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[18]}"/></div>
+                    <div data-no="19"><pri:selectBooleanCheckbox styleClass="hour x19" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[19]}"/></div>
+                    <div data-no="20"><pri:selectBooleanCheckbox styleClass="hour x20" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[20]}"/></div>
+                    <div data-no="21"><pri:selectBooleanCheckbox styleClass="hour x21" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[21]}"/></div>
+                    <div data-no="22"><pri:selectBooleanCheckbox styleClass="hour x22" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[22]}"/></div>
+                    <div data-no="23"><pri:selectBooleanCheckbox styleClass="hour x23" value="#{campaignMBean.campaignSchedulingMBean.hoursOfDayWeekend[23]}"/></div>
+                </div>
+                <div class="row-boxes">
+                    <div data-x="0" data-y="5"></div>
+                    <div data-x="1" data-y="5"></div>
+                    <div data-x="2" data-y="5"></div>
+                    <div data-x="3" data-y="5"></div>
+                    <div data-x="4" data-y="5"></div>
+                    <div data-x="5" data-y="5"></div>
+                    <div data-x="6" data-y="5"></div>
+                    <div data-x="7" data-y="5"></div>
+                    <div data-x="8" data-y="5"></div>
+                    <div data-x="9" data-y="5"></div>
+                    <div data-x="10" data-y="5"></div>
+                    <div data-x="11" data-y="5"></div>
+                    <div data-x="12" data-y="5"></div>
+                    <div data-x="13" data-y="5"></div>
+                    <div data-x="14" data-y="5"></div>
+                    <div data-x="15" data-y="5"></div>
+                    <div data-x="16" data-y="5"></div>
+                    <div data-x="17" data-y="5"></div>
+                    <div data-x="18" data-y="5"></div>
+                    <div data-x="19" data-y="5"></div>
+                    <div data-x="20" data-y="5"></div>
+                    <div data-x="21" data-y="5"></div>
+                    <div data-x="22" data-y="5"></div>
+                    <div data-x="23" data-y="5"></div>
+                </div>
+                <div class="row-boxes">
+                    <div data-x="0" data-y="6"></div>
+                    <div data-x="1" data-y="6"></div>
+                    <div data-x="2" data-y="6"></div>
+                    <div data-x="3" data-y="6"></div>
+                    <div data-x="4" data-y="6"></div>
+                    <div data-x="5" data-y="6"></div>
+                    <div data-x="6" data-y="6"></div>
+                    <div data-x="7" data-y="6"></div>
+                    <div data-x="8" data-y="6"></div>
+                    <div data-x="9" data-y="6"></div>
+                    <div data-x="10" data-y="6"></div>
+                    <div data-x="11" data-y="6"></div>
+                    <div data-x="12" data-y="6"></div>
+                    <div data-x="13" data-y="6"></div>
+                    <div data-x="14" data-y="6"></div>
+                    <div data-x="15" data-y="6"></div>
+                    <div data-x="16" data-y="6"></div>
+                    <div data-x="17" data-y="6"></div>
+                    <div data-x="18" data-y="6"></div>
+                    <div data-x="19" data-y="6"></div>
+                    <div data-x="20" data-y="6"></div>
+                    <div data-x="21" data-y="6"></div>
+                    <div data-x="22" data-y="6"></div>
+                    <div data-x="23" data-y="6"></div>
+                </div>
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
+    
+    <div class="form-row">
+
+        <h:panelGroup id="eventBasedTrigger" layout="block" class="form-row">
+	        
+            <pri:outputPanel layout="inline">
+                <pri:commandLink disabled="#{campaignMBean.campaignSchedulingMBean.campaignTriggers.size()>0 ? true : false}" id="schedulingAddTrigger" styleClass="addIcon"
+                                 actionListener="#{campaignMBean.campaignSchedulingMBean.doAddTrigger}"
+                                 update="eventBasedTrigger"
+                                 value="#{msg['page.campaign.scheduling.link.addtrigger.label']}">
+                </pri:commandLink>
+                <pri:message for="schedulingAddTrigger"/>
+      			</pri:outputPanel>
+    		    
+            <ui:repeat var="campaignTrigger" value="#{campaignMBean.campaignSchedulingMBean.campaignTriggers}" varStatus="status">
+        
+                <pri:panelGrid id="campaignTriggerInfo" styleClass="panelGrid">
+                    <pri:row styleClass="form-row">
+                        <pri:column styleClass="form-col">
+                            <h:outputLabel styleClass="bl b" id="pluginVendor-label" for="pluginVendor" value="#{msg['page.campaign.scheduling.triggervendor.label']}"/>
+                            <pri:selectOneMenu id="pluginVendor" 
+                                               value="#{campaignTrigger.pluginVendor}"
+                                               converter="com.adfonic.tools.converter.campaign.PluginVendorConverter">
+                                <f:selectItems value="#{campaignMBean.campaignSchedulingMBean.pluginVendors}" var="l" itemLabel="#{l.name}" itemValue="#{l}"/>
+                            </pri:selectOneMenu>
+                        </pri:column>
+                        <pri:column styleClass="form-col">
+                            <h:outputLabel id="pluginType-label" for="pluginType" value="#{msg['page.campaign.scheduling.plugintype.label']}"/>
+                            <pri:selectOneRadio id="pluginType" value="#{campaignTrigger.pluginType}" layout="grid" columns="1">
+                                <f:selectItems value="#{campaignMBean.campaignSchedulingMBean.pluginTypes}" var="l" itemLabel="#{msg[l.displayName]}" itemValue="#{l}"/>
+                            </pri:selectOneRadio>
+                        </pri:column>
+                        <pri:column styleClass="form-col">
+                            <pri:commandLink id="schedulingRemoveTrigger"
+                                actionListener="#{campaignMBean.campaignSchedulingMBean.doRemoveTrigger}"
+                                update=":campaignForm:eventBasedTrigger"
+                                value="#{msg['page.campaign.scheduling.link.removetrigger.label']}">
+                                <f:attribute name="index" value="#{status.index}"/>
+                            </pri:commandLink>
+                        </pri:column>
+                    </pri:row>
+                </pri:panelGrid>
+    		            	
+            </ui:repeat>
+        </h:panelGroup>
+    </div>
+	
+    <div class="form-row">
+        <pri:commandButton value="#{campaignMBean.continueButtonMessage}" id="schedulingContinueBtn"
+                           actionListener="#{campaignMBean.campaignSchedulingMBean.checkEvenDistribution}"
+                           onclick="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.panelsTop()"
+                           update=":navigationDiv,:menuForm:side-panel"/>
+                           
+            <pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" actionListener="#{campaignMBean.campaignSchedulingMBean.cancel}" rendered="#{!campaignMBean.newCampaign}"
+	    		process="@this" update=":navigationDiv,:menuForm:side-panel" onclick="progressDialog.show();" oncomplete="progressDialog.hide()">
+	       </pri:commandLink>                      
+    </div>
+    <pri:dialog id="confirmSaveDialog" header="#{msg['page.campaign.creative.applyall']}" resizable="false" modal="true" closable="true"  
+             		    styleClass="confirm-dialog" widgetVar="confirmationSave">
+             	<h3>
+                     <h:outputText value="#{msg['page.campaign.scheduling.confirmation.message']}" />
+                 </h3>
+                 <p>
+                     <h:outputText value="#{msg['page.campaign.scheduling.confirmation.warning']}" />
+                 </p>
+                 <div class="buttons">
+                     <pri:commandButton id="confirmation" value="#{msg['page.campaign.creative.delete.confirmation.yes']}" update=":navigationDiv,:menuForm:side-panel"
+                                        onclick="confirmationSave.hide();progressDialog.show();" oncomplete="progressDialog.hide()"
+                                        actionListener="#{campaignMBean.campaignSchedulingMBean.doSave}">
+                     </pri:commandButton>
+                     <pri:commandButton id="declineApp" value="#{msg['page.campaign.creative.delete.confirmation.no']}" onclick="confirmationSave.hide()" type="button" />
+                 </div>
+	</pri:dialog>
+</h:form>
+
+</section>
+
+</ui:composition>

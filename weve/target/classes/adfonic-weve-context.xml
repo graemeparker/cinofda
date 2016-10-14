@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:encryption="http://www.jasypt.org/schema/encryption"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.jasypt.org/schema/encryption http://www.jasypt.org/schema/encryption/jasypt-spring31-encryption-1.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+  <context:annotation-config/>
+  
+  <!-- Scan for @Component, etc. classes automatically -->
+  <context:component-scan base-package="com.adfonic.weve">
+    <!-- Include anything annotated as @Component -->
+    <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+    <!-- Exclude controllers...they get picked up in the dispatcher context -->
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+  </context:component-scan>
+    
+  <bean id="weveProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-weve.properties"/>
+  
+  <encryption:encryptable-property-placeholder encryptor="stringEncryptor" properties-ref="weveProperties"/>
+  <encryption:string-encryptor id="stringEncryptor" algorithm="PBEWithMD5AndDES" password="MASTERKEY" />
+
+  <bean id="weveDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close"
+        p:driverClassName="${weve.jdbc.driverClassName}"
+        p:url="${weve.jdbc.url}"
+        p:username="${weve.jdbc.username}"
+        p:password="${weve.jdbc.password}"
+        p:initialSize="${weve.dbcp.initialSize:0}"
+        p:maxActive="${weve.dbcp.maxActive}"
+        p:minIdle="${weve.dbcp.minIdle:0}"
+        p:maxIdle="${weve.dbcp.maxIdle}"
+        p:maxWait="${weve.dbcp.maxWait:-1}"
+        p:testOnBorrow="${weve.dbcp.testOnBorrow:true}"
+        p:validationQuery="${weve.dbcp.validationQuery}"
+        p:validationQueryTimeout="${weve.dbcp.validationQueryTimeout:-1}"
+        p:testOnReturn="${weve.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${weve.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${weve.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${weve.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${weve.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="2"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+	<bean id="beaconServiceDao" class="com.adfonic.weve.dao.BeaconServiceDaoImpl">
+		<property name="dataSource" ref="weveDataSource"/>
+	</bean>
+	<bean id="optoutServiceDao" class="com.adfonic.weve.dao.OptOutServiceDaoImpl">
+		<property name="dataSource" ref="weveDataSource"/>
+	</bean>
+	
+	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+
+	<bean id="staticPagesViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	    <property name="prefix" value="/static/"/>
+	    <property name="suffix" value=".html"/>
+	</bean>
+	<mvc:resources location="/static" mapping="/static/**" />
+	
+	 <!-- We use the explicit bean instantiation here instead of using the
+	     task:executor declaration so that we can set daemon=true.  Otherwise
+	     the default thread factory creates non-daemon threads. -->
+	<!-- <bean id="executor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler" p:daemon="true" p:threadNamePrefix="adfonic-weve-executor" p:poolSize="3"/> -->
+	<task:annotation-driven executor="weveExecutor" scheduler="weveScheduler" />
+	<task:executor id="weveExecutor" pool-size="5-10" queue-capacity="10000" rejection-policy="DISCARD_OLDEST"/>
+	<task:scheduler id="weveScheduler" pool-size="3"/>
+</beans>

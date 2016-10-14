@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+  <!-- We'll use the JMS-based email service, and no need to wire up any
+       other instance of EmailService since we don't need DataHandler
+       or Multipart support -->
+  <amq:queue id="outboundEmailQueue" physicalName="adfonic.email.outbound"/>
+  <bean id="emailService"
+        class="com.adfonic.email.impl.JmsBasedEmailService"
+        p:outboundEmailQueue-ref="outboundEmailQueue"/>
+
+  <bean id="jmsConnectionFactory"
+        class="org.apache.activemq.pool.PooledConnectionFactory"
+        destroy-method="stop"
+        p:maxConnections="${jms.pool.maxConnections:5}">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory"
+            p:brokerURL="${jms.broker.url:failover:(tcp://localhost:61616)}" />
+    </property>
+  </bean>
+
+  <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+    <constructor-arg ref="jmsConnectionFactory"/>
+  </bean>
+  
+</beans>

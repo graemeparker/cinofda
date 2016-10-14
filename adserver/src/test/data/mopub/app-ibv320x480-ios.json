@@ -1,0 +1,68 @@
+{
+	"app":{
+		"bundle":"651510680",
+		"cat":[ "IAB1", "IAB9", "IAB9-30", "entertainment", "games" ],
+		"id":"9e898003b465446ebe80712312413243",
+		"name":"Trivia Crack iOS",
+		"publisher":{ "id":"8cc575bd24ad48bcbb6a3b0e1a71d171", "name":"Etermax" },
+		"storeurl":"https://itunes.apple.com/us/app/trivia-crack/id651510680?mt=8&uo=4",
+		"ver":"1.9.2"
+	},
+	"tmax":5000,
+	"at":2,
+	"badv":[ "club1616.com", "huntmads.com", "mobilestreams.com", "mobilestrems.com", "movistar.com", "movistar.mobilewap.com", "pdx.mobileboost.me", "quizup.com", "wlsmapi.com" ],
+	"bcat":[ "IAB7-39", "IAB8-18", "IAB9-9", "IAB25", "IAB26" ],
+	"device":{
+		"carrier":"311-480",
+		"connectiontype":2,
+		"devicetype":1,
+		"dnt":0,
+		"dpidmd5":"cdafe094d3ad37583887cfa1a288e34e",
+		"dpidsha1":"d2e987d013fe031da179f1be895424694264a68a",
+		"ext":{ "idfa":"867F68FB-0414-461A-956E-E35E527CE93A" },
+		"geo":{ "city":"Yonkers", "country":"USA", "region":"NY" },
+		"ip":"69.74.126.146",
+		"js":1,
+		"language":"en",
+		"make":"Apple",
+		"model":"iPhone 5 (GSM+CDMA)",
+		"os":"iOS",
+		"osv":"8.1",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B411"
+	},
+	"id":"66d7b00c-bbb1-4346-b608-3bd8fac635ff",
+	"imp":[
+		{
+			"banner":{
+				"api":[ 3 ],
+				"battr":[ 2, 9, 10 ],
+				"btype":[ 4 ],
+				"ext":{
+					"mraid":[{
+							"functions":[ "storePicture", "supports", "playVideo", "createCalendarEvent" ],
+							"version":"2.0"
+					}],
+					"nativebrowserclick":1
+				},
+				"h":480, "pos":1, "w":320
+			},
+			"bidfloor":0.610,
+			"displaymanager":"mopub",
+			"displaymanagerver":"3.2.0",
+			"id":"1",
+			"instl":1,
+			"tagid":"286066e20b3f4e74ab0e1d50aa96e982",
+			"video":{
+				"battr":[ 2, 9, 10 ],
+				"h":480,
+				"linearity":1,
+				"maxduration":30,
+				"mimes":[ "video/3gpp", "video/3gpp2", "video/mp4", "video/quicktime", "video/x-m4v" ],
+				"minduration":0,
+				"protocol":2,
+				"protocols":[ 2, 5 ],
+				"w":320
+			}
+		}
+	]
+}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+  
+  <context:component-scan base-package="com.adfonic.tools" />
+                     
+                    
+  <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<property name="locations">
+		<array>
+			<value>file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tools2.properties</value>
+			<value>file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-sso-global.properties</value>
+		</array>
+	</property>
+  </bean>
+    
+  <bean id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.jdbc.driverClassName:com.mysql.jdbc.Driver}"
+        p:url="${tools.jdbc.url:jdbc:mysql://localhost:3306/adfonic?autoReconnect=true}"
+        p:username="${tools.jdbc.username:adfonic}"
+        p:password="${tools.jdbc.password:adfon1c}"
+        p:initialSize="${tools.dbcp.initialSize:3}"
+        p:maxActive="${tools.dbcp.maxActive:20}"
+        p:minIdle="${tools.dbcp.minIdle:3}"
+        p:maxIdle="${tools.dbcp.maxIdle:10}"
+        p:maxWait="${tools.dbcp.maxWait:5000}"
+        p:testOnBorrow="${tools.dbcp.testOnBorrow:true}"
+        p:validationQuery="${tools.dbcp.validationQuery:/* ping */ SELECT 1}"
+        p:validationQueryTimeout="${tools.dbcp.validationQueryTimeout:3}"
+        p:testOnReturn="${tools.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${tools.dbcp.testWhileIdle:true}"
+        p:timeBetweenEvictionRunsMillis="${tools.dbcp.timeBetweenEvictionRunsMillis:600000}"
+        p:numTestsPerEvictionRun="${tools.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />  
+        
+  <bean id="readOnlyDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName" destroy-method="close"
+		p:driverClassName="${tools-read-only.jdbc.driverClassName:com.mysql.jdbc.Driver}"
+		p:url="${tools.read-only.jdbc.url:jdbc:mysql://localhost:3306/adfonic?autoReconnect=true}"
+		p:username="${tools.read-only.jdbc.username:adfonic}" p:password="${tools.read-only.jdbc.password:adfon1c}"
+		p:maxActive="${tools.read-only.dbcp.maxActive:20}" p:maxWait="${tools.read-only.dbcp.maxWait:5000}"
+		p:minIdle="${tools.read-only.dbcp.minIdle:3}" p:maxIdle="${tools.read-only.dbcp.maxIdle:10}"
+		p:validationQuery="${tools.read-only.dbcp.validationQuery:/* ping */ SELECT 1}"
+		p:testOnBorrow="true" p:defaultTransactionIsolation="4"
+		p:removeAbandoned="true" p:removeAbandonedTimeout="300"
+		p:logAbandoned="true" />      
+        
+  <bean id="dashBoardDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+         p:url="${dashBoard.jdbc.url:jdbc:mysql://devdb01:3306/tools_dashboard?autoReconnect=true}"
+         p:user="${dashBoard.jdbc.username:adfonic}"
+         p:password="${dashBoard.jdbc.password:adfon1c}"/>
+         
+  <bean id="reportingDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+         p:url="${reporting.jdbc.url:jdbc:mysql://devdb01:3306/tools_dashboard?autoReconnect=true}"
+         p:user="${reporting.jdbc.username:adfonic}"
+         p:password="${reporting.jdbc.password:adfon1c}"/>
+      
+  <bean id="muidDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+         p:url="${muid.jdbc.url:jdbc:mysql://localhost:3306/muid?autoReconnect=true}"
+         p:user="${muid.jdbc.username:int_muid}"
+         p:password="${muid.jdbc.password:adfon1c}"/>
+
+  <import resource="classpath:spring/**/adfonic-tools2-util-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-auditor-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-db-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-email-context.xml"/>
+  <import resource="classpath:spring/**/adfonic-middleware-jms-context.xml"/>
+  <!-- import resource="classpath:spring/**/adfonic-middleware-paypal-context.xml"/-->
+  <import resource="classpath:spring/**/adfonic-tools2-security-context.xml"/>
+  <import resource="classpath*:spring/**/adfonic-presentation2-context.xml"/>
+  
+</beans>

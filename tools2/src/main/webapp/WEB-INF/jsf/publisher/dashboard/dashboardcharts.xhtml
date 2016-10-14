@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+      
+    <h:body>
+        <ui:component id="dashboardCharts">  
+            <div class="twelvecol last">
+			<h:form id="chartsFormId" prependId="false">
+		    	<h:panelGroup layout="block" id="tabs" class="ui-corner-all">
+		        	<table class="mainTab ui-corner-top" style="padding:0px;border-spacing:0px">
+		            	<tr>
+		            		<!-- Requests -->
+		            		<td data-no="1" class="#{publisherDashBoardMBean.chartBean.renderChart1==true?'active':''}">
+		                   		<h:panelGroup id="miniChart1" layout="block">
+									<h:commandLink id="commandChart1Id" actionListener="#{publisherDashBoardMBean.chartBean.doChartToggle}">
+									    <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+									    <f:attribute name="chart" value="renderChart11"/>
+                                            <ui:param name="reqTabText" value="#{msg['page.dashboard.labels.table.header.label.requests']}" />
+                                            <span class="tabHeader">#{reqTabText}</span>                                       
+		                                    <span class="tabData">
+		                                    	<h:outputText value="#{publisherDashBoardMBean.headerFigures.publisherHeaderDto.requests}">
+		                                    		<byydtechJs:numberFormatConverter format="abbreviated"/>
+		                                    	</h:outputText>
+		                                    
+		                                    </span>
+		                                           
+		                                    <pri:lineChart styleClass="mini-chart" id="small1" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('small11')}" legendPosition="e"
+		                                                        extender="function(){ ADT.dashboardChart.extender('#{reqTabText}', ADT.dashboardChart.smallConfig, '#9ACB3C', this) }"/>
+		                       		</h:commandLink>    
+		                            <h:panelGroup layout="block" id="helpTab1" styleClass="helpImage"></h:panelGroup>                 
+		                    	</h:panelGroup>                                            
+		                   	</td>
+		                   	
+		                   	<!-- Impressions -->
+		               		<td data-no="2" class="#{publisherDashBoardMBean.chartBean.renderChart2==true?'active':''}">
+		                    	<h:panelGroup id="miniChart2" layout="block">                                            
+									<h:commandLink id="commandChart2Id" actionListener="#{publisherDashBoardMBean.chartBean.doChartToggle}">
+									    <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>  
+									    <f:attribute name="chart" value="renderChart12"/>
+									    <ui:param name="imprTabText" value="#{msg['page.dashboard.labels.table.header.label.impressions']}" />
+                                        <span class="tabHeader">#{imprTabText}</span>    
+                                         <span class="tabData">
+                                         	<h:outputText value="#{publisherDashBoardMBean.headerFigures.publisherHeaderDto.impressions}">
+                                         		<byydtechJs:numberFormatConverter format="abbreviated"/>
+                                         	</h:outputText>
+                                         </span>
+                                     
+                                         <pri:lineChart styleClass="mini-chart" id="small2" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('small12')}" legendPosition="e"
+                                                        extender="function(){ ADT.dashboardChart.extender('#{imprTabText}', ADT.dashboardChart.smallConfig, '#9ACB3C', this) }" />
+		                         	 </h:commandLink>  
+                                     <h:panelGroup layout="block" id="helpTab2" styleClass="helpImage"></h:panelGroup>
+		                     	</h:panelGroup>                                                               
+		                    </td>
+		                    
+		                    <!-- Fill Rate -->
+		                    <td data-no="3" class="#{publisherDashBoardMBean.chartBean.renderChart3==true?'active':''}">
+		                    	<h:panelGroup id="miniChart3" layout="block">
+		                        	<h:commandLink id="commandChart3Id" actionListener="#{publisherDashBoardMBean.chartBean.doChartToggle}">
+									    <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+									    <f:attribute name="chart" value="renderChart13"/>
+									    	 <ui:param name="fillTabText" value="#{msg['page.dashboard.labels.table.header.label.fillrate']}" />
+                                        	 <span class="tabHeader">#{fillTabText}</span>           
+	                                         <span class="tabData">
+	                                         	<h:outputText value="#{publisherDashBoardMBean.headerFigures.publisherHeaderDto.fillRate}">
+	                                         		<byydtechJs:numberFormatConverter format="abbreviated" units="%" unitsPosition="back"/>
+	                                         	</h:outputText>
+	                                         </span>
+	                                         <pri:lineChart styleClass="mini-chart" id="small3" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('small13')}" legendPosition="e"
+					                                                        extender="function(){ ADT.dashboardChart.extender('#{fillTabText}', ADT.dashboardChart.smallConfig, '#9ACB3C', this) }"/>
+		                     		</h:commandLink> 
+	                                <h:panelGroup layout="block" id="helpTab3" styleClass="helpImage"></h:panelGroup>
+		                    	</h:panelGroup>
+		                   	</td>
+		                   	
+		                   	<!-- Revenue -->
+		                   	 <td data-no="4" class="#{publisherDashBoardMBean.chartBean.renderChart4==true?'active':''}">
+		                     	<h:panelGroup id="miniChart4" layout="block">
+		                        	<h:commandLink id="commandChart4Id" actionListener="#{publisherDashBoardMBean.chartBean.doChartToggle}">
+									    <f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+									    <f:attribute name="chart" value="renderChart14"/>
+									     <ui:param name="revTabText" value="#{msg['page.dashboard.labels.table.header.label.revenue']}" />
+                                         <span class="tabHeader">#{revTabText}</span>  
+                                         <span class="tabData">
+                                         	<h:outputText value="#{publisherDashBoardMBean.headerFigures.publisherHeaderDto.revenue}">
+                                         		<byydtechJs:numberFormatConverter format="abbreviated" units="$" unitsPosition="front"/>
+                                         	</h:outputText>	
+                                         </span>
+                                         <pri:lineChart styleClass="mini-chart" id="small4" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('small14')}" legendPosition="e"
+                                                        extender="function(){ ADT.dashboardChart.extender('#{revTabText}', ADT.dashboardChart.smallConfig, '#9ACB3C', this) }"/>
+                              		 </h:commandLink>
+                                     <h:panelGroup layout="block" id="helpTab4" styleClass="helpImage"></h:panelGroup>
+                              	 </h:panelGroup>
+                         	</td>
+                         	
+                         	<!-- eCPM -->
+                            <td data-no="6" class="#{publisherDashBoardMBean.chartBean.renderChart6==true?'active':''}">
+                            	<h:panelGroup id="miniChart5" layout="block">
+                             		<h:commandLink id="commandChart6Id" actionListener="#{publisherDashBoardMBean.chartBean.doChartToggle}">
+						    			<f:ajax event="action" render="chartsFormId:tabs" execute="@this"/>
+						    			<f:attribute name="chart" value="renderChart16"/>
+									    	<ui:param name="ecpmTabText" value="#{msg['page.dashboard.labels.table.header.label.ecpm']}" />
+                                        	<span class="tabHeader">#{ecpmTabText}</span>                                            
+	                                        <span class="tabData">
+	                                        	<h:outputText value="#{publisherDashBoardMBean.headerFigures.publisherHeaderDto.ecpm}">
+	                                        		<byydtechJs:numberFormatConverter format="abbreviated" units="$" unitsPosition="front"/>
+	                                        	</h:outputText>
+	                                        </span>
+	                                        <pri:lineChart styleClass="mini-chart" id="small6" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('small16')}" legendPosition="e"
+		                                                        extender="function(){ ADT.dashboardChart.extender('#{ecpmTabText}', ADT.dashboardChart.smallConfig, '#9ACB3C', this) }"/>
+									</h:commandLink>  
+	                                <h:panelGroup layout="block" id="helpTab6" styleClass="helpImage"></h:panelGroup>									                                                               
+								</h:panelGroup>
+                        	</td>                                            
+                     	</tr>
+                	</table>
+		
+					<pri:overlayPanel for="helpTab1" hideEffect="fade" styleClass="no-shadow">
+                        <div class="helpInner ui-corner-all ui-shadow">
+                            <div class="helpArrow"></div>
+                            <h2>#{msg['page.dashboard.publisher.requests.title']}</h2>
+                            <p>#{msg['page.dashboard.publisher.requests.message']}</p>
+                        </div>
+                    </pri:overlayPanel>
+                    <pri:overlayPanel for="helpTab2" hideEffect="fade" styleClass="no-shadow">
+                        <div class="helpInner ui-corner-all ui-shadow">
+                            <div class="helpArrow"></div>
+                            <h2>#{msg['page.dashboard.publisher.impressions.title']}</h2>
+                            <p>#{msg['page.dashboard.publisher.impressions.message']}</p>
+                        </div>
+                    </pri:overlayPanel>
+                    <pri:overlayPanel for="helpTab3" hideEffect="fade" styleClass="no-shadow">
+                        <div class="helpInner ui-corner-all ui-shadow">
+                            <div class="helpArrow"></div>
+                            <h2>#{msg['page.dashboard.publisher.fillrate.title']}</h2>
+                            <p>#{msg['page.dashboard.publisher.fillrate.message']}</p>
+                        </div>
+                    </pri:overlayPanel>
+                    <pri:overlayPanel for="helpTab4" hideEffect="fade" styleClass="no-shadow">
+                        <div class="helpInner ui-corner-all ui-shadow">
+                            <div class="helpArrow"></div>
+                            <h2>#{msg['page.dashboard.publisher.revenue.title']}</h2>
+                            <p>#{msg['page.dashboard.publisher.revenue.message']}</p>
+                        </div>
+                    </pri:overlayPanel>
+                    <pri:overlayPanel for="helpTab6" hideEffect="fade" styleClass="no-shadow">
+                        <div class="helpInner ui-corner-all ui-shadow">
+                            <div class="helpArrow"></div>
+                            <h2>#{msg['page.dashboard.publisher.ecpm.title']}</h2>
+                            <p>#{msg['page.dashboard.publisher.ecpm.message']}</p>
+                        </div>
+                    </pri:overlayPanel>
+
+	                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{publisherDashBoardMBean.chartBean.renderChart1==true?'active':''}" id="chart1">
+	                		<pri:lineChart id="linear1" styleClass="bigChart" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('linear11')}" legendPosition="e" rendered="#{publisherDashBoardMBean.chartBean.renderChart1}"
+	                   					   extender="function(){ ADT.dashboardChart.extender('#{reqTabText}', ADT.dashboardChart.largeConfig, '#9ACB3C', this) }" widgetVar="chart" />
+	
+	                    </h:panelGroup>
+	                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{publisherDashBoardMBean.chartBean.renderChart2==true?'active':''}" id="chart2">	                        
+	                		<pri:lineChart id="linear2" styleClass="bigChart" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('linear12')}" legendPosition="e" rendered="#{publisherDashBoardMBean.chartBean.renderChart2}"
+	                   					   extender="function(){ ADT.dashboardChart.extender('#{imprTabText}', ADT.dashboardChart.largeConfig, '#9ACB3C', this) }" widgetVar="chart" />                                        
+	                    </h:panelGroup>
+	                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{publisherDashBoardMBean.chartBean.renderChart3==true?'active':''}" id="chart3">
+	                		<pri:lineChart id="linear-fill-rate" styleClass="bigChart" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('linear13')}" legendPosition="e" rendered="#{publisherDashBoardMBean.chartBean.renderChart3}"
+	                   					   extender="function(){ ADT.dashboardChart.extender('#{fillTabText}', ADT.dashboardChart.largeConfig, '#9ACB3C', this) }" widgetVar="chart" />                                        
+	                    </h:panelGroup>
+	                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{publisherDashBoardMBean.chartBean.renderChart4==true?'active':''}" id="chart4">
+	                		<pri:lineChart id="linear-revenue" styleClass="bigChart" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('linear14')}" legendPosition="e" rendered="#{publisherDashBoardMBean.chartBean.renderChart4}"
+	                   					   extender="function(){ ADT.dashboardChart.extender('#{revTabText}', ADT.dashboardChart.largeConfig, '#9ACB3C', this) }" widgetVar="chart" />                                        
+	                    </h:panelGroup>
+	                    <h:panelGroup layout="block" class="ui-corner-bottom tab #{publisherDashBoardMBean.chartBean.renderChart6==true?'active':''}" id="chart6">
+	                		<pri:lineChart id="linear-ecpm" styleClass="bigChart" value="#{publisherDashBoardMBean.chartBean.getPublisherLinearModel('linear15')}" legendPosition="e" rendered="#{publisherDashBoardMBean.chartBean.renderChart6}"
+	                   					   extender="function(){ ADT.dashboardChart.extender('#{ecpmTabText}', ADT.dashboardChart.largeConfig, '#9ACB3C', this) }" widgetVar="chart" />                                        
+	                    </h:panelGroup>                                    
+	                </h:panelGroup>
+				</h:form>
+	       </div>
+	       <div class="clear"></div>
+        </ui:component>
+    </h:body>
+</html>

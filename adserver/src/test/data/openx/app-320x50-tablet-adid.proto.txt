@@ -1,0 +1,70 @@
+api_version: 15
+auction_id: "11df9753-4440-4d2a-97fe-ea43965dd120"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537099152"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "37edaf25-aea2-dcfc-34ef-30a9b46006b7"
+user_ip_address: "\255U\017%"
+user_geo_country: "us"
+user_geo_state: "minnesota"
+user_geo_dma: 676
+user_agent: "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; GT-P5113 Build/JRO03C) AppleWebKit/525.10+ (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2"
+url: "http://play.google.com/store/apps/details?id=com.whitepages.search"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2026
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 2
+pub_blocked_content: 4
+pub_blocked_content: 6
+pub_blocked_content: 7
+pub_blocked_content: 8
+pub_blocked_content: 10
+pub_blocked_content: 11
+pub_blocked_content: 12
+pub_blocked_content: 14
+pub_blocked_content: 15
+pub_blocked_type: 10
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (Linux; U; Android 4.1.1; en-us; GT-P5113 Build/JRO03C) AppleWebKit/525.10+ (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2"
+  ip: "173.85.15.37"
+  os: "Android"
+  osv: "4"
+  make: "Samsung"
+  model: "GT-P5113"
+  connectiontype: "wifi"
+  geo {
+    lat: 47.90322
+    lon: -91.86325
+    country: "us"
+    city: "ely"
+    type: 1
+    continent: "north america"
+    state: "minnesota"
+    dma: 676
+  }
+  browser: "Mobile InApp View"
+  idforad: "6b92c041-ad40-4f96-b493-fafa7e44891c"
+  idforad_enabled: true
+  category: "tablet"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+}

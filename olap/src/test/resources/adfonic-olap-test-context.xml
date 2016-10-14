@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-olap-test.properties"/>
+
+  <bean id="reportingDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${reporting.jdbc.driverClassName}"
+        p:url="${reporting.jdbc.url}"
+        p:username="${reporting.jdbc.username}"
+        p:password="${reporting.jdbc.password}"
+        p:maxActive="${reporting.dbcp.maxActive}"
+        p:maxWait="${reporting.dbcp.maxWait}"
+        p:minIdle="${reporting.dbcp.minIdle}"
+        p:maxIdle="${reporting.dbcp.maxIdle}"
+        p:validationQuery="${reporting.dbcp.validationQuery}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4" /><!-- REPEATABLE_READ -->  
+  
+  <bean id="mondrianDataSource"
+        class="com.adfonic.olap.MondrianSqlDataSource"
+        p:reportingDataSource-ref="reportingDataSource"
+        p:catalogLocation="com/adfonic/olap/mondrian-admreporting.xml"/>
+  
+</beans>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<!-- Allow @Scheduled and what not on component methods -->
+
+	<context:annotation-config />
+	
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tasks.properties" />
+
+      <bean id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.jdbc.driverClassName}"
+        p:url="${tools.jdbc.url}"
+        p:username="${tools.jdbc.username}"
+        p:password="${tools.jdbc.password}"
+        p:maxActive="${tools.dbcp.maxActive}"
+        p:maxWait="${tools.dbcp.maxWait}"
+        p:minIdle="${tools.dbcp.minIdle}"
+        p:maxIdle="${tools.dbcp.maxIdle}"
+        p:validationQuery="${tools.dbcp.validationQuery}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+        
+</beans>

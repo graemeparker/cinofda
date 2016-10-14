@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<section style="display: block;" id="new" class="form-box ui-corner-all">
+            <h:form id="addappsite-settings" class="options" prependId="false" >
+               <div class="form-row tac">
+                    <pri:commandButton 
+                    	value="#{msg['page.publication.create.label.movapp']}" 
+                    	id="addAppButton"
+                        actionListener="#{publicationNavigationSessionBean.doNavigateTo}"
+                        update=":navigationDiv,:menuForm"
+                        oncomplete="addAppSiteformActions(true);"
+                    >
+                        <f:attribute name="navigateTo" value="appSettings"/>
+                    </pri:commandButton>
+
+                    <pri:commandButton 
+                    	value="#{msg['page.publication.create.label.movsite']}" 
+                    	id="addSiteButton"
+                        actionListener="#{publicationNavigationSessionBean.doNavigateTo}"
+                        update=":navigationDiv,:menuForm"
+                        oncomplete="addAppSiteformActions();"
+                    >
+                        <f:attribute name="navigateTo" value="siteSettings"/>
+                    </pri:commandButton>
+                </div>
+	       </h:form>
+        </section>
+  
+</h:body>
+</html>

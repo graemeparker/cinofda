@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Transactions"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+    <div class="infoContent">#{msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+
+<script type="text/javascript">
+jQuery('#advertiserSelect').ready(function(){
+  jQuery('.wrapDescription').each(function() {
+    jQuery(this).html(jQuery(this).text().split('').join('<wbr/>'));
+  });
+});
+</script>
+
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+<hr/>
+
+<h:form id="advertiserSelect">
+<table class="form">
+<tr>
+    <td class="label">Advertiser</td>
+    <td>
+        <h:selectOneMenu id="advertiser"
+          converter="jpaConverter"
+          onchange="submit()"
+          value="#{accountTransactionsBean.advertiser}">
+            <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+            <f:selectItems value="#{accountTransactionsBean.companyAdvertisers}"/>
+        </h:selectOneMenu>
+    </td>
+</tr>
+<h:panelGroup rendered="#{not empty accountTransactionsBean.advertiser}">
+  <tr>
+    <td class="label">Advertiser balance</td>
+    <td>
+      <h:outputText value="#{accountTransactionsBean.advertiserBalance}">
+        <f:convertNumber type="currency" currencySymbol="$" />
+      </h:outputText>
+     </td>
+  </tr>
+</h:panelGroup>
+</table>
+
+<h2>Advertiser transactions</h2>
+<c:choose>
+<c:when test="${empty accountTransactionsBean.advertiser or empty accountTransactionsBean.advertiserTransactions}">
+  <table class="data"><tr><td>No advertiser transactions</td></tr></table>
+</c:when>
+<c:otherwise>
+  <pri:dataTable 	id="advTxTable" var="row" value="#{accountTransactionsBean.advertiserTransactions}"
+                      rows="10"
+                      paginator="true"
+                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                      rowsPerPageTemplate="10,20,50,100"
+                      rendered="#{not empty accountTransactionsBean.advertiserTransactions}"
+                      styleClass="data">
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Date" /></f:facet>
+      <h:outputText value="#{row.transactionTime}">
+        <f:convertDateTime type="both" dateStyle="short" timeZone="GMT" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Type" /></f:facet>
+      <h:outputText value="#{row.transactionType}"/>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Description" /></f:facet>
+      <h:outputText styleClass="wrapDescription" value="#{row.description}"/>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Amount" /></f:facet>
+      <h:outputText value="#{row.amount}">
+        <f:convertNumber type="currency" currencySymbol="$" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Tax" /></f:facet>
+      <h:outputText value="#{row.tax}">
+        <f:convertNumber type="currency" currencySymbol="$" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Total" /></f:facet>
+      <h:outputText value="#{row.total}">
+        <f:convertNumber type="currency" currencySymbol="$" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Reference" /></f:facet>
+      <h:outputText value="#{row.reference}"/>
+    </pri:column>
+  </pri:dataTable>
+
+
+</c:otherwise>
+</c:choose>
+
+<div class="clear"></div>
+
+<h2>Publisher transactions</h2>
+
+<c:choose>
+<c:when test="${empty accountTransactionsBean.publisher or empty accountTransactionsBean.publisherTransactions}">
+  <table class="data"><tr><td>No publisher transactions</td></tr></table>
+</c:when>
+<c:otherwise>
+  <pri:dataTable 	id="pubTxTable" var="row" value="#{accountTransactionsBean.publisherTransactions}"
+                      rows="10"
+                      paginator="true"
+                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                      rowsPerPageTemplate="10,20,50,100"
+                      rendered="#{not empty accountTransactionsBean.publisherTransactions}"
+                      styleClass="data">
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Date" /></f:facet>
+      <h:outputText value="#{row.transactionTime}">
+        <f:convertDateTime type="both" dateStyle="short" timeZone="GMT" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Type" /></f:facet>
+      <h:outputText value="#{row.transactionType}"/>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Description" /></f:facet>
+      <h:outputText styleClass="wrapDescription" value="#{row.description}"/>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Amount" /></f:facet>
+      <h:outputText value="#{row.amount}">
+        <f:convertNumber type="currency" currencySymbol="$" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Tax" /></f:facet>
+      <h:outputText value="#{row.tax}">
+        <f:convertNumber type="currency" currencySymbol="$" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Total" /></f:facet>
+      <h:outputText value="#{row.total}">
+        <f:convertNumber type="currency" currencySymbol="$" />
+      </h:outputText>
+    </pri:column>
+
+    <pri:column headerstyleClass="center" styleClass="center">
+      <f:facet name="header"><h:outputText value="Reference" /></f:facet>
+      <h:outputText value="#{row.reference}"/>
+    </pri:column>
+  </pri:dataTable>
+</c:otherwise>
+</c:choose>
+
+</h:form>
+</ui:define>
+</ui:composition>

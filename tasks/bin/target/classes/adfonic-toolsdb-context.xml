@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <context:annotation-config/>
+
+  <tx:annotation-driven />
+  
+  <bean id="toolsDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.jdbc.driverClassName}"
+        p:url="${tools.jdbc.url}"
+        p:username="${tools.jdbc.username}"
+        p:password="${tools.jdbc.password}"
+        p:maxActive="${tools.dbcp.maxActive}"
+        p:maxWait="${tools.dbcp.maxWait}"
+        p:minIdle="${tools.dbcp.minIdle}"
+        p:maxIdle="${tools.dbcp.maxIdle}"
+        p:validationQuery="${tools.dbcp.validationQuery}"
+        p:testWhileIdle="${tools.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tools.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tools.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" 
+        p:defaultAutoCommit="true"
+        />
+
+  <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        p:persistenceUnitName="adfonic-domain"
+        p:packagesToScan="com.adfonic.domain"
+        p:dataSource-ref="toolsDataSource">
+    <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+            p:database="MYSQL"
+            p:showSql="false"
+            p:generateDdl="false"/>
+    </property>
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.generate_statistics">false</prop>
+        <prop key="hibernate.jdbc.fetch_size">10</prop>
+        <prop key="hibernate.jdbc.batch_size">10</prop>
+      </props>
+    </property>
+  </bean>
+  
+  <bean id="transactionManager"
+        class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+    <property name="dataSource" ref="toolsDataSource" />
+  </bean>
+  <bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tasks.properties" />
+</beans>

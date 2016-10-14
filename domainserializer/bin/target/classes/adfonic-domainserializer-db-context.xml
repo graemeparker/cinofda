@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-domainserializer.properties"/>
+
+  <bean id="toolsReadDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.read.jdbc.driverClassName}"
+        p:url="${tools.read.jdbc.url}"
+        p:username="${tools.read.jdbc.username}"
+        p:password="${tools.read.jdbc.password}"
+        p:maxActive="${tools.read.dbcp.maxActive}"
+        p:maxWait="${tools.read.dbcp.maxWait}"
+        p:minIdle="${tools.read.dbcp.minIdle}"
+        p:maxIdle="${tools.read.dbcp.maxIdle}"
+        p:validationQuery="${tools.read.dbcp.validationQuery}"
+        p:testWhileIdle="${tools.read.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tools.read.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tools.read.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.read.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+  <bean id="toolsWriteDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.write.jdbc.driverClassName}"
+        p:url="${tools.write.jdbc.url}"
+        p:username="${tools.write.jdbc.username}"
+        p:password="${tools.write.jdbc.password}"
+        p:maxActive="${tools.write.dbcp.maxActive}"
+        p:maxWait="${tools.write.dbcp.maxWait}"
+        p:minIdle="${tools.write.dbcp.minIdle}"
+        p:maxIdle="${tools.write.dbcp.maxIdle}"
+        p:validationQuery="${tools.write.dbcp.validationQuery}"
+        p:testWhileIdle="${tools.write.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tools.write.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tools.write.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.write.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+  <bean id="ecpmDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${ecpm.jdbc.driverClassName}"
+        p:url="${ecpm.jdbc.url}"
+        p:username="${ecpm.jdbc.username}"
+        p:password="${ecpm.jdbc.password}"
+        p:maxActive="${ecpm.dbcp.maxActive}"
+        p:maxWait="${ecpm.dbcp.maxWait}"
+        p:minIdle="${ecpm.dbcp.minIdle}"
+        p:maxIdle="${ecpm.dbcp.maxIdle}"
+        p:validationQuery="${ecpm.dbcp.validationQuery}"
+        p:testWhileIdle="${ecpm.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${ecpm.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${ecpm.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${ecpm.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+</beans>

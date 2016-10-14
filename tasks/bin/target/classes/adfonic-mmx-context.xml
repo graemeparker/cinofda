@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tasks.properties" />
+
+
+<bean name="metamarketsLookup" class="com.adfonic.tasks.combined.MetamarketsLookupTableTask">
+ 	<property name="lookups">
+ 		<list>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="publication"/>
+ 				<property name="columns" value="ID,PUBLICATION_TYPE_ID,CATEGORY,PUBLISHER_ID,NAME,FRIENDLY_NAME,EXTERNAL_ID,RTB_ID,SAFETY_LEVEL,DISCLOSED"/>
+ 				<property name="query" value="SELECT p.ID, PUBLICATION_TYPE_ID, c.NAME as CATEGORY, PUBLISHER_ID, p.NAME, FRIENDLY_NAME, EXTERNAL_ID, RTB_ID, SAFETY_LEVEL, DISCLOSED from PUBLICATION p LEFT OUTER JOIN CATEGORY c on c.ID = CATEGORY_ID WHERE p.STATUS = 'ACTIVE';" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="model"/>
+ 				<property name="columns" value="ID,NAME,EXTERNAL_ID,VENDOR_ID,DELETED,DEVICE_GROUP_ID,HIDDEN,PLATFORM,DEVICE_TYPE"/>
+ 				<property name="query" value="SELECT m.ID,m.NAME,EXTERNAL_ID,VENDOR_ID,DELETED,DEVICE_GROUP_ID,m.HIDDEN, p.NAME as PLATFORM, dg.SYSTEM_NAME as DEVICE_TYPE from MODEL m LEFT JOIN  MODEL_PLATFORM mp on mp.MODEL_ID = m.ID LEFT JOIN DEVICE_GROUP dg on dg.ID = m.DEVICE_GROUP_ID LEFT OUTER JOIN PLATFORM p ON p.ID = mp.PLATFORM_ID;" />
+ 			</bean> 
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="publisher"/>
+ 				<property name="columns" value="ID,NAME,RTB_ENABLED,RTB_CONFIG_ID,COMPANY_ID,DISCLOSED"/>
+ 				<property name="query" value="SELECT ID, NAME, RTB_ENABLED, RTB_CONFIG_ID, COMPANY_ID, DISCLOSED from PUBLISHER;" />
+ 			</bean>
+			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="bidder"/>
+ 				<property name="columns" value="ID,NAME,EMAIL"/>
+ 				<property name="query" value="SELECT COMPANY.ID as 'ID', NAME, u.EMAIL as 'EMAIL' FROM COMPANY, USER u WHERE ACCOUNT_TYPE_FLAGS IN (1,3,5) AND ACCOUNT_MANAGER_ID = u.ID;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="exchange"/>
+ 				<property name="columns" value="ID,NAME"/>
+ 				<property name="query" value="SELECT PUBLISHER.ID as 'ID', PUBLISHER.NAME as 'NAME' from PUBLISHER inner join COMPANY on PUBLISHER.COMPANY_ID = COMPANY.ID where ACCOUNT_TYPE_FLAGS IN (4,5);" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="campaign"/>
+ 				<property name="columns" value="ID,NAME,EXTERNAL_ID,ADVERTISER_ID,CATEGORY,IO_REFERENCE,DEAL_ID"/>
+ 				<property name="query" value="SELECT CAMPAIGN.ID, CAMPAIGN.NAME, EXTERNAL_ID, REFERENCE AS 'IO_REFERENCE', APPLICATION_ID, ADVERTISER_ID, ADVERTISER_DOMAIN, CATEGORY.NAME as CATEGORY, PUBLICATION_LIST_ID, PRIVATE_MARKET_PLACE_DEAL.DEAL_ID as 'DEAL_ID' FROM CAMPAIGN LEFT OUTER JOIN PRIVATE_MARKET_PLACE_DEAL ON CAMPAIGN.PRIVATE_MARKET_PLACE_DEAL_ID = PRIVATE_MARKET_PLACE_DEAL.ID LEFT OUTER JOIN CATEGORY on CATEGORY.ID = CAMPAIGN.CATEGORY_ID;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="owner"/>
+ 				<property name="columns" value="ID,NAME,EMAIL"/>
+ 				<property name="query" value="SELECT ID, CONCAT(FIRST_NAME,' ',LAST_NAME) AS 'NAME', EMAIL from ADFONIC_USER WHERE STATUS = 'ACTIVE';" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="creative"/>
+ 				<property name="columns" value="ID,CAMPAIGN_ID,EXTERNAL_ID,FORMAT_ID,NAME"/>
+ 				<property name="query" value="SELECT ID,CAMPAIGN_ID,EXTERNAL_ID,FORMAT_ID,NAME FROM CREATIVE;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="format"/>
+ 				<property name="columns" value="ID,NAME,SYSTEM_NAME"/>
+ 				<property name="query" value="SELECT ID,NAME,SYSTEM_NAME FROM FORMAT;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="operator"/>
+ 				<property name="columns" value="ID,NAME,COUNTRY_ID,OPERATOR_GROUP_ID"/>
+ 				<property name="query" value="SELECT ID,NAME,COUNTRY_ID,OPERATOR_GROUP_ID FROM OPERATOR;" />
+ 			</bean> 
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="publisher"/>
+ 				<property name="columns" value="ID,NAME,RTB_ENABLED,RTB_CONFIG_ID,COMPANY_ID"/>
+ 				<property name="query" value="SELECT ID,NAME,RTB_ENABLED,RTB_CONFIG_ID,COMPANY_ID FROM PUBLISHER;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="device_identifier_type"/>
+ 				<property name="columns" value="ID,NAME,SYSTEM_NAME"/>
+ 				<property name="query" value="SELECT ID,NAME,SYSTEM_NAME FROM DEVICE_IDENTIFIER_TYPE;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="rtb_config"/>
+ 				<property name="columns" value="ID,WIN_NOTICE_MODE,AUCTION_TYPE"/>
+ 				<property name="query" value="SELECT ID,WIN_NOTICE_MODE,AUCTION_TYPE FROM RTB_CONFIG;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="vendor"/>
+ 				<property name="columns" value="ID,NAME"/>
+ 				<property name="query" value="SELECT ID,NAME FROM VENDOR;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="device_identifier_type"/>
+				<property name="columns" value="ID,NAME"/>
+ 				<property name="query" value="SELECT ID,NAME FROM DEVICE_IDENTIFIER_TYPE" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="platform"/>
+				<property name="columns" value="ID,NAME"/>
+ 				<property name="query" value="SELECT ID,NAME FROM PLATFORM;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="category"/>
+				<property name="columns" value="ID,NAME,IAB_ID"/>
+ 				<property name="query" value="SELECT ID,NAME,IAB_ID FROM CATEGORY;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="advertiser"/>
+				<property name="columns" value="ID,NAME,AD_OPS_OWNER_ID,AD_OPS_OWNER_NAME,AD_OPS_OWNER_EMAIL,SALES_OWNER_ID,SALES_OWNER_NAME,SALES_OWNER_EMAIL,BIDDER_ID,BIDDER_NAME,BIDDER_EMAIL,SALES_OWNER_ID,SALES_OWNER_NAME,SALES_OWNER_EMAIL,SALES_OFFICE"/>
+ 				<property name="query" value="SELECT a.ID AS ID,a.NAME as NAME,a.AD_OPS_OWNER_ID as AD_OPS_OWNER_ID,CONCAT(adop.FIRST_NAME,' ',adop.LAST_NAME) as AD_OPS_OWNER_NAME,adop.EMAIL as AD_OPS_OWNER_EMAIL,a.SALES_OWNER_ID as SALES_OWNER_ID,CONCAT(so.FIRST_NAME,' ',so.LAST_NAME) as SALES_OWNER_NAME,so.EMAIL as SALES_OWNER_EMAIL,a.COMPANY_ID as BIDDER_ID,bdc.NAME as BIDDER_NAME,bdc.NAME as BIDDER_EMAIL, (case a.sales_owner_id when 83 then 3 when 94 then 2 when 136 then 2 else 1 end) as SALES_OFFICE FROM ADVERTISER a, ADFONIC_USER adop, ADFONIC_USER so, COMPANY bdc WHERE a.AD_OPS_OWNER_ID = adop.ID AND a.SALES_OWNER_ID = so.ID AND a.COMPANY_ID = bdc.ID;" />
+ 			</bean>
+ 			<bean class="com.adfonic.tasks.combined.mmx.LookupFileDefinition">
+ 				<property name="name" value="sales_office"/>
+				<property name="staticContent">
+					<value><![CDATA[{"id": "1", "name": "Byyd Office UK"}
+{"id": "2", "name": "Byyd Office DE"}
+{"id": "3", "name": "Byyd Office FR"}
+]]></value>
+				</property>
+ 			</bean>
+ 		</list>
+ 	</property>
+ </bean>
+ 
+ 
+ </beans>

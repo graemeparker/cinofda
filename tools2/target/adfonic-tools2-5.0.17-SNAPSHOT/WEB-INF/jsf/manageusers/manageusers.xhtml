@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<h:body>
+    <ui:composition template="/WEB-INF/jsf/template/layouts/layout.xhtml">
+        <ui:define name="content">
+        	<div class="content ovh">
+			    <div class="row main-add-panel">
+				    <pri:outputPanel styleClass="fourcol">
+						<ui:include src="/WEB-INF/jsf/manageusers/manageusersmenu.xhtml">
+							<ui:param name="currentMenu" value="manageUsers" />
+						</ui:include>
+				    </pri:outputPanel>
+			                   
+				    <div id="navigationDiv" class="eightcol last">
+						<section id="setup" class="form-box ui-corner-all">
+						
+						    <h2 class="sec-title"><h:outputText value="#{msg['page.agency.settings.menu.manageUsers']}"/></h2>
+						    <h:form id="manageUsersForm" prependId="false">		
+								<pri:outputPanel styleClass="form-row" layout="block">
+						            <h:outputLabel styleClass="bl b" id="select-user-label" for="user-select"
+						                           value="#{msg['page.agency.settings.removeuser.selectuser']}"/>
+						            <pri:selectOneMenu id="user-select" value="#{manageUsersMBean.selectedUser}" converter="com.adfonic.tools.converter.user.UserConverter">
+						            	<f:selectItems value="#{manageUsersMBean.users}" var="u" itemLabel="#{u.formattedName}" itemValue="#{u}"/>
+						            </pri:selectOneMenu>
+						            <pri:message for="user-select"/>
+						        </pri:outputPanel>	
+						            
+					            <div class="form-row">
+						            <pri:commandButton id="load-but" value="#{msg['page.agency.settings.manageusers.loaduser']}" process="@this,user-select" update="accountsGrid,isAdmin" actionListener="#{manageUsersMBean.loadUser}" onclick="progressDialog.show();" oncomplete="progressDialog.hide();"/>
+					            </div>	
+					            
+								<div class="form-row">	      
+							        <p>
+							        	<h:outputLabel styleClass="bl b" id="selected-accounts-label" for="accountsGrid"
+						                           value="#{msg['page.agency.settings.manageusers.selectedaccounts']}"/>
+							    	</p>
+					           		<pri:dataGrid id="accountsGrid" var="account" value="#{manageUsersMBean.lAccounts}" columns="3" emptyMessage="#{msg['page.agency.settings.manageusers.noaccounts']}">
+					           			<pri:panel>
+					           				<pri:commandButton value="x" actionListener="#{manageUsersMBean.removeAccount}" process="@this" update="accountsGrid">
+					           					<f:attribute name="accountId" value="#{account.id}"/>
+					           				</pri:commandButton>
+					           				<h:outputText value="#{account.name}" />
+					           			</pri:panel>
+					           		</pri:dataGrid>		    	
+								</div>		
+									
+					            <div class="form-row">
+						            <pri:commandButton id="clear-but" value="#{msg['page.agency.settings.manageusers.clearselections']}" process="@this" update="accountsGrid"
+						            					actionListener="#{manageUsersMBean.clearSelections}" onclick="progressDialog.show();" oncomplete="progressDialog.hide();"/>
+					            </div>			
+					            
+					            <div class="form-row">	
+							        <p>
+							        	<h:outputLabel styleClass="bl b" id="add-accounts-label" for="advertiserId"
+						                           value="#{msg['page.agency.settings.manageusers.addaccounts']}"/>
+							    	</p>					            				            
+						            <pri:autoComplete id="advertiserId" value="#{manageUsersMBean.selectedAccount}" completeMethod="#{manageUsersMBean.complete}"
+				                                      var="c" itemLabel="#{c.name}" itemValue="#{c}" multiple="false" converter="com.adfonic.tools.converter.advertiser.AdvertiserConverter">
+				                                     <pri:ajax event="itemSelect" update="add-but"></pri:ajax>
+				                   	</pri:autoComplete>
+						            <pri:commandButton id="add-but" value="#{msg['page.agency.settings.manageusers.add']}" process="@this,advertiserId" update="@this,advertiserId,accountsGrid" 
+						            					actionListener="#{manageUsersMBean.addAccount}" onclick="progressDialog.show();" oncomplete="progressDialog.hide();"
+						            					disabled="#{manageUsersMBean.accountEmpty}"/>
+						            			
+					            </div>
+					            
+					            <div class="form-row">
+	                                <pri:selectBooleanCheckbox id="isAdmin" 
+	                                                           value="#{manageUsersMBean.isAdmin}" 
+	                                                           itemLabel="#{msg['page.agency.settings.newuser.adminuser']}">                
+	                                </pri:selectBooleanCheckbox>                                                                                                                
+                                </div>
+					            
+					            <div class="form-row">
+					            	<pri:commandButton id="save-but" value="#{msg['page.agency.settings.manageusers.savechanges']}" process="@this,user-select,isAdmin" action="#{manageUsersMBean.doSave}" onclick="progressDialog.show();" oncomplete="progressDialog.hide();"/>
+				            	</div>				                        				            
+						    </h:form>					            						        
+						</section>
+				    </div>			                        
+
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

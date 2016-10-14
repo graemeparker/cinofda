@@ -1,0 +1,78 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Budgets reporting options -->
+
+	<h:form prependId="false">
+		<section id="budgets" class="form-box ui-corner-all">
+		    <h2 class="sec-title">#{msg['page.reporting.budgets.menu.label']}</h2>
+			<pri:panelGrid id="grid" styleClass="panelGrid">
+
+			    <pri:row>
+			        <!-- Budget Type -->
+				    <pri:column colspan="2">
+					    <h:outputLabel styleClass="bl b" for="reportView" value="#{msg['page.reporting.budget.reportview.label']}" />
+					    <pri:selectOneMenu id="reportView" value="#{advertiserBudgetReportingMBean.reportView}" 
+	                            		   styleClass="reportViewStyle" panelStyleClass="reportViewPanelStyle">
+	                        <f:selectItem itemLabel="#{msg['page.reporting.budget.reportview.item.daily']}"    itemValue="#{Tools2Constants.BUDGET_BREAKDOWN_OPTION_DAILY}" />
+	                        <f:selectItem itemLabel="#{msg['page.reporting.budget.reportview.item.overall']}"  itemValue="#{Tools2Constants.BUDGET_BREAKDOWN_OPTION_OVERALL}" />
+	                    </pri:selectOneMenu>
+					</pri:column>
+				</pri:row>
+
+			    <pri:row>
+			        <!-- Campaign selection -->
+				    <pri:column colspan="2">
+                        <h:outputLabel styleClass="bl b" for="campaignSelection" value="#{msg['page.reporting.commons.campaigns.label']}" />
+                        <pri:selectOneMenu id="campaignSelection"
+                                           value="#{advertiserBudgetReportingMBean.selectedCampaignId}" 
+                                           filter="true" filterMatchMode="contains"
+                                           styleClass="campaignSelectionStyle" panelStyleClass="campaignSelectionPanelStyle">
+                            <f:selectItem itemLabel="#{advertiserBudgetReportingMBean.allCampaignLabel}" />
+                            <f:selectItems value="#{advertiserBudgetReportingMBean.campaigns}" var="campaign" itemLabel="#{campaign.name}" itemValue="#{campaign.id}"/>
+                        </pri:selectOneMenu>
+					</pri:column>
+				</pri:row>
+				
+                <pri:row>
+                    <!-- Start Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/start_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserBudgetReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+
+                    <!-- End Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/end_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserBudgetReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+                </pri:row>
+		        
+		        <pri:row>
+		            <!-- Generate Report -->
+		            <pri:column colspan="2">
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/generate_button_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserBudgetReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+	        	</pri:row>
+	    	</pri:panelGrid>
+		</section>
+		
+		<!-- Reporting tables -->
+		
+		<pri:outputPanel id="reports">
+    		<ui:include src="/WEB-INF/jsf/reporting/commons/tables_template.xhtml">
+        		<ui:param name="reportingMBean" value="#{advertiserBudgetReportingMBean}" />
+    		</ui:include>
+    	</pri:outputPanel>
+
+	</h:form>
+
+</ui:composition>

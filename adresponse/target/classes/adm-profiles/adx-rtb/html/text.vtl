@@ -1,0 +1,38 @@
+#if(($device.get("vendor") == "Apple" || $platform.systemName == "android") && (!$targetingContext.get("t.pretty") || $targetingContext.get("t.pretty") != "0"))
+
+<div style="position:relative;width:300px;height:50px;border:0">
+#if($adComponents.components.backgroundImage)
+  <div style="position:absolute;width:300px;height:50px;top:0px;right:0px;border:0px;"><img border=0 alt="" width=300 height=50 src="${adComponents.components.backgroundImage.url}"/></div>
+#end
+#if($adComponents.components.icon)
+  <div style="position:absolute;width:42px;height:42px;top:4px;left:5px;border:0px;"><img border=0 alt="" width="${adComponents.components.icon.width}" height="${adComponents.components.icon.height}" src="${adComponents.components.icon.url}"/></div>
+  <div style="position:absolute;display:table;width:200px;height:42px;top:4px;left:52px">
+#else
+  <div style="position:absolute;display:table;width:246px;height:42px;top:4px;left:5px">
+#end
+    <div style="position:relative;display:table-cell;font-family:tahoma,verdana,sans-serif;font-size:12px;text-align:left;vertical-align:middle;color:${textColor}">${escape.html($adComponents.components.text.content)}</div>
+  </div>
+  <div style="position:absolute; right:52px;top:34px; font-family:tahoma,verdana,sans-serif;font-size:10px;color:#f19123;text-align:right;vertical-align:middle">Byyd ads</div>
+  
+  <div
+style="position:absolute;width:300px;height:50px;top:0px;left:0px;border:0px"><a
+href="${adComponents.destinationUrl}" target="_blank"><img border=0 alt="" width=300 height=50 src="${adComponents.components.baseUrls.pixel}"/></a></div>
+  
+</div>
+
+#else
+
+#if($adComponents.components.text)
+<!-- Text Link text -->
+[Ad] <a href="${adComponents.destinationUrl}">${escape.html($adComponents.components.text.content)}</a>
+#end
+
+#end
+
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

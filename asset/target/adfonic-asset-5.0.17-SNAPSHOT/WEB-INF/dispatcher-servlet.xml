@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Superseded by AssetWebMvcConfig.java @Configuration. Delete me next time you read me! -->
+	
+  <context:annotation-config/>
+
+  <context:component-scan base-package="com.adfonic.asset"/>
+
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-asset.properties"/>
+  
+  <!-- We need these next two beans with their alwaysUseFullPath set to true
+       so that "<context>/foo/bar" ends up being treated as "/foo/bar"
+       when it comes to request mappings. -->
+  <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"
+        p:alwaysUseFullPath="true"/>
+  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"
+        p:alwaysUseFullPath="true"/>
+  
+</beans>

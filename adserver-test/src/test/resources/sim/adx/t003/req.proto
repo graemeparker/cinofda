@@ -1,0 +1,81 @@
+id: "SMn\263\000\rgl\n\302\224\320\345\000\020"
+ip: "O1\357"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D167,gzip(gfe)"
+url: "http://mbappgewtkmbrgy3tqmrxgy888888.com/"
+detected_language: "it"
+detected_vertical {
+  id: 39
+  weight: 0.5
+}
+detected_vertical {
+  id: 1462
+  weight: 0.5
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 7
+  excluded_attribute: 30
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 220000
+    direct_deal {
+    	direct_deal_id: 715
+    	fixed_cpm_micros: 690000
+    }
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  excluded_product_category: 10031
+  excluded_product_category: 10106
+  excluded_product_category: 13566
+  excluded_product_category: 13423
+  ad_block_key: 1
+  publisher_settings_list_id: 17473617890803971578
+}
+is_test: false
+cookie_version: 1
+vertical_dictionary_version: 2
+timezone_offset: 120
+detected_content_label: 39
+mobile {
+  platform: "iphone"
+  DEPRECATED_carrier_name: ""
+  DEPRECATED_carrier_country: ""
+  app_id: "reqId"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 2
+  app_category_ids: 60506
+  app_category_ids: 60525
+  app_category_ids: 60526
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 7
+    os_version_minor: 1
+  }
+  screen_width: 568
+  screen_height: 320
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "SMn\263\000\rgl\n\302\224\320\001\000\020 \252\206\210i\314\327\360\276-@T\361\274\315\232\026\023:\3669"
+}
+cookie_age_seconds: 6910681
+postal_code: "00186"
+geo_criteria_id: 1008736
+seller_network_id: 1
+publisher_settings_list_id: 2042544978129220379

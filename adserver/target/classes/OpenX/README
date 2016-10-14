@@ -1,0 +1,32 @@
+==============================================================================
+Open X RTB
+==============================================================================
+
+1. Generating java source from the OpenX protobuf specification:
+
+cat OpenX.proto.header ssrtb.proto_v7_0.txt > OpenX.proto
+protoc --java_out=../../java OpenX.proto
+
+------------------------------------------------------------------------------
+
+2. Generating OpenX-to-Adfonic category mappings:
+
+2a. Take the Excel spreadsheet from the product team and save the sheet
+that provides OpenX to IAB/ADF category mappings as a CSV file here as:
+
+src/main/resources/OpenX/openx-category-to-iabid.csv
+
+2b. Run the generate-openx-category-mappings script from this directory.
+
+------------------------------------------------------------------------------
+
+3. Generating Adfonic-to-OpenX category and content mappings:
+
+3a. Take the Excel spreadsheet from the product team and save the sheet
+that provides IAB/ADF to OpenX category mappings, make sure you correct
+it so that the content mappings are working (the version I got wasn't
+working so I had to fix the VLOOKUP).  Save that as a CSV file here as:
+
+src/main/resources/OpenX/adfonic-iabid-to-openx-category.csv
+
+3b. Run the generate-adfonic-category-mappings script from this directory.

@@ -1,0 +1,102 @@
+#!/bin/bash
+ 
+# If we find a pom.xml file lying around, that means we're running
+# in "developer mode" (local, non-production mode).  In production,
+# the distribution (.tar.gz) of this module doesn't include pom.xml.
+if [ -f `dirname $0`/../pom.xml ]; then
+    developerMode="true"
+    developerMinHeap=""
+    developerMaxHeap="-Xmx5g"
+else
+    developerMode="false"
+fi
+
+sysProps="-Dcom.adfonic.progress.enabled=true"
+debuggerArgs=""
+shard="default"
+jmxPort="9103"
+until [ -z "$1" ]; do
+    if [ $1 == "-1" ]; then
+        echo "RunOnceMode is enabled"
+        sysProps="$sysProps -DrunOnceMode=true"
+    elif [ $1 == "-ec" ]; then
+        echo "Forcing CreativeEligibilityUpdater.enabled=false"
+        sysProps="$sysProps -DCreativeEligibilityUpdater.enabled=false"
+    elif [ $1 == "-a" ]; then
+        echo "Only serializing AdserverDomainCache"
+        sysProps="$sysProps -DomitDomainCache=true -DomitDataCollectorDomainCache=true"
+    elif [ $1 == "-d" ]; then
+        echo "Only serializing DomainCache"
+        sysProps="$sysProps -DomitAdserverDomainCache=true -DomitDataCollectorDomainCache=true"
+    elif [ $1 == "-dc" ]; then
+        echo "Only serializing DataCollectorDomainCache"
+        sysProps="$sysProps -DomitDomainCache=true -DomitAdserverDomainCache=true"
+    elif [ $1 == "-oa" ]; then
+        echo "NOT serializing AdserverDomainCache"
+        sysProps="$sysProps -DomitAdserverDomainCache=true"
+    elif [ $1 == "-od" ]; then
+        echo "NOT serializing DomainCache"
+        sysProps="$sysProps -DomitDomainCache=true"
+    elif [ $1 == "-odc" ]; then
+        echo "NOT serializing DataCollectorDomainCache"
+        sysProps="$sysProps -DomitDataCollectorDomainCache=true"
+    elif [ $1 == "-debug" ]; then
+        echo "Enabling debugging options"
+        debuggerArgs="-DDomainSerializer.debug=true -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+    elif [ $1 == "-nodev" ]; then
+        echo "Disabling developer mode"
+        developerMode="false"
+        echo "Disabling progress indications"
+        sysProps="$sysProps -Dcom.adfonic.progress.enabled=false"
+    elif [ $1 == "-profile" ]; then
+        echo "Instrumenting for JIP profiler and enabling sleep breakpoints"
+        sysProps="$sysProps -Dcom.adfonic.profiler.enabled=true -javaagent:/opt/jip-1.2/profile/profile.jar -Dprofile.properties=/opt/jip-1.2/profile/webapp.profile.properties"
+    elif [[ $1 =~ ^-Xms.+$ ]]; then
+        echo "Using min heap size arg: $1"
+        sysProps="$sysProps -DdsMinHeapArg=$1"
+        developerMinHeap="$1"
+    elif [[ $1 =~ ^-Xmx.+$ ]]; then
+        echo "Using max heap size arg: $1"
+        sysProps="$sysProps -DdsMaxHeapArg=$1"
+        developerMaxHeap="$1"
+    elif [[ $1 =~ ^-Dshard.+$ ]]; then
+        shard="${1:8}"
+        echo "Running for shard : $shard"
+    elif [[ $1 =~ ^-DjmxPort.+$ ]]; then
+        jmxPort="${1:10:4}"
+    elif [[ $1 =~ ^-Dservice\.port.+$ ]]; then
+        serviceport="${1:15}"
+        echo "Web service(secondary) port : [$serviceport]"
+        sysProps="$sysProps -Dservice.port=$serviceport"
+    else
+        echo "Unrecognized option: $1"
+    fi
+    shift
+done
+if [ "$jmxPort" = "" ]; then
+    echo "WARNING : JMX port Not provided.You will not be able to monitor it via JMX";
+else
+    echo "JMX port : $jmxPort"
+    sysProps="$sysProps -Dcom.sun.management.jmxremote.port=${jmxPort}"
+fi
+sysProps="$sysProps -Dshard=${shard}"
+# This is a trick that lets developers use mvn to run this locally.
+if [ "$developerMode" = "true" ]; then
+echo "Running with Maven using exec:exec"
+    exec mvn \
+        compile \
+        exec:exec \
+        -Dexec.classpathScope=runtime \
+        -Dexec.executable="java" \
+        -Dexec.args="$debuggerArgs $developerMinHeap $developerMaxHeap $sysProps -XX:-OmitStackTraceInFastThrow -DDomainSerializer.developerMode=$developerMode -Djava.util.logging.config.file=conf/logging.properties -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -cp %classpath com.adfonic.domainserializer.DomainSerializer"
+fi
+
+APPNAME=domainserializer-${shard}
+echo "running with build.xml"
+echo "APPNAME=$APPNAME"
+
+START_COMMAND="ant -emacs $sysProps -f `dirname $0`/../build.xml domainserializer"
+
+. /usr/local/adfonic/bin/init-env
+
+startProcess ${APPNAME} ${START_COMMAND}

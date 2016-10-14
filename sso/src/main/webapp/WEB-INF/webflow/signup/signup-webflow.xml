@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.springframework.org/schema/webflow"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd"
+      start-state="signupFormView">
+    
+   	<var name="signupModel" class="com.adfonic.sso.flows.signup.SignUpModel"/>
+   	
+	<view-state id="signupFormView" view="signup" model="signupModel">
+		<on-render>
+		 	<evaluate expression="rootBean.countriesList" result="viewScope.countryList"></evaluate>
+		 	<evaluate expression="rootBean.timezonesList" result="viewScope.timezonesList"></evaluate>
+		 	<evaluate expression="rootBean.hearAboutPlaces" result="viewScope.hearAboutPlacesList"></evaluate>
+		 	<evaluate expression="rootBean.defaultCurrencyCodes" result="viewScope.defaultCurrencyCodesList"></evaluate>
+		</on-render>
+        <transition on="submit" to="signupAction"></transition>
+    </view-state>
+    
+    <action-state id="signupAction">
+    	<evaluate expression="signUpAction"/>
+        <transition on="success" to="signupCompletedView" />
+		<transition on="error" to="signupFormView" />
+    </action-state>
+    
+    <action-state id="resendAction">
+    	<evaluate expression="signUpAction.resendEmail(signupModel)" />
+        <transition on="success" to="signupCompletedView" />
+    </action-state>
+    
+    <view-state id="signupCompletedView" view="signupcompleted" model="signupModel">
+        <transition on="resend" to="resendAction"></transition>
+    </view-state>
+</flow>

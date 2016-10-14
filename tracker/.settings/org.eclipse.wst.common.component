@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="adfonic-tracker">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
+        <dependent-module archiveName="adfonic-domain-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-domain/adfonic-domain">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-middleware-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-middleware/adfonic-middleware">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-reporting-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-reporting/adfonic-reporting">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-olap-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-olap/adfonic-olap">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-adx-client-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-adx-client/adfonic-adx-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-jms-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-jms/adfonic-jms">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-tracker-api-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-tracker-api/adfonic-tracker-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-adserver-api-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-adserver-api/adfonic-adserver-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-util-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-util/adfonic-util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="adfonic-archive-5.0.38-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/adfonic-archive/adfonic-archive">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="adfonic-tracker"/>
+        <property name="java-output-path" value="/adfonic-tracker/target/classes"/>
+    </wb-module>
+</project-modules>

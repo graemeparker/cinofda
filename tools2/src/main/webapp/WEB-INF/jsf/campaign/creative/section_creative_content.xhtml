@@ -1,0 +1,390 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:sec="http://www.springframework.org/security/tags">
+ 		
+		<div class="item-data">
+	    	<pri:outputPanel styleClass="form-row" rendered="#{!creative.format.systemName.equals('text') and !creative.format.systemName.equals('native_app_install')}">
+	        	<pri:outputLabel value="#{status.index+1}. #{creative.name}" styleClass="propType name"/>
+	        </pri:outputPanel>
+	        
+            <pri:outputPanel styleClass="ovh form-row-small">
+	        	<ui:param name="notThirdPartyOrNative" value="#{!creative.thirdPartyTag and !creative.format.systemName.equals('native_app_install')}"/>
+	        	
+		        <!-- Specific flags for all creative except third party tag and native -->
+	        	<pri:outputPanel rendered="#{notThirdPartyOrNative}">
+	            	<ui:param name="successOrFailureIconStyle" value="icon #{creative.state != 2 ? 'success' : 'failure'}"/>
+	            	
+	            	<!-- Content spec -->
+	                <pri:outputPanel rendered="#{creative.state!=2 and !creative.missingImage}" styleClass="#{successOrFailureIconStyle}">
+	                    <h:outputText value="#{creative.contentSpec.name}" />
+	                </pri:outputPanel>
+	                <pri:outputPanel rendered="#{creative.state==2 and !creative.missingImage}" styleClass="#{successOrFailureIconStyle}">
+	                    <h:outputText value="#{creative.contentSpec.name}" />
+	                </pri:outputPanel>
+	                
+	                <!-- Creative size -->
+	                <pri:outputPanel rendered="#{creative.state!=2 and !creative.format.systemName.equals('text') and !creative.missingImage}" styleClass="#{successOrFailureIconStyle}">
+	                    <h:outputText value="#{msg['page.campaign.creative.sizeless.label']} #{creative.contentSpec.maxSize}" />
+	                </pri:outputPanel>
+	                <pri:outputPanel rendered="#{creative.state==2} and !creative.missingImage" styleClass="#{successOrFailureIconStyle}">
+	                    <h:outputText value="#{msg['page.campaign.creative.sizebigger.label']} #{creative.contentSpec.maxSize}" />
+	                </pri:outputPanel>
+                </pri:outputPanel>
+                
+	            <!-- Common Flags for all creative -->
+                <!-- SSL Compliance -->
+				<pri:outputLabel id="sslFlag" value="#{newSslType}" styleClass="#{newSslIcon}" />
+            </pri:outputPanel>
+            
+            <!-- Creative ID -->
+  	    	<pri:outputPanel styleClass="creative-id-label" rendered="#{creative.externalID != null}">
+	            <span class="b1 b">#{msg["page.campaign.confirmation.creative.id.label"]}: </span>
+	            <span>#{creative.externalID}</span>
+	        </pri:outputPanel>
+	        
+	        <!-- Creative name -->
+            <pri:outputPanel id="name-div" rendered="#{!creative.format.systemName.equals('native_app_install')}" styleClass="form-row-small">
+                <h:outputLabel styleClass="bl b" id="name-label" for="name"
+                               value="#{msg['page.campaign.creative.upload.name.label']}"/>
+                <pri:inputText styleClass="bl" maxlength="100" id="name" value="#{creative.name}" required="true" requiredMessage="#{msg['page.campaign.creative.name.required']}">
+                	<pri:ajax event="change" process="@this" listener="#{campaignCreativeMBean.nameChangeListener}" oncomplete="update#{status.index}();"/>
+                	<f:attribute name="creativeIndex" value="#{status.index}" />  
+                </pri:inputText>
+                <div class="name-msg">
+                    <pri:message for="name"/>
+                </div>
+            </pri:outputPanel>
+            
+            <!-- Ad Text -->
+            <pri:outputPanel id="text-div" rendered="#{creative.format.systemName.equals('text')}" styleClass="form-row-small">
+                <h:outputLabel styleClass="bl b" id="ad-text-label" for="ad-text"
+                               value="#{msg['page.campaign.creative.textbanner.adtext.label']}"
+                               />
+                <pri:inputText styleClass="bl ad-txt#{status.index}" id="ad-text" maxlength="100" value="#{creative.adText}"
+                               required="true" validatorMessage="#{msg['page.error.validation.maxlengthname']}"
+                            validator="MaxLengthNameValidator" requiredMessage="#{msg['page.campaign.creative.text.required']}">
+                	<pri:ajax event="change" listener="#{campaignCreativeMBean.adTextChangeListener}" oncomplete="update#{status.index}();"/>       
+                	<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+                </pri:inputText>
+                <div class="long">
+                    <pri:message for="ad-text"/>
+                </div>
+                <pri:outputPanel styleClass="characters#{status.index} char-count" layout="block">
+                    <span class="count"></span>
+                    <h:outputText value="#{msg['page.campaign.creative.textbanner.maxcharacters.label']}" />
+                    <script type="text/javascript">
+                      ADT.charCount('.ad-txt#{status.index}', '.characters#{status.index} .count', 35, 100);
+                  	</script>
+              	</pri:outputPanel>
+          	</pri:outputPanel>
+          	
+          	<!-- Title (Native Ad) -->
+          	<pri:outputPanel id="title-div" rendered="#{creative.format.systemName.equals('native_app_install')}" styleClass="form-row-small">
+                <h:outputLabel styleClass="bl b" id="ad-title-label" for="ad-title"
+                               value="#{msg['page.campaign.creative.texttitle.label']}"/>
+                <pri:inputText styleClass="bl ad-ttl#{status.index}" id="ad-title" maxlength="50" value="#{creative.nativeAdInfo.title}" required="true"
+                            validator="MaxLengthNameValidator" validatorMessage="#{msg['page.error.validation.maxlengthname']}" requiredMessage="#{msg['page.campaign.creative.title.required']}">
+                	<pri:ajax event="change" listener="#{campaignCreativeMBean.nativeAdAttributesChangeListener}" oncomplete="update#{status.index}();"/>       
+                	<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+                </pri:inputText>
+                <div class="long">
+                    <pri:message for="ad-title"/>
+                </div>
+                <pri:outputPanel styleClass="characterstitl#{status.index} char-count" layout="block">
+                    <span class="count"></span>
+                    <h:outputText value="#{msg['page.campaign.creative.textbanner.maxcharacters.label']}" />
+                    <script type="text/javascript">
+                      ADT.charCount('.ad-ttl#{status.index}', '.characterstitl#{status.index} .count', 25, 50);
+                  	</script>
+              	</pri:outputPanel>
+          	</pri:outputPanel>
+          	
+          	<!-- Description (Native Ad) -->
+          	<pri:outputPanel id="description-div" rendered="#{creative.format.systemName.equals('native_app_install')}" styleClass="form-row-small">
+                <h:outputLabel styleClass="bl b" id="ad-description-label" for="ad-description"
+                               value="#{msg['page.campaign.creative.textdescription.label']}"/>
+                <pri:inputText styleClass="bl ad-desc#{status.index}" id="ad-description" maxlength="120" value="#{creative.nativeAdInfo.description}"
+                               required="true" validatorMessage="#{msg['page.error.validation.maxlengthname']}"
+                               validator="MaxLengthNameValidator" requiredMessage="#{msg['page.campaign.creative.description.required']}">
+                	<pri:ajax event="change" listener="#{campaignCreativeMBean.nativeAdAttributesChangeListener}" oncomplete="update#{status.index}();"/>       
+                	<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+                </pri:inputText>
+                <div class="long">
+                    <pri:message for="ad-description"/>
+                </div>
+                <pri:outputPanel styleClass="charactersdesc#{status.index} char-count" layout="block">
+                    <span class="count"></span>
+                    <h:outputText value="#{msg['page.campaign.creative.textbanner.maxcharacters.label']}" />
+                    <script type="text/javascript">
+                      ADT.charCount('.ad-desc#{status.index}', '.charactersdesc#{status.index} .count', 100, 120);
+                  	</script>
+              	</pri:outputPanel>
+          	</pri:outputPanel>
+          	
+          	<!-- Click to action (Native Ad) -->
+          	<pri:outputPanel id="clicktoaction-div" layout="block" styleClass="form-row-small" rendered="#{creative.format.systemName.equals('native_app_install')}">
+          		<h:outputLabel styleClass="bl b" id="ad-clicktoaction-label" for="ad-clicktoaction" value="#{msg['page.campaign.creative.textclicktoaction.label']}"/>
+          		<pri:inputText styleClass="bl ad-clicktoaction#{status.index}" id="ad-clicktoaction" maxlength="15" value="#{creative.nativeAdInfo.clickToAction}"
+                               required="false" validator="MaxLengthNameValidator" validatorMessage="#{msg['page.error.validation.maxlengthname']}">
+                	<pri:ajax event="change" listener="#{campaignCreativeMBean.nativeAdAttributesChangeListener}" oncomplete="update#{status.index}();"/>       
+                	<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+                	<pri:watermark id="ad-clicktoaction-watermark" for="ad-clicktoaction" value="#{msg['page.campaign.creative.textclicktoaction.watermark']}" />
+                </pri:inputText>
+          	</pri:outputPanel>
+            
+            <!-- Destination section -->
+            <div class="form-row-small">
+                <ui:insert name="sectionDestination" >
+               		<ui:include src="/WEB-INF/jsf/campaign/creative/section_creative_content_destination.xhtml" />
+           		</ui:insert>
+           	</div>
+	
+			<!-- Language section -->
+            <div class="form-row-small">
+                <ui:insert name="sectionLanguage" >
+               		<ui:include src="/WEB-INF/jsf/campaign/creative/section_creative_content_language.xhtml" />
+           		</ui:insert>
+            </div>
+            
+            <!-- Creative Attributes -->
+            <pri:outputPanel id="creativeAttribute" styleClass="form-row-small">
+              <sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+               	<div>
+           			<h:outputLabel styleClass="bl b field-label" id="attributes-label" value="#{msg['page.campaign.creative.attributes']}"/>
+			  		<span class="admin status-indicator"></span>
+			  	</div>
+                <pri:selectManyMenu id="creativeAttributeMenu" 
+                        value="#{creative.creativeAttributes}"
+                        styleClass="cratt"
+                        converter="com.adfonic.tools.converter.creative.creativeattribute.CreativeAttributeConverter">
+                    <f:selectItems value="#{toolsApplicationBean.creativeAttributes}" var="a" itemLabel="#{a.name}" itemValue="#{a}"/>
+                 	<pri:ajax event="change" listener="#{campaignCreativeMBean.creativeAttributeChangeListener}" oncomplete="update#{status.index}();"/>
+			        <f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+                </pri:selectManyMenu>
+              </sec:authorize>
+            </pri:outputPanel>
+           
+           	<!-- Third party section -->
+            <ui:insert name="sectionThirdParty" >
+           		<ui:include src="/WEB-INF/jsf/campaign/creative/section_creative_content_thirdparty.xhtml" />
+       		</ui:insert>
+            
+            
+            <!-- Play and Pause buttons -->
+            <div class="form-row play-pause">
+            	<pri:selectOneButton id="paused-button" value="#{creative.activeStatus}" rendered="#{!campaignMBean.campaignCreativeMBean.newCampaign and !creative.newCreative}">
+            		<f:selectItem itemLabel="#{msg['page.campaign.creative.status.active']}" itemValue="ACTIVE"/>
+            		<f:selectItem itemLabel="#{msg['page.campaign.creative.status.paused']}" itemValue="PAUSE"/>
+            		<pri:ajax event="change" process="@this" listener="#{campaignCreativeMBean.statusChangeListener}" oncomplete="update#{status.index}();"/>
+            		<f:attribute name="creativeIndex" value="#{status.index}" />
+            	</pri:selectOneButton>
+            </div>
+            
+            <!-- Commit Change or Save button -->
+	        <div class="form-row btns">
+	        	
+                <!-- Save -->
+                <pri:commandButton id="saveButton" 
+                    value="#{campaignMBean.campaignCreativeMBean.saveButtonMessage}"
+                    onclick="progressDialog.show(); saveCreativeWithoutSslOverride();"
+                    disabled="#{campaignMBean.campaignCreativeMBean.commitDisabled}" />
+                <pri:remoteCommand name="saveCreative"
+                    update=":navigationDiv,:menuForm:side-panel" 
+                    process="@this,text-div,ad-title,ad-description,name,destType,destURL,finalDestinationWrapper,beaconContainer,language,translation,paused-button,vendor,vendor2,contentForms"
+                    oncomplete="progressDialog.hide(); ADT.scrollToElement('.ui-message-error');" 
+                    actionListener="#{campaignMBean.campaignCreativeMBean.saveCreative}" />
+	          	
+	          	<!-- Cancel -->
+	            <pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" actionListener="#{campaignMBean.campaignCreativeMBean.cancelCreative}" 
+	            				process="@this" update=":navigationDiv" onclick="progressDialog.show();" oncomplete="progressDialog.hide()">
+	            	<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+	            </pri:commandLink>
+	            
+	            <!-- Delete -->
+	            <pri:commandLink value="#{msg['page.campaign.creative.delete.label']}" onclick="confirmation#{status.index}.show()" 
+	            			process="@this" rendered="#{creative.deletable}">
+	            </pri:commandLink>
+	            
+	            <pri:message escape="false" for="saveButton" />
+	            
+	            <!-- Delete Confirmation -->
+		        <pri:confirmDialog id="confirmDialog" header="#{msg['page.campaign.creative.delete.label']}" message="#{msg['page.campaign.creative.delete.confirmation.message']}" severity="alert" widgetVar="confirmation#{status.index}" styleClass="confirm-dialog">  
+		  			<pri:commandButton id="confirm" value="#{msg['page.campaign.creative.delete.confirmation.yes']}" update=":navigationDiv,:menuForm:side-panel" onclick="confirmation#{status.index}.hide();progressDialog.show();" oncomplete="progressDialog.hide()"  
+		              				actionListener="#{campaignMBean.campaignCreativeMBean.deleteCreative}" process="@this">
+		  				<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+		  			</pri:commandButton>  
+		  			<pri:commandButton id="decline" value="#{msg['page.campaign.creative.delete.confirmation.no']}" onclick="confirmation#{status.index}.hide()" type="button" />   
+				</pri:confirmDialog>
+                    
+	            <!-- Update SSL confirmation -->
+	            <pri:remoteCommand name="updateAndShowSslConfirmation" onstart="progressDialog.show()" update="sslConfirmation" oncomplete="progressDialog.hide(); confirmationSsl.show();" />
+                    
+				<!-- SSL Compliance Confirmation -->
+		        <pri:confirmDialog id="sslConfirmation" widgetVar="confirmationSsl" severity="alert" styleClass="confirm-dialog-long-buttons">
+		        
+		        	<!-- Header -->
+					<f:facet name="header">
+						<!-- Determined SSL compliance type -->
+				        <pri:outputLabel value="#{newSslType}" />
+				        
+				        <!-- SSL compliance tool tip -->
+			        	<pri:outputPanel id="sslHint" layout="inline" styleClass="helpImageRight" style="vertical-align: sub;" />
+						<pri:tooltip for="sslHint" style="width:600px;">
+						    <pri:outputLabel value="#{msg['page.campaign.creative.save.sslcompliance.tooltip.part1']}" /><br /><br />
+						    <pri:outputLabel value="#{msg['page.campaign.creative.save.sslcompliance.tooltip.part2']}" escape="false" />
+						</pri:tooltip>
+				    </f:facet>
+		        
+		        	<!-- Message -->
+		        	<f:facet name="message">
+		        		<!-- Part 1 -->
+			        	<pri:outputLabel value="#{msg['page.campaign.creative.save.sslcompliance.message.part1']}" />
+			        	
+			        	<!-- Part 2 -->
+			        	<pe:switch value="#{isSslUnsure}">
+			        		<!-- Unsure SSL -->
+		    				<pe:case value="#{true}">
+		    					<br/><pri:outputLabel value="#{msg['page.campaign.creative.save.sslcompliance.message.part2.unsuressl']}" styleClass="i" />
+			            		
+			            		<!-- Part 3 -->
+			            		<br/><h:outputFormat value="#{msg['page.campaign.creative.save.sslcompliance.message.part3']}" styleClass="b">
+				            		<f:param value="#{msg['page.campaign.creative.sslcompliance.confirmation.compliant']}" />
+				            	</h:outputFormat>	    				
+		    				</pe:case>
+		    				
+		    				<!-- Not SSL -->
+		    				<pe:case value="#{false}">
+			    				<br/><h:outputFormat value="#{msg['page.campaign.creative.save.sslcompliance.message.part2.nossl']}" styleClass="i">
+			            			<f:param value="#{msg['page.campaign.creative.sslcompliance.confirmation.continue']}" />
+			            		</h:outputFormat>
+		    				</pe:case>
+		    			</pe:switch>
+    				</f:facet>
+		        	
+		        	<!-- Continue without compliance -->  
+		  			<pri:commandButton value="#{msg['page.campaign.creative.sslcompliance.confirmation.continue']}"
+		  							onclick="confirmationSsl.hide();progressDialog.show();saveCreativeWithSslOverride(false);" />
+		  			
+		  			<!-- My creative is compliant -->
+		  			<!-- Disabled in case of NOT SSL -->
+		  			<pri:commandButton value="#{msg['page.campaign.creative.sslcompliance.confirmation.compliant']}"
+		  							onclick="confirmationSsl.hide();progressDialog.show();saveCreativeWithSslOverride(true);"
+		  							disabled="#{not isSslUnsure}" />
+				</pri:confirmDialog>
+        	</div>
+        	
+        	<!-- Creative stop serving section -->
+            <pri:outputPanel id="warning" styleClass="form-row">
+                <pri:outputPanel rendered="#{campaignMBean.campaignCreativeMBean.isCreativeGoToPendingWarningVisible(creative)}" styleClass="warning">
+                    <p class="top"><h:outputText value="#{msg['page.campaign.creative.changes.warning.top']}" /></p>
+                    <h:outputText value="#{campaignMBean.campaignCreativeMBean.warningMessage}" />
+                        <pri:commandLink 
+                        	value="#{msg['page.campaign.creative.changes.warning.cancel']}" 
+                        	actionListener="#{campaignMBean.campaignCreativeMBean.cancelCreative}" 
+              				onclick="progressDialog.show();" 
+              				oncomplete="progressDialog.hide();" 
+              				process="@this" 
+              				update=":navigationDiv"
+              			>
+                          	<f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+                      	</pri:commandLink>
+                  	<h:outputText value="#{msg['page.campaign.creative.changes.warning.last']}" />
+              	</pri:outputPanel>
+            </pri:outputPanel>
+            
+            <script type="text/javascript">
+				<!-- Display SSL confirmation or save creative -->
+				function saveCreativeWithoutSslOverride() {
+					saveCreative([{name:'#{Tools2Constants.CREATIVE_INDEX}', value: '#{status.index}'}]);
+				}
+				
+				<!-- Save creative with overridden SSL -->
+				function saveCreativeWithSslOverride(sslOverride) {
+					saveCreative([{name:'#{Tools2Constants.CREATIVE_INDEX}', value: '#{status.index}'}, {name:'#{Tools2Constants.SSL_OVERRIDE}', value: '' + sslOverride + ''}]);
+				}
+        	</script>
+            
+        </div>
+        <pri:outputPanel styleClass="thumb-panel-wrap" rendered="#{!creative.format.systemName.equals('text') and !creative.thirdPartyTag and !creative.format.systemName.equals('native_app_install')}" layout="block">
+            <h:panelGroup styleClass="thumb-panel" layout="block" rendered="#{creative.state!=2 and !creative.missingImage}">
+            	<pri:graphicImage value="#{campaignCreativeMBean.existingStream}" cache="false"
+                               rendered="#{!creative.format.systemName.equals('text')}"
+                               width="#{creative.smallWidth}" height="#{creative.smallHeight}">
+                 	<f:param name="index" value="#{status.index}"/>
+             	</pri:graphicImage>
+         	</h:panelGroup>
+            <h:panelGroup styleClass="thumb-panel" layout="block" rendered="#{creative.state==2 or creative.missingImage}">
+            	<pri:graphicImage url="/resources/images/no_image.png"
+                               rendered="#{!creative.format.systemName.equals('text')}">
+                	<f:param name="index" value="#{status.index}"/>
+             	</pri:graphicImage>
+         	</h:panelGroup>
+            <pri:fileUpload id="changeFile" mode="advanced" label="#{msg['page.campaign.creative.changefile.label']}"
+                            auto="true" multiple="false" styleClass="change-file"
+                            rendered="#{!creative.format.systemName.equals('text')}"
+                            onstart="progressDialog.show();" oncomplete="progressDialog.hide();"
+                            fileUploadListener="#{campaignCreativeMBean.changeFile}" update="edit-panel,:submitForm">
+                <f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+            </pri:fileUpload>
+        </pri:outputPanel>
+        <pri:outputPanel styleClass="thumb-panel-wrap-native" rendered="#{creative.format.systemName.equals('native_app_install')}" layout="block">   
+           <h:panelGroup id="native-ad-help" layout="block" styleClass="helpImage"></h:panelGroup>
+           <pri:overlayPanel for="native-ad-help" hideEffect="fade" styleClass="no-shadow">
+               <div class="helpInner ui-corner-all ui-shadow">
+                   <div class="helpArrow"></div>
+                   <h2>#{msg['page.campaign.creative.nativead.help.title']}</h2>
+                   <p>#{msg['page.campaign.creative.nativead.help.text.1']}</p>
+                   <p>#{msg['page.campaign.creative.nativead.help.text.2']}</p>
+                   <p>#{msg['page.campaign.creative.nativead.help.text.3']}</p>
+               </div>
+           </pri:overlayPanel>           
+            <div id="native-ad-thumbnail">
+	           <h:panelGroup styleClass="thumb-panel-native-small" layout="block" rendered="#{creative.state!=2 and creative.nativeAdInfo.icon!=null}">
+            	<pri:graphicImage  cache="false"
+            		value="#{campaignCreativeMBean.nativeAdIconStream}" width="50" height="50">
+                 	<f:param name="index" value="#{status.index}"/>
+             	</pri:graphicImage>
+         	</h:panelGroup>
+            <h:panelGroup styleClass="thumb-panel-native-small" layout="block" rendered="#{creative.state==2 || creative.nativeAdInfo.icon==null}">
+            	<pri:graphicImage url="/resources/images/placeholder-icon.png"
+                               width="50" height="50">
+                	<f:param name="index" value="#{status.index}"/>
+             	</pri:graphicImage>
+         	</h:panelGroup>
+            <pri:fileUpload id="changeIcon" mode="advanced" label="#{creative.nativeAdInfo.icon!=null?msg['page.campaign.creative.native.icon.change.label']:msg['page.campaign.creative.native.icon.upload.label']}"
+                            auto="true" multiple="false" styleClass="change-file-native"
+                            onstart="progressDialog.show();" oncomplete="progressDialog.hide();"
+                            fileUploadListener="#{campaignCreativeMBean.changeIconForNativeAd}" update="edit-panel,:submitForm">
+                <f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+            </pri:fileUpload>
+            </div>
+            
+            <div id="native-ad-large">
+            <h:panelGroup styleClass="thumb-panel-native" layout="block" rendered="#{creative.state!=2 and creative.nativeAdInfo.image!=null}">
+            	<pri:graphicImage value="#{campaignCreativeMBean.nativeAdImageStream}" cache="false"
+                               width="192" height="100">
+                 	<f:param name="index" value="#{status.index}"/>
+             	</pri:graphicImage>
+         	</h:panelGroup>
+            <h:panelGroup styleClass="thumb-panel-native" layout="block" rendered="#{creative.state==2 || creative.nativeAdInfo.image==null}">
+            	<pri:graphicImage url="/resources/images/placeholder-image.png"
+                               width="192" height="100">
+                	<f:param name="index" value="#{status.index}"/>
+             	</pri:graphicImage>
+         	</h:panelGroup>
+            <pri:fileUpload id="changeNativeImage" mode="advanced" label="#{creative.nativeAdInfo.image!=null?msg['page.campaign.creative.native.image.change.label']:msg['page.campaign.creative.native.image.upload.label']}"
+                            auto="true" multiple="false" styleClass="change-file-native"
+                            onstart="progressDialog.show();" oncomplete="progressDialog.hide();"
+                            fileUploadListener="#{campaignCreativeMBean.changeImageForNativeAd}" update="edit-panel,:submitForm">
+                <f:attribute name="#{Tools2Constants.CREATIVE_INDEX}" value="#{status.index}" />
+            </pri:fileUpload>
+	        </div>
+        </pri:outputPanel>
+</ui:composition>

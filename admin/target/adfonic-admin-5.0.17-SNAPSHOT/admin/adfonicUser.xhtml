@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Admin user management"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+
+<h:panelGroup rendered="#{!ad:hasAdminRole(adfonicUserBean.adfonicUser,'SuperAdmin')}">
+    You don't have sufficient privilges
+</h:panelGroup>
+<h:panelGroup rendered="#{ad:hasAdminRole(adfonicUserBean.adfonicUser,'SuperAdmin')}">
+    <h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+        <div class="infoError">
+        <div class="infoErrorImage"></div>
+        <div class="infoErrorHeader">${msg['page.generic.error.label']}</div>
+        <div class="infoContent">${msg['page.generic.error.box']}</div>
+        </div>
+    </h:panelGroup>
+
+    <h2>
+        <pri:outputLabel rendered="#{adminAdfonicUserBean.editMode}">Edit</pri:outputLabel>
+        <pri:outputLabel rendered="#{!adminAdfonicUserBean.editMode}">Add</pri:outputLabel>
+    </h2>
+
+    <h:form id="mainForm">
+        <div class="formSection">
+            <p class="label">Login name<span class="required">*</span></p>
+            <div class="error">
+                <h:message for="loginName" styleClass="error" style="margin-right:10px" />
+            </div>
+            <pri:inputText id="loginName"
+                    maxlength="50"
+                    style="width:360px" 
+                    value="#{adminAdfonicUserBean.adminAdfonicUser.loginName}"
+                    required="true" />
+        </div>
+
+        <div class="formSection">
+            <p class="label">First name <span class="required">*</span></p>
+            <div class="error">
+                <h:message for="fname" styleClass="error" style="margin-right:10px" />
+            </div>
+            <pri:inputText id="fname"
+                    maxlength="80"
+                    style="width:360px"
+                    value="#{adminAdfonicUserBean.adminAdfonicUser.firstName}"
+                    required="true" />
+        </div>
+
+        <div class="formSection">
+            <p class="label">Last name <span class="required">*</span></p>
+            <div class="error">
+                <h:message for="lname" styleClass="error" style="margin-right:10px" />
+            </div>
+            <pri:inputText id="lname"
+                    maxlength="80"
+                    style="width:360px"
+                    value="#{adminAdfonicUserBean.adminAdfonicUser.lastName}"
+                    required="true" />
+        </div>
+
+        <div class="formSection">
+            <p class="label">Email <span class="required">*</span></p>
+            <div class="error">
+                <h:message for="email" styleClass="error" style="margin-right:10px" />
+            </div>
+            <pri:inputText id="email"
+                    maxlength="255"
+                    style="width:360px"
+                    value="#{adminAdfonicUserBean.adminAdfonicUser.email}"
+                    validator="#{util.validateEmail}"
+                    required="true" />
+        </div>
+
+        <div class="formSection">
+            <p class="label">Password <h:panelGroup rendered="#{!adminAdfonicUserBean.editMode}"><span class="required">*</span></h:panelGroup></p>
+            <div class="error">
+                <h:message for="password" styleClass="error" style="margin-right:10px" />
+            </div>
+            <div class="formtip">6 - 32 characters</div>
+            <h:inputSecret id="password"
+                    maxlength="32"
+                    style="width:360px"
+                    value="#{adminAdfonicUserBean.password}"
+                    required="#{!adminAdfonicUserBean.editMode}">
+                    <f:validateLength minimum="6" maximum="32" />
+            </h:inputSecret>
+        </div>
+
+        <div class="formSection">
+            <p class="label">Password again <h:panelGroup rendered="#{!adminAdfonicUserBean.editMode}"><span class="required">*</span></h:panelGroup></p>
+            <div class="error">
+                <h:message for="passwordRetype" styleClass="error" style="margin-right:10px" />
+            </div>
+            <h:inputSecret id="passwordRetype"
+                    maxlength="32"
+                    style="width:360px"
+                    value="#{adminAdfonicUserBean.passwordRetype}"
+                    required="#{!adminAdfonicUserBean.editMode}">
+                    <f:validateLength minimum="6" maximum="32" />
+            </h:inputSecret>
+        </div>
+
+        <div class="formSection">
+            <p class="label">Status <span class="required">*</span></p>
+            <div class="error">
+                <h:message for="userStatus" styleClass="error" style="margin-right:10px" />
+            </div>
+            <h:selectOneMenu id="userStatus"
+                           value="#{adminAdfonicUserBean.adminAdfonicUser.status}"
+                           required="true" style="width:335px">
+                           <f:selectItems value="#{adminAdfonicUserBean.statusItems}" />
+             </h:selectOneMenu>
+        </div>
+        <div class="formSection">
+        	<p class="label">Roles</p>
+	        <pri:selectManyMenu id="adminRolesList" value="#{adminAdfonicUserBean.adminAdfonicUser.roles}" converter="jpaConverter"
+		        style="width:335px" collectionType="java.util.HashSet">
+		        <f:selectItems value="#{adminAdfonicUserBean.adminRoles}">
+		        </f:selectItems>
+		        <pri:ajax update="accountsContainer"/>
+		    </pri:selectManyMenu>
+		</div>
+		<h:panelGroup id="accountsContainer" layout="block">
+			<h:panelGroup layout="block" styleClass="formSection" rendered="#{adminAdfonicUserBean.restrictedAdmin}">
+				<table>
+					<tr>
+						<td>
+				        	<p class="label">Available Accounts</p>
+				        	<pri:inputText id="userSearch" value="#{adminAdfonicUserBean.userSearch}"/>
+				        	<pri:commandButton value="Search" process="@this,userSearch" update="searchList" actionListener="#{adminAdfonicUserBean.search}"></pri:commandButton>
+					        <pri:selectManyMenu id="searchList" value="#{adminAdfonicUserBean.usersToAdd}" converter="jpaConverter" 
+					        	style="width:335px;max-height:140px;min-height:140px">
+					        	<f:selectItems value="#{adminAdfonicUserBean.usersFound}" var="u" itemValue="#{u}" itemLabel="#{u.email}">
+					        </f:selectItems>
+					        </pri:selectManyMenu>
+					        <pri:commandButton value="Add" process="@this,searchList" update="searchList,assignedUsers" actionListener="#{adminAdfonicUserBean.add}"></pri:commandButton>
+					        <pri:commandButton value="Add all" process="@this,searchList" update="searchList,assignedUsers" actionListener="#{adminAdfonicUserBean.addAll}"></pri:commandButton>
+		        		</td>
+		        		<td style="width:100px;text-align:center;vertical-align:center">
+		        			<b>>></b>
+		        		</td>
+		        		<td>
+					        <p class="label">Assigned Accounts</p>
+					        <br/>
+					        <br/>
+					        <pri:selectManyMenu id="assignedUsers" value="#{adminAdfonicUserBean.usersToDelete}" converter="jpaConverter" style="width:335px;max-height:140px;min-height:140px">
+					        	<f:selectItems value="#{adminAdfonicUserBean.adminAdfonicUser.users}" var="u" itemValue="#{u}" itemLabel="#{u.email}"/>
+					        </pri:selectManyMenu>
+					        <pri:commandButton value="Remove" process="@this,assignedUsers,userSearch" update="searchList,assignedUsers" actionListener="#{adminAdfonicUserBean.remove}"></pri:commandButton>
+					        <pri:commandButton value="Remove All" process="@this,assignedUsers,userSearch" update="searchList,assignedUsers" actionListener="#{adminAdfonicUserBean.removeAll}"></pri:commandButton>
+		        		</td>
+		        	</tr>
+		        </table>
+			</h:panelGroup>
+		</h:panelGroup>
+        <div class="bottomButton">
+            <!-- button start -->
+            <h:commandLink id="saveNewsLink" action="#{adminAdfonicUserBean.doSave}" styleClass="largeButton">
+                <span>Save</span><span class="go"></span>
+            </h:commandLink>
+
+            <h:commandLink styleClass="largeButton" action="#{adminAdfonicUserBean.doCancel}" immediate="true" style="float:right;">
+                <span>Cancel</span><span class="stop"></span>
+            </h:commandLink>
+            <!-- button end -->
+        </div>
+        <div class="clear"></div>
+
+    </h:form>
+</h:panelGroup>
+</ui:define>
+</ui:composition>

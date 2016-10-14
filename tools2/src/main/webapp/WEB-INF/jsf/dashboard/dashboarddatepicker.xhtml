@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:component id="dashboardDatePicker">
+           <!-- DATE FILTER -->
+           <h:panelGroup layout="block">
+               <h:form id="datepickerSubFormId" prependId="false">
+                   <h:panelGroup layout="block" id="dateFilterDivId" styleClass="dateFilter ui-button ui-corner-all">
+                       <span class="filterDate">
+                           <h:outputText value= "#{datePickerMBean.from}">
+                               <f:convertDateTime locale="#{languageSessionBean.locale}" pattern="#{languageSessionBean.getLongDateFormat()}" type="date" />
+                           </h:outputText> -
+                           <h:outputText value= "#{datePickerMBean.to}">
+                               <f:convertDateTime locale="#{languageSessionBean.locale}" pattern="#{languageSessionBean.getLongDateFormat()}" type="date" />
+                           </h:outputText>
+                       </span>
+                       <span class="datefilterIcon"></span>
+                   </h:panelGroup>
+                   <pri:overlayPanel id="datePanel" for="dateFilterDivId" showEffect="fade" hideEffect="fade" styleClass="datePanel ui-helper-clearfix" >
+                       <h:panelGroup layout="block">
+                           <pri:selectOneButton id="datePickerPresetsId" value="#{datePickerMBean.previousSelection}" styleClass="filterBtns date-selection" >
+                               <f:selectItem itemLabel="#{msg['page.dashboard.labels.datepicker.options.today']}" itemValue="1"/>
+                               <f:selectItem itemLabel="#{msg['page.dashboard.labels.datepicker.options.yesterday']}" itemValue="2"/>
+                               <f:selectItem itemLabel="#{msg['page.dashboard.labels.datepicker.options.last7days']}" itemValue="3"/>
+                               <f:selectItem itemLabel="#{msg['page.dashboard.labels.datepicker.options.thismonth']}" itemValue="4"/>
+                               <c:if test="#{datePickerMBean.renderLastMonth}">
+                               	   <f:selectItem itemLabel="#{msg['page.dashboard.labels.datepicker.options.lastmonth']}" itemValue="5"/>
+                               </c:if>
+                               <pri:ajax event="change" process="@this" onstart="progressDialog.show();" oncomplete="progressDialog.hide();"
+                               		    update="dateFilterDivId,datepickerSubFormId,:chartsFormId,:dataTableFormId,:date-text" 
+                               			listener="#{datePickerMBean.processDatePickerValueChange}"/>
+                           </pri:selectOneButton>
+                       </h:panelGroup>
+                   </pri:overlayPanel>
+               </h:form>
+           </h:panelGroup>
+           <p class="change-date-range">
+           		<h:outputFormat id="date-text" value="#{datePickerMBean.dateSelection}" styleClass="range"/>
+           		<!-- <span class="zone">GMT +0.00</span>  -->
+           </p><!-- END DATE FILTER -->
+        </ui:component>
+    </h:body>
+</html>

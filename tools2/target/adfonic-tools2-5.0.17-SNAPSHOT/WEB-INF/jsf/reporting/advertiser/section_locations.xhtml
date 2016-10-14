@@ -1,0 +1,107 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Locations reporting options -->
+
+	<h:form prependId="false">
+        <section id="locations" class="form-box ui-corner-all">
+			<h2 class="sec-title">#{msg['page.reporting.locations.menu.label']}</h2>
+		    <pri:panelGrid id="grid" styleClass="panelGrid">
+		              
+			    <pri:row>
+			        <!-- Campaign selection -->
+				    <pri:column colspan="2">
+		                <ui:include src="/WEB-INF/jsf/reporting/commons/campaigns_template.xhtml">
+		                    <ui:param name="reportingMBean" value="#{advertiserLocationReportingMBean}" />
+		                </ui:include>
+					</pri:column>
+				</pri:row>
+
+                <pri:row>
+                    <!-- Group by Category -->
+                    <pri:column>
+                        <pri:selectBooleanCheckbox value="#{advertiserLocationReportingMBean.groupByCategory}"
+                                                   itemLabel="#{msg['page.reporting.commons.groupby.category.label']}"/>
+                    </pri:column>
+                    
+                    <!-- Group by Inventory Source -->
+                    <pri:column>
+                        <pri:selectBooleanCheckbox value="#{advertiserLocationReportingMBean.groupByInventory}"
+                                                   itemLabel="#{msg['page.reporting.commons.groupby.inventory.label']}"/>
+                    </pri:column>
+                </pri:row>
+
+                <pri:row>
+                    <!-- Start Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/start_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserLocationReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+
+                    <!-- End Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/end_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserLocationReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+                </pri:row>
+                
+				<pri:row>
+				    <!-- Daily statistic for period -->
+					<pri:column colspan="2">
+						<pri:selectBooleanCheckbox id="dailyStatistics" value="#{advertiserLocationReportingMBean.dailyStatistics}" 
+							itemLabel="#{msg['page.reporting.commons.detailed.by.day.label']}" styleClass="bl" />
+		        	</pri:column>
+		        </pri:row>
+			        
+		        <pri:row>
+		            <!-- Generate Report -->
+		            <pri:column colspan="2">
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/generate_button_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserLocationReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+		        </pri:row>
+
+	    	</pri:panelGrid>
+   	    </section>
+   
+	    <!-- Reporting tables -->
+	   
+	    <pri:outputPanel id="reports">
+	   		<pri:outputPanel rendered="#{advertiserLocationReportingMBean.geoChart != null}">
+	   			<pri:spacer height="10" />
+	   			
+		   		<section id="locationChart" class="form-box ui-corner-all">
+		   			<h2 class="sec-title">Geographic coverage</h2>
+		   			<pri:panelGrid styleClass="panelGrid" style="padding:0px">
+		            	<pri:row>
+		                	<pri:column colspan="6">
+					   			<h:graphicImage url="#{advertiserLocationReportingMBean.geoChart.url}" style="border: solid 1px #bbbbbb !important;"/>
+		                	</pri:column>
+		                	<pri:column colspan="1">
+		                		<pri:spacer width="37px"/>
+		                	</pri:column>
+		                	<pri:column colspan="6">
+					   			<h:graphicImage url="#{advertiserLocationReportingMBean.donutChart.url}" style="border: solid 1px #bbbbbb !important;"/> 
+		                	</pri:column>
+		            	</pri:row>
+		        	</pri:panelGrid>
+		   		</section>
+	        </pri:outputPanel>
+	        
+	        <!-- Reporting tables -->
+	        
+	   		<ui:include src="/WEB-INF/jsf/reporting/commons/tables_template.xhtml">
+	       		<ui:param name="reportingMBean" value="#{advertiserLocationReportingMBean}" />
+	   		</ui:include>
+	    </pri:outputPanel>
+   
+    </h:form>	
+
+</ui:composition>

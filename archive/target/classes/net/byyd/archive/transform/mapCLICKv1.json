@@ -1,0 +1,20 @@
+{ 
+	"timestamp": "@{dateFmt(adEvent.eventTime)}", 
+	"request_id": "@{adEvent.impressionExternalID}",
+	"action": "click",
+	"ext":{  
+      "byyd":{  
+         "buyer_premium": @{adEvent.accountingBuyerPremium != null ? adEvent.accountingBuyerPremium : '""'},
+         "direct_cost": @{adEvent.accountingDirectCost != null ? adEvent.accountingDirectCost : '""'},
+         "tech_fee": @{adEvent.accountingTechFee != null ? adEvent.accountingTechFee : '""'},
+         "data_retail": @{adEvent.accountingDataRetail != null ? adEvent.accountingDataRetail : '""'},
+         "data_wholesale": @{adEvent.accountingDataWholesale != null ? adEvent.accountingDataWholesale : '""'},
+         "dsp_margin": @{adEvent.accountingDspMargin != null ? adEvent.accountingDspMargin : '""'},
+         "cust_margin": @{adEvent.accountingCustMargin != null ? adEvent.accountingCustMargin : '""'},
+         "payout": @{adEvent.accountingPayout != null ? adEvent.accountingPayout : '""'},
+         "shard": "@{adEvent.shard}",
+         "server": "@{adEvent.serverName}",
+         "campaign_discount": "@{adEvent.accountingCampaignDiscount}"
+      }
+   } 
+}

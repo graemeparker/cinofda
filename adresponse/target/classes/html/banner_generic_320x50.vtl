@@ -1,0 +1,37 @@
+#if($adtruthjs)
+    #parse($adtruthjs)
+#end
+<div style="position:relative;width:320px;height:50px;border:0;text-align:center" onclick="location.href='${adComponents.destinationUrl}';">
+
+#if($adComponents.components.image)
+## Comment : if its an image ad then only image will be shown but no text or tagline
+<!-- Banner image -->
+<a href="${adComponents.destinationUrl}"><img border="0" alt="" src="${adComponents.components.image.url}"#if($adComponents.components.image.width) width="${adComponents.components.image.width}"#end#if($adComponents.components.image.height) height="${adComponents.components.image.height}"#end /></a>
+#else
+## Comment :  if its not an image ad then print text
+#if($adComponents.components.text)
+## Comment : print text only if its available
+<!-- Text  -->
+<a href="${adComponents.destinationUrl}">${escape.html($adComponents.components.text.content)}</a>
+#end
+#end
+
+</div>
+
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+#if($adtruthjs)
+    <script>
+            document.write('<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")d.adtruth_data=' + adtruth_data + '"/>');
+    </script>
+    <noscript>
+        <img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+    </noscript>
+#else
+    <img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+
+#end
+#end

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+ACC_KEY=AKIAJRQDOV4DMY47DKPQ
+SEC_KEY=kldAIrcq+lUVbWqOMO6FDOoIbhTC3syuOAliqBq/
+MMX_KEY=byyd:eOmkt11nzkUfBAmgSo7o93Yb216SHzKzUbSNLWyOUpyiawCWjek4kA==
+MMX_URL=https://rt.mmx.io/events/byyd-auction
+MMX_URL2=https://rt.mmx.io/events/byyd-impression
+
+cd /mnt/data/logs/archive
+CP=
+for i in  /usr/local/adfonic/adfonic-archive/lib/*.jar; do
+  CP=$CP:$i
+done
+
+APPNAME=push-cont-s3-mmx
+START_COMMAND="java -XX:-UseLargePages -Xmx4g -cp $CP:/usr/local/adfonic/adfonic-archive/conf/ net.byyd.archive.model.v1.ContinuousPushAWStoMMX 20 $ACC_KEY $SEC_KEY $MMX_KEY $MMX_URL $MMX_URL2"
+
+. /usr/local/adfonic/bin/init-env
+
+export HOSTNAME=`hostname`
+
+startProcess ${APPNAME} ${START_COMMAND}

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.adserver.controller.rtb.NexageBidControllerTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.163 sec - in com.adfonic.adserver.controller.rtb.NexageBidControllerTest

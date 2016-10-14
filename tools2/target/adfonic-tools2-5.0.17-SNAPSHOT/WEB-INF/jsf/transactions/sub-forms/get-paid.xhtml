@@ -1,0 +1,206 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+> 
+	<h:body>
+	 <pri:dialog id="fundsOutDialogId"
+	     widgetVar="fundsOutDialog" 
+	     modal="true"
+	     resizable="false"
+	     header="#{msg['page.transactions.fundsout.dialog.header']}"
+	 	 styleClass="fundsOutDialog"
+	 	 onShow="ADT.getCountryValue()"
+	 >
+	   <h:form id="fundsOutForm" prependId="false">
+	     <div class="form-row message">
+	         <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.method.label']}" /> 
+	           <pri:selectOneRadio 
+	        		id="paymentType" 
+	             	value="#{transactionMBean.transactionFundsOutMBean.paymentType}"
+	             	required="true"
+	           >
+	             <f:selectItem itemValue="PAYPAL" itemLabel="#{msg['page.transactions.fundsout.dialog.method.PAYPAL']}" />
+	             <f:selectItem itemValue="CHEQUE" itemLabel="#{msg['page.transactions.fundsout.dialog.method.CHEQUE']}" />
+	             <f:selectItem itemValue="WIRE_TRANSFER" itemLabel="#{msg['page.transactions.fundsout.dialog.method.WIRE_TRANSFER']}" rendered="#{transactionMBean.transactionFundsOutMBean.paymentType eq 'WIRE_TRANSFER'}"/>
+	             <pri:ajax process="@this" update="@form"  oncomplete="ADT.centreDialog(); ADT.getCountryValue('.country-selection')"/>
+	         </pri:selectOneRadio>
+	         <pri:message for="paymentType"/>
+	     </div>
+	       
+	     <h:panelGroup 
+	     	id="paypalOptionWrapper" 
+	     	rendered="#{transactionMBean.transactionFundsOutMBean.paymentType eq 'PAYPAL'}"
+	     	styleClass="payment-option-wrapper"
+	     >
+	       <div class="form-row">
+	           <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.paypal.accountemail.label']}" /> 
+	           <h:inputText id="payPalLogin" 
+	                value="#{transactionMBean.transactionFundsOutMBean.payPalLogin}"
+	                required="true"
+	                validatorMessage="#{msg['error.transactions.fundsout.dialog.paypal.accountemail.invalid']}"
+	                requiredMessage="#{msg['error.transactions.fundsout.dialog.paypal.accountemail.required']}"
+	                validator="EmailValidator" 
+				/>
+			 	<pri:watermark for="payPalLogin" value="#{msg['page.transactions.getpaid.paypallogin.watermark']}" />     
+         	 	<pri:message for="payPalLogin"/>
+	       </div>              
+	     </h:panelGroup>
+	     
+	     <h:panelGroup 
+	     	id="nonPaypalOptionWrapper" 
+	     	rendered="#{transactionMBean.transactionFundsOutMBean.paymentType ne 'PAYPAL'}"
+	     	layout="block"
+	     	styleClass="payment-option-wrapper"
+	     >
+	         <div class="form-row">
+	           <div class="warning message">
+		           <h3>#{msg['page.transactions.fundsout.dialog.paymentdetails.label']}</h3>
+	
+		           <h:panelGroup rendered="#{transactionMBean.transactionFundsOutMBean.paymentType eq 'WIRE_TRANSFER'}">
+		               <p>#{msg['page.transactions.fundsout.dialog.paymentdetail.wire.description']}</p>
+		           </h:panelGroup>                
+		           
+		           <h:panelGroup rendered="#{transactionMBean.transactionFundsOutMBean.paymentType eq 'CHEQUE'}">
+		               <p>#{msg['page.transactions.fundsout.dialog.paymentdetail.cheque.description']}</p>
+		           </h:panelGroup>
+			   </div>
+            </div>         
+			<div class="form-row">
+			  <h:outputLabel styleClass="bl b" 
+			      value="#{transactionMBean.transactionFundsOutMBean.paymentType eq 'CHEQUE' ? msg['page.transactions.fundsout.dialog.payee.cheque.label'] : msg['page.transactions.fundsout.dialog.payee.wire.label']}" for="chequePayee"/> 
+			  <h:inputText id="chequePayee" 
+			      required="true" 
+			      requiredMessage="#{transactionMBean.transactionFundsOutMBean.paymentType eq 'CHEQUE' ? msg['error.transactions.fundsout.dialog.payee.cheque.required'] : msg['error.transactions.fundsout.dialog.payee.wire.required']}"
+			      value="#{transactionMBean.transactionFundsOutMBean.chequePayee}" />
+			  <pri:message for="chequePayee"/>
+			  <pri:watermark for="chequePayee" value="#{msg['page.transactions.getpaid.chequepayee.watermark']}" />   
+			</div>    
+
+   
+	         <div class="form-row">
+	             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.firstname.label']}" /> 
+	             <h:inputText id="firstName" 
+	                 value="#{transactionMBean.transactionFundsOutMBean.address.firstName}" 
+	                 required="true" 
+	                 requiredMessage="#{msg['error.transactions.fundsout.dialog.address.firstname.required']}"
+	                 maxlength="50">
+	               <f:validateLength maximum="50" />
+	             </h:inputText>
+	             <pri:message for="firstName"/>
+	             <pri:watermark for="firstName" value="#{msg['page.transactions.getpaid.firstname.watermark']}" />               
+	         </div>
+	         <div class="form-row">
+	             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.lastname.label']}" /> 
+	             <h:inputText id="lastName" 
+	                  value="#{transactionMBean.transactionFundsOutMBean.address.lastName}" 
+	                  required="true" 
+	                  requiredMessage="#{msg['error.transactions.fundsout.dialog.address.lastname.required']}"
+	                  maxlength="50">
+	               <f:validateLength maximum="50" />
+	             </h:inputText>
+	             <pri:message for="lastName"/> 
+	             <pri:watermark for="lastName" value="#{msg['page.transactions.getpaid.lastname.watermark']}" />              
+	         </div>
+	         <div class="form-row">
+	             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.address1.label']}" /> 
+	             <h:inputText id="address1" 
+	                  value="#{transactionMBean.transactionFundsOutMBean.address.address1}" 
+	                  required="true" 
+	                  requiredMessage="#{msg['error.transactions.fundsout.dialog.address.address1.required']}"
+	                  maxlength="50">
+	               <f:validateLength maximum="50" />
+	             </h:inputText>
+	             <pri:message for="address1"/>
+	             <pri:watermark for="address1" value="#{msg['page.transactions.getpaid.address1.watermark']}" />               
+	         </div>
+	         <div class="form-row">
+	             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.address2.label']}" /> 
+	             <h:inputText id="address2" 
+	                     value="#{transactionMBean.transactionFundsOutMBean.address.address2}"
+	                     maxlength="50">
+	               <f:validateLength maximum="50" />
+	             </h:inputText>
+	             <pri:message for="address2"/>
+	             <pri:watermark for="address2" value="#{msg['page.transactions.getpaid.address2.watermark']}" />                
+	         </div>
+	         <div class="form-row">
+	             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.city.label']}" /> 
+	             <h:inputText id="city" 
+	                     value="#{transactionMBean.transactionFundsOutMBean.address.city}" 
+	                     maxlength="50">
+	               <f:validateLength maximum="50" />
+	             </h:inputText>
+	             <pri:message for="city"/> 
+	             <pri:watermark for="city" value="#{msg['page.transactions.getpaid.city.watermark']}" />               
+	         </div>
+	         <div class="form-row state">
+	         	 <div id="state-field-element">
+		             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.state.label']}" /> 
+		             <h:inputText id="state" 
+		                  value="#{transactionMBean.transactionFundsOutMBean.address.state}" 
+		                  required="true" 
+		                  requiredMessage="#{msg['error.transactions.fundsout.dialog.address.state.required']}"
+		                  maxlength="50">
+		               <f:validateLength maximum="50" />
+		             </h:inputText>
+	             </div>
+	             <pri:message for="state"/>
+	             <pri:watermark for="state" value="#{msg['page.transactions.getpaid.state.watermark']}" />
+	         </div>
+	         <div class="form-row">
+	             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.postcode.label']}" /> 
+	             <h:inputText id="postcode"
+	                  value="#{transactionMBean.transactionFundsOutMBean.address.postcode}" 
+	                  required="true" 
+	                  requiredMessage="#{msg['error.transactions.fundsout.dialog.address.postcode.required']}"
+	                  maxlength="50">
+	               <f:validateLength maximum="50" />
+	             </h:inputText>
+	             <pri:message for="postcode"/>
+	             <pri:watermark for="postcode" value="#{msg['page.transactions.getpaid.postcode.watermark']}" />
+	         </div>
+	         <div class="form-row">
+	             <h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsout.dialog.address.country.label']}" /> 
+	             <pri:selectOneMenu 
+	                 id="country" 
+                     value="#{transactionMBean.transactionFundsOutMBean.address.country}" 
+                     required="true"
+                     requiredMessage="#{msg['error.transactions.fundsout.dialog.address.country.required']}"
+                     converter="com.adfonic.tools.converter.country.CountryConverter"
+                     onchange="ADT.getCountryValue('.country-selection')"
+                     styleClass="country-selection"
+	             >
+	                 <f:selectItems 
+	                     value="#{transactionMBean.transactionFundsOutMBean.countries}" 
+	                     var="country"
+	                     itemValue="#{country}" 
+	                     itemLabel="#{country.name}"
+	                 />               
+	             </pri:selectOneMenu>
+	             <pri:message for="country"/>
+	         </div>
+	     </h:panelGroup>
+	                        
+	     <div class="form-row">
+	       <pri:commandButton value="#{msg['page.transactions.fundsout.dialog.save.label']}" id="saveFundsOutButton"
+	           onclick="progressDialog.show();" oncomplete="progressDialog.hide()"
+	           actionListener="#{transactionMBean.transactionFundsOutMBean.doSave}"
+	           process="@form"
+	           update="@form, :menuForm:side-panel">
+	       </pri:commandButton>              
+	       
+	       <pri:commandButton value="#{msg['page.transactions.fundsout.dialog.cancel.label']}" id="cancelFundsOutButton"
+	           actionListener="#{transactionMBean.transactionFundsOutMBean.doCancel}"
+	           onclick="fundsOutDialog.hide();" update="@form, :menuForm:side-panel">
+	       </pri:commandButton>              
+	    </div>
+	   </h:form>
+	 </pri:dialog>
+	</h:body>
+</ui:composition>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<context:annotation-config />
+	
+    <bean class="com.adfonic.tasks.combined.fxrate.OpenExchangeRatesServiceImpl" />
+    <bean id="exchangeRatesAutoFeedTask" class="com.adfonic.tasks.combined.ExchangeRatesAutoFeedTask" />
+	
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="objectMapper" ref="jacksonObjectMapper" />
+	</bean>
+                
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+    
+    <!-- AuditLog (Entities configuration) -->
+    <import resource="classpath*:spring/**/adfonic-middleware-auditlog-entities-configuration.xml"/>
+    
+    <bean id="auditLogJpaListener" class="com.byyd.middleware.auditlog.listener.AuditLogJpaListener">
+        <constructor-arg index="0" value="${auditlog.log.auditsource}" />
+    </bean>
+
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:pri="http://primefaces.org/ui"
+      template="/WEB-INF/templates/template.xhtml">
+
+<ui:param name="pageTitle" value="byyd Admin"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+
+<c:choose>
+<c:when test="${sessionScope.adfonicUser == null}">
+    <p>
+        You are not logged in to Admin.
+    </p>
+    <c:if test="${requestScope.sessionExpired}">
+     <p class="error">Session timed out due to inactivity.</p>
+    </c:if>
+</c:when>
+<c:otherwise>
+    <p>
+        You are logged into Admin as ${sessionScope.adfonicUser.email}
+    </p>
+</c:otherwise>
+</c:choose>
+
+<p:link mappingId="adminHome">Go to protected area</p:link>
+
+</ui:define>
+</ui:composition>

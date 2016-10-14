@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- Constants, enums -->
+	<pe:importConstants className="com.byyd.elasticsearch.model.filemover.FileFields" var="FileFields" />
+	<pe:importEnum type="com.adfonic.presentation.audience.enums.AudienceEngineStatus" var="AudienceEngineStatus" allSuffix="ALL_ENUM_VALUES" />
+	<pe:importEnum type="com.adfonic.presentation.audience.enums.S3FileStatus" var="S3FileStatus" allSuffix="ALL_ENUM_VALUES"/>
+	<pe:importEnum type="com.adfonic.presentation.audience.enums.MuidStatus" var="MuidStatus" allSuffix="ALL_ENUM_VALUES" />
+	<pe:importEnum type="com.adfonic.presentation.audience.enums.FileType" var="FileType" />
+	
+	<!-- Variables -->
+	<ui:param name="isS3Devices" value="#{audienceSourceS3MBean.fileType eq FileType.DEVICES}" />
+	<ui:param name="isS3GeoPoints" value="#{audienceSourceS3MBean.fileType eq FileType.GEOPOINTS}" />
+
+	<!-- S3 Unassigned Files -->
+	<pri:outputPanel id="s3UnassignedFiles#{id}" styleClass="form-row">
+		<ui:include	src="/WEB-INF/jsf/audience/commons/s3_unassigned_files_template.xhtml">
+			<ui:param name="id" value="#{id}" />
+		</ui:include>
+	</pri:outputPanel>
+
+	<!-- S3 Assigned Files -->
+	<pri:outputPanel id="s3AssignedFiles#{id}" styleClass="form-row">
+		<ui:include	src="/WEB-INF/jsf/audience/commons/s3_assigned_files_template.xhtml">
+			<ui:param name="id" value="#{id}" />
+		</ui:include>
+	</pri:outputPanel>
+	
+</ui:composition>

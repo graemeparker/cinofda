@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:pri="http://primefaces.org/ui"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				template="/WEB-INF/templates/adminTemplate.xhtml">
+	<ui:param name="pageTitle" value="Custom 3rd Party Segments"/>
+	<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+	
+	<ui:define name="title">#{pageTitle}</ui:define>
+	
+	<ui:define name="pageContent">
+		
+		<h2>#{pageTitle}</h2>
+		
+		<ui:param name="isEditable" value="#{ad:hasAdminRole(adfonicUserBean.adfonicUser,'SuperAdmin') and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}" />
+		
+		<pri:confirmDialog showEffect="fade" hideEffect="fade" visible="#{isEditable}" 
+		                   severity="alert" widgetVar="alertDialog">
+		    <f:facet name="message">
+		      You are accesing this page with superadmin role.<br/>
+		      Changes on any vendor pricing will affect all active campaigns using it.
+		    </f:facet>
+            <pri:commandButton value="Ok" type="button" onclick="alertDialog.hide()" />
+        </pri:confirmDialog>
+		
+		
+		<h:form id="vendorForm" prependId="false">
+		  
+		  <!-- Filters -->
+		  <h:panelGroup id="vendorFilters" columns="2">
+		      <!--  DMP Vendor --> 
+		      <pri:outputLabel value="Select Vendor" styleClass="b"/>
+		      <pri:selectOneMenu id="dmpVendor"
+			                     value="#{thirdPartySegmentsMBean.selectedDmpVendorName}" style="margin-left: 10px;margin-bottom: -5px;">
+			     <pri:ajax event="change" listener="#{thirdPartySegmentsMBean.onDmpVendorChange}" 
+			               update="segmentsTable" 
+			               onstart="progressDialog.show()" oncomplete="progressDialog.hide();"/>
+	             <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" noSelectionOption="true" />
+	             <f:selectItems value="#{thirdPartySegmentsMBean.dmpVendorsNames}" var="dmpVendors" itemLabel="#{dmpVendor}" itemValue="#{dmpVendor}"/>
+               </pri:selectOneMenu>
+		  </h:panelGroup>
+		  
+		  <br/><pri:spacer height="10"/><br/>
+		  
+		  <pri:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+		  
+          <!-- Vendor table -->
+          <pri:dataTable id="segmentsTable" style="width:600px;"
+                         var="dmpSelector" value="#{thirdPartySegmentsMBean.editableDMPSelectors}"
+                         editable="#{isEditable}" editMode="cell">
+              <f:facet name="header">#{thirdPartySegmentsMBean.selectedDmpVendorName} segments</f:facet>
+              
+              <pri:ajax event="cellEdit" listener="#{thirdPartySegmentsMBean.onCellEdit}" onstart="progressDialog.show()" oncomplete="progressDialog.hide();"/>
+              
+              <pri:column headerText="Attribute Name">
+                  <h:outputText value="#{dmpSelector.attributeName}" />
+              </pri:column>
+              
+              <pri:column headerText="Segment Name">
+                  <pri:cellEditor id="selectorNameEditor">
+                      <f:facet name="output">
+                          <h:outputText value="#{dmpSelector.selectorName}"/>
+                      </f:facet>
+                      <f:facet name="input">
+                          <pri:inputText value="#{dmpSelector.selectorName}"/>
+                      </f:facet>
+                  </pri:cellEditor>
+              </pri:column>
+              
+              <pri:column headerText="CPM to Byyd ($)" style="text-align:center;">
+                  <pri:cellEditor id="selectorDataWholesaleEditor">
+                      <f:facet name="output">
+                          <h:outputText value="#{dmpSelector.dataWholesale}"/>
+                      </f:facet>
+                      <f:facet name="input">
+                          <pri:inputText value="#{dmpSelector.dataWholesale}"/>
+                      </f:facet>
+                  </pri:cellEditor>
+              </pri:column>
+              
+              <pri:column headerText="CPM to Client ($)" style="text-align:center;">
+                  <pri:cellEditor id="selectorDataRetailEditor">
+                      <f:facet name="output">
+                          <h:outputText value="#{dmpSelector.dataRetail}"/>
+                      </f:facet>
+                      <f:facet name="input">
+                          <pri:inputText value="#{dmpSelector.dataRetail}"/>
+                      </f:facet>
+                  </pri:cellEditor>
+              </pri:column>
+              
+              <pri:column headerText="Hidden" style="text-align:center;">
+                  <pri:cellEditor id="selectorHiddenEditor">
+                      <f:facet name="output">
+                          <pri:selectBooleanCheckbox value="#{dmpSelector.hidden}" disabled="true"/>
+                      </f:facet>
+                      <f:facet name="input">
+                          <h:inputHidden value="#{dmpSelector.hidden}" />
+                          <h:selectBooleanCheckbox value="#{dmpSelector.hidden}" styleClass="ui-chkbox-box" onclick="$(this).prev().val(this.checked)"/>
+                      </f:facet>
+                  </pri:cellEditor>
+              </pri:column>
+              
+              <pri:column headerText="External Id">
+                  <h:outputText value="#{dmpSelector.externalId}" />
+              </pri:column>
+          </pri:dataTable>
+          
+		</h:form>
+	
+	</ui:define>
+</ui:composition>
+

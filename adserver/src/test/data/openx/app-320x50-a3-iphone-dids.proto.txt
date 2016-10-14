@@ -1,0 +1,72 @@
+api_version: 15
+auction_id: "633097ef-8139-45ba-a8f0-a6705b0ce78d"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537091394"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "503d3331-0b5f-72d6-0006-5ee64c517d71"
+user_ip_address: "\330\337\033)"
+user_geo_country: "us"
+user_geo_state: "maryland"
+user_geo_dma: 511
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12D508"
+user_lang: "en"
+url: "http://itunes.apple.com/us/app/text-free-free-texting-app/id399355755?mt=8"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2028
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 8
+pub_blocked_content: 15
+pub_blocked_type: 10
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12D508"
+  ip: "216.223.27.41"
+  carrier: "310-120"
+  os: "iOS"
+  osv: "8"
+  language: "en"
+  make: "Apple"
+  model: "iPhone"
+  connectiontype: "wifi"
+  geo {
+    lat: 39.377995
+    lon: -77.44595
+    country: "us"
+    city: "frederick"
+    zip: "21703"
+    type: 1
+    continent: "north america"
+    state: "maryland"
+    dma: 511
+  }
+  browser: "Mobile Safari"
+  api: 3
+  openudid: "74427F53AB9345ACAAD0C7A730083C27"
+  idforad: "31C53D40-3186-4B74-A1A1-82DF1E9A975A"
+  androidid_md5: "09c3ee6902fc75121454d5727a436527"
+  androidid_sha1: "8e2dac271ea301a2c5970cd9e956693718e1b596"
+  idforad_enabled: true
+  category: "phone"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+  yob: 1996
+  gender: "F"
+}

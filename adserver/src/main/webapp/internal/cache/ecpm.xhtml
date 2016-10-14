@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util">
+<h:head>
+	<title>ECPM</title>
+	<style type="text/css">
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #CEE3F6;
+}
+
+.ui-widget {
+	font-size: 13px !important;
+}
+.topAlignPanel td {
+    vertical-align: top;
+}
+</style>
+</h:head>
+<h:body>
+
+
+<h:form id="form">
+
+    <p:panel id="panel" header="">
+    	<f:facet name="header">
+    	<h:outputText value="Calculate ECPM"></h:outputText><p:spacer width="50" height="10" /> | <p:spacer width="50" height="10" />
+    	<h:outputText value="RTB Enabled :" /><h:outputText value="#{adServerCacheBean.rtbEnabled}" /> <p:spacer width="50" height="10" /> | <p:spacer width="50" height="10" /> <a href="./../index.jsp">home</a>
+    	</f:facet>
+
+  		<p:messages id="messages" autoUpdate="true"/>
+
+        <h:panelGrid columns="6" cellpadding="5">
+            <h:outputLabel for="adspaceId" value="AdSpace Id *" />
+            <p:inputText id="adspaceId"
+                    value="#{adServerCacheBean.adspaceIdForEcpm}"
+                    required="true" label="adspaceId">
+            </p:inputText>
+            <p:message for="adspaceId" autoUpdate="true"/>
+
+            <h:outputLabel for="creativeId" value="Creative Id *" />
+            <p:inputText id="creativeId"
+                    value="#{adServerCacheBean.creativeIdForEcpm}"
+                    required="true" label="creativeId"/>
+            <p:message for="creativeId" autoUpdate="true"/>
+
+            <h:outputLabel for="countryId" value="Country Id *" />
+	        <p:selectOneMenu id="countryId" value="#{adServerCacheBean.selectedCountry}" effect="fade" converter="#{countryConvertor}">
+	            <f:selectItem itemLabel="Select One" itemValue="" />
+	            <f:selectItems value="#{adServerCacheBean.allCountries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry}"/>
+	        </p:selectOneMenu>
+	        <!--
+            <p:inputText id="countryId"
+                    value="#{adServerCacheBean.countryIdForEcpm}"
+                    required="false" label="countryId"/>
+                     -->
+            <p:message for="countryId" autoUpdate="true"/>
+
+			<h:outputText value="Platform " />
+	        <p:selectOneMenu id="platformId" value="#{adServerCacheBean.platform}" effect="fade" converter="#{platformConvertor}">
+	            <f:selectItem itemLabel="Select One" itemValue="" />
+	            <f:selectItems value="#{adServerCacheBean.allPlatforms}" var="onePlatform" itemLabel="#{onePlatform.name}-#{onePlatform.systemName}" itemValue="#{onePlatform}"/>
+	        </p:selectOneMenu>
+	        <p:message for="platformId" autoUpdate="true"/>
+
+            <h:outputLabel for="bidFloorPrice" value="Bid Floor Price(Only for RTB)" />
+            <p:inputText id="bidFloorPrice"
+                    value="#{adServerCacheBean.enteredBidFloorPrice}"
+                    />
+
+
+        </h:panelGrid>
+
+        <p:commandButton value="Calculate ECPM" update="panel"  actionListener="#{adServerCacheBean.calculateEcpm}"
+                id="btnGlobal" /> 
+        <p:commandButton value="Clear" update="panel"  actionListener="#{adServerCacheBean.clear}"
+                id="btnClear" />
+        <p:panelGrid columns="2" cellpadding="5">
+   	    	<f:facet name="header">
+		    	<h:outputText value="Adspace-Creative ECPM Info"></h:outputText>
+	    	</f:facet>
+
+	        <h:outputLabel for="ecpm" value="Expected Revenue" />
+			<h:outputText id="ecpm" value="#{adServerCacheBean.ecpmDataFromDataCache.ecpmInfo.expectedRevenue}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+            <h:outputLabel for="bidPrice" value="Bid Price (RTB only)" rendered="#{adServerCacheBean.rtbEnabled}"/>
+			<h:outputText id="bidPrice" value="#{adServerCacheBean.ecpmDataFromDataCache.ecpmInfo.bidPrice}" rendered="#{adServerCacheBean.rtbEnabled}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+            <h:outputLabel for="expectedProfit" value="Expected Profit" />
+			<h:outputText id="expectedProfit" value="#{adServerCacheBean.ecpmDataFromDataCache.ecpmInfo.expectedProfit}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+            <h:outputLabel for="expectedSettlementPrice" value="Expected Settlement Price" />
+			<h:outputText id="expectedSettlementPrice" value="#{adServerCacheBean.ecpmDataFromDataCache.ecpmInfo.expectedSettlementPrice}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+            <h:outputLabel for="winningProbability" value="winningProbability" />
+			<h:outputText id="winningProbability" value="#{adServerCacheBean.ecpmDataFromDataCache.ecpmInfo.winningProbability}"></h:outputText>
+
+	        <h:outputLabel for="weight" value="weight" />
+			<h:outputText id="weight" value="#{adServerCacheBean.ecpmDataFromDataCache.ecpmInfo.weight}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+        </p:panelGrid>
+
+
+        <h:panelGrid columns="4" cellpadding="5" id="mainPanel" styleClass="topAlignPanel">
+        <p:panelGrid columns="2" cellpadding="5">
+	    	<f:facet name="header">
+		    	<h:outputText value="Adspace-Creative DB Values"></h:outputText>
+	    	</f:facet>
+	        <h:outputLabel for="creativeCvr" value="Creative CVR :" />
+			<h:outputText id="creativeCvr" value="#{adServerCacheBean.ecpmDataFromDataCache.creativeCvr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="campaignCvr" value="Campaign CVR :" />
+			<h:outputText id="campaignCvr" value="#{adServerCacheBean.ecpmDataFromDataCache.campaignCvr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="expectedCvr" value="Expected CVR :" />
+			<h:outputText id="expectedCvr" value="#{adServerCacheBean.ecpmDataFromDataCache.expectedStatsCvr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="expectedCtr" value="Expected CTR :" />
+			<h:outputText id="expectedCtr" value="#{adServerCacheBean.ecpmDataFromDataCache.expectedStatsCtr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="expectedRgr" value="Expected RGR :" />
+			<h:outputText id="expectedRgr" value="#{adServerCacheBean.ecpmDataFromDataCache.expectedStatsRgr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="adspaceCtr" value="AdSpace CTR :" />
+			<h:outputText id="adspaceCtr" value="#{adServerCacheBean.ecpmDataFromDataCache.adspaceCtr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="defaultCtr" value="Default CTR" />
+			<h:outputText id="defaultCtr" value="#{adServerCacheBean.ecpmDataFromDataCache.defaultCtr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="defaultCvr" value="Default CVR" />
+			<h:outputText id="defaultCvr" value="#{adServerCacheBean.ecpmDataFromDataCache.defaultCvr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="defaultCvrRtb" value="Default CVR(RTB)" />
+			<h:outputText id="defaultCvrRtb" value="#{adServerCacheBean.ecpmDataFromDataCache.defaultRtbCvr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="networkMaxExpectedRgr" value="Network Max Expected RGR" />
+			<h:outputText id="networkMaxExpectedRgr" value="#{adServerCacheBean.ecpmDataFromDataCache.networkMaxExpectedRgr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="countryWeighting" value="Country Weighting" />
+			<h:outputText id="countryWeighting" value="#{adServerCacheBean.ecpmDataFromDataCache.countryWeighting}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="creativeWeightedCtrIndex" value="CreativeWeightedCtrIndex" />
+			<h:outputText id="creativeWeightedCtrIndex" value="#{adServerCacheBean.ecpmDataFromDataCache.creativeWeightedCtrIndex}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="publicationWeightedCvrIndex" value="PublicationWeightedCvrIndex" />
+			<h:outputText id="publicationWeightedCvrIndex" value="#{adServerCacheBean.ecpmDataFromDataCache.publicationWeightedCvrIndex}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+            <h:outputLabel for="defaultCtrTarget" value="DefaultCtrTarget" />
+            <h:outputText id="defaultCtrTarget" value="#{adServerCacheBean.ecpmDataFromDataCache.defaultCtrTarget}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+            <h:outputLabel for="defaultCpcCtrTarget" value="DefaultCpcCtrTarget" />
+            <h:outputText id="defaultCpcCtrTarget" value="#{adServerCacheBean.ecpmDataFromDataCache.defaultCpcCtrTarget}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+            <h:outputLabel for="defaultCvrTarget" value="DefaultCvrTarget" />
+            <h:outputText id="defaultCvrTarget" value="#{adServerCacheBean.ecpmDataFromDataCache.defaultCvrTarget}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="cpmCtrUnderperformanceThreshold" value="CpmCtrUnderperformanceThreshold" rendered="#{!adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}" />
+	        <h:outputLabel for="cpmCtrUnderperformanceThreshold" value="CpmCtrUnderperformanceThreshold &lt;br /&gt;(Media Cost Optimisation enabled)"  rendered="#{adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}"  escape="false"/>
+			<h:outputText id="cpmCtrUnderperformanceThreshold" value="#{adServerCacheBean.ecpmDataFromDataCache.cpmCtrUnderperformanceThreshold}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="cpcCtrUnderperformanceThreshold" value="CpcCtrUnderperformanceThreshold" rendered="#{!adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}" />
+	        <h:outputLabel for="cpcCtrUnderperformanceThreshold" value="CpcCtrUnderperformanceThreshold &lt;br /&gt;(Media Cost Optimisation enabled)"  rendered="#{adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}" escape="false"/>
+			<h:outputText id="cpcCtrUnderperformanceThreshold" value="#{adServerCacheBean.ecpmDataFromDataCache.cpcCtrUnderperformanceThreshold}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="cpcCvrUnderperformanceThreshold" value="CpcCvrUnderperformanceThreshold" rendered="#{!adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}" />
+	        <h:outputLabel for="cpcCtrUnderperformanceThreshold" value="CpcCtrUnderperformanceThreshold &lt;br /&gt;(Media Cost Optimisation enabled)"  rendered="#{adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}" escape="false"/>
+			<h:outputText id="cpcCvrUnderperformanceThreshold" value="#{adServerCacheBean.ecpmDataFromDataCache.cpcCvrUnderperformanceThreshold}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="campaignCurrentCtr" value="Campaign Current Ctr" />
+			<h:outputText id="campaignCurrentCtr" value="#{adServerCacheBean.ecpmDataFromDataCache.campaignCurrentCtr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="campaignTargetCtr" value="Campaign Target Ctr" />
+			<h:outputText id="campaignTargetCtr" value="#{adServerCacheBean.ecpmDataFromDataCache.campaignTargetCtr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="campaignCurrentCvr" value="Campaign Current Cvr" />
+			<h:outputText id="campaignCurrentCvr" value="#{adServerCacheBean.ecpmDataFromDataCache.campaignCurrentCvr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="campaignTargetCvr" value="Campaign Target Cvr" />
+			<h:outputText id="campaignTargetCvr" value="#{adServerCacheBean.ecpmDataFromDataCache.campaignTargetCvr}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+	        <h:outputLabel for="adfonicCtrBuffer" value="Adfonic Ctr Buffer" />
+			<h:outputText id="adfonicCtrBuffer" value="#{adServerCacheBean.adfonicCtrBuffer}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+
+			<h:outputLabel for="softFloorMultiplier" value="softFloorMultiplier" />
+            <h:outputText id="softFloorMultiplier" value="#{adServerCacheBean.ecpmDataFromDataCache.softFloorMultiplier}"><f:convertNumber minFractionDigits="5" maxFractionDigits="7"/></h:outputText>
+            
+            <h:outputLabel for="mediaCostOptimisationEnabled" value="Media Cost Optimisation Enabled" />
+            <h:outputText id="mediaCostOptimisationEnabled" value="#{adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}"/>
+            
+            <h:outputLabel for="campaignMarginRecommendation" value="Campaign Margin Recommendation &lt;br /&gt;(media cost optimisation)" rendered="#{adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}" escape="false"/>
+            <h:outputText id="campaignMarginRecommendation" value="#{adServerCacheBean.ecpmDataFromDataCache.campaignMarginRecommendation}" rendered="#{adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}"><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+       
+        </p:panelGrid>
+
+        <p:panelGrid columns="2" cellpadding="5" rendered="#{adServerCacheBean.rtbEnabled}" >
+	    	<f:facet name="header">
+		    	<h:outputText value="RTB Factors"></h:outputText>
+	    	</f:facet>
+	        <h:outputLabel for="rtbBidMultiplierCPM" value="RtbBidMultiplierCPM" />
+			<h:outputText id="rtbBidMultiplierCPM" value="#{adServerCacheBean.ecpmDataFromDataCache.rtbBidMultiplierCPM}"></h:outputText>
+	        <h:outputLabel for="rtbBidMultiplierCPC" value="RtbBidMultiplierCPC" />
+			<h:outputText id="rtbBidMultiplierCPC" value="#{adServerCacheBean.ecpmDataFromDataCache.rtbBidMultiplierCPC}"></h:outputText>
+	        <h:outputLabel for="rtbBidMultiplierCPI" value="RtbBidMultiplierCPI" />
+			<h:outputText id="rtbBidMultiplierCPI" value="#{adServerCacheBean.ecpmDataFromDataCache.rtbBidMultiplierCPI}"></h:outputText>
+	        <h:outputLabel for="rtbBidMultiplierCPA" value="RtbBidMultiplierCPA" />
+			<h:outputText id="rtbBidMultiplierCPA" value="#{adServerCacheBean.ecpmDataFromDataCache.rtbBidMultiplierCPA}"></h:outputText>
+			<h:outputLabel for="buyerPremium" value="Buyer Premium" />
+			<h:outputText id="buyerPremium" value="#{adServerCacheBean.ecpmDataFromDataCache.buyerPremium}"  ></h:outputText>
+        </p:panelGrid>
+        <p:panelGrid columns="2" cellpadding="5">
+	        <f:facet name="header">
+		        Creative Info
+		    </f:facet>
+	        <h:outputLabel for="creativeExternalId" value="Creative External ID" />
+			<h:outputText id="creativeExternalId" value="#{adServerCacheBean.creative.externalID}"></h:outputText>
+	        <h:outputLabel for="creativeIdDisplay" value="Creative ID" />
+			<h:outputText id="creativeIdDisplay" value="#{adServerCacheBean.creative.id}"></h:outputText>
+	        <h:outputLabel for="creativeName" value="Creative Name" />
+			<h:outputText id="creativeName" value="#{adServerCacheBean.creative.name}"></h:outputText>
+	        <h:outputLabel for="campaignBidType" value="Campaign Bid Type" />
+			<h:outputText id="campaignBidType" value="#{adServerCacheBean.creative.campaign.currentBid.bidType}"></h:outputText>
+	        <h:outputLabel for="campaignBidValue" value="Campaign Bid Value" />
+			<h:outputText id="campaignBidValue" value="#{adServerCacheBean.creative.campaign.currentBid.amount}"></h:outputText>
+	        <h:outputLabel for="campaignId" value="Campaign Id" />
+			<h:outputText id="campaignId" value="#{adServerCacheBean.creative.campaign.id}"></h:outputText>
+	        <h:outputLabel for="campaignBoostFactor" value="Boost Factor" />
+			<h:outputText id="campaignBoostFactor" value="#{adServerCacheBean.creative.campaign.boostFactor}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	        <h:outputLabel for="tradingDeskMargin" value="Campaign TradingDeskMargin" rendered="#{!adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}"/>
+	        <h:outputLabel for="tradingDeskMargin" value="Campaign TradingDeskMargin &lt;br /&gt;(value overrided due to Media Cost Optimisation,&lt;br /&gt;see campaignMarginRecommendation value in Adspace-Creative DB Values)" rendered="#{adServerCacheBean.creative.campaign.mediaCostOptimisationEnabled}" escape="false"/>
+			<h:outputText id="tradingDeskMargin" value="#{adServerCacheBean.tradingDeskMarginMediaCostOptimisation}" ><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+	        <h:outputLabel for="dataFee" value="Campaign DataFee" />
+			<h:outputText id="dataFee" value="#{adServerCacheBean.creative.campaign.dataFee}"><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+	        <h:outputLabel for="rmAdServingFee" value="Campaign RmAdServingFee" />
+			<h:outputText id="rmAdServingFee" value="#{adServerCacheBean.creative.campaign.rmAdServingFee}"><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+	        <h:outputLabel for="mediaCostMargin" value="Company MediaCostMargin" />
+			<h:outputText id="mediaCostMargin" value="#{adServerCacheBean.creative.campaign.advertiser.company.mediaCostMargin}"><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+                <h:outputLabel for="companyMarginShareDsp" value="Company Margin Share DSP" />
+                        <h:outputText id="companyMarginShareDsp" value="#{adServerCacheBean.creative.campaign.advertiser.company.marginShareDSP}"><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+                <h:outputLabel for="companyDirectCost" value="Company Direct Cost" />
+                        <h:outputText id="companyDirectCost" value="#{adServerCacheBean.creative.campaign.advertiser.company.directCost}"><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+                <h:outputLabel for="campaignDiscount" value="Campaign Discount" />
+			<h:outputText id="campaignDiscount" value="#{adServerCacheBean.creative.campaign.agencyDiscount}"><f:convertNumber minFractionDigits="2" maxFractionDigits="4"/></h:outputText>
+	        <h:outputLabel for="dealId" value="Deal Id" />
+			<h:outputText id="dealId" value="#{adServerCacheBean.creative.campaign.privateMarketPlaceDeal.dealId}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	        <h:outputLabel for="dealPublisherId" value="Deal Publisher Id" />
+			<h:outputText id="dealPublisherId" value="#{adServerCacheBean.creative.campaign.privateMarketPlaceDeal.publisherId}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	        <h:outputLabel for="auctionType" value="PMP Auction Type" />
+			<h:outputText id="auctionType" value="#{adServerCacheBean.creative.campaign.privateMarketPlaceDeal.auctionType}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	        <h:outputLabel for="floor" value="Floor" />
+			<h:outputText id="floor" value="#{adServerCacheBean.creative.campaign.privateMarketPlaceDeal.floor}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	        <h:outputLabel for="bidSeatId" value="PMP Bid Seat Id" />
+			<h:outputText id="bidSeatId" value="#{adServerCacheBean.creative.campaign.advertiser.pmpBidSeat.seatId}"/>
+			<h:outputLabel for="agencySeatIds" value="Agency RTB Seat Ids &lt;br /&gt; (publisher Id = seat Id)" escape="false"/>
+            <p:dataTable id="agencySeatIds" var="entry" value="#{adServerCacheBean.creative.campaign.advertiser.company.rtbBidSeats.entrySet().toArray()}">
+                <p:column headerText="Publisher Id" style="width:100px;">
+                    <h:outputLabel value="#{entry.key}"/>
+                </p:column>
+                <p:column headerText="Seat Id" style="text-align: center;">
+                    <h:outputLabel value="#{entry.value}"/>
+                </p:column>
+            </p:dataTable>
+            <h:outputLabel for="advertiserSeatIds" value="Advertiser RTB Seat Ids &lt;br /&gt; (publisher Id = seat Id)" escape="false"/>
+            <p:dataTable id="advertiserSeatIds" var="entry" value="#{adServerCacheBean.creative.campaign.advertiser.rtbBidSeats.entrySet().toArray()}">
+                <p:column headerText="Publisher Id" style="width:100px;">
+                    <h:outputLabel value="#{entry.key}"/>
+                </p:column>
+                <p:column headerText="Seat Id" style="text-align: center;">
+                    <h:outputLabel value="#{entry.value}"/>
+                </p:column>
+            </p:dataTable>
+        </p:panelGrid>
+        <p:panelGrid columns="2" cellpadding="5">
+	        <f:facet name="header">
+		        AdSpace Info
+		    </f:facet>
+	        <h:outputLabel for="adspaceExternalId" value="Adspace External ID" />
+			<h:outputText id="adspaceExternalId" value="#{adServerCacheBean.adspace.externalID}"></h:outputText>
+	        <h:outputLabel for="adspaceIdForDisplay" value="Adspace ID" />
+			<h:outputText id="adspaceIdForDisplay" value="#{adServerCacheBean.adspace.id}"></h:outputText>
+	        <h:outputLabel for="adspaceName" value="Adspace Name" />
+			<h:outputText id="adspaceName" value="#{adServerCacheBean.adspace.name}"></h:outputText>
+			<h:outputLabel for="publicationRtbId" value="RtbId" />
+			<h:outputText id="publicationRtbId" value="#{adServerCacheBean.adspace.publication.rtbId}"></h:outputText>
+			<h:outputLabel for="publisherRtbAdMode" value="AdMode" />
+			<h:outputText id="publisherRtbAdMode" value="#{adServerCacheBean.adspace.publication.publisher.rtbConfig.adMode}"></h:outputText>
+			<h:outputLabel for="publisherRtbWinNoticeMode" value="WinNoticeMode" />
+			<h:outputText id="publisherRtbWinNoticeMode" value="#{adServerCacheBean.adspace.publication.publisher.rtbConfig.winNoticeMode}"></h:outputText>
+			<h:outputLabel for="publisherRtbBidCurrency" value="Bid Currency" />
+			<h:outputText id="publisherRtbBidCurrency" value="#{adServerCacheBean.adspace.publication.publisher.rtbConfig.bidCurrency}"></h:outputText>
+			<h:outputLabel for="publisherRtbBidCurrencyRate" value="Bid Currency Conversion Rate" />
+			<h:outputText id="publisherRtbBiCurrencyRate" value="#{adServerCacheBean.currencyConversionRate}"></h:outputText>
+			<h:outputLabel for="publisherRtbAuctionType" value="RTB Auction Type" />
+			<h:outputText id="publisherRtbAuctionType" value="#{adServerCacheBean.adspace.publication.publisher.rtbConfig.auctionType}"></h:outputText>
+
+            <h:outputLabel for="publicationFloor" value="PublicationFloor" />
+            <h:outputText id="publicationFloor" value="#{adServerCacheBean.adspace.publication.ecpmTargetRateCard.defaultMinimum}"></h:outputText>
+
+            <h:outputLabel for="publisherFloor" value="PublisherFloor" />
+            <h:outputText id="publisherFloor" value="#{adServerCacheBean.adspace.publication.publisher.ecpmTargetRateCard.defaultMinimum}"></h:outputText>
+
+            <h:outputLabel for="usePublisherFloor" value="usePublisherFloor" />
+            <h:outputText id="usePublisherFloor" value="#{adServerCacheBean.adspace.publication.useSoftFloor}"></h:outputText>
+
+
+        </p:panelGrid>
+        </h:panelGrid>
+        <h:outputText value="Elapsed time for DataCache #{adServerCacheBean.ecpmDataFromDataCache.elapsedTime}" id="elapsedDataCache" style="display:none;" ></h:outputText>
+
+    </p:panel>
+
+
+</h:form>
+
+
+
+</h:body>
+</html>

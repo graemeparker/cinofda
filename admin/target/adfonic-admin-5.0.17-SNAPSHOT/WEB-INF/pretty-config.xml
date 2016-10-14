@@ -1,0 +1,59 @@
+<pretty-config xmlns="http://ocpsoft.com/prettyfaces/3.2.0"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ocpsoft.com/prettyfaces/3.2.0
+                                        http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.2.0.xsd">
+
+<!-- Begin Example RewriteRules
+    // These are custom rewrite-rules, and are probably not necessary for your application.
+    <rewrite match="^/old-url/(\w+)/$" substitute="/new_url/$1/" redirect="301" />
+-->
+
+<!-- Begin UrlMappings -->
+
+<url-mapping id="accessdenied">
+    <pattern value="/accessdenied" />
+    <view-id value="/accessdenied.jsf" />
+</url-mapping>
+
+<url-mapping id="home">
+    <pattern value="/" />
+    <view-id value="/index.jsf" />
+</url-mapping>
+
+<url-mapping id="adminHome">
+    <pattern value="/admin/" />
+    <view-id value="/admin/account.jsf" />
+</url-mapping>
+
+<url-mapping id="logout">
+    <pattern value="/logout" />
+    <view-id value="/index.jsf" />
+    <action>#{adminLogoutBean.doLogout}</action>
+</url-mapping>
+
+<url-mapping id="admin/report/advertiser/newOptimisationReport">
+    <pattern value="/admin/report/advertiser/newOptimisationReport.jsf" />
+    <view-id value="/admin/report/advertiser/newOptimisationReport.jsf" />
+    <action onPostback="false">#{optimisationReportBean.doInit}</action>
+</url-mapping>
+
+<url-mapping id="admin/companyAdManagement.jsf">
+    <pattern value="/admin/companyAdManagement.jsf" />
+    <view-id value="/admin/companyAdManagement.jsf" />
+    <action onPostback="false">#{adminAdManagement.doInit}</action>
+</url-mapping>
+
+<url-mapping id="admin/pidoptimisation">
+    <pattern value="/admin/pidoptimisation.jsf" />
+    <view-id value="/admin/pidoptimisation.jsf" />
+    <action onPostback="false">#{adminPidOptimisationBean.doInit}</action>
+</url-mapping>
+
+<url-mapping id="admin/approval/creative">
+    <pattern value="/admin/approval/creative" />
+    <query-param name="id">#{creativeAdminBean.creativeId}</query-param>
+    <view-id value="/admin/approval/creative.jsf" />
+    <action onPostback="false">#{creativeAdminBean.loadCreative}</action>
+</url-mapping>
+
+</pretty-config>

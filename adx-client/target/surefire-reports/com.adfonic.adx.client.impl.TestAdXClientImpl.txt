@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.adx.client.impl.TestAdXClientImpl
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.33 sec - in com.adfonic.adx.client.impl.TestAdXClientImpl

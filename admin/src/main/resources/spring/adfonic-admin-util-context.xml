@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- http://cagataycivici.wordpress.com/2010/02/17/port-jsf-2-0s-viewscope-to-spring-3-0/ 
+		to get the beauty of the view scope in JSF managed by spring -->
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="view">
+					<bean class="com.adfonic.scope.ViewScope" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+  <bean id="tools2AdminURL" class="java.lang.String">
+    <constructor-arg value="${tools2.admin.url}" />
+  </bean>
+  <bean id="madisonAdminURL" class="java.lang.String">
+    <constructor-arg value="${madison.admin.url}" />
+  </bean>    
+  <bean id="baseURL" class="java.lang.String">
+    <constructor-arg value="${base.url}" />
+  </bean>
+    <bean id="adserverApiURL" class="java.lang.String">
+    <constructor-arg value="${adserver.api.url}" />
+  </bean>
+  <bean id="adserverApiAdSpace" class="java.lang.String">
+    <constructor-arg value="${adserver.api.adspace}" />
+  </bean>
+  <bean id="optimizationDefaultMaxRemoval" class="java.lang.String">
+    <constructor-arg value="${AutoOptimizeCpaCampaigns.defaultMaxRemoval}" />
+  </bean>
+  <bean id="optimizationDefaultMultiplier" class="java.lang.String">
+    <constructor-arg value="${AutoOptimizeCpaCampaigns.defaultMultiplier}" />
+  </bean>
+  <bean id="companyName" class="java.lang.String">
+    <constructor-arg value="${applicationBean.companyName}" />
+  </bean>
+  <bean id="companyLegalName" class="java.lang.String">
+    <constructor-arg value="${applicationBean.companyLegalName}" />
+  </bean>
+
+  <bean id="showAssetServlet"
+        class="com.adfonic.servlet.ShowAssetServlet"
+        autowire="byName"/>
+
+  <bean id="urlPathHelper"
+        class="org.springframework.web.util.UrlPathHelper"/>
+
+  <!-- Provide ad-hoc access to the ApplicationContext to non-beans -->
+  <bean id="applicationContextUtils"
+        class="com.adfonic.util.ApplicationContextUtils"/>
+        
+  <bean id="creativeEmailUtils" class="com.adfonic.util.CreativeEmailUtils"/>
+  
+  <bean id="publicationEmailUtils" class="com.adfonic.util.PublicationEmailUtils"/>
+
+	
+  <bean id="postSecurityLoginFilter" class="com.adfonic.servlet.PostSecurityLoginFilter"/>
+    
+  <bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient"/>
+  
+  <bean id="adXClient" class="com.adfonic.adx.client.impl.AdXClientImpl">
+      <constructor-arg value="${adx.client.secret}"/>
+      <constructor-arg value="${adx.client.baseUri}"/>
+      <constructor-arg value="${adx.client.connectionTimeout:1000}"/>
+      <constructor-arg value="${adx.client.soTimeout:2000}"/>
+      <constructor-arg ref="httpClient"/>
+  </bean>
+
+  <bean name="auditedPublishersBean" 
+        class="com.adfonic.beans.AuditedPublishersBean"
+        p:appNexusPublisherIds="#{'${appnxs.publisherids}'.split(',')}"
+        p:adxPublisherIds="#{'${adx.publisherids}'.split(',')}"
+        depends-on="adfonicBeanDispatcher"/>
+</beans>

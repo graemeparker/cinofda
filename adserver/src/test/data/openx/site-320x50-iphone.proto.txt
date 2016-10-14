@@ -1,0 +1,73 @@
+api_version: 15
+auction_id: "69e4045c-7ac3-4baf-be3a-15ca3c0c9548"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "100799"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "d8f612f0-a06a-4003-727d-d2c6ee06acae"
+user_ip_address: "l#\035W"
+user_screen_height: 667
+user_screen_width: 375
+user_geo_country: "us"
+user_geo_state: "new jersey"
+user_geo_dma: 501
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70 [FBAN/FBIOS;FBAV/28.0.0.10.10;FBBV/8930087;FBDV/iPhone7,2;FBMD/iPhone;FBSN/iPho
+ne OS;FBSV/8.3;FBSS/2; FBCR/AT&T;FBID/phone;FBLC/en_US;FBOP/5]"
+user_lang: "en"
+url: "http://www.salon.com/2015/04/15/a_free_range_family_fights_back/?utm_source=facebook&utm_medium=socialflow"
+http_referer: "http://m.facebook.com"
+ox_cat_tier_1: 21
+ox_cat_tier_2: 2103
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 2
+pub_blocked_content: 8
+pub_blocked_content: 15
+pub_blocked_type: 4
+pub_blocked_type: 5
+pub_blocked_type: 7
+pub_blocked_type: 10
+pub_blocked_type: 11
+pub_blocked_type: 12
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70 [FBAN/FBIOS;FBAV/28.0.0.10.10;FBBV/8930087;FBDV/iPhone7,2;FBMD/iPhone;FBSN/iPhone OS;
+FBSV/8.3;FBSS/2; FBCR/AT&T;FBID/phone;FBLC/en_US;FBOP/5]"
+  ip: "108.35.29.87"
+  os: "iOS"
+  osv: "8"
+  language: "en"
+  make: "Apple"
+  model: "iPhone"
+  geo {
+    lat: 40.739
+    lon: -74.195
+    country: "us"
+    city: "newark"
+    zip: "07103"
+    type: 2
+    continent: "north america"
+    state: "new jersey"
+    dma: 501
+  }
+  browser: "Mobile Safari"
+  idforad_enabled: false
+  category: "phone"
+}
+is_test: false
+is_mobile_site: true
+is_application: false
+ssl_enabled: false
+user {
+}

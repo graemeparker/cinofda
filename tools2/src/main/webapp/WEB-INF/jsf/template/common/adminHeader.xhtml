@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sec="http://www.springframework.org/security/tags">
+      
+    <pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+    
+    <sec:authorize ifAllGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+        <div id="admin-bar">
+            <h:outputFormat value="#{msg['page.adminHeader.loggedinasadmin']}" >
+            	<f:param value="#{(userSessionBean.map['adfonicUser']).email}" />
+            </h:outputFormat>
+
+            <pri:commandLink style="margin-left:5px;" value="#{msg['page.adminHeader.label.link.returnToAdmin']}" actionListener="#{userSessionBean.redirectToAdmin}"/>
+        </div>
+    </sec:authorize>
+    
+</ui:composition>

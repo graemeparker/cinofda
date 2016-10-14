@@ -1,0 +1,246 @@
+#!/bin/sh
+#
+# mmxpush      This shell script takes care of starting and stopping mmxpush
+#
+# chkconfig: - 80 20
+
+## Source function library.
+. /etc/rc.d/init.d/functions
+
+NAME="$(basename $0)"
+if [ "${NAME:0:1}" = "S" -o "${NAME:0:1}" = "K" ]; then
+ NAME="${NAME:3}"
+fi
+
+PROG_USER=root
+RETVAL="0"
+
+
+# Loading configuration
+if [ -r /etc/sysconfig/${NAME} ]; then
+ . /etc/sysconfig/${NAME}
+else
+ echo -n "/etc/sysconfig/${NAME} not found"
+ failure
+ echo
+ exit 4
+fi
+
+function log(){
+    echo -e "`date +'%D %R:%S'`;$*" >> $PROG_LOG
+    echo -n "$*"
+}
+
+# Start
+function start() {
+   log "Starting ${NAME}: "
+   if [ "$RETVAL" != "0" ]; then
+     failure
+     return
+   fi
+
+   # Make sure the pid file root directory exists
+    if [ ! -d ${ADFONIC_PID_DIR} ]; then
+        log "Creating directory: ${ADFONIC_PID_DIR}"
+        echo
+        mkdir -p ${ADFONIC_PID_DIR}
+    fi
+   # Make sure that the START_DIRECTORY exists
+    if [ ! -d ${START_DIRECTORY} ]; then
+        log "Start directory ${START_DIRECTORY} didn't exist, creating it..."
+        echo
+        mkdir -p ${START_DIRECTORY}
+    fi
+
+
+   if [ -f "/var/lock/subsys/${NAME}" ]; then
+        if [ -s "$ADFONIC_PID_DIR/${NAME}.pid" ]; then
+            read kpid < $ADFONIC_PID_DIR/${NAME}.pid
+            if [ -d "/proc/${kpid}" ]; then
+                log "already started"
+                success
+                echo
+                return 0
+            fi
+        fi
+    fi
+    # fix permissions on the log and pid files
+    export PROG_PID="$ADFONIC_PID_DIR/${NAME}.pid"
+    touch $PROG_PID 2>&1 || RETVAL="4"
+    if [ "$RETVAL" -eq "0" -a "$?" -eq "0" ]; then
+      chown ${PROG_USER}:${PROG_USER} $PROG_PID
+    fi
+    if [ "$RETVAL" -eq "0" -a "$?" -eq "0" ]; then
+      touch $PROG_LOG
+      chown ${PROG_USER}:${PROG_USER} $PROG_LOG
+    fi
+    if [ "$RETVAL" -eq "0" ]; then
+       cd $START_DIRECTORY
+       ${START_SCRIPT} > ${PROG_LOG} 2>&1 &
+       echo $! > $PROG_PID
+       # Checking if the script is still being executed after N seconds
+       sleep $WAIT_FOR_SCRIPT_TO_START
+       if ! (ps -p `cat $PROG_PID` > /dev/null 2>&1) ; then
+        RETVAL="4"
+       fi
+    else
+        RETVAL="4"
+    fi
+    if [ "$RETVAL" -eq "0" ]; then
+        success
+        echo
+        touch /var/lock/subsys/${NAME}
+    else
+        log "Error code ${RETVAL}"
+        failure
+        echo
+    fi
+}
+
+function stop() {
+    #check to see if pid file is good. We only want to stop program if
+    #we started it from this init script
+    log "Stopping..."
+    running_pid=$(pgrep -f "`echo $START_SCRIPT | cut -c 1-4095`")
+    if [ -f $ADFONIC_PID_DIR/${NAME}.pid ]; then
+        read kpid junk< $ADFONIC_PID_DIR/${NAME}.pid
+        if [ -z "$kpid" ]; then
+            log "PID file empty"
+            rm -f /var/lock/subsys/${NAME} $ADFONIC_PID_DIR/${NAME}.pid
+            failure
+            echo
+            exit 4
+        fi
+        if [ -z "$running_pid" ]; then
+            log "no ${NAME} running, but pid file exists - cleaning up"
+            rm -f /var/lock/subsys/${NAME} $ADFONIC_PID_DIR/${NAME}.pid
+            success
+            echo
+            exit 0
+        fi
+        if [ -z "$(echo ${kpid} | fgrep -x "${running_pid}")" ]; then
+            log "PID file does not match pid of any running ${NAME}"
+            failure
+            echo
+            rm -f /var/lock/subsys/${NAME} $ADFONIC_PID_DIR/${NAME}.pid
+            exit 4
+        fi
+
+        echo -n "Stopping ${NAME}: "
+        kill $kpid > /dev/null 2>&1
+        sleep 1
+        count=0
+        until [ "$(ps --pid $kpid | grep -c $kpid)" -eq "0" ] || \
+          [ "$count" -gt "$SHUTDOWN_WAIT" ]; do
+            if [ "$SHUTDOWN_VERBOSE" = "true" ]; then
+                log "waiting for processes ${NAME} ($kpid) to exit"
+                echo
+            fi
+            sleep 1
+            let count="${count}+1"
+        done
+        if [ "$count" -gt "$SHUTDOWN_WAIT" ]; then
+            if [ "$SHUTDOWN_VERBOSE" = "true" ]; then
+                log "Failed to stop ${NAME} ($kpid) gracefully after $SHUTDOWN_WAIT seconds, sending SIGKILL."
+                echo
+            fi
+            warning
+            echo
+            kill -9 $kpid
+            if [ "$SHUTDOWN_VERBOSE" = "true" ]; then
+                log "Waiting for ${NAME} ($kpid) to exit."
+                echo
+            fi
+            count=0
+            until [ "$(ps --pid $kpid | grep -c $kpid)" -eq "0" ] || \
+              [ "$count" -gt "$KILL_SLEEP_WAIT" ]; do
+                if [ "$SHUTDOWN_VERBOSE" = "true" ]; then
+                    log "waiting for ${NAME} ($kpid) to exit. It could be in the UNINTERRUPTIBLE state"
+                    echo
+                fi
+                sleep 1
+                let count="${count}+1"
+            done
+        fi
+        #check to make sure program is gone
+        if [ "$(ps --pid $kpid | grep -c $kpid)" -eq "0" ]; then
+            rm -f /var/lock/subsys/${NAME} $ADFONIC_PID_DIR/${NAME}.pid
+            RETVAL="0"
+            success
+            echo
+        else
+            log "Unable to stop ${NAME} ($kpid)"
+            RETVAL="4"
+            failure
+            echo
+        fi
+    else
+        if [ -n "$running_pid" ]; then
+            log "${NAME} running, but no pid file"
+            failure
+            echo
+            RETVAL="4"
+        else
+            log "${NAME} was already stopped"
+            success
+            echo
+        fi
+    fi
+    return $RETVAL
+}
+
+function usage()
+{
+   echo "Usage: $0 {start|stop|restart|status}"
+   RETVAL="2"
+}
+
+# See how we were called.
+RETVAL="0"
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    status)
+        if [ -s "$ADFONIC_PID_DIR/${NAME}.pid" ]; then
+            read kpid junk < $ADFONIC_PID_DIR/${NAME}.pid
+            if [ -d "/proc/${kpid}" ]; then
+                echo -n "${NAME} (pid ${kpid}) is running..."
+                success
+                echo
+                RETVAL="0"
+            else
+# The pid file exists but the process is not running
+                echo -n "PID file exists, but process is not running"
+                warning
+                echo
+                RETVAL="1"
+            fi
+        else
+            pid="$(pgrep -f "`echo $START_SCRIPT | cut -c 1-4095`")"
+            if [ -z "$pid" ]; then
+                echo -n "${NAME} is stopped"
+                success
+                echo
+                RETVAL="3"
+            else
+                echo -n "${NAME} (pid $pid) is running, but PID file is missing"
+                success
+                echo
+                RETVAL="0"
+            fi
+        fi
+        ;;
+    *)
+      usage
+      ;;
+esac
+
+exit $RETVAL

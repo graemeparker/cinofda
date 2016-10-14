@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Affiliate Programs"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+<script type="text/javascript">
+function previewChange() {
+    jQuery('#descriptionPreview').html(jQuery('#affiliateProgramForm\\:description').val());
+}
+</script>
+
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+    <div class="infoContent">#{msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+<h2>
+    <h:outputText rendered="#{adminAffiliateProgramBean.editMode}">Edit</h:outputText>
+    <h:outputText rendered="#{!adminAffiliateProgramBean.editMode}">Add</h:outputText>
+</h2>
+
+<h:form id="affiliateProgramForm" enctype="multipart/form-data">
+
+<div class="formSection">
+    <p class="label">Name <span class="required">*</span></p>
+    <div class="error"><h:message for="name" styleClass="error" style="margin-right:10px" /></div>
+    <h:inputText id="name"
+        value="#{adminAffiliateProgramBean.affiliateProgram.name}"
+        required="true"
+        requiredMessage="Name is required"
+        size="50" maxlength="255"
+        style="width:360px"/>
+    </div>
+
+<div class="formSection">
+    <p class="label">Affiliate ID<span class="required">*</span></p>
+    <div class="error">
+        <h:message for="affiliateId" styleClass="error" style="margin-right:10px" />
+    </div>
+    <h:panelGroup layout="block" styleClass="error" rendered="#{not empty adminAffiliateProgramBean.affiliateProgram.affiliateId}">
+        CAUTION!! If you've already given the link to an external partner you probably should not be changing this.
+    </h:panelGroup>
+    <h:panelGroup layout="block" styleClass="formtip" rendered="#{not empty adminAffiliateProgramBean.affiliateProgram.affiliateId}">
+        Link is: /sign-up?affid=<h:outputText value="#{adminAffiliateProgramBean.affiliateProgram.affiliateId}" />
+    </h:panelGroup>
+    <h:inputText id="affiliateId"
+            value="#{adminAffiliateProgramBean.affiliateProgram.affiliateId}"
+            required="true"
+            requiredMessage="Affiliate Id is required"
+            size="50" maxlength="64"
+            style="width:360px"/>
+</div>
+
+<div class="formSection">
+    <p class="label">Deposit bonus<span class="required">*</span></p>
+    <div class="error">
+        <h:message for="bonus" styleClass="error" style="margin-right:10px" />
+    </div>
+    <div class="formtip">Enter percentage with % sign. Example: 10%</div>
+    <h:inputText id="bonus"
+            value="#{adminAffiliateProgramBean.affiliateProgram.depositBonus}"
+            required="true"
+            requiredMessage="Deposit bonus is required"
+            size="12" maxlength="5"
+            style="width:75px">
+        <f:convertNumber type="percent" minIntegerDigits="1" maxIntegerDigits="2" minFractionDigits="0" maxFractionDigits="2" />
+        <f:validateDoubleRange minimum="0" maximum=".99" />
+    </h:inputText>
+</div>
+
+<div class="formSection">
+    <p class="label">Logo</p>
+    <pri:growl id="messages"/>
+    <div class="formtip">356 x 75 pixels max; file formats supported GIF, JPG, PNG.</div>
+     
+    <pri:fileUpload id="apUpload" fileUploadListener="#{adminAffiliateProgramBean.handleFileUpload}" mode="advanced"
+    		update="messages" 
+    		allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+
+    <!-- display -->
+    <h:panelGroup layout="block" rendered="#{adminAffiliateProgramBean.affiliateProgram.logo != null}">
+        <div class="formtip">Note that logo updates will not be displayed until changes are saved.</div>
+        <h:graphicImage url="/showContent/#{adminAffiliateProgramBean.affiliateProgram.logo.externalID}" />
+        <br/>
+        <h:selectBooleanCheckbox id="deleteLogo"
+            value="#{adminAffiliateProgramBean.deleteLogo}" />
+            <h:outputLabel for="deleteLogo" value="Delete logo" />
+    </h:panelGroup>
+</div>
+
+<div class="formSection">
+    <p class="label">Description</p>
+    <div class="error">
+        <h:message for="description" styleClass="error" style="margin-right:10px" />
+    </div>
+    <div class="formtip">Optional. Will show to the right of the form.</div>
+    <h:inputTextarea id="description"
+                     value="#{adminAffiliateProgramBean.affiliateProgram.description}"
+                     required="false"
+                     rows="20"
+                     cols="50"
+                     onkeyup="previewChange()">
+    </h:inputTextarea>
+	
+    <br/>Preview
+    <div id="descriptionPreview" style="width:400px; border:solid 1px blue; min-height:20px;">
+        <h:outputText value="#{adminAffiliateProgramBean.affiliateProgram.description}" escape="false" />
+    </div>
+    
+</div>
+
+<div class="bottomButton" style="margin-bottom:20px">
+    <!-- button start -->
+
+    <h:commandLink id="saveAffiliateProgram" action="#{adminAffiliateProgramBean.doSave}" styleClass="largeButton">
+        <span>Save</span><span class="go"></span>
+    </h:commandLink>
+
+    <h:commandLink styleClass="largeButton" action="#{adminAffiliateProgramBean.doCancel}" immediate="true" style="float:right;">
+        <span>Cancel</span><span class="stop"></span>
+    </h:commandLink>
+    <!-- button end -->
+</div>
+</h:form>
+</ui:define>
+</ui:composition>

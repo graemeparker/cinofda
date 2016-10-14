@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+  <!-- Don't declare beans explicitly, that's for old-school config-mongers -->
+  <context:annotation-config/>
+
+  <tx:annotation-driven />
+
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-api.properties"/>
+
+  <bean id="reportingDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${reporting.jdbc.driverClassName}"
+        p:url="${reporting.jdbc.url}"
+        p:username="${reporting.jdbc.username}"
+        p:password="${reporting.jdbc.password}"
+        p:initialSize="${reporting.dbcp.initialSize:0}"
+        p:maxActive="${reporting.dbcp.maxActive}"
+        p:maxWait="${reporting.dbcp.maxWait:-1}"
+        p:minIdle="${reporting.dbcp.minIdle:0}"
+        p:maxIdle="${reporting.dbcp.maxIdle}"
+        p:testOnBorrow="${reporting.dbcp.testOnBorrow:true}"
+        p:validationQuery="${reporting.dbcp.validationQuery}"
+        p:validationQueryTimeout="${reporting.dbcp.validationQueryTimeout:-1}"
+        p:testOnReturn="${reporting.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${reporting.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${reporting.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${reporting.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${reporting.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+  <!-- Need this to support OLAP queries.  Declaring this bean sets up
+       a singleton MondrianDataSource instance, which is required for
+       internal use by the OLAPQuery class.
+  -->
+  <bean id="mondrianDataSource"
+        class="com.adfonic.olap.MondrianSqlDataSource"
+        p:reportingDataSource-ref="reportingDataSource"
+        p:catalogLocation="com/adfonic/olap/mondrian-reporting.xml"/>
+
+  <bean id="jmsConnectionFactory"
+        class="org.apache.activemq.pool.PooledConnectionFactory"
+        destroy-method="stop"
+        p:maxConnections="${jms.pool.maxConnections}">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory"
+            p:brokerURL="${jms.broker.url}"/>
+    </property>
+  </bean>
+  
+  <jms:listener-container connection-factory="jmsConnectionFactory" destination-type="topic">
+    <jms:listener destination="adfonic.mondrian.cache.flush" ref="mondrianDataSource" method="onCacheFlush"/>
+  </jms:listener-container>
+
+  <bean id="centralJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+    <constructor-arg ref="jmsConnectionFactory"/>
+  </bean> 
+
+  <amq:topic id="stopCampaignTopic" physicalName="adfonic.stopCampaign"/>
+  <amq:topic id="unStopCampaignTopic" physicalName="adfonic.unStopCampaign"/>
+  
+  <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+    <property name="mappingFiles" value="classpath*:/dozer-mapping.xml"/>
+  </bean>
+
+  <bean id="auditorConfig"
+        class="com.adfonic.audit.AuditorConfig">
+    <property name="auditedProperties">
+      <props>
+        <prop key="com.adfonic.domain.User">
+          email,firstName,lastName,country,phoneNumber,emailOptIn
+        </prop>
+        <prop key="com.adfonic.domain.Company">
+          accountTypeFlags,individual,country,taxCode,defaultTimeZone,autoTopupLimit,autoTopupAmount
+        </prop>
+        <prop key="com.adfonic.domain.Advertiser">
+          name,status,dailyBudget,notifyLimit,notifyAdditionalEmails,users,key,adOpsOwner,salesOwner
+        </prop>
+        <prop key="com.adfonic.domain.Campaign">
+          name,reference,description,startDate,endDate,defaultLanguage,overallBudget,dailyBudget,dailyBudgetWeekday,dailyBudgetWeekend,evenDistributionOverallBudget,evenDistributionDailyBudget,budgetType,dailyBudgetImpressions,overallBudgetImpressions,dailyBudgetClicks,overallBudgetClicks,status,applicationID,conversionTrackingEnabled,installTrackingEnabled,targetCPA,optimizationMaxRemoval,optimizationMultiplier
+        </prop>
+        <prop key="com.adfonic.domain.Segment">
+          channelsAsString,connectionType,genderMix,minAge,maxAge,daysOfWeek,hoursOfDay,hoursOfDayWeekend,browsersAsString,countriesAsString,operatorsAsString,modelsAsString,platformsAsString,targetedPublishersAsString,vendorsAsString
+        </prop>
+        <prop key="com.adfonic.domain.Creative">
+          name,format,status
+        </prop>
+        <prop key="com.adfonic.domain.Destination">
+          destinationType,data
+        </prop>
+        <prop key="com.adfonic.domain.Asset">
+          dataAsString
+        </prop>
+        <prop key="com.adfonic.domain.CampaignBid">
+          bidType,amount
+        </prop>
+        <prop key="com.adfonic.domain.Publisher">
+          name,pendingAdType,defaultAdRequestTimeout,defaultRevShare,trusted,rtbConfig,key,adOpsOwner,salesOwner,currentRevShare
+        </prop>
+        <prop key="com.adfonic.domain.Publication">
+          name,publicationType,description,autoApproval,status,genderMix,minAge,maxAge,languagesAsString,category
+        </prop>
+        <prop key="com.adfonic.domain.AdSpace">
+          name,status,formatsAsString
+        </prop>
+        <prop key="com.adfonic.domain.PaymentOptions">
+          paymentType,paymentAccount
+        </prop>
+        <prop key="com.adfonic.domain.PostalAddress">
+          firstName,lastName,address1,address2,city,state,postcode,country
+        </prop>
+        <prop key="com.adfonic.domain.AccountDetail">
+          amount
+        </prop>
+        <prop key="com.adfonic.domain.CampaignTimePeriod">
+          startDate,endDate
+        </prop>
+        <prop key="com.adfonic.domain.RtbConfig">
+          adMode,winNoticeMode
+        </prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="entityAuditor" class="com.byyd.middleware.domainlog.EntityAuditorJpaImpl">
+      <constructor-arg ref="auditorConfig"/>
+      <constructor-arg ref="domainLogManager"/>
+      <!-- This is the system ID that will be used with AUDIT_LOG entries -->
+      <constructor-arg value="webservices"/>
+  </bean>
+
+    <!-- Fetch Strategy support beans -->
+    <bean id="fetchesfactory" class="com.byyd.middleware.iface.dao.jpa.FetchesFactory"/>
+    <bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory" init-method="init"/>
+    
+    <!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+    <context:component-scan base-package="com.byyd.middleware">
+        <context:exclude-filter type="annotation" expression="com.byyd.middleware.iface.service.NotAutoScan"/>
+    </context:component-scan>
+
+    <!-- Transactional Runner -->
+    <bean id="transactionalRunner" class="com.byyd.middleware.utils.TransactionalRunner"/>
+
+    <!-- Bean Dispatcher -->
+    <bean id="adfonicBeanDispatcher" class="com.byyd.middleware.utils.AdfonicBeanDispatcher"/>
+
+  <bean id="wsSqlQuery" class="com.adfonic.reporting.sql.WebServicesSQLQuery">
+    <property name="dataSource" ref="reportingDataSource" />
+  </bean>
+
+    <context:component-scan base-package="com.adfonic.webservices.util"/>
+
+  <bean id="readOnlyDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${reporting.jdbc.driverClassName}"
+        p:url="${reporting.jdbc.url}"
+        p:username="${reporting.jdbc.username}"
+        p:password="${reporting.jdbc.password}"
+        p:initialSize="${reporting.dbcp.initialSize:0}"
+        p:maxActive="${reporting.dbcp.maxActive}"
+        p:maxWait="${reporting.dbcp.maxWait:-1}"
+        p:minIdle="${reporting.dbcp.minIdle:0}"
+        p:maxIdle="${reporting.dbcp.maxIdle}"
+        p:testOnBorrow="${reporting.dbcp.testOnBorrow:true}"
+        p:validationQuery="${reporting.dbcp.validationQuery}"
+        p:validationQueryTimeout="${reporting.dbcp.validationQueryTimeout:-1}"
+        p:testOnReturn="${reporting.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${reporting.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${reporting.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${reporting.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${reporting.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+  
+  <bean id="readOnlyEntityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        p:persistenceUnitName="adfonic-domain"
+        p:packagesToScan="com.adfonic.domain"
+        p:dataSource-ref="readOnlyDataSource">
+    <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+            p:database="MYSQL"
+            p:showSql="false"
+            p:generateDdl="false"/>
+    </property>
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.generate_statistics">false</prop>
+        <prop key="hibernate.jdbc.fetch_size">10</prop>
+        <prop key="hibernate.jdbc.batch_size">10</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="readOnlyTransactionManager"
+      class="org.springframework.orm.jpa.JpaTransactionManager">
+      <property name="entityManagerFactory" ref="readOnlyEntityManagerFactory" />
+      <property name="dataSource" ref="readOnlyDataSource" />
+  </bean>
+
+  <import resource="classpath:adfonic-middleware-db-context.xml"/>
+  <import resource="classpath:adfonic-middleware-auditlog-context.xml"/>
+
+</beans>

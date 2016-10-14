@@ -1,0 +1,27 @@
+<!-- Replace "[timestamp]" in img src with actual timestamp for cache busting -->
+<img src="http://mdn2.phluantmobile.net/3/trk.gif?cmID=1001&adId=4906&type=rm&phbust=${adComponents.destinationUrl}" style="position:absolute; width:1px; height:1px; top:0px; left:0px;" />
+
+<script type="text/javascript">
+    var ph4906_clkPrepend="${adComponents.destinationUrl}";
+</script>
+
+<script type="text/javascript" id="phad_${adComponents.components.extendedData.campaignID}_${adComponents.components.extendedData.creativeID}_u|t_${adComponents.components.extendedData.tagID}" src="http://mdn2.phluantmobile.net/3/ph/js/phluant.js"></script>
+
+<noscript>
+<img src="http://mdn2.phluantmobile.net/3/trk.gif?cmID=${adComponents.components.extendedData.campaignID}&adId=${adComponents.components.extendedData.adID}&type=noscript&phbust=${adComponents.destinationUrl}" style="position:absolute; width:1px; height:1px; top:0px; left:0px;" />
+
+<div style="width:300px; margin:auto; position:relative;">
+    <a name="clickFailover" href="http://cts.phluantmobile.net/clickthru.aspx?pclick=http%3A%2F%2Fphluant.com%2Fmobi&amp;ctName=noscript&amp;cmID=${adComponents.components.extendedData.campaignID}&amp;adID=${adComponents.components.extendedData.adID}&amp;phbust=0">
+        <img src="http://mdn3.phluantmobile.net/media/550/1001/4906/NOSCRIPTfailover.jpg" border="0"></a>
+</div>
+
+</noscript>
+
+
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

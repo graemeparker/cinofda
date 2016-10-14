@@ -1,0 +1,45 @@
+{
+	"id":"c92e6f56080097e9c551b1fd419c65b3a3611948",
+	"at":2,
+	"tmax":112,
+	"imp":[ {
+			"id":"1",
+			"tagid":"60361",
+			"secure":0,
+			"iframebuster":[ ],
+			"banner":{
+				"w":320, "h":50, "pos":0,
+				"battr":[ 14018, 1, 2, 3, 5, 8, 9, 10, 12, 13, 14, 14005 ],
+				"api":[ ],
+				"topframe":0
+			},
+			"instl":0
+	} ],
+	"site":{
+		"id":"19103",
+		"domain":"http://Drudgereport.com",
+		"name":"Drudge_MWeb_RFM",
+		"cat":[ "IAB12", "IAB11" ],
+		"page":"http://www.idrudgereport.com/",
+		"publisher":{ "id":"6005" },
+		"ext":{ "mopt":1 }
+	},
+	"device":{
+		"os":"iOS",
+		"model":"iPhone",
+		"connectiontype":0,
+		"geo":{ "country":"USA", "region":"GA" },
+		"osv":"8.1.2",
+		"js":1,
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B440",
+		"devicetype":1,
+		"language":"en",
+		"make":"Apple",
+		"ext":{ "xff":"", "res":"320x480" },
+		"ip":"166.137.10.126"
+	},
+	"user":{
+		"id":"26e4ea9fa28e52bf89a22b9e73fd5164bddc4dc7",
+		"ext":{ "sessiondepth":2 }
+	}
+}

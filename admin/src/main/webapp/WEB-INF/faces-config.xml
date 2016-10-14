@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<faces-config version="2.0"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<application>
+	    <locale-config>
+	        <default-locale>en_GB</default-locale>
+	    </locale-config>
+	    <message-bundle>com.adfonic.beans.Messages</message-bundle>
+	    <resource-bundle>
+	      <base-name>com.adfonic.beans.Messages</base-name>
+	      <var>msg</var>
+	    </resource-bundle>
+	    <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	
+	    <!-- Handles ViewExpiredException -->
+	    <view-handler>
+	        com.adfonic.util.ViewExpiredViewHandlerWrapper
+	    </view-handler>
+	</application>
+	<component>
+		<component-type>jawr.JavascriptBundle</component-type>
+		<component-class>net.jawr.web.taglib.jsf.JavascriptBundleTag</component-class>
+	</component>
+	<component>
+		<component-type>jawr.CSSBundle</component-type>
+		<component-class>net.jawr.web.taglib.jsf.CSSBundleTag</component-class>
+	</component>
+
+</faces-config>

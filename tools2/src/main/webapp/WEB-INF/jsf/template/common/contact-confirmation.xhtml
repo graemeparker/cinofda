@@ -1,0 +1,21 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<pri:outputPanel styleClass="content contact-confirmation ovh fullpage margin-btm-307" rendered="#{contactUsMBean.sended!=null}">
+    	<c:if test="#{contactUsMBean.sended eq true}">
+    		<h1 class="margin-lft-240"><h:outputText value="#{msg['page.contact.confirmation.messagesent']}"/></h1>
+	    	<div class="notification-ok"><h:outputText value="#{msg['page.contact.confirmation.notification.ok']}"/></div>
+    	</c:if >
+	    <c:if test="#{contactUsMBean.sended eq false}">
+    		<h1 class="margin-lft-240"><h:outputText value="#{msg['page.contact.confirmation.messagenotsent']}"/></h1>
+	    	<div class="notification-error"><h:outputText value="#{msg['page.contact.confirmation.notification.error']}"/></div>
+    	</c:if >
+	    <p class="margin-lft-240"><p:link mappingId="home" ><h:outputText value="#{msg['page.contact.confirmation.link.label']}"/></p:link></p>
+	</pri:outputPanel>	
+	
+</ui:composition>

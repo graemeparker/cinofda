@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+       	<h2 class="sec-title">#{msg['page.campaign.inventory.safetylevel.title']}</h2>
+       	<h:outputText value="#{msg['page.campaign.inventory.safetylevel.description']}"/>
+       	<pri:selectOneRadio id="safetyLevel" value="#{campaignMBean.campaignInventoryTargetingMBean.safetyLevel}" layout="custom"
+       					required="true" requiredMessage="#{msg['page.campaign.inventory.safetylevel.required.message']}">
+    		<f:selectItem itemLabel="#{msg['page.campaign.segment.safetylevel.off.long.label']}" itemValue="OFF"/>
+    		<f:selectItem itemLabel="#{msg['page.campaign.segment.safetylevel.bronze.long.label']}" itemValue="BRONZE"/>
+   			<f:selectItem itemLabel="#{msg['page.campaign.segment.safetylevel.silver.long.label']}" itemValue="SILVER"/>
+   			<f:selectItem itemLabel="#{msg['page.campaign.segment.safetylevel.gold.long.label']}" itemValue="GOLD"/>
+   			<f:converter converterId="com.adfonic.tools.converter.campaign.SegmentSafetyLevelConverter" />
+   		</pri:selectOneRadio>
+   		<pri:message for="safetyLevel" display="text"/>
+   		<h:panelGrid columns="2" styleClass="form-row">
+   		
+   			<pri:radioButton id="gold_id" for="safetyLevel" itemIndex="3"/>
+   			<h:outputLabel style="font-weight:bold" for="gold_id" value="#{msg['page.campaign.segment.safetylevel.gold.long.label']}"/> 
+   			<h:outputText value=""/>
+   			<h:outputText style="font-style:italic;text-align:justify;" value="#{msg['page.campaign.inventory.safetylevel.gold.message']}"/>
+   			
+   			<pri:radioButton id="silver_id" for="safetyLevel" itemIndex="2"/>
+   			<h:outputLabel style="font-weight:bold" for="silver_id" value="#{msg['page.campaign.segment.safetylevel.silver.long.label']}" /> 
+   			<h:outputText value=""/>
+   			<h:outputText style="font-style:italic;text-align:justify;" value="#{msg['page.campaign.inventory.safetylevel.silver.message']}"/>
+   			
+   			<pri:radioButton id="bronze_id" for="safetyLevel" itemIndex="1"/>
+   			<h:outputLabel style="font-weight:bold" for="bronze_id" value="#{msg['page.campaign.segment.safetylevel.bronze.long.label']}" />
+   			<h:outputText value=""/> 
+   			<h:outputFormat style="font-style:italic;text-align:justify;" value="#{msg['page.campaign.inventory.safetylevel.bronze.message']}" escape="false">
+	   			<f:param value="#{toolsApplicationBean.externalUrls['brandSafety']}" />
+   			</h:outputFormat>
+   			
+   			<pri:radioButton id="off_id" for="safetyLevel" itemIndex="0" />
+   			<h:outputLabel style="font-weight:bold" for="off_id" value="#{msg['page.campaign.segment.safetylevel.off.long.label']}" />
+   			<h:outputText value=""/>
+   			<h:outputText style="font-style:italic;text-align:justify;" value="#{msg['page.campaign.inventory.safetylevel.off.message']}"/>
+   		</h:panelGrid>
+	</h:body>
+</ui:composition>

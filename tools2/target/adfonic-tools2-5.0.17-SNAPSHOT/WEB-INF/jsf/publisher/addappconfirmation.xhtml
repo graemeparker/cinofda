@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+                
+                
+    <h:form>
+        <pri:dialog id="addPubMessage" widgetVar="createPubdialog" modal="true" width="460"
+                header="#{msg['page.publisher.dialog.label.addsite']}" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+            <p><h:outputText value="#{msg['page.publisher.dialog.label.reviews']}"/></p>
+            <span><h:outputText value="#{msg['page.publisher.dialog.label.notapprove']}:"/></span>
+            <ul>
+                <li><h:outputText value="#{msg['page.publisher.dialog.label.drug']}"/></li>
+                <li><h:outputText value="#{msg['page.publisher.dialog.label.gambling']}"/></li>
+                <li><h:outputText value="#{msg['page.publisher.dialog.label.music']}"/></li>
+            </ul>
+            <div class="form-row">
+                <h:outputText value="#{msg['page.publisher.dialog.label.details']}"/>
+                <a href="#">"#{msg['page.publisher.dialog.label.addsite']}"</a>
+            </div>
+            <div class="form-row tac">
+                <pri:commandButton value="#{msg['page.publisher.dialog.label.go']}"
+                                 action="#{publisherSessionBean.saveAndNavigate()}"/>
+                <h:commandLink value="#{msg['page.publisher.dialog.label.cancel']}" onclick="createPubdialog.hide()"/>
+            </div>
+            <div class="form-row">
+                <pri:selectBooleanCheckbox id="dontShowCheckboxId"
+                                           value="#{publisherSessionBean.dontShowContentDialog}"/>
+                <h:outputLabel for="dontShowCheckboxId" value="#{msg['page.publisher.dialog.label.dontshow']}"/>
+            </div>
+        </pri:dialog>
+    </h:form>
+                
+</ui:composition>

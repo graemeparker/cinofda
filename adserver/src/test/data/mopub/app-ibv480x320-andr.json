@@ -1,0 +1,72 @@
+{
+	"app":{
+		"bundle":"com.gamebasics.osm",
+		"cat":[ "IAB17", "IAB9", "IAB9-30", "games", "sports" ],
+		"id":"1d80d8b434bc11e2bf1612313d143c11",
+		"name":"Online Soccer Manager Android",
+		"publisher":{
+			"id":"8d73f6bc34ba11e2a30712313b12f67e",
+			"name":"Online Soccer Manager BV"
+		},
+		"ver":"1.49"
+	},
+	"at":2,
+	"badv":[ "http://nordeus.com", "https://www.kabam.com/", "http://www.nordeus.com", "topeleven.com" ],
+	"bcat":[ "IAB7-39", "IAB8-5", "IAB8-18", "IAB9-9", "IAB25", "IAB26" ],
+	"device":{
+		"carrier":"206-20",
+		"connectiontype":2,
+		"devicetype":1,
+		"dnt":0,
+		"dpidmd5":"ef6653f97b4c39c3a6d40dced09cedd3",
+		"dpidsha1":"b88aee9928c0cc0f0ad3b20e2677e7683531344f",
+		"ext":{
+			"idfa":"2a9faea4-7f05-45d6-a4e3-9df152b5f689"
+		},
+		"geo":{ "city":"Diest", "country":"BEL", "region":"12", "zip":"3290" },
+		"ip":"84.193.135.55",
+		"js":1,
+		"make":"samsung",
+		"model":"GT-I9195",
+		"os":"Android",
+		"osv":"4.4.2",
+		"ua":"Mozilla/5.0 (Linux; Android 4.4.2; GT-I9195 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36"
+	},
+	"id":"042d4c1e-651d-45ee-be20-ce3fb55613db",
+	"imp":[
+		{
+			"banner":{
+				"api":[ 3 ],
+				"battr":[ 9, 10, 8, 14 ],
+				"btype":[ 4 ],
+				"ext":{
+					"mraid":[ {
+							"functions":[ "storePicture", "supports", "playVideo", "createCalendarEvent" ],
+							"version":"2.0"
+					} ],
+					"nativebrowserclick":1
+				},
+				"h":320,
+				"pos":1,
+				"w":480
+			},
+			"bidfloor":1.290,
+			"displaymanager":"mopub",
+			"displaymanagerver":"3.2.1",
+			"id":"1",
+			"instl":1,
+			"tagid":"1d92407234bc11e2bf1612313d143c11",
+			"video":{
+				"battr":[ 9, 10, 8, 14 ],
+				"h":320,
+				"linearity":1,
+				"maxduration":30,
+				"mimes":[ "video/mp4", "video/.3gp" ],
+				"minduration":0,
+				"protocol":2,
+				"protocols":[ 2, 5 ],
+				"w":480
+			}
+		}
+	]
+}

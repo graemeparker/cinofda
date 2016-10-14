@@ -1,0 +1,401 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Digest::MD5 qw(md5_hex);
+use Digest::SHA1 qw(sha1_hex);
+use JSON;
+use LWP::UserAgent;
+
+my $ipAddress;
+#$ipAddress = "127.0.0.1";
+#$ipAddress = "166.132.164.157";
+#$ipAddress = "80.125.176.116"; # FR
+#$ipAddress = "32.128.108.158";
+#$ipAddress = "80.187.100.120"; # T-Mobile Germany
+#$ipAddress = "76.177.133.140"; # home
+#$ipAddress = "67.32.178.228"; # home
+#$ipAddress = "213.87.88.2"; # MTS Russian Federation
+#$ipAddress = "98.67.157.168"; # KY
+#$ipAddress = "192.168.0.1"; # private network
+#$ipAddress = "67.32.183.150"; # home Georgetown, KY
+#$ipAddress = "32.128.108.158"; # AT&T US
+#$ipAddress = "unknown";
+#$ipAddress = "80";
+#$ipAddress = "86.194.5.66/186.194.5.66";
+$ipAddress = "149.254.200.236"; # T-Mobile UK
+#$ipAddress = "foo.bar.com/32.128.108.158";
+#$ipAddress = "2.128.108.158/32.128.108.158";
+#$ipAddress = "24.114.128.0"; # Rogers Wireless Canada (postal code: m1b 1a1, province: Ontario)
+#$ipAddress = "67.205.68.11"; # Canada (postal code: h2y 2j7, province: Quebec)
+#$ipAddress = "184.43.64.179";
+#$ipAddress = "10.114.220.18"; # Private network...should come back unfilled
+#$ipAddress = "93.122.255.200"; # Quova operator alias test: orange romania
+#$ipAddress = "149.254.200.236"; # Quova operator alias test: tmobileuk
+#$ipAddress = "31.222.144.233"; # UK non-mobile, London RM12 (Romford)
+
+#$ipAddress = "0:0:0:0:0:0:0:1%0"; # IPv6 test - localhost with zone
+#$ipAddress = "fe80::3%1"; # IPv6 test - Windows zone index
+#$ipAddress = "fe80::3\%eth0"; # IPv6 test - unix zone index (interface name)
+#$ipAddress = "2001:db8:85a3:0:0:8a2e:370:7334"; # IPv6 test
+#$ipAddress = "::ffff:192.0.2.128"; # IPv6 test - dotted quad notation
+#$ipAddress = "::ffff:10.0.0.10"; # IPv6 test - dotted quad notation
+#$ipAddress = "fe80:0:0:0:0204:61ff:254.157.241.86"; # IPv6 test - dotted quad notation
+#$ipAddress = "fe80::204:61ff:254.157.241.86"; # IPv6 test - dotted quad notation
+
+my $adSpaceID;
+my $trackingId;
+my $userAgent;
+my $integrationType;
+
+# We want a JSON response
+my $format = "json";
+
+# We'll piece it together ourselves
+my $markup = "false";
+
+#$integrationType = "danfoo";
+#$integrationType = "Mobclix/android/2.3.4";
+#$integrationType = "danfoo";
+
+#$adSpaceID = "f51032c6-0a2f-4a93-85be-dfe70d8a9064";
+#$adSpaceID = "159220ab-e617-4f49-8a3b-30134ecd3f31"; # pub.status=PENDING
+#$adSpaceID = "b0026d49-9921-420d-a8cf-f0c317e6f67f"; # pub.status=PAUSED
+#$adSpaceID = "2325cc5d-f040-482a-94ec-e4eea190a76a"; # pub with non-default publication rate card
+#$adSpaceID = "fdfbe056-4230-4907-bf66-a8ec1851ff44"; # company with default rate card
+
+# For "pound" text testing
+#$adSpaceID = "9c5f3bb5-4109-47fe-b132-38b3451ec5af";
+
+#$adSpaceID = "24309f7a-bd6c-4d58-b882-531e5e1a7753"; # this works on test
+
+# iPhone app
+$adSpaceID = "043b3fb5-6500-4c27-a5e3-4c50462d356a"; # this is an iPhone app
+$trackingId = "0123456789abcdef0123456789abcdef01234567"; # 40-char iPhone UDID
+$userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+# Android app
+#$adSpaceID = "156eb08f-b0d0-44fe-8dcb-3014bec6a838"; # this is an Android app
+#$trackingId = "0123456789abcdef"; # 16-char Android device ID
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; nl-nl; Desire_A8181 Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+
+# "Other"
+#$adSpaceID = "9a104704-83a5-4d6e-ae72-0ac90e0bbe56"; # this is an "Other" publication
+#$trackingId = "0123456789abcdef0123456789abcdef01234567"; # 40-char iPhone UDID
+#$trackingId = "0123456789abcdef"; # 16-char Android device ID
+#$userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+$adSpaceID = "19ffa850-8774-4ec2-a153-6ab35be63fa5";
+
+# MayViewPricing
+#$adSpaceID = "770c65e7-224d-417c-a7ad-61b338b9ec03";
+
+# Mobclix AdSpace (used to test the Mobclix shard)
+#$adSpaceID = "d1bb3f0c-a23a-4c97-bc05-99c35b84e136";
+#$trackingId = "0123456789abcdef"; # 16-char Android device ID
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; nl-nl; Desire_A8181 Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+
+# Smaato Adspace (used to test the Smaato shard)
+#$adSpaceID = "b81487e9-6510-40ab-a253-de9282ccefdc";
+#$trackingId = "0123456789abcdef"; # 16-char Android device ID
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; nl-nl; Desire_A8181 Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+  
+# Rich Media testing
+#$adSpaceID = "77dc0e5b-218b-4ec6-a24f-978ef999bbf8";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; ADR6300 Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
+#$ipAddress = "149.254.200.236"; # T-Mobile UK
+#$integrationType = "Tiemen/RichMediaMadView/1.0";
+#$markup = "true";
+
+# AF-992 with rftest02 data
+#$adSpaceID = "3663ddb9-6b46-486c-9f8d-98b02ff6b4bf";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13";
+#$ipAddress = "194.75.78.44";
+#$format = "html";
+#undef $markup;
+
+# Missing Asset Test
+#$adSpaceID = "61efb645-5f90-4bb7-af65-3a3dfb411294";
+#$userAgent = "BlackBerry8900/4.6.1.206 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/130";
+#$ipAddress = "124.197.109.186";
+
+$adSpaceID = "b48384e6-8ff7-487e-98e3-aa147891a6ca"; # Mocospace iPhone Mobile
+$userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+# Browser header case-insensitivity test.  In order to isolate a test case
+# for this, you can do:
+#
+# update CREATIVE set STATUS='FUBAR' where STATUS='ACTIVE' and id != 34384;
+# update PUBLICATION set STATUS='FUBAR' where STATUS='ACTIVE' and id != 4092;
+#
+# ...then update AdserverDomainCache (run domainserializer).
+#
+# That will set us up for the known-good single creative/adspace eligibility in
+# cache.  The creative targets Russia, so we have to pass a Russian IP.
+#
+# NOTE: that creative has a funky frequency cap of 4 per 24 hours...beware!
+#$adSpaceID = "3b57634c-a548-4651-ba2a-61a899bf5458";
+#$trackingId = "0123456789abcdef0123456789abcdef01234567"; # 40-char iPhone UDID
+#$ipAddress = "213.87.88.2"; # MTS Russian Federation
+# This funkily capitalized User-Agent is still recognized by DeviceAtlas
+# but ordinarily would not match up with Browser.headerMap before the
+# case-insensitive fix went in.
+#$userAgent = "Mozilla/5.0 (iPhone; U; CPU IPHONE os 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+#$trackingId = md5_hex("Dan Checkoway");
+
+#$userAgent = "MOT-V3/0E.41.C3R MIB/2.2.1 Profile/MIDP-2.0 Configuration/CLDC-1.0 UP.Link/6.3.1.20.06.3.1.20.0";
+#$userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 2_2 like Mac OS X; en-us) AppleWebKit/525.18.1 (KHTML, like Gecko) Version/3.1.1 Mobile/5G77 Safari/525.20";
+#$userAgent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+#$userAgent = "DoCoMo/2.0 N905i(c100;TB;W24H16) (compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)";
+#$userAgent = "Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10";
+#$userAgent = "Mozilla/5.0 (iPod; U; CPU iPhone OS 3_1_3 like Mac OS X; de-de) AppleWebKit/528.18 (KHTML, like Gecko) Mobile/7E18";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; T-Mobile_Espresso Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; HTC Desire Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
+#$userAgent = "r451[TF268435458315611027487354018023233184] UP.Browser/6.2.3.8 (GUI) MMP/2.0";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; fr-ch; HTC Tattoo-Orange Build/DRC79) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; ja-jp; Dell Streak Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+
+my $clickUserAgent;
+$clickUserAgent = $userAgent;
+#$clickUserAgent = "Mozilla/5.0 (iPod; U; CPU iPhone OS 3_1_3 like Mac OS X; de-de) AppleWebKit/528.18 (KHTML, like Gecko) Mobile/7E18";
+#$clickUserAgent = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; T-Mobile_Espresso Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
+
+my %params = ();
+#$params{"s.test"} = "1";
+$params{"r.ip"} = $ipAddress;
+if ($integrationType) {
+  $params{"r.client"} = $integrationType;
+}
+if ($trackingId) {
+    $params{"r.id"} = $trackingId;
+}
+
+my $androidId = "0123456789abcdef"; # 16-char Android device ID
+my $udid = "0123456789abcdef0123456789abcdef01234567"; # 40-char iPhone UDID
+my $dpid = sha1_hex($udid);
+my $openudid = "1111111111222222222233333333334444444444"; # fake OpenUDID
+my $odin1 = "9999999999888888888877777777776666666666"; # fake ODIN-1
+my $ifa = "17d8fa16-1095-4bf6-901a-ba2b694905e2"; # fake Apple IFA (identifierForAdvertising)
+
+#$params{"d.udid"} = $udid;
+$params{"d.dpid"} = $dpid;
+#$params{"d.openudid"} = $openudid;
+#$params{"d.odin-1"} = $odin1;
+#$params{"d.android"} = $androidId;
+$params{"d.ifa"} = $ifa;
+
+#$params{"r.nettype"} = "wifi";
+#$params{"r.nettype"} = "gprs";
+#$params{"r.mccmnc"} = "310090";
+#$params{"r.mccmnc"} = "310481-9";
+#$params{"r.mccmnc"} = "000000";
+
+$params{"h.user-agent"} = $userAgent;
+
+# Test h.User-Agent mixed case
+#$params{"h.User-Agent"} = $userAgent;
+
+# Test Opera Mini stuff
+#$params{"h.user-agent"} = "Opera/";
+##$params{"h.user-agent"} = "doesn't start with that other prefix we were looking for";
+#$params{"h.x-operamini-phone-ua"} = $userAgent;
+
+#$params{"u.latitude"} = "38.234444"; $params{"u.longitude"} = "-84.4346944445"; # Georgetown, KY 40324
+#$params{"u.latitude"} = "33.97477930555556"; $params{"u.longitude"} = "-117.63648283333333"; # Chino, CA 91710
+#$params{"u.latitude"} = "49.8693"; $params{"u.longitude"} = "-119.4049"; # Kelowna, BC, Canada, V1P 1J6
+#$params{"u.latitude"} = "60.7189"; $params{"u.longitude"} = "-135.0634"; # Whitehorse, YT, Canada, Y1A 3Y5
+#$params{"u.latitude"} = "53.7107"; $params{"u.longitude"} = "-57.0141"; # Castors River, NL, Canada, A0K 1W0 (new as of 0612 update)
+#$params{"u.latitude"} = "51.56960699"; $params{"u.longitude"} = "0.207906"; # London, UK RM11 or RM12 (Romford)
+#$params{"u.latitude"} = "34.0"; $params{"u.longitude"} = "-117.0";
+#$params{"u.latitude"} = "0"; $params{"u.longitude"} = "0";
+#$params{"d.latitude"} = "38.228625"; $params{"d.longitude"} = "-84.6885";
+#$params{"d.latitude"} = "34.0"; $params{"d.longitude"} = "-117.0";
+#$params{"d.latitude"} = "0"; $params{"d.longitude"} = "0";
+#$params{"o.country"} = "US";
+#$params{"o.country"} = "United Kingdom"; # test for AF-1125
+#$params{"o.state"} = "MA";
+#$params{"o.postalCode"} = "91709";
+#$params{"o.postalCode"} = "A0K 1W0";
+#$params{"o.postalCode"} = "a0k 1w0";
+#$params{"o.postalCode"} = "rm11";
+#$params{"o.postalCode"} = "RM11";
+#$params{"o.dma"} = "800";
+#$params{"u.gender"} = "m";
+#$params{"u.dob"} = "19740509";
+#$params{"u.age"} = "36";
+#$params{"u.ageLow"} = "30";
+#$params{"u.ageHigh"} = "40";
+#$params{"u.lang"} = "en";
+#$params{"t.colorScheme"} = "purple";
+#$params{"t.pretty"} = "0";
+#$params{"t.constraints"} = "width=300;height=50";
+#$params{"t.constraints"} = "width=300;height=250";
+#$params{"p.tags"} = "sports,football";
+#$params{"o.format"} = "image728x90";
+#$params{"h.x-forwarded-for"} = "192.168.1.100,10.1.100.40, 201.88.16.12";
+# Test an invalid IP address within X-Forwarded-For
+#$params{"h.x-forwarded-for"} = "192.168.1.100, blah, 10.1.100.40, 201.88.16.12";
+# Test the crap/ip pattern within X-Forwarded-For
+#$params{"h.x-forwarded-for"} = "24.24.24.24, aildm.zahid.com/212.119.69.187";
+#$params{"h.x-forwarded-for"} = "192.168.0.1, aildm.zahid.com/212.119.69.187, 10.1.3.17";
+#$params{"h.x-forwarded-for"} = "192.168.0.1, unknown, 10.1.3.17";
+#$params{"h.x-forwarded-for"} = "unknown";
+
+$params{"t.format"} = $format;
+if ($markup) {
+    $params{"t.markup"} = $markup;
+}
+
+# Uncomment this to test a warning condition
+#$params{"t.beacons"} = "markup";
+
+#$params{"t.width"} = "320"; $params{"t.height"} = "50";
+#$params{"t.width"} = "123"; $params{"t.height"} = "45";
+
+my $host = "localhost";
+my $port = "8080";
+my $urlBase = "http://$host:$port/adfonic-adserver";
+#$urlBase = "http://byyd.net";
+#$urlBase = "http://rfadserver01";
+#$urlBase = "http://rfadserver39";
+#$urlBase = "http://mobclix.byyd.net";
+#$urlBase = "http://lon2adserver01";
+#$urlBase = "http://smaato.byyd.net";
+#$urlBase = "http://164.177.130.231"; # Smaato public VIP
+#$urlBase = "http://test.byyd.net";
+
+my $queryString = "";
+print "*** Request Parameters:\n";
+foreach my $key (sort(keys(%params))) {
+    print "$key = $params{$key}\n";
+    if (length($queryString) > 0) {
+        $queryString .= '&';
+    }
+    $queryString .= $key;
+    $queryString .= '=';
+    $queryString .= CGI::escape($params{$key});
+}
+
+my $url = $urlBase . "/ad/" . $adSpaceID . '?' . $queryString;
+print "*** Hitting URL: $url\n";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+
+# To test AF-1569, use this:
+#my $response = $ua->get($url, "Accept", "application/xml,application/vnd.wap.xhtml+xml,application/xhtml+xml;profile='http://www.wapforum.org/xhtml',text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
+
+my $response = $ua->get($url);
+print "*** HTTP Status: ".$response->status_line."\n";
+#$response->headers->scan(sub { my ($key, $value) = @_; print "*** Response Header: $key: $value\n"; });
+if (!$response->is_success) {
+    exit(1);
+}
+
+my $content = $response->decoded_content;
+
+if ($format ne "json") {
+    # Just dump the response content and bail
+    print "*** Response Content:\n$content\n";
+    print "*** Can't do anything else with non-JSON response, exiting\n";
+    exit(0);
+}
+
+# Parse the JSON response
+my $json = JSON->new->decode($content);
+unless ($json->{"status"} eq "success") {
+    print "*** ERROR: status=".$json->{"status"}.", error=".$json->{"error"}."\n";
+    exit(1);
+}
+
+my $adId = $json->{"adId"};
+my $destinationType = $json->{"destination"}->{"type"};
+my $destinationUrl = $json->{"destination"}->{"url"};
+my $components = $json->{"components"};
+my $adContent = $json->{"adContent"};
+if ($adContent) {
+  print "*** Ad Content:\n$adContent\n";
+}
+
+my @beaconUrls = ();
+
+# Display the response attributes
+print "------------------------------------------------------------\n";
+print "*** adId = $adId\n";
+if ($json->{"trackingId"}) {
+    print "*** trackingId = ".$json->{"trackingId"}."\n";
+}
+print "*** format = ".$json->{"format"}."\n";
+print "*** destination = $destinationUrl\n";
+if ($components) {
+    foreach my $compKey (keys(%$components)) {
+        my $component = $components->{$compKey};
+        foreach my $attr (keys(%$component)) {
+            my $value = $component->{$attr};
+            if ($value =~ /^(data:[^;]+;base64,).+/) {
+                print "*** $compKey.$attr = $1...(data not shown)\n";
+            }
+            else {
+                print "*** $compKey.$attr = ".$component->{$attr}."\n";
+            }
+            if ($compKey eq "beacons" && $attr =~ /^beacon(\d+)/) {
+              push(@beaconUrls, $component->{$attr});
+            }
+        }
+    }
+}
+
+# Load the internal/impression.jsp data to show details on the impression
+print "------------------------------------------------------------\n";
+print "*** Impression Data:\n";
+my $uaWithBasicAuth = LWP::UserAgent->new;
+$uaWithBasicAuth->timeout(30);
+$uaWithBasicAuth->credentials("$host:$port", "Internal Adserver Tools", "adfonic", "adfon1c");
+$response = $uaWithBasicAuth->get("$urlBase/internal/impression.jsp?impressionExternalID=$adId");
+my $key;
+my $applicationID;
+for (split /^/, $response->decoded_content) {
+    chomp($_);
+    if ($_ =~ /<th[^>]*>([^:<]+):?<\/th>/) {
+        $key = $1;
+        print "$1: ";
+    }
+    elsif ($_ =~ /<td[^>]*>([^<]+)<\/td>/) {
+        print "$1\n";
+        if ($key eq "Application ID") {
+            $applicationID = $1;
+        }
+    }
+}
+
+# Provide a beacon/click URL that passes the same IP and User-Agent as the
+# impression so it won't bump into a 401 due to mismatch
+$queryString = "?r.ip=$ipAddress&h.user-agent=" . CGI::escape($clickUserAgent) . "&r.id=" . CGI::escape($trackingId);
+print "------------------------------------------------------------\n";
+foreach (@beaconUrls) {
+  print "*** Beacon URL:\n$_$queryString\n";
+}
+print "*** Click URL:\n$destinationUrl$queryString\n";
+if (defined($applicationID)) {
+    %params = ();
+    $params{"d.udid"} = $udid;
+    $params{"d.dpid"} = $dpid;
+    $params{"d.openudid"} = $openudid;
+    $params{"d.odin-1"} = $odin1;
+    $params{"d.android"} = $androidId;
+    $params{"d.ifa"} = $ifa;
+    $queryString = "";
+    foreach my $key (sort(keys(%params))) {
+        if (length($queryString) > 0) {
+            $queryString .= '&';
+        }
+        $queryString .= $key;
+        $queryString .= '=';
+        $queryString .= CGI::escape($params{$key});
+    }
+    print "*** Install Tracking URL:\n$urlBase/is/$applicationID?$queryString\n";
+}

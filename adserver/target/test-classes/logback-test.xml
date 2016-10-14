@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset class="java.nio.charset.Charset">UTF-8</charset>
+			<pattern>%d|%-10t|%-5p|%c{40}: %m%n</pattern>
+		</encoder>
+		
+	</appender>
+
+	<logger name="org.apache.activemq" level="INFO" />
+	<logger name="org.apache.http" level="INFO" />
+	<logger name="org.apache.http.wire" level="DEBUG" />
+	<logger name="org.springframework" level="INFO" />
+	<logger name="org.springframework.web" level="INFO" />
+	<logger name="com.adfonic.quova" level="DEBUG" />
+	<logger name="com.adfonic.adsquare" level="DEBUG" />
+	<logger name="com.adfonic.data.cache" level="DEBUG" />
+	<logger name="com.adfonic.adserver.impl.AdEventLoggerImpl" level="DEBUG" />
+
+	<logger name="com.adfonic.data.cache.AbstractSerializableCacheS3Manager" level="INFO" />
+	<logger name="com.adfonic.adserver.impl.IconManagerImpl" level="INFO" />
+	<logger name="com.adfonic.adserver.impl.ArchiveV1BackupLoggerImpl" level="INFO" />
+	<logger name="com.adfonic.adserver.plugin" level="INFO" />
+	<logger name="com.adfonic.http" level="TRACE" />
+	
+	<logger name="com.adfonic.adserver" level="TRACE" /> 
+	<logger name="com.adfonic.cache" level="TRACE" /> 
+	<logger name="com.adfonic.util.status" level="TRACE" /> 
+	<logger name="com.adfonic.retargeting.redis" level="TRACE" />
+	
+	<!-- Silence bloody noisy backgroud threads -->
+	<turboFilter class="com.adfonic.adserver.logging.ThreadNameTurboFilter">
+    <Regex>main|http-nio.*|http-bio.*|.*startStop.*|.*JmsListener-.*</Regex>
+    <OnMatch>NEUTRAL</OnMatch>
+    <OnMismatch>DENY</OnMismatch>
+  </turboFilter> 
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  
+</configuration>

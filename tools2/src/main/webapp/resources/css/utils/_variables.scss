@@ -1,0 +1,51 @@
+/*=================== VARIABLES ===================*/
+
+/* Colours */
+$borderColour:  #bbbbbb;             // widget border colours
+$hoverColour:   #e7e7e7;
+
+$errorBgColour: 	#ffd4d4;
+$errorBorderColour: #e80b0b;
+
+$tblInnerBorderColour: #eeeeee;
+$tblOuterBorderColour: $borderColour;
+
+/* Byyd Colours */
+$byydPinkColour:       #e22a83;
+$byydTealColour:       #28aecc;
+$byydNavyColour:       #173343;
+$byydGreyColour:       #6d6e71;
+
+/* Gradients */
+
+/* grey */
+$btnTopGradientColour:        #f2f2f2;
+$btnBottomGradientColour:     #d6d6d6;
+
+/* red */
+$btnNoTopGradientColour:      #e57f7f;
+$btnNoBottomGradientColour:   #d05050;
+
+/* green */
+$btnYesTopGradientColour:     #a2d63f;
+$btnYesBottomGradientColour:  #78ae13;
+
+/* Fixed widths */
+$calendarWidth: 80px;
+
+/*===================  GRID  ===================*/
+$gridMarginRight: 3.8%;
+
+/* Grid width from Zurb Foundation: http://foundation.zurb.com/grid.html */
+$grid1Width:  8.33333%;
+$grid2Width:  16.66667%;
+$grid3Width:  25%;
+$grid4Width:  33.33333%;
+$grid5Width:  41.66667%;
+$grid6Width:  50%;
+$grid7Width:  58.33333%;
+$grid8Width:  66.66667%;
+$grid9Width:  75%;
+$grid10Width: 83.33333%;
+$grid11Width: 91.66667%;
+$grid12Width: 100%;

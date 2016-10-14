@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <!-- Paypal API Interface -->
+  <bean id="paypalInterface"
+        class="com.adfonic.paypal.PaypalInterface"
+        autowire="byName"
+        p:apiUrl="${paypal.api.url:https://api-3t.sandbox.paypal.com/nvp}"
+        p:apiUser="${paypal.api.user:seller_1240270587_biz_api1.adfonic.com}"
+        p:apiPassword="${paypal.api.password:1240270598}"
+        p:apiSignature="${paypal.api.signature:AFcWxV21C7fd0v3bYYYRCpSSRl31A4KDaI5LkeEzv4k7.fh6wXTrxy.m}"
+        p:expressCheckoutUrl="${paypal.expressCheckoutUrl:https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout}"/>
+    
+  
+</beans>

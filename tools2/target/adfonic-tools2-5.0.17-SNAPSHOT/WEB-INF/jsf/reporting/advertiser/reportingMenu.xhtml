@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:form id="menuForm" prependId="false">
+		
+		<pri:outputPanel id="side-panel" styleClass="ui-corner-all #{reportingNavigationSessionBean.menuStyleClass['section']}">
+
+			<!-- Campaigns -->
+            <section class="#{reportingNavigationSessionBean.menuStyleClass[Tools2Constants.REPORTING_CAMPAIGNS_CLASS]}">
+                <h2>
+                    <pri:commandLink id="campaignsMenuLinkId" actionListener="#{reportingNavigationSessionBean.doNavigateTo}"
+                                     process="@this" async="true" update=":menuForm,:reportingContent">
+                        <f:attribute name="navigateTo" value="#{Tools2Constants.REPORTING_MENU_NAVIGATE_TO_CAMPAIGNS}" />
+                        <pri:outputPanel layout="inline" styleClass="reporting-text">
+                            <pri:outputPanel styleClass="campaigns reporting-icon" /><br />
+                            <pri:outputLabel value="#{msg['page.reporting.campaigns.menu.label']}"/>
+                        </pri:outputPanel>
+                    </pri:commandLink>
+                </h2>
+            </section>
+            
+            <!-- Devices -->
+            <section class="#{reportingNavigationSessionBean.menuStyleClass[Tools2Constants.REPORTING_DEVICES_CLASS]}">
+                <h2>
+                    <pri:commandLink id="devicesMenuLinkId" actionListener="#{reportingNavigationSessionBean.doNavigateTo}"
+                                     process="@this" async="true" update=":menuForm,:reportingContent">
+                        <f:attribute name="navigateTo" value="#{Tools2Constants.REPORTING_MENU_NAVIGATE_TO_DEVICES}" />
+                        <pri:outputPanel layout="inline" styleClass="reporting-text">
+                            <pri:outputPanel styleClass="devices reporting-icon" /><br />
+                            <pri:outputLabel value="#{msg['page.reporting.devices.menu.label']}"/>
+                        </pri:outputPanel>
+                    </pri:commandLink>
+                </h2>
+            </section>
+            
+            <!-- Budgets -->
+            <section class="#{reportingNavigationSessionBean.menuStyleClass[Tools2Constants.REPORTING_BUDGETS_CLASS]}">
+                <h2>
+                    <pri:commandLink id="budgetsMenuLinkId" actionListener="#{reportingNavigationSessionBean.doNavigateTo}"
+                                     process="@this" async="true" update=":menuForm,:reportingContent">
+                       <f:attribute name="navigateTo" value="#{Tools2Constants.REPORTING_MENU_NAVIGATE_TO_BUDGETS}" />
+                        <pri:outputPanel layout="inline" styleClass="reporting-text">
+                            <pri:outputPanel styleClass="budgets reporting-icon" /><br />
+                            <pri:outputLabel value="#{msg['page.reporting.budgets.menu.label']}"/>
+                        </pri:outputPanel>
+                    </pri:commandLink>
+                </h2>
+            </section>
+            
+            <!-- Creatives -->
+            <section class="#{reportingNavigationSessionBean.menuStyleClass[Tools2Constants.REPORTING_CREATIVES_CLASS]}">
+                <h2>
+                    <pri:commandLink id="creativesMenuLinkId" actionListener="#{reportingNavigationSessionBean.doNavigateTo}"
+                                     process="@this" async="true" update=":menuForm,:reportingContent">
+                        <f:attribute name="navigateTo" value="#{Tools2Constants.REPORTING_MENU_NAVIGATE_TO_CREATIVES}" />
+                        <pri:outputPanel layout="inline" styleClass="reporting-text">
+                            <pri:outputPanel styleClass="creatives reporting-icon" /><br />
+                            <pri:outputLabel value="#{msg['page.reporting.creatives.menu.label']}"/>
+                        </pri:outputPanel>
+                    </pri:commandLink>
+                </h2>
+            </section>
+            
+            <!-- Locations -->
+            <section class="#{reportingNavigationSessionBean.menuStyleClass[Tools2Constants.REPORTING_LOCATIONS_CLASS]}">
+                <h2>
+                    <pri:commandLink id="locationsMenuLinkId" actionListener="#{reportingNavigationSessionBean.doNavigateTo}"
+                                     process="@this" async="true" update=":menuForm,:reportingContent">
+                        <f:attribute name="navigateTo" value="#{Tools2Constants.REPORTING_MENU_NAVIGATE_TO_LOCATIONS}" /> 
+                        <pri:outputPanel layout="inline" styleClass="reporting-text">
+                            <pri:outputPanel styleClass="locations reporting-icon" /><br />
+                            <pri:outputLabel value="#{msg['page.reporting.locations.menu.label']}"/>
+                        </pri:outputPanel>
+                    </pri:commandLink>
+                </h2>
+            </section>
+            
+            <!-- Connections -->
+            <section class="#{reportingNavigationSessionBean.menuStyleClass[Tools2Constants.REPORTING_CONNECTIONS_CLASS]}">
+                <h2>
+                    <pri:commandLink id="connectionsMenuLinkId" actionListener="#{reportingNavigationSessionBean.doNavigateTo}"
+                                     process="@this" async="true" update=":menuForm,:reportingContent">
+                        <f:attribute name="navigateTo" value="#{Tools2Constants.REPORTING_MENU_NAVIGATE_TO_CONNECTIONS}" />
+                        <pri:outputPanel layout="inline" styleClass="reporting-text">
+                            <pri:outputPanel styleClass="connections reporting-icon" /><br />
+                            <pri:outputLabel value="#{msg['page.reporting.connections.menu.label']}"/>
+                        </pri:outputPanel>
+                    </pri:commandLink>
+                </h2>
+            </section>
+
+		</pri:outputPanel>
+	</h:form>
+</ui:composition>

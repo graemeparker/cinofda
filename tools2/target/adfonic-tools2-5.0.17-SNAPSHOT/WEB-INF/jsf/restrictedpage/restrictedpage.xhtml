@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+    <ui:composition template="/WEB-INF/jsf/template/layouts/errorLayout.xhtml">
+        <ui:define name="content">
+            <!-- CONTAINER -->
+            <div class="content">
+                <!-- ROW -->
+                <div class="row">
+                    <!-- MAIN CONTENT -->
+                    <div class="twelvecol last">
+                        <!-- LOGIN FORM -->
+                        <article>
+                            <div>
+                                <h1>#{msg['page.error.whoops']}</h1>
+
+                                <h2>#{msg['page.restricted.needpermision']}</h2>
+                            </div>
+
+                            <div>
+				             <c:if test="${request.remoteUser != null}">
+				                <p>
+				                    <h:outputText value="#{msg['page.restricted.signedin']} "/>
+				                    <span class="usr-mail"><h:outputText value="#{request.remoteUser}" /></span>
+				                    <h:outputText value="#{msg['page.restricted.nopermision']}" />
+				                </p>
+				             </c:if>
+                                <p>#{msg['page.restricted.request']}</p>
+                                <div>
+                                    <pri:commandButton value="#{msg['page.restricted.chooseaccount']}" type="button" onclick="window.location='${request.contextPath}/logout'"/>
+                                </div>
+                            </div>
+                        </article>
+                        <div class="error-image">
+                            <pri:graphicImage alt="" id="errorPageImageId" url="/resources/images/image_404.jpg"/>
+                        </div>
+                        <!-- LOGIN FORM END -->
+                    </div>
+                    <!-- END MAIN CONTENT -->
+                    <div class="clear"></div>
+                </div>
+                <!-- END ROW -->
+            </div>
+            <!-- END CONTAINER -->
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

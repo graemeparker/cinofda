@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.byyd.middleware.creative.service.jpa.TestCreativeEligibilityManagerJpaImpl
+-------------------------------------------------------------------------------
+Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.148 sec - in com.byyd.middleware.creative.service.jpa.TestCreativeEligibilityManagerJpaImpl

@@ -1,0 +1,62 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+		<pri:dialog id="fundsAcrossDialogId" widgetVar="fundsAcrossDialog"
+			modal="true" resizable="false"
+			header="#{msg['page.transactions.fundsacross.dialog.header']}">
+			<h:form id="fundsAcrossForm" prependId="false">
+				
+				<div class="form-row message">
+					<p>#{msg['page.transactions.fundsacross.dialog.p1']}</p>
+				</div>
+				
+				<div class="form-row message current-earnings">
+					<p>#{msg['page.transactions.fundsacross.dialog.publisher.earnings']}</p>
+					<p class="publisher-balance">
+						<h:outputText
+							value="#{transactionMBean.transactionFundsAcrossMBean.publisherBalance}">
+							<f:convertNumber type="currency" currencySymbol="$" />
+						</h:outputText>
+					</p>
+				</div>
+				
+				<div class="form-row">
+					<h:outputLabel styleClass="bl b"
+						value="#{msg['page.transactions.fundsacross.dialog.amount']}" />
+					<pri:inputText id="fundsAcrossAmount" required="true"
+						requiredMessage="#{msg['page.transactions.fundsacross.dialog.amount.required']}"
+						value="#{transactionMBean.transactionFundsAcrossMBean.amount}"
+						validator="#{transactionMBean.transactionFundsAcrossMBean.validateAmount}" />
+					<pri:message id="fundsAcrossMessageId" for="fundsAcrossAmount" />
+					<pri:watermark for="fundsAcrossAmount" value="#{msg['page.transactions.transferfunds.amount.watermark']}" />
+				</div>
+
+				<div class="form-row">
+					<pri:commandButton
+						value="#{msg['page.transactions.fundsacross.dialog.save.label']}"
+						id="saveFundsAcrossButton" onclick="progressDialog.show();"
+						oncomplete="progressDialog.hide()"
+						actionListener="#{transactionMBean.transactionFundsAcrossMBean.doSave}"
+						process="@form" update="@form, :menuForm:side-panel, :transactionForm, :headerForm:balance">
+					</pri:commandButton>
+
+					<pri:commandButton
+						value="#{msg['page.transactions.fundsacross.dialog.cancel.label']}"
+						id="cancelFundsAcrossButton"
+						actionListener="#{transactionMBean.transactionFundsAcrossMBean.doCancel}"
+						onclick="fundsAcrossDialog.hide();"
+						update="@form, :menuForm:side-panel">
+					</pri:commandButton>
+				</div>
+			</h:form>
+		</pri:dialog>
+	</h:body>
+</ui:composition>

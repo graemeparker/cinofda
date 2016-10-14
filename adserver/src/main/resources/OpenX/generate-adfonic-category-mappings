@@ -1,0 +1,40 @@
+#! /usr/bin/perl
+
+use strict;
+use warnings;
+use Text::CSV;
+
+my $inputFile = "adfonic-iabid-to-openx-category.csv";
+my $categoryOutputFile = "adfonic-iabid-to-openx-category.properties";
+my $contentOutputFile = "adfonic-iabid-to-openx-content.properties";
+
+my $numHeaderLines = 2;
+
+my $csv = Text::CSV->new();
+
+# Replace carriage returns with newlines (Excel sucks)
+# Use awk to skip the first N line(s), the header line(s)
+open (INPUT, "-|", "cat $inputFile | tr '\r' '\n' | awk '{if(NR > $numHeaderLines) print}'") or die $!;
+
+open(CATEGORY_OUTPUT, ">$categoryOutputFile");
+open(CONTENT_OUTPUT, ">$contentOutputFile");
+
+while (<INPUT>) {
+    $csv->parse($_) || die "Failed to parse line: $_";
+
+    # ID,NAME,PARENT_ID,CATEGORY_ORDER,IAB_ID,CHANNEL_ID,OpenX Parent Category,OpenX Parent Category ID,Open X Ad Attribute,OpenX Ad Attribute ID
+    my @columns = $csv->fields();
+    my $iabId = $columns[4];
+    my $oxCategoryId = $columns[7];
+    my $oxContentId = $columns[9];
+    
+    print "Adfonic Category $iabId => $oxCategoryId\n";
+    print CATEGORY_OUTPUT "$iabId=$oxCategoryId\n";
+
+    if ($oxContentId) {
+        print "Adfonic Category $iabId => $oxContentId\n";
+        print CONTENT_OUTPUT "$iabId=$oxContentId\n";
+    }
+}
+close(INPUT);
+close(OUTPUT);

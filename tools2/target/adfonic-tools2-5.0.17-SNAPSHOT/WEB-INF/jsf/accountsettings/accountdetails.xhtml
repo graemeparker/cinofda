@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+<h:body>
+    <ui:composition template="#{userSessionBean.publisher ? '/WEB-INF/jsf/template/layouts/publisherLayout.xhtml' : '/WEB-INF/jsf/template/layouts/layout.xhtml'}">
+<!--         <ui:define name="header">
+        	
+        	<ui:include src="/WEB-INF/jsf/template/common/advertiserHeader.xhtml" />
+        	<ui:include src="/WEB-INF/jsf/template/common/publisherHeader.xhtml" />
+        </ui:define> -->
+        <ui:define name="content">
+        	<div id="accountsettings-page" class="content ovh">
+			    <div class="row main-add-panel">
+				    <pri:outputPanel styleClass="fourcol">
+						<ui:include src="/WEB-INF/jsf/accountsettings/accountsettingsmenu.xhtml">
+							<ui:param name="currentMenu" value="accDetails" />
+						</ui:include>
+				    </pri:outputPanel>
+			                   
+				    <div id="navigationDiv" class="eightcol last">
+						<section id="accDetails" class="form-box ui-corner-all">
+						
+							<table>
+								<tr>
+									<td>
+										<h2 style="font-size:18px;"><h:outputText value="#{msg['page.account.settings.menu.details']}"/></h2>
+									</td> 
+									<td>
+						    			<h:outputText style="padding-left:20px;font-style:italic" rendered="#{userSessionBean.advertiser}" value="(Advertiser ID: #{accountDetailsMBean.advertiserId})"/>
+						    		</td>
+						    	</tr>
+						    </table>
+						    
+						    <h:form id="accDetailsForm" prependId="false">
+						    	<!-- EMAIL -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+						    		<h:outputLabel styleClass="bl b" id="emailLabel" for="emailInput"
+						                           value="#{msg['page.account.settings.accountdetails.email.label']}"/>
+						            <pri:inputText  id="emailInput"
+						            			    styleClass="bl" 
+						            			    value="#{accountDetailsMBean.email}" 
+						            			    size="50"
+						            			    maxlength="254"
+							            		    required="true"
+						            			    requiredMessage="#{msg['page.account.settings.accountdetails.email.required']}"
+						            			    validator="EmailValidator"
+						            			    validatorMessage="#{msg['page.account.settings.accountdetails.email.validation']}" 	/>        				
+						            <pri:message id="emailInputMessage" for="emailInput"/>
+						    	</h:panelGroup>
+						    	
+						    	<!-- ACCOUNT TYPE -->
+						    	<h:panelGroup styleClass="form-row" layout="block" rendered="#{!userSessionBean.agencyUser}">
+						    		<h:outputLabel styleClass="bl b" id="accountTypeLabel" for="accountTypeInput"
+						                           value="#{msg['page.account.settings.accountdetails.accounttype.label']}"/>
+						            <pri:selectManyButton  styleClass="long" 
+							            				   id="accountTypeInput" 
+							            				   value="#{accountDetailsMBean.accountTypes}" 
+							            				   required="true"
+						            			    	   requiredMessage="#{msg['page.account.settings.accountdetails.accounttype.required']}">
+							        	<f:selectItem itemLabel="#{msg['page.account.settings.accountdetails.accounttype.advertiser.label']}" 
+								        			  itemValue="#{accountDetailsMBean.advertiserAccountType}"/>
+								        <f:selectItem itemLabel="#{msg['page.account.settings.accountdetails.accounttype.publisher.label']}" 
+								        			  itemValue="#{accountDetailsMBean.publisherAccountType}"/>
+						            </pri:selectManyButton>
+						            <pri:message id="accountTypeInputMessage" for="accountTypeInput"/>
+						    	</h:panelGroup>
+						    	
+						    	<!-- COMPANY -->
+						    	<h:panelGroup styleClass="form-row" layout="block" rendered="#{!userSessionBean.agencyUser or userSessionBean.adminAgency}">
+						    		<h:outputLabel styleClass="bl b" id="companyLabel" for="companyInput"
+						                           value="#{msg['page.account.settings.accountdetails.company.label']}"/>
+						            <pri:inputText  id="companyInput"
+						            			    styleClass="bl" 
+						            			    value="#{accountDetailsMBean.companyName}" 
+						            			    size="50"
+						            			    maxlength="254"
+						            			    converter="stringTrimConverter"/>
+						            <pri:watermark for="companyInput" value="#{msg['page.label.optional']}" />       				
+						            <pri:message id="companyInputMessage" for="companyInput"/>
+						    	</h:panelGroup>
+						    	
+						    	<!-- FIRST NAME -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+						    		<h:outputLabel styleClass="bl b" id="firstnameLabel" for="firstnameInput"
+						                           value="#{msg['page.account.settings.accountdetails.firstname.label']}"/>
+						            <pri:inputText  id="firstnameInput"
+						            			    styleClass="bl" 
+						            			    value="#{accountDetailsMBean.firstName}" 
+						            			    size="50"
+						            			    maxlength="254"
+							            		    required="true"
+						            			    requiredMessage="#{msg['page.account.settings.accountdetails.firstname.required']}"
+						            			    converter="stringTrimConverter"/>        				
+						            <pri:message id="firstnameInputMessage" for="firstnameInput"/>
+						    	</h:panelGroup>
+						    	
+						    	<!-- SURNAME -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+						    		<h:outputLabel styleClass="bl b" id="surnameLabel" for="surnameInput"
+						                           value="#{msg['page.account.settings.accountdetails.surname.label']}"/>
+						            <pri:inputText  id="surnameInput"
+						            			    styleClass="bl" 
+						            			    value="#{accountDetailsMBean.lastname}" 
+						            			    size="50"
+						            			    maxlength="254"
+							            		    required="true"
+						            			    requiredMessage="#{msg['page.account.settings.accountdetails.surname.required']}"
+						            			    converter="stringTrimConverter"/>        				
+						            <pri:message id="surnameInputMessage" for="surnameInput"/>
+						    	</h:panelGroup>
+						    	
+						    	<!-- ALIAS -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+						    		<h:outputLabel styleClass="bl b" id="aliasLabel" for="aliasInput"
+						                           value="#{msg['page.account.settings.accountdetails.alias.label']}"/>
+						            <h:outputText  id="aliasDetail"
+						            			   value="#{msg['page.account.settings.accountdetails.alias.detail']}" />
+						            <h:outputText  id="aliasInput"
+						            			   styleClass="bl" 
+						            			   value="#{accountDetailsMBean.alias}" />
+						    	</h:panelGroup>
+						    	
+						    	<!--  DEVELOPER KEY for API -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+                                    <h:outputLabel styleClass="bl b" id="developerKeyLabel" for="developerKeyInput"
+                                                   value="#{msg['page.account.settings.accountdetails.developerkey.label']}"/>
+                                                   <h:outputText  id="developerKeyInput"
+                                                   styleClass="bl" 
+                                                   value="#{accountDetailsMBean.developerKey}" />
+						    	</h:panelGroup>
+						    	
+						    	<!-- COUNTRY -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+						    		<h:outputLabel styleClass="bl b" id="countryLabel" for="countryInput"
+						                           value="#{msg['page.account.settings.accountdetails.country.label']}"/>
+						            <pri:selectOneMenu styleClass="long" 
+						            				   id="countryInput" 
+						            				   value="#{accountDetailsMBean.country}"
+						            				   converter="com.adfonic.tools.converter.country.CountryConverter">
+								        <f:selectItem itemLabel="#{accountDetailsMBean.GBCountry.name}" itemValue="#{accountDetailsMBean.GBCountry}" />
+								        <f:selectItem itemLabel="#{accountDetailsMBean.USCountry.name}" itemValue="#{accountDetailsMBean.USCountry}" />
+								        <f:selectItems value="#{accountDetailsMBean.allCountries}" var="l" itemLabel="#{l.name}" itemValue="#{l}"/>
+								        <pri:ajax event="change" update="vatnumberPanel" process="accDetailsForm"></pri:ajax>
+								    </pri:selectOneMenu>
+						    	</h:panelGroup>
+						    	
+						    	<!-- VAT NUMBER -->
+						    	<h:panelGroup id="vatnumberPanel" styleClass="form-row" layout="block" >
+						    		<h:panelGroup rendered="#{accountDetailsMBean.country.taxRegime eq 'UK' or accountDetailsMBean.country.taxRegime eq 'EU'}" layout="block">
+							    		<h:outputLabel styleClass="bl b" id="vatnumberLabel" for="vatnumberInput"
+							                           value="#{msg['page.account.settings.accountdetails.vatnumber.label']}"/>
+							            <h:outputText  id="vatnumberDetail"
+							            			   value="#{msg['page.account.settings.accountdetails.vatnumber.detail']}" />   
+							            <pri:inputText  id="vatnumberInput"
+							            			    styleClass="bl" 
+							            			    value="#{accountDetailsMBean.taxCode}" 
+							            			    size="50"
+							            			    maxlength="254"
+							            			    converter="stringTrimConverter"/>
+							            <span class="optional"><h:outputText value="#{msg['page.label.optional']}"/></span>        				
+							            <pri:message id="vatnumberInputMessage" for="vatnumberInput"/>
+							    	</h:panelGroup>
+						    	</h:panelGroup>
+						    	
+						    	<!-- PHONE -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+						    		<h:outputLabel styleClass="bl b" id="phoneLabel" for="phoneInput"
+						                           value="#{msg['page.account.settings.accountdetails.phone.label']}"/>
+						            <pri:inputText  id="phoneInput"
+						            			    styleClass="bl" 
+						            			    value="#{accountDetailsMBean.phone}" 
+						            			    size="50"
+						            			    maxlength="254"
+							            		    required="true"
+						            			    requiredMessage="#{msg['page.account.settings.accountdetails.phone.required']}"
+						            			    validator="PHONEValidator"
+						            			    validatorMessage="#{msg['page.account.settings.accountdetails.phone.validation']}"/>        				
+						            <pri:message id="phoneInputMessage" for="phoneInput"/>
+						    	</h:panelGroup>
+						    	
+						    	<!-- TIMEZONE -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+						    		<h:outputLabel styleClass="bl b" id="timezoneLabel" for="timezoneInput"
+						                           value="#{msg['page.account.settings.accountdetails.timezone.label']}"/>
+						            <pri:selectOneMenu styleClass="long" 
+						            				   id="timezoneInput" 
+						            				   value="#{accountDetailsMBean.timezone}"
+						            				   converter="com.adfonic.tools.converter.timezone.TimezoneConverter">
+								        <f:selectItems value="#{accountDetailsMBean.allTimezones}" var="l" itemLabel="#{l.description}" itemValue="#{l}" />
+								    </pri:selectOneMenu>
+						    	</h:panelGroup>
+						    	
+						    	<!-- INVOICE TIMEZONE -->
+						    	<h:panelGroup styleClass="form-row" layout="block" rendered="#{!userSessionBean.agencyUser or userSessionBean.adminAgency}">
+						    		<h:outputLabel styleClass="bl b" id="invoiceTimezoneLabel" for="invoiceTimezoneInput"
+						                           value="#{msg['page.account.settings.accountdetails.invoicetimezone.label']}"/>
+						            <pri:selectOneMenu styleClass="long" 
+						            				   id="invoiceTimezoneInput" 
+						            				   value="#{accountDetailsMBean.invoiceDateInGMT}">
+								        <f:selectItem itemLabel="#{msg['page.account.settings.accountdetails.invoicetimezone.accountoption.label']}" itemValue="false"/>
+								        <f:selectItem  itemLabel="#{accountDetailsMBean.timezoneGMT.description}" itemValue="true" />
+								    </pri:selectOneMenu>
+						    	</h:panelGroup>
+						    	
+						    	<!-- UPDATE BUTTON -->
+						    	<h:panelGroup styleClass="form-row" layout="block">
+ 					            	<pri:commandButton id="updateButton" 
+ 					            					   value="#{msg['page.account.settings.accountdetails.updatebutton']}"
+ 					            					   onclick="if (jQuery('#emailInput').val()=='#{accountDetailsMBean.email}'){ progressDialog.show(); return true;} else {confirmation.show(); return false;}"
+ 					            					   oncomplete="progressDialog.hide();"
+ 					            					   action="#{accountDetailsMBean.doSave}"
+								        			   update="accDetailsForm"
+								        			   process="accDetailsForm"/>
+ 					            	<pri:message id="updateButtonMessage" for="updateButton"/>
+ 					            	
+ 					            	<pri:confirmDialog id="confirmDialog" 
+ 					            					   severity="alert" 
+ 					            					   widgetVar="confirmation"
+ 					            					   styleClass="btns">  
+								        <pri:commandButton id="confirm" 
+								        				   value="#{msg['page.account.settings.accountdetails.confirmation.yes']}" 
+								        				   onclick="confirmation.hide();progressDialog.show();"
+								        				   oncomplete="progressDialog.hide();"
+								        				   action="#{accountDetailsMBean.doSave}"
+								        				   update="accDetailsForm"
+								        				   process="accDetailsForm"/>  
+								        <pri:commandButton id="decline"
+								        				   value="#{msg['page.account.settings.accountdetails.confirmation.no']}"
+								        				   onclick="confirmation.hide();"/>
+								        <f:facet name="message">
+									        <pri:outputPanel>
+									            <h:outputFormat value="#{msg['page.account.settings.accountdetails.confirmation.message']}" escape="false"/>
+									        </pri:outputPanel>
+									    </f:facet> 
+								    </pri:confirmDialog>
+				            	</h:panelGroup>
+						    </h:form>
+						</section>
+				    </div>	
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

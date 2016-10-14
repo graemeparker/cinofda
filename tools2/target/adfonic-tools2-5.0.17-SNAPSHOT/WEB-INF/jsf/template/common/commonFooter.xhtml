@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <footer>
+        <div class="row version">
+            <f:view>
+            Copyright &#169; <h:outputText value="#{toolsApplicationBean.currentDate}"><f:convertDateTime pattern="yyyy" /></h:outputText> <h:outputText value=" #{toolsApplicationBean.companyLegalName} " /> (Version: <h:outputText value="#{applicationScope.appAttributes['Implementation-Version']}" /> Build: <h:outputText value="#{applicationScope.appAttributes['Build']}" />)
+            </f:view>
+            <nav>
+                <a href="#{toolsApplicationBean.externalUrls['termsAndConditionsUrl']}">Terms &amp; conditions</a>
+                <a href="#{toolsApplicationBean.externalUrls['privacyPolicyUrl']}">Privacy policy</a>
+                <a href="#{toolsApplicationBean.externalUrls['endUserPrivacyPolicyUrl']}">End user privacy policy</a>
+            </nav>
+        </div>
+    </footer>
+
+</ui:composition>

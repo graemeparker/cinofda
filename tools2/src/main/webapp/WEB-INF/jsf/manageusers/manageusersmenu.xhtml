@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+<h:form id="menuForm" prependId="false">
+<h:panelGroup id="panelSectionGroup" layout="block" class="settingsMenu">  
+	<div id="settingsMenuHeader">
+		Account settings
+		<span id="settingeMenuCog"></span>
+	</div>
+	
+	<ul>
+	    <pri:commandLink disabled="#{currentMenu eq 'companySettings' ? true : false}" action="pretty:companySettings" process="@this">
+            <li class="#{currentMenu eq 'companySettings' ? 'selectedMenu' : ''}">
+                <span class="label"><h:outputText value="#{msg['page.agency.settings.menu.companysettings']}"/></span>
+            </li>                               
+        </pri:commandLink>
+	    <pri:commandLink disabled="#{currentMenu eq 'addUser' ? true : false}" action="pretty:newUser" process="@this">
+		    <li class="#{currentMenu eq 'addUser' ? 'selectedMenu' : ''}">
+		        <span class="label"><h:outputText value="#{msg['page.agency.settings.menu.newUser']}"/></span>
+		    </li>								
+	    </pri:commandLink>	
+	    <pri:commandLink disabled="#{currentMenu eq 'removeUser' ? true : false}" action="pretty:removeUser" process="@this">
+		    <li class="#{currentMenu eq 'removeUser' ? 'selectedMenu' : ''}">
+		        <span class="label"><h:outputText value="#{msg['page.agency.settings.menu.removeUser']}"/></span>
+		    </li>						
+	    </pri:commandLink>	
+	    <pri:commandLink disabled="#{currentMenu eq 'reactivateUser' ? true : false}" action="pretty:reactivateUsers" process="@this">
+		    <li class="#{currentMenu eq 'reactivateUser' ? 'selectedMenu' : ''}">
+		        <span class="label"><h:outputText value="#{msg['page.agency.settings.menu.reactivateUser']}"/></span>
+		    </li>								
+	    </pri:commandLink>	
+	    <pri:commandLink disabled="#{currentMenu eq 'manageUsers' ? true : false}" action="pretty:manageUsers" process="@this">
+		    <li class="#{currentMenu eq 'manageUsers' ? 'selectedMenu' : ''}">
+		        <span class="label"><h:outputText value="#{msg['page.agency.settings.menu.manageUsers']}"/></span>
+		    </li>	   							
+	    </pri:commandLink>	
+	    <pri:commandLink disabled="#{currentMenu eq 'resetPassword' ? true : false}" action="pretty:resetPassword" process="@this">
+		    <li class="#{currentMenu eq 'resetPassword' ? 'selectedMenu' : ''}">
+		        <span class="label"><h:outputText value="#{msg['page.agency.settings.menu.resetPassword']}"/></span>
+		    </li>	   							
+	    </pri:commandLink>	    	    	    	    	    
+	</ul>
+</h:panelGroup>
+</h:form>
+</h:body>
+</html>

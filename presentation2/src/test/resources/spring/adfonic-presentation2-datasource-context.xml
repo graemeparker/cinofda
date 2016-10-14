@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    ">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="classpath:adfonic-presentation2-test.properties"/>
+
+	<bean id="dashBoardDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		p:driverClassName="${tools.jdbc.driverClassName:com.mysql.jdbc.Driver}"
+		p:url="${tools.jdbc.url:jdbc:mysql://localhost:3306/adfonic?autoReconnect=true}"
+		p:username="${tools.jdbc.username:adfonic}" p:password="${tools.jdbc.password:adfon1c}"
+		p:maxActive="${tools.dbcp.maxActive:20}" p:maxWait="${tools.dbcp.maxWait:5000}"
+		p:minIdle="${tools.dbcp.minIdle:3}" p:maxIdle="${tools.dbcp.maxIdle:10}"
+		p:validationQuery="${tools.dbcp.validationQuery:/* ping */ SELECT 1}"
+		p:testOnBorrow="true" p:defaultTransactionIsolation="4"
+		p:removeAbandoned="true" p:removeAbandonedTimeout="300"
+		p:logAbandoned="true" />
+		
+	<bean id="reportingDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+         p:url="${reporting.jdbc.url:jdbc:mysql://devdb01:3306/tools_dashboard?autoReconnect=true}"
+         p:user="${reporting.jdbc.username:adfonic}"
+         p:password="${reporting.jdbc.password:adfon1c}"/>
+
+	<bean id="readOnlyDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName" destroy-method="close"
+		p:driverClassName="${tools-read-only.jdbc.driverClassName:com.mysql.jdbc.Driver}"
+		p:url="${tools.read-only.jdbc.url:jdbc:mysql://localhost:3306/adfonic?autoReconnect=true}"
+		p:username="${tools.read-only.jdbc.username:adfonic}" p:password="${tools.read-only.jdbc.password:adfon1c}"
+		p:maxActive="${tools.read-only.dbcp.maxActive:20}" p:maxWait="${tools.read-only.dbcp.maxWait:5000}"
+		p:minIdle="${tools.read-only.dbcp.minIdle:3}" p:maxIdle="${tools.read-only.dbcp.maxIdle:10}"
+		p:validationQuery="${tools.read-only.dbcp.validationQuery:/* ping */ SELECT 1}"
+		p:testOnBorrow="true" p:defaultTransactionIsolation="4"
+		p:removeAbandoned="true" p:removeAbandonedTimeout="300"
+		p:logAbandoned="true" />
+		
+	<bean id="readOnlyDataSourceForPublicationApproval"
+		class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.read-only.pub-approval.jdbc.driverClassName}"
+        p:url="${tools.read-only.pub-approval.jdbc.url}"
+        p:username="${tools.read-only.pub-approval.jdbc.username}"
+        p:password="${tools.read-only.pub-approval.jdbc.password}"
+        p:initialSize="${tools.read-only.pub-approval.dbcp.initialSize:0}"
+        p:maxActive="${tools.read-only.pub-approval.dbcp.maxActive}"
+        p:maxWait="${tools.read-only.pub-approval.dbcp.maxWait:-1}"
+        p:minIdle="${tools.read-only.pub-approval.dbcp.minIdle:0}"
+        p:maxIdle="${tools.read-only.pub-approval.dbcp.maxIdle}"
+        p:testOnBorrow="${tools.read-only.pub-approval.dbcp.testOnBorrow:true}"
+        p:validationQuery="${tools.read-only.pub-approval.dbcp.validationQuery}"
+        p:validationQueryTimeout="${tools.read-only.pub-approval.dbcp.validationQueryTimeout:-1}"
+        p:testOnReturn="${tools.read-only.pub-approval.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${tools.read-only.pub-approval.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tools.read-only.pub-approval.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tools.read-only.pub-approval.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.read-only.pub-approval.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+</beans>

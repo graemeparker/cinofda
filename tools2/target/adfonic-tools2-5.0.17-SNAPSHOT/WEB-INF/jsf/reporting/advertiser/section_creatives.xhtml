@@ -1,0 +1,119 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Creatives reporting options -->
+
+    <h:form prependId="false">
+	    <section id="creatives" class="form-box ui-corner-all">
+		    <h2 class="sec-title">#{msg['page.reporting.creatives.menu.label']}</h2>
+	        <pri:panelGrid id="grid" styleClass="panelGrid">
+
+                <pri:row>
+                    <!-- Campaign selection -->
+                    <pri:column colspan="2">    
+					    <h:outputLabel styleClass="bl b" for="campaignSelection" value="#{msg['page.reporting.commons.campaigns.label']}" />
+					    <pri:selectOneMenu id="campaignSelection"
+					                       value="#{advertiserCreativeReportingMBean.selectedCampaignId}" 
+					                       filter="true" filterMatchMode="contains"
+					                       styleClass="campaignSelectionStyle" panelStyleClass="campaignSelectionPanelStyle">
+					        <f:selectItem itemLabel="#{advertiserCreativeReportingMBean.allCampaignLabel}" />
+					        <f:selectItems value="#{advertiserCreativeReportingMBean.campaigns}" var="campaign" itemLabel="#{campaign.name}" itemValue="#{campaign.id}"/>
+					        <pri:ajax onstart="progressDialog.show()" oncomplete="progressDialog.hide()"
+					                  update="creativeSelectMenu" listener="#{advertiserCreativeReportingMBean.updateCreatives}"/>
+					    </pri:selectOneMenu>
+                    </pri:column>
+                </pri:row>
+                
+                <pri:row>
+                    <!-- Creative selection -->
+                    <pri:column colspan="2">
+                        <h:outputLabel for="creativeSelectMenu" value="#{msg['page.reporting.creative.creatives.select.label']}" styleClass="bl b" />
+                        <pri:selectOneMenu id="creativeSelectMenu"
+                                           value="#{advertiserCreativeReportingMBean.selectedCreativeId}" 
+                                           filter="true" filterMatchMode="contains"
+                                           styleClass="campaignSelectionStyle" panelStyleClass="campaignSelectionPanelStyle">
+                            <f:selectItem itemLabel="#{msg['page.reporting.creative.creatives.item.all']}" />
+                            <f:selectItems value="#{advertiserCreativeReportingMBean.creatives}" var="creative" itemLabel="#{creative.name}" itemValue="#{creative.id}" />
+                        </pri:selectOneMenu>
+                    </pri:column>
+                </pri:row>
+                
+                <pri:row>
+                    <!-- Format selection -->
+                    <pri:column colspan="2">
+                        <h:outputLabel for="formatSelectMenu" value="#{msg['page.reporting.creative.formats.select.label']}" styleClass="bl b" />
+                        <pri:selectOneMenu id="formatSelectMenu"
+                                           value="#{advertiserCreativeReportingMBean.selectedFormatId}" 
+                                           filter="true" filterMatchMode="contains"
+                                           styleClass="campaignSelectionStyle" panelStyleClass="campaignSelectionPanelStyle">
+                            <f:selectItem itemLabel="#{msg['page.reporting.creative.formats.item.all']}" />
+                            <f:selectItems value="#{advertiserCreativeReportingMBean.formats}" var="format" itemLabel="#{format.name}" itemValue="#{format.id}" />
+                        </pri:selectOneMenu>
+                    </pri:column>
+                </pri:row>
+                
+                <pri:row>
+                    <!-- Group by Category -->
+                    <pri:column>
+                        <pri:selectBooleanCheckbox value="#{advertiserCreativeReportingMBean.groupByCategory}"
+                                                   itemLabel="#{msg['page.reporting.commons.groupby.category.label']}"/>
+                    </pri:column>
+                    
+                    <!-- Group by Inventory Source -->
+                    <pri:column>
+                        <pri:selectBooleanCheckbox value="#{advertiserCreativeReportingMBean.groupByInventory}"
+                                                   itemLabel="#{msg['page.reporting.commons.groupby.inventory.label']}"/>
+                    </pri:column>
+                </pri:row>
+                
+                <pri:row>
+                    <!-- Start Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/start_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserCreativeReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+
+                    <!-- End Date -->
+                    <pri:column>
+                        <ui:include src="/WEB-INF/jsf/reporting/commons/end_date_template.xhtml">
+                            <ui:param name="reportingMBean" value="#{advertiserCreativeReportingMBean}" />
+                        </ui:include>
+                    </pri:column>
+                </pri:row>
+
+                <pri:row>
+                    <!-- Detailed statistic for period -->
+                    <pri:column colspan="2">
+                        <pri:selectBooleanCheckbox id="detailedByDay" value="#{advertiserCreativeReportingMBean.detailedByDay}"
+                                                   itemLabel="#{msg['page.reporting.commons.detailed.by.day.label']}"/>
+                    </pri:column>
+                </pri:row>
+
+                <pri:row>
+                    <!-- Generate Report -->
+                    <pri:column colspan="2">
+	                    <ui:include src="/WEB-INF/jsf/reporting/commons/generate_button_template.xhtml">
+	                        <ui:param name="reportingMBean" value="#{advertiserCreativeReportingMBean}" />
+	                    </ui:include>
+                    </pri:column>
+                </pri:row>
+
+            </pri:panelGrid>
+        </section>
+    
+        <!-- Reporting tables -->
+    
+        <pri:outputPanel id="reports">
+            <ui:include src="/WEB-INF/jsf/reporting/commons/tables_template.xhtml">
+                <ui:param name="reportingMBean" value="#{advertiserCreativeReportingMBean}" />
+            </ui:include>   
+        </pri:outputPanel>  
+    
+    </h:form>
+    
+</ui:composition>

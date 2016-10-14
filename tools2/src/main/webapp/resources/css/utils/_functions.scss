@@ -1,0 +1,21 @@
+/*===================  FUNCTIONS  ===================*/
+
+/* Add two numbers. */
+@function add($num1, $num2) {
+    @return $num1 + $num2
+}
+
+/* Substract two numbers. */
+@function sub($num1, $num2) {
+    @return $num1 - $num2
+}
+
+/* Multiply two numbers. */
+@function multiply($num1, $num2) {
+    @return $num1 * $num2
+}
+
+/* Divide two numbers. */
+@function divide($num1, $num2) {
+    @return $num1 / $num2
+}

@@ -1,0 +1,16 @@
+<ad xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="smaato_ad_v0.9.xsd" modelVersion="0.9">
+<textAd>
+#if($adComponents.components.text)
+<clickText>${escape.html($adComponents.components.text.content)}</clickText>
+<clickUrl>${adComponents.destinationUrl}</clickUrl>
+#end
+#if($renderBeacons && $adComponents.components.beacons)
+<beacons>
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<beacon>#evaluate("$adComponents.components.beacons.beacon$idx")</beacon>
+#end
+</beacons>
+#end
+</textAd>
+</ad>

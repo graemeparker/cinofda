@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+<!-- Admin full width page template -->
+
+<!-- Head -->
+<ui:include src="/WEB-INF/includes/head.xhtml"/>
+<h:body>
+
+	<pe:layout togglerTipClosed="Show menu" togglerTipOpen="Hide menu">
+	
+		<!-- North Pane -->
+		<pe:layoutPane position="north" size="41" closable="true" resizable="false" styleClassContent="layoutPaneNorthStyle">  
+			<ui:include src="/WEB-INF/includes/mainNav.xhtml" />
+		</pe:layoutPane>
+		
+		<!-- Center Pane -->
+		<pe:layoutPane position="center" styleClassContent="layoutPaneCenterStyle">  
+			<pri:outputPanel id="mainFullWidth">
+				<ui:insert name="pageContent" />
+			</pri:outputPanel>
+		</pe:layoutPane>
+		
+	</pe:layout>
+</h:body>
+</html>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.adserver.plugin.TestAbstractPlugin
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 sec - in com.adfonic.adserver.plugin.TestAbstractPlugin

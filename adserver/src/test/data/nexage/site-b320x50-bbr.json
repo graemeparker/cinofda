@@ -1,0 +1,38 @@
+{
+	"id":"e185885e-3b86-4ce6-ae60-2853736d66e9",
+	"at":2,
+	"bcat":[ "IAB14-1", "IAB26", "IAB25", "IAB8-5", "IAB24", "IAB8-18", "NEX9-108", "NEX8-101", "NEX9-109", "NEX20-101" ],
+	"badv":[ "radar11ab.co.uk", "blackoakcasino.com", "sclv.com", "mostawesomeoffers.com", "badoink.com", "nistserver.com", "msiexpress.us", "instabang.com", "mobile.instabang.com", "localslappers.co.uk", "timewarnercable.com" ],
+	"imp":[ {
+			"id":"e185885e-3b86-4ce6-ae60-2853736d66e9-1",
+			"instl":0,
+			"banner":{
+				"h":50, "w":320,
+				"btype":[ 1 ],
+				"battr":[ 1, 3, 8, 9 ],
+				"pos":0
+			},
+			"displaymanager":"web",
+			"bidfloor":0.45,
+			"ext":{ "nex_screen":0 }
+	} ],
+	"site":{
+		"id":"44604",
+		"name":"CONVX-f0107",
+		"cat":[ "IAB1", "IAB9" ],
+		"publisher":{ "id":"9999", "name":"Conversion Exchange" },
+		"ext":{ "nex_coppa":0 }
+	},
+	"device":{
+		"ip":"93.186.31.112",
+		"ua":"Mozilla/5.0 (BlackBerry; U; BlackBerry 9720; en-GB) AppleWebKit/534.11+ (KHTML, like Gecko) Version/7.1.0.1121 Mobile Safari/534.11+",
+		"make":"RIM",
+		"model":"BlackBerry 9720",
+		"osv":"7.1",
+		"js":1,
+		"os":"RIM",
+		"devicetype":1,
+		"geo":{ "lat":51.5, "lon":-0.13, "country":"GBR", "type":1 },
+		"ext":{ "nex_tablet":0 }
+	}
+}

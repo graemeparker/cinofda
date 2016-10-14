@@ -1,0 +1,71 @@
+api_version: 15
+auction_id: "101c5796-3a51-488b-909d-ee27081a1291"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537091394"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "fc9d53f9-93cd-2ed8-9ca3-deea27b3dace"
+user_ip_address: "\3301xD"
+user_geo_country: "us"
+user_geo_state: "indiana"
+user_geo_dma: 649
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70"
+user_lang: "en"
+url: "http://itunes.apple.com/us/app/text-free-free-texting-app/id399355755?mt=8"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2028
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 8
+pub_blocked_content: 15
+pub_blocked_type: 10
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 1
+  ua: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70"
+  ip: "216.49.120.68"
+  carrier: "310-410"
+  os: "iOS"
+  osv: "8"
+  language: "en"
+  make: "Apple"
+  model: "iPhone"
+  connectiontype: "wifi"
+  geo {
+    lat: 37.94557
+    lon: -86.768036
+    country: "us"
+    city: "troy"
+    zip: "95113"
+    type: 1
+    continent: "north america"
+    state: "indiana"
+    dma: 649
+  }
+  browser: "Mobile Safari"
+  api: 3
+  openudid: "d16c2e59328beb1baff8159cf562a1c1a8b8af80"
+  androidid_md5: "a5638ea19a6e291c88f1557e11a1c298"
+  androidid_sha1: "27983d12dfd6d3b395cfa776de316701cf31644f"
+  idforad_enabled: false
+  category: "phone"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+  yob: 1972
+  gender: "M"
+}

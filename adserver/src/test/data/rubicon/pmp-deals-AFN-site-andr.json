@@ -1,0 +1,82 @@
+{
+	"id":"8d84e0d6de25b97cb3afde9765ef48aa9ee71494",
+	"at":2,
+	"tmax":114,
+	"pmp":{
+		"deals":[ {
+				"id":"AFN-7845-001b4",
+				"at":2,
+				"bidfloor":1.3662,
+				"bidfloorcur":"USD"
+			},
+			{	"id":"BYD-7845-002d6",
+				"at":2,
+				"bidfloor":1.3662,
+				"bidfloorcur":"USD",
+				"wseat":[ "54c53f0f-bdfe-453c-b9fe-b244ef8b9f6c" ]
+			}
+		],
+		"private":0
+	},
+	"imp":[ {
+			"id":"1",
+			"tagid":"91921",
+			"secure":0,
+			"iframebuster":[ ],
+			"banner":{
+				"w":320,
+				"h":50,
+				"pos":1,
+				"battr":[ 14018, 14019, 1, 3, 5, 6, 7, 8, 9, 10, 12, 13, 14, 14005, 14015, 14014 ],
+				"api":[ ],
+				"topframe":0
+			},
+			"pmp":{
+				"deals":[
+					{
+						"id":"AFN-7845-001b4",
+						"at":2,
+						"bidfloor":1.3662,
+						"bidfloorcur":"USD"
+					},
+					{
+						"id":"BYD-7845-002d6",
+						"at":2,
+						"bidfloor":1.3662,
+						"bidfloorcur":"USD",
+						"wseat":[ "54c53f0f-bdfe-453c-b9fe-b244ef8b9f6c" ]
+					}
+				],
+				"private_auction":0
+			},
+			"instl":0
+		}
+	],
+	"site":{
+		"id":"24187",
+		"domain":"http://m.theguardian.com",
+		"name":"Guardian UK Mobile - Mobile-R.F.M",
+		"cat":[ "IAB12", "IAB3", "IAB13" ],
+		"page":"http://www.theguardian.com/us-news/2015/apr/27/teacher-tackles-school-shooter-north-thurston-high-lacey-washington",
+		"publisher":{ "id":"7845" },
+		"ext":{ "mopt":1 }
+	},
+	"device":{
+		"os":"iOS",
+		"model":"iPhone",
+		"connectiontype":0,
+		"geo":{ "country":"GBR", "region":"BST" },
+		"osv":"8.2",
+		"js":1,
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12D508",
+		"devicetype":1,
+		"language":"en",
+		"make":"Apple",
+		"ext":{ "xff":"", "res":"320x568" },
+		"ip":"213.205.194.207"
+	},
+	"user":{
+		"id":"8d5d4c062d522ccc2fe9bd282c8fb1c9f931d1fd",
+		"ext":{ "sessiondepth":1 }
+	}
+}

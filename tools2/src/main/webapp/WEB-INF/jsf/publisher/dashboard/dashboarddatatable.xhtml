@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+    <h:body>
+        <ui:component id="dashboarddata">
+           <h:form id="dataTableFormId" prependId="false">        	
+	        	<h:panelGroup layout="block" styleClass="row btns">
+		            <pri:commandButton value="#{msg['page.dashboard.buttons.state.activate.label']}" id="activeButtonId"
+		                               process="@this,dataTable" update=":dataTableFormId:dataTable,:chartsFormId" onclick="progressDialog.show()" oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+		                               actionListener="#{publisherDashBoardMBean.reportingBean.doChangeStatus}">
+		                <f:attribute name="stat" value="activate" />
+		            </pri:commandButton>
+		            <pri:commandButton value="#{msg['page.dashboard.buttons.state.pause.label']}"
+		                               process="@this,dataTable" update=":dataTableFormId:dataTable,:chartsFormId" onclick="progressDialog.show()" oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+		                               id="pauseButtonId" actionListener="#{publisherDashBoardMBean.reportingBean.doChangeStatus}">
+		                <f:attribute name="stat" value="pause" />
+		            </pri:commandButton>
+		            <pri:commandButton value="#{msg['page.dashboard.buttons.state.newpublication.label']}" id="newPublicationButtonId" onclick="progressDialog.show()" action="pretty:newPublication" />
+		        </h:panelGroup>
+	        
+             
+	           <!-- BEGIN REPORTING TABLE -->
+	           <div class="twelvecol last">
+	               <pri:dataTable id="dataTable" var="stc" styleClass="ui-corner-all publisher dashboard-datatable"
+	                              paginator="true" rows="25"
+	                              paginatorTemplate="Show {RowsPerPageDropdown}  per page. Showing rows {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+	                              rowsPerPageTemplate="10,25,50,100"
+	                              value="#{publisherDashBoardMBean.reportingBean.lazyModel}"
+	                              lazy="true"
+	                              paginatorPosition="bottom"
+	                           	  selection="#{publisherDashBoardMBean.reportingBean.selected}"	   
+	                          	  rowSelectMode="add"
+	                          >
+	                   <ui:remove>ajax event to sorting. primefaces sorting in columns calls an object or a function, but not
+	                   a custom made event for that.
+	                   </ui:remove>           
+	                   <pri:ajax event="sort" onstart="progressDialog.show();" oncomplete="progressDialog.hide();"/>
+	                   <pri:ajax event="page" onstart="progressDialog.show();" oncomplete="progressDialog.hide();"/>
+	                   <pri:column selectionMode="multiple" styleClass="select-col center"/>
+	                   <pri:column id="publicationStatusHeader" styleClass="sel-box stat-col tooltip">
+	                       <f:facet name="header">
+	                           <pri:selectOneMenu 
+	                           		id="publicationStatusFilter" 
+	                           		value="#{publisherDashBoardMBean.reportingBean.dashboardDto.publicationStatusFilter}"
+	                                styleClass="status-filter" 
+	                                valueChangeListener="#{publisherDashBoardMBean.reportingBean.processFilter}"
+	                           		panelStyleClass="status-icon-panel"
+	                           >
+	                               <f:selectItems value="#{toolsApplicationBean.publicationStatus}" var="status" itemValue="#{status}" itemLabel="#{msg[status.publicationStatusStr]}"/>
+	                               <f:attribute name="filterBy" value="status" />
+	                               <pri:ajax event="change" process="@this" update="dataTable,:chartsFormId" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.insertStatIcons(); "
+	                               				listener="#{publisherDashBoardMBean.reportingBean.filter}"/>
+	                           </pri:selectOneMenu>
+	                       </f:facet>
+	                       <ui:remove>Active,Paused,Stopped,Pending</ui:remove>
+                           <div class="status #{stc.status}"></div>
+
+                           <div class="ui-overlaypanel none">
+                               <div class="helpInner ui-corner-all ui-shadow">
+                                   <div class="helpArrow"></div>
+                                   <span>#{msg[publisherDashBoardMBean.reportingBean.convertStatus(stc.status)]}</span>
+                               </div>
+                           </div>
+	                   </pri:column>
+	                   <pri:column id="publicationNameHeader" styleClass="datatable-item-name" sortBy="#{stc.publicationName}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.publicationname']}" />
+	                       </f:facet>
+	                       <h:link outcome="pretty:publicationAdd" value="#{stc.publicationName}" onclick="progressDialog.show();">
+                               <f:param name="id" value="#{toolsApplicationBean.encodeUrl(publisherDashBoardMBean.getExternalIdFromId(stc.publicationId))}"></f:param>
+                           </h:link>
+	                   </pri:column>
+	                   <pri:column id="platformHeader" styleClass="sel-box">
+	                       <f:facet name="header">
+	                           <pri:selectOneMenu id="publicationPlatformFilter" converter="com.adfonic.tools.converter.publication.publicationtype.PublicationTypeConverter" 
+	                           					  value="#{publisherDashBoardMBean.reportingBean.dashboardDto.platformFilter}"
+	                                              valueChangeListener="#{publisherDashBoardMBean.reportingBean.processFilter}"
+	                                              styleClass="platform-dropdown">
+	                               <f:selectItems value="#{publisherDashBoardMBean.platformMap}"  var="type" itemLabel="#{type.name}" itemValue="#{type}"/>
+	                               <f:attribute name="filterBy" value="platform" />
+	                               <pri:ajax event="change" process="@this" update="dataTable,:chartsFormId" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+	                               				listener="#{publisherDashBoardMBean.reportingBean.filter}"/>
+	                           </pri:selectOneMenu>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.platform.name}"/>
+	                   </pri:column>
+	                   <pri:column id="approvalHeader" styleClass="small-col">
+	                       <f:facet name="header">
+	                           <pri:selectOneMenu id="publicationApprovalFilter" value="#{publisherDashBoardMBean.reportingBean.dashboardDto.approvalFilter}"
+	                                              valueChangeListener="#{publisherDashBoardMBean.reportingBean.processFilter}"
+	                                              styleClass="approval-dropdown">
+	                               <f:selectItems value="#{toolsApplicationBean.approval}" var="ap" itemValue="#{ap}" itemLabel="#{ap.approval}"/>
+	                               <f:attribute name="filterBy" value="approval" />
+	                               <pri:ajax event="change" process="@this" update="dataTable,:chartsFormId" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ADT.updateStatusIcons(); "
+	                               				listener="#{publisherDashBoardMBean.reportingBean.filter}"/>
+	                           </pri:selectOneMenu>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.approval.approval}" />
+	                   </pri:column>
+	                   <pri:column id="backfillHeader" styleClass="sel-box mid-col" sortBy="#{stc.backfill.backfill}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.backfill']}">
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.backfill.backfill}" />
+	                   </pri:column >
+	                   <pri:column id="requestsHeader" sortBy="#{stc.requests}" styleClass="sel-box mid-col">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.requests']}">
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.requests}">
+	                       		<byydtechJs:numberFormatConverter format="normal"/>
+	                       </h:outputText>
+	                   </pri:column>
+	                   <pri:column id="impressionsHeader" sortBy="#{stc.impressions}">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.impressions']}" />
+	                       </f:facet>
+	                       <h:outputText value="#{stc.impressions}">
+	                     	  <byydtechJs:numberFormatConverter format="normal"/>
+	                       </h:outputText>
+	                   </pri:column>
+	                   <pri:column id="clicksHeader" sortBy="#{stc.clicks}" styleClass="num small-col">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.clicks']}" />
+	                       </f:facet>
+	                       <h:outputText value="#{stc.clicks}">
+	                     	  <byydtechJs:numberFormatConverter format="normal"/>
+	                       </h:outputText>
+	                   </pri:column>
+	                   <pri:column id="fillRateHeader" sortBy="#{stc.fillRate}" styleClass="num mid-col">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.fillrate']}">
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.fillRate}">
+	                      		<byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+	                       </h:outputText>
+	                   </pri:column>
+	                   <pri:column id="revenueHeader" sortBy="#{stc.revenue}" styleClass="num mid-col">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.revenue']}">
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.revenue}">
+	                       		<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front" decimals="2"/>
+	                       </h:outputText>
+	                   </pri:column>	
+	                   <pri:column id="ecpmHeader" sortBy="#{stc.ecpm}" styleClass="num small-col">
+	                       <f:facet name="header">
+	                           <h:outputText value="#{msg['page.dashboard.labels.table.header.label.ecpm']}">                           		
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.ecpm}">
+	                       		<byydtechJs:numberFormatConverter format="normal" units="$" unitsPosition="front" decimals="2"/>
+	                       </h:outputText>
+	                   </pri:column>         
+	                   <pri:column id="ctrHeader" sortBy="#{stc.ctr}" styleClass="num small-col smaller">
+	                       <f:facet name="header">
+	                           <h:outputText value="CTR">                           		
+	                           </h:outputText>
+	                       </f:facet>
+	                       <h:outputText value="#{stc.ctr}">
+	                       		<byydtechJs:numberFormatConverter format="normal" units="%" unitsPosition="back"/>
+	                       </h:outputText>
+	                   </pri:column>          
+	               </pri:dataTable>
+	           </div>
+	           <!-- END REPORTING TABLE -->
+	           <!-- END MAIN CONTENT -->
+	     		<div class="clear"></div>
+			</h:form>
+        </ui:component>
+    </h:body>
+</html>

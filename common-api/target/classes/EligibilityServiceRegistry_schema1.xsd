@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://service.adfonic.com/" xmlns:tns="http://service.adfonic.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="lookupECService" type="tns:lookupECService"/>
+
+  <xs:element name="lookupECServiceResponse" type="tns:lookupECServiceResponse"/>
+
+  <xs:element name="registerECService" type="tns:registerECService"/>
+
+  <xs:element name="registerECServiceResponse" type="tns:registerECServiceResponse"/>
+
+  <xs:complexType name="registerECService">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:boolean"/>
+      <xs:element name="arg1" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="arg2" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="registerECServiceResponse">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="lookupECService">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:long" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="lookupECServiceResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

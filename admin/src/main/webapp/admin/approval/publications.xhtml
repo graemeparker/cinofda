@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/WEB-INF/templates/fullWidthPageContentTemplate.xhtml">
+	
+	<ui:param name="adminUser" value="#{adminAccountBean.user}" />
+	<ui:define name="title">Publication Approvals Dashboard</ui:define>
+	
+	<ui:define name="pageContent">
+
+		<!-- Expressions -->
+		<ui:param name="recordCount"	value="#{publicationApprovalDashboardMBean.resultCount}" />
+		<ui:param name="initResult"		value="#{recordCount eq -10}" />
+		<ui:param name="hasProcError"	value="#{recordCount eq -1}" />
+		<ui:param name="emptyResult"	value="#{recordCount eq 0}" />
+		<ui:param name="hasResults"		value="#{recordCount gt 0}" />
+		
+		<!-- Publications table -->
+		<h:form prependId="false" onkeypress="return event.keyCode != 13">
+			
+			<!-- Filters, Pagination, Ordering -->
+			<ui:include src="publication/dashboard/publicationHeader.xhtml" />
+			
+			<!-- Publications search result -->
+			<pri:dataTable id="publicationResult" var="publication"
+				value="#{publicationApprovalDashboardMBean.publications}"
+				rows="#{publicationApprovalDashboardMBean.pageSize}"
+				selection="#{publicationApprovalDashboardMBean.filteredRows}"
+				disabledSelection="false"
+				rowKey="#{publication.internalId}"
+				emptyMessage="#{ (hasProcError) ? msg['page.approval.publication.procerror'] : msg['page.approval.publication.empty']}"
+				styleClass="publicationTable #{hasResults ? 'show' : 'hide'}">
+
+				<!-- Header -->
+				<f:facet name="header">
+
+				    <!-- Bulk Assign, Excel Export -->
+					<!-->pri:outputPanel rendered="#{hasResults and recordCount gt 5}" styleClass="header">
+						<ui:include src="publication/dashboard/publicationFooter.xhtml">
+							<ui:param name="id" value="Top" />
+						</ui:include>
+					</pri:outputPanel-->
+			    
+		        </f:facet>
+		        
+		        <!-- Footer -->
+				<f:facet name="footer">
+					
+					<!-- Bulk Assign, Excel Export -->
+					<pri:outputPanel rendered="#{hasResults}">
+						<ui:include src="publication/dashboard/publicationFooter.xhtml">
+							<ui:param name="id" value="Bottom" />
+						</ui:include>
+					</pri:outputPanel>
+					
+		        </f:facet>
+		        
+				<!-- Select check box -->
+				<pri:column selectionMode="multiple" styleClass="select-col" />
+				
+				<!-- Internal Id -->
+				<pri:column headerText="#{msg['page.approval.publication.internalid.label']}" styleClass="internalId-col">
+					<pri:commandLink value="#{publication.internalId}" onclick="window.open('#{request.contextPath}/admin/approval/publication/#{publication.internalId}')" />
+				</pri:column>
+
+				<!-- Publication Name -->
+				<pri:column headerText="#{msg['page.approval.publication.name.label']}" styleClass="name-col">
+					<pri:outputLabel value="#{publication.name}" />
+				</pri:column>
+
+				<!-- Friendly Name -->
+				<pri:column headerText="#{msg['page.approval.publication.friendlyname.label']}" styleClass="friendlyName-col">
+					<pri:outputLabel value="#{publication.friendlyName}" />
+				</pri:column>
+
+				<!-- Supplier Name -->
+				<pri:column headerText="#{msg['page.approval.publication.supplier.name.label']}" styleClass="supplierName-col">
+					<pri:outputLabel value="#{publication.supplierName}" />
+				</pri:column>
+
+				<!-- Supplier User Name -->
+				<pri:column headerText="#{msg['page.approval.publication.supplier.username.label']}" styleClass="supplierUserName-col">
+					<pri:outputLabel value="#{publication.supplierUserName}" />
+				</pri:column>
+				
+				<!-- External Id -->
+				<pri:column headerText="#{msg['page.approval.publication.externalid.label']}" styleClass="externalId-col">
+					<pri:outputLabel value="#{publication.externalId}" />
+				</pri:column>
+				
+				<!-- Bundle Id -->
+				<pri:column headerText="#{msg['page.approval.publication.bundle.label']}" styleClass="bundle-col">
+					<pri:outputLabel value="#{publication.bundle}" />
+				</pri:column>
+
+				<!-- Publication Type -->
+				<pri:column headerText="#{msg['page.approval.publication.type.label']}" styleClass="type-col">
+					<pri:outputLabel value="#{publication.type}" />
+				</pri:column>
+
+				<!-- Status -->
+				<pri:column headerText="#{msg['page.approval.publication.status.label']}" styleClass="status-col">
+					<pri:outputLabel value="#{publication.status}" />
+				</pri:column>
+
+				<!-- Assigned To -->
+				<pri:column headerText="#{msg['page.approval.publication.assignedto.label']}" styleClass="assignedTo-col">
+					<pri:outputLabel value="#{publication.assignedTo}" />
+				</pri:column>
+
+				<!-- Account Type -->
+				<pri:column headerText="#{msg['page.approval.publication.accounttype.label']}" styleClass="accountType-col">
+					<pri:outputLabel value="#{publication.accountType}" />
+				</pri:column>
+				
+				<!-- RTB Id -->
+				<pri:column headerText="#{msg['page.approval.publication.rtbid.label']}" styleClass="rtbId-col">
+					<pri:outputLabel value="#{publication.rtbId}" />
+				</pri:column>
+				
+				<!-- Seller Network Id -->
+				<pri:column headerText="#{msg['page.approval.publication.sellernetworkid.label']}" styleClass="sellerNetworkId-col">
+					<pri:outputLabel value="#{publication.sellerNetworkId}" />
+				</pri:column>
+				
+				<!-- Algorithm Status -->
+				<pri:column headerText="#{msg['page.approval.publication.algorithm.status.label']}" styleClass="algorithmStatus-col">
+					<pri:outputLabel value="#{publication.algorithmStatus}" />
+				</pri:column>
+				
+				<!-- Dead Zone Status -->
+				<pri:column headerText="#{msg['page.approval.publication.deadzone.status.label']}" styleClass="deadZoneStatus-col">
+					<pri:outputLabel value="#{publication.deadZoneStatus}" />
+				</pri:column>
+				
+				<!-- Sampling Active -->
+				<pri:column headerText="#{msg['page.approval.publication.sampling.active.label']}" styleClass="samplingActive-col">
+					<pri:outputPanel style="margin: auto;" styleClass="icon #{publication.samplingActive ? 'sampling-on' : 'sampling-off'}" />
+				</pri:column>
+
+			</pri:dataTable>
+							
+		</h:form>
+	
+	</ui:define>
+</ui:composition>
+

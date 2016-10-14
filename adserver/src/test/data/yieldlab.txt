@@ -1,0 +1,30 @@
+GET /rtb/yieldlab/bid/3d36b3c5-b513-4bf2-bc91-f39ec6495e7b?yl_id=5ef78b80-8b49-41c6-8c07-468f1fe774a1&tid=345cc4c9-5d8d-4b51-9864-d89d9c525a11&sid=21691&wid=55573&adsize=320x75&wtype=1&wpos=1&at=2&secure=0&country=DE&user_agent=Mozilla%2F5.0+%28iPhone%3B+CPU+iPhone+OS+8_2+like+Mac+OS+X%29+AppleWebKit%2F600.1.4+%28KHTML%2C+like+Gecko%29+Version%2F8.0+Mobile%2F12D508+Safari%2F600.1.4&lang=de_DE&refer=www.tomorrow-focus-media.de&did=22147 HTTP/1.1
+Host: yieldlab-rtb.byyd.net
+Connection: Keep-Alive
+User-Agent: Yieldlab
+
+GET /rtb/yieldlab/bid/3d36b3c5-b513-4bf2-bc91-f39ec6495e7b?yl_id=4b68c4f3-addb-4ea0-8c73-d77a5f4c79ea&tid=30146729-8923-4f40-a997-d1292052e4fc&sid=5710&wid=15878&adsize=320x50&wtype=2&wpos=0&at=2&secure=0&country=DE&user_agent=Mozilla%2F5.0+%28Linux%3B+U%3B+Android+4.1.2%3B+de-de%3B+LG-E460+Build%2FJZO54K%29+AppleWebKit%2F534.30+%28KHTML%2C+like+Gecko%29+Version%2F4.0+Mobile+Safari%2F534.30&lang=de_DE&refer=mobile.wetter.com&ip=178.115.133.69&did=22147 HTTP/1.1
+Host: yieldlab-rtb.byyd.net
+Connection: Keep-Alive
+User-Agent: Yieldlab
+
+GET /rtb/yieldlab/bid/3d36b3c5-b513-4bf2-bc91-f39ec6495e7b?yl_id=a48dfe70-c67a-410a-b225-48d197388e29&tid=e8b6a0b6-7b89-4c4d-8d14-d17e6907b076&sid=5710&wid=81439&adsize=320x50&wtype=2&wpos=0&at=2&secure=0&country=DE&user_agent=Mozilla%2F5.0+%28Linux%3B+Android+5.0.2%3B+D6603+Build%2F23.1.A.0.726%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Version%2F4.0+Chrome%2F37.0.0.0+Mobile+Safari%2F537.36+%28Mobile%3B+afma-sdk-a-v7099000.6587000.1%29&lang=de_DE&refer=mobile.wetter.com&ip=178.12.71.248&did=22147 HTTP/1.1
+Host: yieldlab-rtb.byyd.net
+Connection: Keep-Alive
+User-Agent: Yieldlab
+
+GET /rtb/yieldlab/bid/3d36b3c5-b513-4bf2-bc91-f39ec6495e7b?yl_id=e3bf3236-d4b5-4ca0-b883-739b039e5882&tid=e703c8e0-9375-492b-af38-a306206039b3&sid=8477&wid=26135&adsize=300x600&wtype=0&wpos=0&at=1&secure=0&country=DE&user_agent=Mozilla%2F5.0+%28Windows+NT+6.3%3B+WOW64%3B+rv%3A37.0%29+Gecko%2F20100101+Firefox%2F37.0&lang=de&ip=84.62.15.217&cat=IAB11,IAB12,IAB17,IAB2,IAB3&did=22147 HTTP/1.1
+Host: yieldlab-rtb.byyd.net
+Connection: Keep-Alive
+User-Agent: Yieldlab
+
+GET /rtb/yieldlab/bid/3d36b3c5-b513-4bf2-bc91-f39ec6495e7b?yl_id=2bdceef1-55c8-4fd3-b618-459d593af76f&tid=77351bbb-0aee-436b-b810-81dadab1dc9a&sid=8477&wid=14325&adsize=320x50&wtype=1&wpos=0&at=1&secure=0&country=DE&user_agent=Mozilla%2F5.0+%28iPhone%3B+CPU+iPhone+OS+8_2+like+Mac+OS+X%29+AppleWebKit%2F600.1.4+%28KHTML%2C+like+Gecko%29+Mobile%2F12D508&lang=de_DE&ip=109.42.0.71&cat=IAB11,IAB12,IAB17,IAB2,IAB3&did=22147 HTTP/1.1
+Host: yieldlab-rtb.byyd.net
+Connection: Keep-Alive
+User-Agent: Yieldlab
+
+GET /rtb/yieldlab/bid/3d36b3c5-b513-4bf2-bc91-f39ec6495e7b?yl_id=964d3a8c-adf6-4422-98a5-e1e19e044b04&tid=2707bfc2-1353-4718-97c0-56db8eed7301&sid=23667&wid=41131&adsize=300x150&wtype=1&wpos=0&at=2&secure=0&country=DE&user_agent=Mozilla%2F5.0+%28compatible%3B+MSIE+10.0%3B+Windows+Phone+8.0%3B+Trident%2F6.0%3B+IEMobile%2F10.0%3B+ARM%3B+Touch%3B+HTC%3B+Windows+Phone+8X+by+HTC%29&lang=de_DE&refer=m.adaudience.de&ip=93.132.106.245&did=22147 HTTP/1.1
+Host: yieldlab-rtb.byyd.net
+Connection: Keep-Alive
+User-Agent: Yieldlab
+

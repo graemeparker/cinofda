@@ -1,0 +1,151 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+		<h:form id="transactionForm" prependId="false">
+		  <ui:include src="/WEB-INF/jsf/transactions/sub-forms/publisher-invoices.xhtml"/>
+          <h:panelGroup id="historyDiv" layout="block" class="eightcol last">
+            <section id="history" class="form-box ui-corner-all">
+              <h2 class="sec-title">Publisher Transaction History</h2>
+                <div class="form-row">
+                    <h:panelGroup id="customPanelGroup" rendered="#{transactionMBean.transactionHistoryMBean.publisherCustom}">
+                      <div>
+                        <pri:calendar id="startDate"
+                                value="#{transactionMBean.transactionHistoryMBean.publisherDateRange.start}"
+                                required="true"
+                                requiredMessage="#{msg['error.dateRange.startDate.required']}"
+                                binding="#{transactionMBean.transactionHistoryMBean.publisherDateRange.binding}">
+                        </pri:calendar>   
+                        <pri:message for="startDate"/>                 
+                      </div>
+                      <div>to</div>
+                      <div>
+                        <pri:calendar id="endDate"
+                                value="#{transactionMBean.transactionHistoryMBean.publisherDateRange.end}"
+                                required="true"
+                                requiredMessage="#{msg['error.dateRange.endDate.required']}"
+                                validator="#{transactionMBean.transactionHistoryMBean.publisherDateRange.validate}">                    
+                        </pri:calendar>                   
+                        <pri:message for="endDate"/>
+                      </div>
+                      <div>
+	                      <pri:commandLink 
+	                      		id="doPublisherCustomEntries" 
+	                            value="Go" 
+	                            actionListener="#{transactionMBean.transactionHistoryMBean.doPublisherCustomEntries}" 
+	                            process="@form" 
+	                            update="@form"
+	                            oncomplete=""
+	                      />
+                   			&#160;
+	                      <pri:commandLink 
+	                      		id="cancelCustomLink" 
+	                            value="Cancel" 
+	                            actionListener="#{transactionMBean.transactionHistoryMBean.cancelPublisherCustom}" 
+	                            process="@this" 
+	                            update="historyDiv"
+	                            oncomplete=""
+	                      />
+                      </div>
+                       
+                    </h:panelGroup>
+                                        
+                    <h:panelGroup id="periodPanelGroup" rendered="#{not transactionMBean.transactionHistoryMBean.publisherCustom}">
+                      <pri:selectOneMenu id="period"
+                              styleClass="long"
+                              valueChangeListener="#{transactionMBean.transactionHistoryMBean.publisherPeriodChangedEvent}"
+                              value="#{transactionMBean.transactionHistoryMBean.publisherPeriod}"
+                              onchange=""
+                              >
+                              
+                          <f:selectItem itemValue="TODAY" itemLabel="Today" />
+                          <f:selectItem itemValue="YESTERDAY" itemLabel="Yesterday" />
+                          <f:selectItem itemValue="LAST_7_DAYS" itemLabel="Last 7 days" />
+                          <f:selectItem itemValue="THIS_MONTH" itemLabel="This month" />
+                          <f:selectItem itemValue="LAST_MONTH" itemLabel="Last month" />
+                          <f:selectItem itemValue="CUSTOM" itemLabel="Custom" />
+                        <pri:ajax process="@this" update="transactionForm" oncomplete="updateMenu(); "/>
+                      </pri:selectOneMenu>
+                      
+                    </h:panelGroup>
+                </div>
+                
+                <div class="form-row">
+                
+                  <pri:dataTable id="publisherInvoices"
+                      var="publisherAccountDetailDto"
+                      lazy="true"
+                      value="#{transactionMBean.transactionHistoryMBean.publisherEntriesLazyModel}"
+                      paginator="true" 
+                      rows="10" 
+                      rowsPerPageTemplate="10,25,50,100"
+                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                      paginatorPosition="bottom"
+                      styleClass="ui-corner-all big-data transactions-history">            
+                    <pri:ajax event="sort" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+                    <pri:ajax event="filter" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); "/>
+                    <pri:ajax event="page" onstart="progressDialog.show();" oncomplete="progressDialog.hide(); ; "/>
+                      
+                    <pri:column sortBy="#{publisherAccountDetailDto.transactionType}">
+						<f:facet name="header">
+							<pri:selectOneMenu id="campaignStatusFilter"
+								value="#{transactionMBean.transactionHistoryMBean.filterValue}"
+								styleClass="transaction-type-select"
+								onchange="ADT.transactionTypeSelect('.transaction-type-select');"
+							>
+								<f:selectItems
+									value="#{transactionMBean.transactionHistoryMBean.publisherTransactionTypeItems}"
+									var="status" itemValue="#{status}"
+									itemLabel="#{msg[status.campaignStatusStr]}" 
+								/>
+							</pri:selectOneMenu>
+						</f:facet>
+                      <h:outputText value="#{transactionMBean.transactionHistoryMBean.getTransactionTypeLabel(publisherAccountDetailDto.transactionType)}"/>
+                    </pri:column>
+                    <pri:column sortBy="#{publisherAccountDetailDto.transactionTime}" headerText="#{msg['page.transactions.invoicestable.header.transactiontime']}">
+                      <h:outputText value="#{publisherAccountDetailDto.transactionTime}">
+                        <f:convertDateTime dateStyle="short" type="date" timeZone="#{transactionMBean.transactionHistoryMBean.transactionTimeZone}" />
+                      </h:outputText>
+                    </pri:column>
+                    <pri:column sortBy="#{publisherAccountDetailDto.description}" headerText="#{msg['page.transactions.invoicestable.header.description']}">
+                      <h:outputText value="#{publisherAccountDetailDto.description}"/>
+                    </pri:column>
+                    <pri:column sortBy="#{publisherAccountDetailDto.amount}" headerText="#{msg['page.transactions.invoicestable.header.amount']}">
+                      <h:outputText value="#{publisherAccountDetailDto.amount}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                      </h:outputText>
+                    </pri:column>
+                    <pri:column sortBy="#{publisherAccountDetailDto.tax}" headerText="#{msg['page.transactions.invoicestable.header.tax']}">
+                      <h:outputText value="#{publisherAccountDetailDto.tax}">
+                         <f:convertNumber type="currency" currencySymbol="$" />
+                      </h:outputText>
+                    </pri:column>
+                    <pri:column sortBy="#{publisherAccountDetailDto.total}" headerText="#{msg['page.transactions.invoicestable.header.total']}">
+                      <h:outputText value="#{publisherAccountDetailDto.total}">
+                         <f:convertNumber type="currency" currencySymbol="$" />
+                      </h:outputText>
+                    </pri:column>
+                    <f:facet name="footer">
+                       Closing publisher balance on
+                        <h:outputText value="#{transactionMBean.transactionHistoryMBean.publisherDateRange.end}">
+                          <f:convertDateTime dateStyle="short" type="date" timeZone="#{transactionMBean.transactionHistoryMBean.transactionTimeZone}" />
+                        </h:outputText>&#160;
+                        <h:outputText value="#{transactionMBean.transactionHistoryMBean.publisherClosingBalance}">
+                          <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>                    
+                    </f:facet>
+                  </pri:dataTable>
+                </div>
+            </section>
+          </h:panelGroup>
+          
+        </h:form>
+	</h:body>
+</ui:composition>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry including="**/*.java" kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-adresponse"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-adserver"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-adserver-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-adx-client"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-archive"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-asset"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-cache"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-common-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-datacache"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-datacollector"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-ddr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-distro"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-domain"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-domainserializer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-dto"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-email"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-geo"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-hornetq-util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-jms"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-jtrac"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-logging"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-middleware"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-mobi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-olap"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-paypal"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-presentation"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-presentation2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-quova"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-reporting"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-retargeting"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-sso"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-sync-service"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-tasks"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-test"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-tickets"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-tools"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-tools2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-tracker"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-tracker-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-valves"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/adfonic-weve"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/LoginActivity"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mopub-sdk"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ORMMA"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OrmmaTestBed"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/parse"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/parser_odr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SyncService"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

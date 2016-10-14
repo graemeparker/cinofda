@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!-- Replaced by ImpcacheEhcacheConfig -->
+
+  <!-- We need to use direct bean declaration for these beans instead of
+       using the @Component annotation, since we have multiple implementations
+       in the code...but we want the impls we're using to be pluggable. -->
+  
+  <bean id="cacheManager"
+        class="com.adfonic.cache.ehcache.EhcacheCacheManagerImpl">
+    <!-- maxElementsInMemory -->
+    <constructor-arg value="100000"/>
+  </bean>
+   
+  <bean id="impressionService"
+        class="com.adfonic.adserver.impl.SharedNamespaceImpressionService"/>
+  
+  <bean id="frequencyCounter"
+        class="com.adfonic.adserver.impl.SharedNamespaceFrequencyCounter"/>
+  
+  <bean id="rtbCacheService"
+        class="com.adfonic.adserver.rtb.impl.SharedNamespaceRtbCacheService"/>
+  
+  <bean id="parallelModeCacheService"
+        class="com.adfonic.adserver.impl.SharedNamespaceParallelModeCacheService"/>
+  
+  <bean id="dmpAudienceCacheManager" autowire="byName"
+        class="com.adfonic.retargeting.InMemoryDmpAudienceCacheManager"/>
+
+</beans>
+

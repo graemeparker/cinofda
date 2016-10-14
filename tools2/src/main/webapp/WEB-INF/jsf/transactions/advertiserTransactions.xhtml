@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"
+>
+	
+	<pe:importConstants className="com.adfonic.domain.Role" var="RoleConstants" />
+	
+	<h:body>
+		<ui:composition template="/WEB-INF/jsf/template/layouts/layout.xhtml">
+			<ui:define name="content">
+	
+				<div id="transactions-page" class="content ovh">
+					<div class="row main-add-panel">
+						<ui:insert name="contentMenu">
+							<ui:include src="/WEB-INF/jsf/transactions/advertiserTransactionsMenu.xhtml" />
+						</ui:insert>
+	
+						<ui:include src="/WEB-INF/jsf/transactions/sub-forms/transactions-history.xhtml"/>
+	
+						<sec:authorize ifNotGranted="#{RoleConstants.COMPANY_ROLE_PREPAY}">
+							<ui:include src="/WEB-INF/jsf/transactions/sub-forms/post-pay.xhtml"/>
+						</sec:authorize>
+						
+						<ui:include src="/WEB-INF/jsf/transactions/sub-forms/daily-budget.xhtml"/>
+						<ui:include src="/WEB-INF/jsf/transactions/sub-forms/balance-notification.xhtml"/>					
+						<ui:include src="/WEB-INF/jsf/transactions/sub-forms/add-funds.xhtml"/>
+						<ui:include src="/WEB-INF/jsf/transactions/sub-forms/transfer-funds.xhtml"/>
+					</div>
+				</div>
+				<ui:include src="/WEB-INF/jsf/transactions/js/transactions-page-event-handlers.js.xhtml"/>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

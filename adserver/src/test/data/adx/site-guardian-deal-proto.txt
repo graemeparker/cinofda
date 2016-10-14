@@ -1,0 +1,113 @@
+id: "UKQz\000\005\2026\n\333\206\304\000\0001\313"
+ip: "\\\t\355"
+user_agent: "Mozilla/5.0 (Linux; Android 4.3; GT-I9300 Build/JSS15J) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.111 Mobile Safari/537.36,gzip(gfe)"
+url: "http://www.theguardian.com/uk"
+detected_language: "en"
+detected_vertical {
+  id: 408
+  weight: 1.0
+}
+detected_vertical {
+  id: 572
+  weight: 0.27401745
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 28
+  excluded_attribute: 30
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 22
+  allowed_vendor_type: 42
+  allowed_vendor_type: 60
+  allowed_vendor_type: 63
+  allowed_vendor_type: 94
+  allowed_vendor_type: 113
+  allowed_vendor_type: 130
+  allowed_vendor_type: 144
+  allowed_vendor_type: 145
+  allowed_vendor_type: 198
+  allowed_vendor_type: 225
+  allowed_vendor_type: 231
+  allowed_vendor_type: 232
+  allowed_vendor_type: 233
+  allowed_vendor_type: 238
+  allowed_vendor_type: 260
+  allowed_vendor_type: 267
+  allowed_vendor_type: 303
+  allowed_vendor_type: 315
+  allowed_vendor_type: 332
+  allowed_vendor_type: 334
+  allowed_vendor_type: 342
+  allowed_vendor_type: 414
+  allowed_vendor_type: 474
+  allowed_vendor_type: 476
+  allowed_vendor_type: 477
+  allowed_vendor_type: 485
+  allowed_vendor_type: 490
+  allowed_vendor_type: 551
+  excluded_sensitive_category: 19
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 23
+  excluded_sensitive_category: 30
+  excluded_sensitive_category: 10
+  excluded_sensitive_category: 3
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 5
+  excluded_sensitive_category: 8
+  excluded_sensitive_category: 24
+  excluded_sensitive_category: 7
+  excluded_sensitive_category: 18
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 3800000
+    direct_deal {
+      direct_deal_id: 263612190546722822
+      fixed_cpm_micros: 3800000
+    }
+  }
+  targetable_channel: "pack-brand-TheGuardian.com::All"
+  slot_visibility: BELOW_THE_FOLD
+  excluded_product_category: 10031
+  excluded_product_category: 10047
+  excluded_product_category: 10137
+  excluded_product_category: 10453
+  excluded_product_category: 10756
+  excluded_product_category: 11840
+  excluded_product_category: 13300
+  excluded_product_category: 13422
+  excluded_product_category: 13423
+  ad_block_key: 744296575
+  publisher_settings_list_id: 5951999289382753443
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEIBjCmriTvPbXl_2KoCYtiI"
+vertical_dictionary_version: 2
+timezone_offset: 60
+detected_content_label: 26
+detected_content_label: 39
+mobile {
+  platform: "android"
+  mobile_device_type: HIGHEND_PHONE
+  brand: "feiteng"
+  model: "gt-i9300"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 3
+  }
+  screen_width: 360
+  screen_height: 640
+  is_mobile_web_optimized: true
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+}
+cookie_age_seconds: 34943471
+postal_code_prefix: "M16"
+geo_criteria_id: 1006912
+seller_network_id: 2177
+publisher_settings_list_id: 4623628666682750841

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+if [ -z ${ADF_DB_ROOT} ]
+then
+    echo ADF_DB_ROOT not set. exiting
+    exit 1
+fi
+

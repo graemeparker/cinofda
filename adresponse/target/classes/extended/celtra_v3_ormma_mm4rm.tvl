@@ -1,0 +1,26 @@
+<!-- Start of PART A -->
+<script>
+    /* _mm4rm_source = "celtra.com"
+       _mm4rm_sample_image = ""
+    */
+    var _mm4rm_click = "${adComponents.destinationUrl}?redir=";
+</script>
+<script>
+    var params = {'channelId':'${adComponents.components.extendedData.channel}','clickUrl':_mm4rm_click,'useViewable':'1'};
+    var req = document.createElement('script');
+    req.id = params.scriptId = 'celtra-script-' + (window.celtraScriptIndex = (window.celtraScriptIndex||0)+1);
+    params.clientTimestamp = new Date/1000;
+    req.src = (window.location.protocol == 'https:' ? 'https' : 'http') + '://ads.celtra.com/${adComponents.components.extendedData.ad}/nexage-ormma.js?';
+    for (var k in params) {
+        req.src += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }
+    document.body.appendChild(req);
+</script>
+<!-- End of PART A -->
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

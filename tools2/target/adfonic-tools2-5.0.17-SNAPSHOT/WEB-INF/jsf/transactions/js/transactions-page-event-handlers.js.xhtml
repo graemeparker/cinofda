@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+		<script type="text/javascript">
+			// <![CDATA[			    
+			    // Add new email button.  
+			    
+				$("body").on("click", "#balanceNotificationForm .email-row a", function(){
+					ADT.addBalanceNotificationRecipient($(this));
+				});	
+			    
+				// Remove email button.
+				$("body").on("click", "#balanceNotificationForm .close-icon", function(){
+					$(this).parent().remove();
+					$("#balanceNotificationForm .email-row:first").addClass("first");
+				});			
+				
+				// Trigger clicks across the entire LHS menu.
+				$("body").on("click", "#menuForm section div.props", function(e){
+					$(this).parent().find("a").trigger("click");
+				});									
+				
+				// Clear error messages.
+				$("body").on("focus keyup", "#balanceNotificationForm .email-row input", function(){
+					if($(this).parent().find(".email-error").is(":visible")) 
+						$(this).parent().find(".email-error").fadeOut(800);
+				});
+				
+				var $countryValueField = {};
+			
+				// Find the value of the date range selection dropdown. 	
+				ADT.getCountryValue = function(selector){
+					var currentText = $("label", selector).text();
+					if(currentText == "United States"){
+						$countryValueField.appendTo(".form-row.state");
+					} else {
+						$countryValueField = $(".form-row.state #state-field-element").clone();
+						$(".form-row.state #state-field-element").remove();
+					}
+				};	
+			// ]]>	
+		</script>	
+	</h:body>
+</ui:composition>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:ad="http://byyd-tech.com/jsf/functions"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/adminTemplate.xhtml">
+  
+	<ui:define name="title">Publication #{publicationApprovalDetailMBean.publicationId} (#{publicationApprovalDetailMBean.publicationDetails.name})</ui:define>
+	<ui:define name="pageContent">
+    
+    <pe:importEnum type="com.adfonic.dto.publication.enums.AdOpsStatus" />
+    <pe:importEnum type="com.adfonic.dto.publication.enums.PublicationStatus" />
+	<pe:importEnum type="com.adfonic.dto.publication.enums.PublicationSafetyLevel" />
+	
+	<h:form prependId="false">
+		
+		<!-- Block UI while giving 2 seconds for replication to be updated -->
+		<pe:blockUI widgetVar="blockPage">
+			<pri:outputLabel value="#{msg['page.approval.publication.approval.replication.refresh.label']}"/>
+		</pe:blockUI>
+	
+		<ui:param name="publicationFound" value="#{not empty publicationApprovalDetailMBean.publicationDetails}" />
+		
+		<pri:outputPanel rendered="#{publicationFound}">
+		
+		  	<!-- Publication History -->
+			<ui:include src="publication/detail/publicationHistory.xhtml" />
+			
+			<pri:spacer styleClass="horizontalDoubleSpace" />
+				
+			<!-- Two Column Layout -->
+			<pri:panelGrid styleClass="panelGridFullWidth">
+				<pri:row>
+					<!-- Left Column -->
+					<pri:column>
+					
+						<!-- Publication details -->
+					    <ui:include src="publication/detail/publicationDetails.xhtml" />
+					    
+				    </pri:column>
+				    
+				    <!-- Right Column -->
+				    <pri:column>
+				    
+					    <!-- Publication IAB Category -->
+					    <ui:include src="publication/detail/publicationIABCategory.xhtml" />
+					    
+						<pri:spacer styleClass="horizontalDoubleSpace" />
+					
+					    <!-- Approval -->
+					    <ui:include src="publication/detail/publicationApproval.xhtml" />
+						
+				    	<!-- Save Changes -->
+				    	<ui:param name="saveIcon" value="ui-icon-disk" />
+		   				<pri:commandButton widgetVar="savePublicationButtonWidget"
+		   								   value="#{msg['page.approval.publication.approval.save.changes.label']}"
+		   								   actionListener="#{publicationApprovalDetailMBean.savePublicationDetail}"
+		   								   update="@this, publicationHistory, publicationStatus"
+		   								   onstart="ADT.showLoadingIcon(savePublicationButtonWidget, '#{saveIcon}'); PF('blockPage').block()"
+		   								   oncomplete="ADT.hideLoadingIcon(savePublicationButtonWidget, '#{saveIcon}'); PF('blockPage').unblock()"
+		   								   icon="#{saveIcon}" />
+						
+					</pri:column>
+				</pri:row>
+			</pri:panelGrid>
+	
+		</pri:outputPanel>
+		
+		<!-- No publication -->
+		<pri:outputPanel rendered="#{not publicationFound}">
+			<h2>#{msg['page.approval.publication.empty']}</h2>
+		</pri:outputPanel>
+		
+		<!-- JSON for validation later -->
+		<pri:outputLabel value="#{publicationApprovalDetailMBean.jsonPublicationDetails}" styleClass="inputTextStyle" rendered="false"/>
+    
+	</h:form>
+
+  </ui:define>
+</ui:composition>

@@ -1,0 +1,69 @@
+{
+	"id":"7d61e0180e26e6d9f4ad869043a9f0a4dfc1a447",
+	"at":2,
+	"tmax":112,
+	"pmp":{
+		"deals":[ {
+				"id":"BYD-7706-00143",
+				"at":2,
+				"bidfloor":3.79501,
+				"bidfloorcur":"USD",
+				"wseat":[ "a795ff8f-6c88-46e4-97cc-bd4c2cd2886a" ]
+			} ],
+		"private":0
+	},
+	"imp":[ {
+			"id":"1",
+			"tagid":"226810",
+			"secure":0,
+			"iframebuster":[ ],
+			"banner":{
+				"w":320, "h":50, "pos":0,
+				"battr":[ 14018, 14019, 1, 3, 5, 8,9,10,12,13,14,14005,14015,14014 ],
+				"api":[ 3 ],
+				"topframe":0
+			},
+			"pmp":{
+				"deals":[ {
+						"id":"BYD-7706-00143",
+						"at":2,
+						"bidfloor":3.79501,
+						"bidfloorcur":"USD",
+						"wseat":[ "a795ff8f-6c88-46e4-97cc-bd4c2cd2886a" ]
+				} ],
+				"private_auction":0
+			},
+			"instl":0
+		}
+	],
+	"app":{
+		"id":"49948",
+		"cat":[ "IAB1", "IAB1-6" ],
+		"name":"Wave 105_App_RFM",
+		"domain":"http://www.wave105.com/",
+		"bundle":"377876861",
+		"publisher":{ "id":"7706" }
+	},
+	"device":{
+		"os":"iOS",
+		"model":"iPhone",
+		"geo":{ "country":"GBR", "region":"WBK", "lat":50.910676, "lon":-1.50391 },
+		"osv":"8.3",
+		"js":1,
+		"ext":{ "xff":"" },
+		"dpidmd5":"1d26d6af21c3481c359ab55f33b235dd",
+		"ip":"85.255.233.119",
+		"connectiontype":0,
+		"dpidsha1":"de51dba1c656e0b6a20a7e252ae2c3fa5f02d228",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70",
+		"carrier":"Vodafone",
+		"devicetype":1,
+		"language":"en",
+		"make":"Apple",
+		"ifa":"7C7EBBC8-3024-40D9-9956-CD4A8A7974A9"
+	},
+	"user":{
+		"id":"6c12db0dfceecabd8d01f917c9a0039110599811",
+		"ext":{ "sessiondepth":1 }
+	}
+}

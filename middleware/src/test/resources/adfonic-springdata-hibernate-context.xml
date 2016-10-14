@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    ">
+
+	<context:annotation-config />
+
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<!-- Load configuration settings -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:adfonic-springdata-hibernate-database.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Common stuff -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		p:persistenceUnitName="adfonic-domain" 
+		p:packagesToScan="com.adfonic.domain"
+		p:dataSource-ref="dataSource">
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+				p:database="MYSQL" 
+				p:showSql="false" 
+				p:generateDdl="false" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<prop key="hibernate.jdbc.fetch_size">10</prop>
+				<prop key="hibernate.jdbc.batch_size">10</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="dataSource" 
+		class="org.apache.commons.dbcp.BasicDataSource"
+		autowire="byName" 
+		destroy-method="close" 
+		p:driverClassName="${database.driver}"
+		p:url="${database.url}" 
+		p:username="${database.username}" 
+		p:password="${database.password}"
+		p:maxActive="${database.dbcp.maxActive}" 
+		p:maxWait="${database.dbcp.maxWait}"
+		p:minIdle="${database.dbcp.minIdle}" 
+		p:maxIdle="${database.dbcp.maxIdle}"
+		p:validationQuery="${database.dbcp.validationQuery}" 
+		p:testOnBorrow="true"
+		p:defaultTransactionIsolation="4" 
+		p:removeAbandoned="true"
+		p:removeAbandonedTimeout="300" 
+		p:logAbandoned="true" />
+
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+	<!-- Reporting stuff -->
+	<bean id="reportingEntityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		p:persistenceUnitName="adfonic-domain" 
+		p:packagesToScan="com.adfonic.domain"
+		p:dataSource-ref="reportingDataSource">
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+				p:database="MYSQL" 
+				p:showSql="false" 
+				p:generateDdl="false" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<prop key="hibernate.jdbc.fetch_size">10</prop>
+				<prop key="hibernate.jdbc.batch_size">10</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="reportingDataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
+		p:url="${reporting.jdbc.url}" 
+		p:user="${reporting.jdbc.username}"
+		p:password="${reporting.jdbc.password}" />
+
+	<!-- Fetch Stragegy support beans -->
+	<bean id="fetchesfactory" class="com.byyd.middleware.iface.dao.jpa.FetchesFactory" />
+	<bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory" init-method="init" />
+	
+	<!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+    <context:component-scan base-package="com.byyd.middleware">
+        <context:exclude-filter type="annotation" expression="com.byyd.middleware.iface.service.NotAutoScan"/>
+    </context:component-scan>
+
+	<!-- Bean Dispatcher -->
+	<bean id="adfonicBeanDispatcher" class="com.byyd.middleware.utils.AdfonicBeanDispatcher" />
+
+	<!-- Transactional Runner -->
+	<bean id="transactionalRunner" class="com.byyd.middleware.utils.TransactionalRunner" />
+
+	<!-- Audit -->
+	<bean id="auditorConfig" class="com.adfonic.audit.AuditorConfig">
+		<property name="auditedProperties">
+			<props>
+				<prop key="com.adfonic.domain.User">
+					email,firstName,lastName,country,phoneNumber,emailOptIn,status
+				</prop>
+				<prop key="com.adfonic.domain.Company">
+					accountTypeFlags,individual,country,taxCode,defaultTimeZone,autoTopupLimit,autoTopupAmount
+				</prop>
+				<prop key="com.adfonic.domain.Advertiser">
+					name,status,dailyBudget,notifyLimit,notifyAdditionalEmails,users,key,adOpsOwner,salesOwner
+				</prop>
+				<prop key="com.adfonic.domain.Campaign">
+					name,reference,description,startDate,endDate,defaultLanguage,overallBudget,dailyBudget,dailyBudgetWeekday,dailyBudgetWeekend,status,applicationID,conversionTrackingEnabled,installTrackingEnabled,targetCPA,optimizationMaxRemoval,optimizationMultiplier
+				</prop>
+				<prop key="com.adfonic.domain.Segment">
+					genderMix,minAge,maxAge,daysOfWeek,hoursOfDay,hoursOfDayWeekend,browsersAsString,countriesAsString,operatorsAsString,modelsAsString,platformsAsString,vendorsAsString
+				</prop>
+				<prop key="com.adfonic.domain.Creative">
+					name,format,status
+				</prop>
+				<prop key="com.adfonic.domain.Destination">
+					destinationType,data
+				</prop>
+				<prop key="com.adfonic.domain.Asset">
+					dataAsString
+				</prop>
+				<prop key="com.adfonic.domain.CampaignBid">
+					bidType,amount
+				</prop>
+				<prop key="com.adfonic.domain.Publisher">
+					name,pendingAdType,defaultAdRequestTimeout,defaultRevShare,trusted,rtbConfig,key,adOpsOwner,salesOwner,currentRevShare
+				</prop>
+				<prop key="com.adfonic.domain.Publication">
+					name,publicationType,description,autoApproval,status,genderMix,minAge,maxAge,languagesAsString
+				</prop>
+				<prop key="com.adfonic.domain.AdSpace">
+					name,status,formatsAsString
+				</prop>
+				<prop key="com.adfonic.domain.PaymentOptions">
+					paymentType,paymentAccount
+				</prop>
+				<prop key="com.adfonic.domain.PostalAddress">
+					firstName,lastName,address1,address2,city,state,postcode,country
+				</prop>
+				<prop key="com.adfonic.domain.AccountDetail">
+					amount
+				</prop>
+				<prop key="com.adfonic.domain.CampaignTimePeriod">
+					startDate,endDate
+				</prop>
+				<prop key="com.adfonic.domain.RtbConfig">
+					adMode,winNoticeMode
+				</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<bean id="entityAuditor" class="com.byyd.middleware.domainlog.EntityAuditorJpaImpl">
+		<constructor-arg ref="auditorConfig" />
+		<constructor-arg ref="domainLogManager" />
+		<constructor-arg value="middleware-test" />
+	</bean>
+	
+	<!-- User Cloud Manager bean -->
+	<bean id="advertiserCloudManager" class="com.byyd.middleware.account.service.jpa.AdvertiserCloudManagerJpaImpl"/>
+	
+	<bean id="filemoverAWSCredentials" class="com.amazonaws.auth.BasicAWSCredentials">
+	   <constructor-arg value="${filemover.accesskey:AKIAJAEQGE6K2MXARNPA}"/>
+	   <constructor-arg value="${filemover.secretkey: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}"/>
+	</bean>
+
+</beans>

@@ -1,0 +1,17 @@
+handlers=java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level=FINER
+java.util.logging.ConsoleHandler.formatter = com.adfonic.logging.ThreadedFormatter
+.level=INFO
+
+com.adfonic.middleware.level=INFO
+com.adfonic.middleware.resolvers.level=WARNING
+com.adfonic.middleware.service.jpa.BalanceAndBudgetServiceJpaImpl.level=INFO
+com.adfonic.tasks.level=FINER
+
+# ActiveMQ uses slf4j as of 5.5.0
+org.apache.activemq.level=WARNING
+
+org.springframework.level=WARNING
+
+org.hibernate.level=WARNING

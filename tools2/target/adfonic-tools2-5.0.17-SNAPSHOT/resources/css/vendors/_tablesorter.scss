@@ -1,0 +1,66 @@
+//////////////////////////
+// Tables Sorter Styles
+//////////////////////////
+
+$longRightPadding: 13px;
+$shortRightPadding: sub($longRightPadding, 3);
+%paddingForSorter {
+    padding: 4px $shortRightPadding 4px 10px;
+    &.reportingDetailTableCol-Campaign                      {padding: 4px $longRightPadding 4px 10px !important;}
+    &.reportingDetailTableCol-Category                      {padding: 4px $longRightPadding 4px 10px !important;}
+    &.reportingDetailTableCol-Format                        {padding: 4px $longRightPadding 4px 10px !important;}
+    &.reportingDetailTableCol-Creative                      {padding: 4px $longRightPadding 4px 10px !important;}
+    &.reportingDetailTableCol-Inventory                     {padding: 4px $longRightPadding 4px 10px !important;}
+    &.reportingDetailTableCol-IMPRESSIONS                   {padding: 4px $longRightPadding 4px 10px !important;}
+    &.reportingDetailTableCol-CONVERSIONS                   {padding: 4px $longRightPadding 4px 10px !important;}
+    &.reportingDetailTableCol-LOCATION_PERCENT_IMPRESSIONS  {padding: 4px $longRightPadding 4px 10px !important;}
+}
+
+/* header no sorting */
+.tablesorter-default .header,
+.tablesorter-default .tablesorter-header {
+    background: url("../../images/tablesorter/bg.png") no-repeat center right,
+                url("../../images/tablesorter/bg-btn.png") repeat-x;
+    
+    cursor: pointer;
+    white-space: normal;
+    
+    @extend %paddingForSorter;
+}
+
+/* header ascending */
+.tablesorter-default thead .headerSortUp,
+.tablesorter-default thead .tablesorter-headerSortUp,
+.tablesorter-default thead .tablesorter-headerAsc { 
+    background: url("../../images/tablesorter/asc.png") no-repeat center right,
+                url("../../images/tablesorter/bg-btn.png") repeat-x;
+    
+    @extend %paddingForSorter;
+}
+
+/* header descending */
+.tablesorter-default thead .headerSortDown,
+.tablesorter-default thead .tablesorter-headerSortDown,
+.tablesorter-default thead .tablesorter-headerDesc {    
+    background: url("../../images/tablesorter/desc.png") no-repeat center right,
+                url("../../images/tablesorter/bg-btn.png") repeat-x;
+
+    
+    @extend %paddingForSorter;
+}
+
+/* Zebra Widget - row alternating colors */
+.tablesorter-default tr.odd td {
+    background-color: #ffffff;
+}
+.tablesorter-default tr.even td {
+    background-color: #f8f8f8;
+}
+
+/* Zebra Widget - hovered row colors */
+.tablesorter-default tbody > tr:hover > td,
+.tablesorter-default tbody > tr.even:hover > td,
+.tablesorter-default tbody > tr.odd:hover > td {
+    background: #f4f4f4;
+    color: #444444;
+}

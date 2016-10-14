@@ -1,0 +1,252 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Getopt::Long;
+use LWP::UserAgent;
+
+sub makeQueryString {
+    my (%params) = @_;
+    my $queryString = "";
+    foreach my $key (sort(keys(%params))) {
+        if (length($queryString) > 0) {
+            $queryString .= '&';
+        }
+        $queryString .= $key . '=' . CGI::escape($params{$key});
+    }
+    return $queryString;
+}
+
+my $imageFallbackUrl = "http://www.chez-pierre.com/404.jpg";
+my $clickFallbackUrl = "http://www.chez-pierre.com";
+my $noImageFallback = 0;
+my $noClickFallback = 0;
+my $forceImageFallback = 0;
+
+# Grab command line args
+if (@ARGV >= 1) {
+    GetOptions("imageFallbackUrl=s" => \$imageFallbackUrl,
+               "clickFallbackUrl=s" => \$clickFallbackUrl,
+               "noImageFallback!" => \$noImageFallback,
+               "noClickFallback!" => \$noClickFallback,
+               "forceImageFallback!" => \$forceImageFallback);
+}
+
+if ($noImageFallback) {
+    print "*** No image fallback, testing pixel fallback\n";
+    undef $imageFallbackUrl;
+} else {
+    print "*** Fallback Image URL: $imageFallbackUrl\n";
+}
+
+if ($noClickFallback) {
+    print "*** No click fallback, testing default click fallback\n";
+    undef $clickFallbackUrl;
+} else {
+    print "*** Fallback Click URL: $clickFallbackUrl\n";
+}
+
+my $staticImpressionId = time() . int(rand(100));
+
+my $allowedFormats;
+# Uncomment this to test restricting the allowed formats to a
+# comma-separated list of Format system names
+#$allowedFormats = "image728x90";
+
+my $adSpaceID = "c70135db-b587-4777-9ec2-3ad16f310f93"; # this is an iPhone app but it'll work here
+
+my $ipAddress;
+#$ipAddress = "127.0.0.1";
+#$ipAddress = "166.132.164.157";
+#$ipAddress = "80.125.176.116"; # FR
+#$ipAddress = "32.128.108.158";
+#$ipAddress = "80.187.100.120"; # T-Mobile Germany
+#$ipAddress = "76.177.133.140"; # home
+#$ipAddress = "67.32.178.228"; # home
+#$ipAddress = "213.87.88.2"; # MTS Russian Federation
+#$ipAddress = "98.67.157.168"; # KY
+#$ipAddress = "192.168.0.1"; # private network
+#$ipAddress = "67.32.183.150"; # home Georgetown, KY
+$ipAddress = "32.128.108.158"; # AT&T US
+#$ipAddress = "unknown";
+#$ipAddress = "80";
+#$ipAddress = "86.194.5.66/186.194.5.66";
+#$ipAddress = "149.254.200.236"; # T-Mobile UK
+#$ipAddress = "foo.bar.com/32.128.108.158";
+#$ipAddress = "2.128.108.158/32.128.108.158";
+#$ipAddress = "24.114.128.0"; # Rogers Wireless Canada (postal code: m1b 1a1, province: Ontario)
+#$ipAddress = "67.205.68.11"; # Canada (postal code: h4p 1s4, province: Quebec)
+#$ipAddress = "184.43.64.179";
+#$ipAddress = "10.114.220.18"; # Private network...should come back unfilled
+#$ipAddress = "93.122.255.200"; # Quova operator alias test: orange romania
+#$ipAddress = "149.254.200.236"; # Quova operator alias test: tmobileuk
+
+my $userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+#$userAgent = "MOT-V3/0E.41.C3R MIB/2.2.1 Profile/MIDP-2.0 Configuration/CLDC-1.0 UP.Link/6.3.1.20.06.3.1.20.0";
+#$userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 2_2 like Mac OS X; en-us) AppleWebKit/525.18.1 (KHTML, like Gecko) Version/3.1.1 Mobile/5G77 Safari/525.20";
+#$userAgent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+#$userAgent = "DoCoMo/2.0 N905i(c100;TB;W24H16) (compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)";
+#$userAgent = "Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10";
+#$userAgent = "Mozilla/5.0 (iPod; U; CPU iPhone OS 3_1_3 like Mac OS X; de-de) AppleWebKit/528.18 (KHTML, like Gecko) Mobile/7E18";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; T-Mobile_Espresso Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; HTC Desire Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
+#$userAgent = "r451[TF268435458315611027487354018023233184] UP.Browser/6.2.3.8 (GUI) MMP/2.0";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; fr-ch; HTC Tattoo-Orange Build/DRC79) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1";
+#$userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; ja-jp; Dell Streak Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+
+if ($forceImageFallback) {
+    # In order to force the image fallback, we have to pass something
+    # that prevents the targeting engine from being able to pick an ad.
+    # Give it a crap User-Agent...that'll prevent it from being able
+    # to identify the device.
+    print "*** Forcing image fallback\n";
+    $userAgent = "Crap";
+}
+
+# Set up our HTTP client
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+
+# Act as our specific User-Agent
+$ua->agent($userAgent);
+
+# We never want redirects followed, we want the 302 and the "Location"
+# header passed back to us directly, so set max_redirect to zero.
+$ua->max_redirect(0);
+
+my $host = "localhost";
+my $port = "8080";
+my $urlBase = "http://$host:$port/adfonic-adserver";
+#$urlBase = "http://byyd.net";
+#$urlBase = "http://rfadserver01";
+
+###########################################################################
+# Test the static image request
+###########################################################################
+
+my %params = ();
+$params{"r.ip"} = $ipAddress;
+$params{"r.impid"} = $staticImpressionId;
+if (defined($imageFallbackUrl)) {
+    $params{"r.fallback"} = $imageFallbackUrl;
+}
+if (defined($allowedFormats)) {
+    $params{"o.format"} = $allowedFormats;
+}
+
+my $url = $urlBase . "/si/" . $adSpaceID . '?' . makeQueryString(%params);
+print "*** Hitting Static Image URL: $url\n";
+
+my $response = $ua->get($url);
+if ($response->code() != 302) {
+    print "*** ERROR: Expected 302, got: " . $response->status_line . "\n";
+    exit(1);
+}
+
+my $imageUrl = $response->header("Location");
+print "*** Got 302, image URL: $imageUrl\n";
+
+# If we forced an image fallback, make sure it used the fallback, if we
+# specified one, or the pixel otherwise.
+if ($forceImageFallback) {
+    if (defined($imageFallbackUrl)) {
+        if ($imageUrl ne $imageFallbackUrl) {
+            print "*** ERROR: Expected image fallback $imageFallbackUrl -- got $imageUrl\n";
+            exit(1);
+        }
+    } elsif ($imageUrl !~ /.+\/pixel\.gif$/) {
+        print "*** ERROR: Expected pixel fallback -- got $imageUrl\n";
+        exit(1);
+    }
+}
+
+###########################################################################
+# Test the static click request
+###########################################################################
+
+# Construct the click URL
+%params = ();
+$params{"r.ip"} = $ipAddress;
+$params{"r.impid"} = $staticImpressionId;
+if (defined($clickFallbackUrl)) {
+    $params{"r.fallback"} = $clickFallbackUrl;
+}
+
+$url = $urlBase . "/sc/" . $adSpaceID . '?' . makeQueryString(%params);
+print "*** Hitting Static Click URL: $url\n";
+
+$response = $ua->get($url);
+if ($response->code() != 302) {
+    print "*** ERROR: Expected 302, got: " . $response->status_line . "\n";
+    exit(1);
+}
+
+my $clickUrl = $response->header("Location");
+print "*** Got 302, click URL: " . $clickUrl . "\n";
+
+###########################################################################
+# Test a duplicate static click request
+###########################################################################
+
+# We should be able to hit the same click URL repeatedly and get the same
+# exact result.  Tracker will de-dup.  Hit it again...
+print "*** Testing duplicate click...\n";
+$response = $ua->get($url);
+if ($response->code() != 302) {
+    print "*** ERROR: Expected 302, got: " . $response->status_line . "\n";
+    exit(1);
+}
+
+if ($response->header("Location") ne $clickUrl) {
+    print "*** ERROR: duplicate click got 302, but click URL: " . $response->header("Location") . " -- expected: $clickUrl\n";
+    exit(1);
+}
+print "*** Duplicate click test passed\n";
+
+###########################################################################
+# Test a static click request with an unknown static impression id
+###########################################################################
+
+# Construct the click URL
+%params = ();
+$params{"r.ip"} = $ipAddress;
+$params{"r.impid"} = "invalidinvalidinvalid";
+if (defined($clickFallbackUrl)) {
+    $params{"r.fallback"} = $clickFallbackUrl;
+}
+
+$url = $urlBase . "/sc/" . $adSpaceID . '?' . makeQueryString(%params);
+print "*** Hitting Invalid Static Click URL: $url\n";
+
+$response = $ua->get($url);
+if ($response->code() != 302) {
+    print "*** ERROR: Expected 302, got: " . $response->status_line . "\n";
+    exit(1);
+}
+
+$clickUrl = $response->header("Location");
+# We expect the click to redirect to the fallback
+if (defined $clickFallbackUrl) {
+    # It should have redirected us to our fallback URL
+    if ($clickUrl ne $clickFallbackUrl) {
+        print "*** ERROR: Expected $clickFallbackUrl -- got $clickUrl\n";
+        exit(1);
+    }
+} else {
+    # It should have redirected us to adserver's default click fallback URL,
+    # which we *could* parse out of adfonic-adserver.properties...but for
+    # now we can just hard-code it to keep it simple...i.e.:
+    # ClickThrough.fallbackURL=/error.html
+    if ($clickUrl !~ /.+\/error\.html$/) {
+        print "*** ERROR: Expected .../error.html -- got $clickUrl\n";
+        exit(1);
+    }
+}
+print "*** Invalid click test passed\n";
+
+###########################################################################
+
+print "*** All tests passed\n";

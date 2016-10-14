@@ -1,0 +1,17 @@
+/*===================  MIXINS  ===================*/
+
+@mixin colourBgWithBorder ($bgColour: $bgColour) {
+    padding:5px 20px;
+    color: black;
+    border:solid 1px;
+    background-color: $bgColour;
+}
+
+@mixin fixWidth ($width: 10px) {
+	width: $width !important;
+}
+
+@mixin fixWrapWidth ($width: 10px) {
+	@extend %breakAllWord;
+	@include fixWidth($width);
+}

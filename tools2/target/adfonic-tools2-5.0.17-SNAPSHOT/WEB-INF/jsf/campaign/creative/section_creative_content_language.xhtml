@@ -1,0 +1,38 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:sec="http://www.springframework.org/security/tags">
+ 
+	<h:outputLabel styleClass="bl b" id="lang-label" for="language" 
+                               value="#{msg['page.campaign.creative.language']}"/>
+    <pri:selectOneMenu styleClass="long language" id="language" value="#{creative.language}" converter="com.adfonic.tools.converter.language.LanguageConverter">
+        <pri:ajax event="change" update="translationPanel,saveButton" listener="#{campaignCreativeMBean.languageChangeListener}"/>
+        <f:attribute name="creativeIndex" value="#{status.index}" />
+        <f:selectItems value="#{campaignCreativeMBean.firstLanguages}" var="l" itemLabel="#{l.name}" itemValue="#{l}"/>
+        <f:selectItem itemLabel="------------" itemValue="#{campaignCreativeMBean.emptyLanguage}"/>
+        <f:selectItems value="#{campaignCreativeMBean.secondLanguages}" var="l" itemLabel="#{l.name}" itemValue="#{l}"/>
+        <f:validator validatorId="LanguageValidator"/>
+    </pri:selectOneMenu>
+    <pri:message id="languagemessage" for="language"/>
+    <pri:commandLink value="#{msg['page.campaign.creative.applyall']}" process="@this,language" update="@this,languagemessage,warning,saveButton,confirmApplyDialogWarningContent"
+    				actionListener="#{campaignMBean.campaignCreativeMBean.processApply}">
+    	<f:attribute name="creativeIndex" value="#{status.index}"/>
+    	<f:attribute name="applyTo" value="language"/>
+    </pri:commandLink>
+    <h:panelGroup id="translationPanel" layout="block">
+        <h:panelGroup rendered="#{!creative.english}">
+            <h:outputLabel styleClass="bl b" id="trans-label" for="translation" value="#{msg['page.campaign.creative.translation']}" />
+                <pri:inputText styleClass="bl" maxlength="50" id="translation" value="#{creative.englishTranslation}" required="true"
+                            requiredMessage="#{msg['page.campaign.creative.translation.required']}">
+                	<pri:ajax event="blur" listener="#{campaignCreativeMBean.translationChangeListener}" update="warning,saveButton"/>       
+    				<f:attribute name="creativeIndex" value="#{status.index}"/>            
+                </pri:inputText>            
+                <pri:message for="translation"/>
+        </h:panelGroup>
+    </h:panelGroup>
+</ui:composition>

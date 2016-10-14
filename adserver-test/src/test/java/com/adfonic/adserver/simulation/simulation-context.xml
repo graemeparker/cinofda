@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+	   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+	<bean id="mappings"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:/sim/adfonic-adserver.properties</value>
+		</property>
+	</bean>
+
+	<import resource="classpath:adfonic-adserver-context-core.xml" />
+
+	<import resource="classpath:adfonic-adserver-adevent-context.xml" />
+	
+	<import resource="classpath:adfonic-tracker-context.xml" />
+
+	<context:annotation-config />
+
+	<bean id="weveBeaconUrl" class="java.lang.String">
+		<constructor-arg value="localhost:9090/"></constructor-arg>
+	</bean>
+
+	<bean id="weveAdvertisers" class="java.util.HashSet">
+		<constructor-arg>
+			<list>
+				<value>test1</value>
+				<value>test2</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="jmsUtils" class="com.adfonic.jms.JmsUtils" />
+
+
+	<bean id="stoppageManager" class="com.adfonic.adserver.impl.StoppageManagerImpl">
+		<constructor-arg index="0" value="true" />
+		<constructor-arg index="1" ref="stoppageFromIWS" />
+	</bean>
+
+	<bean id="stoppageFromIWS" class="com.adfonic.adserver.stoppages.StoppageFromIWS">
+		<constructor-arg ref="iwsClient" />
+	</bean>
+
+	<bean id="iwsClient" class="com.adfonic.adserver.simulation.impl.SimulationIWSClient" />
+
+	<bean id="centralJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop" p:maxConnections="${central.jms.pool.maxConnections}">
+		<property name="connectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory"
+				p:brokerURL="${central.jms.broker.url}" />
+		</property>
+	</bean>
+
+	<bean id="centralJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<constructor-arg ref="centralJmsConnectionFactory" />
+	</bean>
+
+	<bean id="cacheManager" class="com.adfonic.adserver.simulation.impl.SimulationCacheManager" />
+
+	<bean id="admqAdEventQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="admqAdEventBatchQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="admqClickMessageQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="adSpaceVerifiedQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="dormantAdSpaceReactivationQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="rtbPublicationPersistenceQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="rtbAdSpaceFormatQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="clickForwardQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+	<bean id="actionTrackingQueue" class="com.adfonic.adserver.simulation.impl.SimulationQueue" />
+
+	<bean id="remoteRequestManager" class="com.adfonic.adserver.simulation.impl.SimulationRemoteRequestManager" />
+
+	<bean id="simAdserverCacheManager"
+		class="com.adfonic.adserver.simulation.impl.SimulationAdserverDataCacheManagerImpl" />
+
+	<bean id="statusChangeManager" class="com.adfonic.adserver.impl.StatusChangeManagerImpl" />
+
+	<bean id="simRetargetingService"
+		class="com.adfonic.adserver.simulation.impl.SimulationRetargetingServiceImpl" />
+
+	<bean id="simDmpAudienceCacheManager" class="com.adfonic.retargeting.InMemoryDmpAudienceCacheManager" />
+
+	<bean id="simCounter" class="com.adfonic.util.stats.CounterManager">
+		<constructor-arg><set/></constructor-arg>
+	</bean>
+	
+	<bean id="ddrService" class="${ddr.deviceatlas.serviceimpl}"/>
+    <bean id="DdrAmazonS3Service" class="com.adfonic.ddr.amazon.AmazonS3Service" lazy-init="true"/>
+
+	<bean id="simAdserverJms"
+		class="com.adfonic.adserver.simulation.impl.SimulationAdserverJmsImpl" />
+
+	<bean id="domainCacheManager"
+		class="com.adfonic.adserver.simulation.impl.SimulationDomainCacheManager">
+		<constructor-arg value="/" />
+		<constructor-arg value="domainCache" />
+		<constructor-arg value="true" />
+	</bean>
+
+	<bean id="adserverDomainCacheManager"
+		class="com.adfonic.adserver.simulation.impl.SimulationAdserverDomainCacheManager">
+		<constructor-arg value="/" />
+		<constructor-arg value="adserverCache" />
+		<constructor-arg value="true" />
+	</bean>
+	
+	<bean id="impressionService"
+		class="com.adfonic.adserver.impl.NamespaceAwareImpressionService" />
+
+	<bean id="frequencyCounter"
+		class="com.adfonic.adserver.impl.NamespaceAwareFrequencyCounter" />
+
+	<bean id="rtbCacheService"
+		class="com.adfonic.adserver.rtb.impl.NamespaceAwareRtbCacheService" />
+
+	<bean id="parallelModeCacheService"
+		class="com.adfonic.adserver.impl.NamespaceAwareParallelModeCacheService" />
+
+	<bean id="dataSource" class="com.adfonic.adserver.simulation.impl.SimulationDataSource" />
+	
+	<bean id="cachedbDataSource" class="com.adfonic.adserver.simulation.impl.SimulationDataSource" />
+
+	<bean id="propertiesFactory" class="com.adfonic.data.cache.util.PropertiesFactory"
+		autowire="byName" />
+
+	<bean id="backupLogger" class="com.adfonic.adserver.simulation.impl.SimulationBackupLogger"/>
+	
+    <bean id="backupLoggerFilter" class="com.adfonic.adserver.simulation.impl.SimulationBackupLoggerFilter"/>
+
+	<context:component-scan
+		base-package="com.adfonic.adserver.controller,com.adfonic.adserver.view" />
+		
+	<bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper" />
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+	    <property name="targetObject" ref="jacksonObjectMapper" />
+	    <property name="targetMethod" value="configure" />
+	    <property name="arguments">
+	        <list>
+	            <value type="org.codehaus.jackson.map.DeserializationConfig.Feature">FAIL_ON_UNKNOWN_PROPERTIES</value>
+	            <value>false</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean id="budgetManager" class="com.adfonic.adserver.impl.LocalBudgetManagerAllAck"/>
+</beans>

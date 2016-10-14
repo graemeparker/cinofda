@@ -1,0 +1,13 @@
+<SCRIPT language='JavaScript1.1' SRC="http://ad.doubleclick.net/adj/${adComponents.components.extendedData.tagId};dcadv=${adComponents.components.extendedData.advertId};sz=${adComponents.components.extendedData.width}x${adComponents.components.extendedData.height};click=${adComponents.destinationUrl}?redir=;ord=[${macros.timestamp}]?">
+</SCRIPT>
+<NOSCRIPT>
+<A HREF="http://ad.doubleclick.net/jump/${adComponents.components.extendedData.tagId};dcadv=${adComponents.components.extendedData.advertId};sz=${adComponents.components.extendedData.width}x${adComponents.components.extendedData.height};click=${adComponents.destinationUrl}?redir=;ord=[${macros.timestamp}]?">
+<IMG SRC="http://ad.doubleclick.net/ad/${adComponents.components.extendedData.tagId};dcadv=${adComponents.components.extendedData.advertId};sz=${adComponents.components.extendedData.width}x${adComponents.components.extendedData.height};click=${adComponents.destinationUrl}?redir=;ord=[${macros.timestamp}]?" BORDER=0 WIDTH=${adComponents.components.extendedData.width} HEIGHT=${adComponents.components.extendedData.height} ALT="Advertisement"></A>
+</NOSCRIPT>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

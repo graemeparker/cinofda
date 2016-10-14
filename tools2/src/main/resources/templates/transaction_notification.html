@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+A transaction notification was sent for the following:
+<hr />
+User: ${user.firstName} ${user.lastName} ${user.email},
+Advertiser: ${advertiser.name} ${advertiser.externalID}
+Wire transfer amount: ${transactionNotification.amount}<br/><br/>
+Wire transfer reference: ${transactionNotification.reference}<br/><br/>
+Timestamp: ${transactionNotification.timestamp}
+<hr /><br/>
+Kind regards,<br/>
+The ${companyName} Team<br/><br/>
+<br/><br/>
+</body>
+</html>

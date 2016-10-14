@@ -1,0 +1,75 @@
+{
+   "id":"@{adEvent.impressionExternalID}",
+   "timestamp":"@{dateFmt(adEvent.eventTime)}",
+   "bcat":[],
+   "bid_request":{  
+      "at": @{adEvent.rtb == 1 ? 2 : 0}, 
+      "device":{  
+         "model":"@{adEvent.modelId}",
+         "carrier":"@{adEvent.operatorId}",
+         "connectiontype":"@{adEvent.operatorId == null ? 2 : 3}",
+         "geo":{  
+            @if{adEvent.geoCountry == 'US' || adEvent.geoCountry == 'UK' || adEvent.geoCountry == 'GB' }"zip": "@{adEvent.geoPostalCode != null? adEvent.geoPostalCode : ''}",@end{}
+            "city": "@{adEvent.geoCity != null ? adEvent.geoCity : ''}",
+            "type": "@{adEvent.geoType != null ? adEvent.geoType : ''}", 
+            "country": "@{adEvent.geoCountry != null ? adEvent.geoCountry : ''}"
+         },
+         "ext":{  
+            "didtypes":[@{keySet(adEvent.deviceIdentifiers)}]
+         }
+      },
+      "user":{  
+         "id":"@{hashFirstDeviceId(adEvent.deviceIdentifiers)}"
+      },
+      "imp":[  
+         {  
+            "tagid":"@{adEvent.adSpaceExternalId}"
+         }
+      ],
+      @if{adEvent.application == 1} "app" @else{} "site" @end{}: {  
+         "id":"@{adEvent.publicationId}",
+         "domain":"@if{adEvent.publicationDomain != null}@{adEvent.publicationDomain}@end{}"
+      }
+   },
+   "bid_responses":[  
+      {  
+         "status":1,
+         "currency":"USD",
+         "seatbid":[  
+            {  
+               "bid":[  
+                  {  
+				     "crid":"@{adEvent.creativeId}",
+				     "cid":"@{adEvent.campaignId}",
+				     @if{adEvent.rtb == 1}"price":@{adEvent.rtbBidPrice}, @end{}
+                     "status":"2",
+                      "clear_price": @{adEvent.rtb == 1 ? adEvent.rtbSettlementPrice : ''},
+               	      "adomain":"@if{adEvent.adomain != null}@{adEvent.adomain}@end{}",
+               "iurl":"@if{adEvent.iurl != null} @{adEvent.iurl} @else{}http://as.byyd.net/as/@end{}"
+                  }
+               ],
+               "ext":{  
+                  "fmt": "@{adEvent.formatId}",
+                  "advid": "@{adEvent.advertiserId}",
+                  "exchangeid": "@{adEvent.exchangeId}",
+                  "bid_type": "@{adEvent.bidType}"
+               }
+            }
+         ]
+      }
+   ],
+   "ext":{  
+      "byyd":{  
+         "buyer_premium": @{adEvent.accountingBuyerPremium != null ? adEvent.accountingBuyerPremium : '""'},
+         "direct_cost": @{adEvent.accountingDirectCost != null ? adEvent.accountingDirectCost : '""'},
+         "tech_fee": @{adEvent.accountingTechFee != null ? adEvent.accountingTechFee : '""'},
+         "data_retail": @{adEvent.accountingDataRetail != null ? adEvent.accountingDataRetail : '""'},
+         "data_wholesale": @{adEvent.accountingDataWholesale != null ? adEvent.accountingDataWholesale : '""'},
+         "dsp_margin": @{adEvent.accountingDspMargin != null ? adEvent.accountingDspMargin : '""'},
+         "cust_margin": @{adEvent.accountingCustMargin != null ? adEvent.accountingCustMargin : '""'},
+         "payout": @{adEvent.accountingPayout != null ? adEvent.accountingPayout : '""'},
+         "shard": "@{adEvent.shard}",
+         "server": "@{adEvent.serverName}"
+      }
+   }
+}

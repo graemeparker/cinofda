@@ -1,0 +1,181 @@
+id: "U.\216\337\000\002e\274\n\037$\020\326\000G\237"
+ip: "\256\373P"
+user_agent: "Mozilla/5.0 (Linux; Android 4.4.2; ALCATEL A564C Build/KVT49L) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36 (Mobile; afma-sdk-a-v7099000.4323000.1),gzip(gfe)"
+url: "https://play.google.com/store/apps/details?id=com.zynga.wwf2.free"
+detected_language: "en"
+detected_vertical {
+  id: 1494
+  weight: 0.2293198
+}
+detected_vertical {
+  id: 1461
+  weight: 0.2293198
+}
+detected_vertical {
+  id: 8
+  weight: 0.2293198
+}
+detected_vertical {
+  id: 381
+  weight: 0.16338784
+}
+detected_vertical {
+  id: 105
+  weight: 0.14865276
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 30
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  allowed_vendor_type: 10
+  allowed_vendor_type: 28
+  allowed_vendor_type: 42
+  allowed_vendor_type: 43
+  allowed_vendor_type: 51
+  allowed_vendor_type: 60
+  allowed_vendor_type: 63
+  allowed_vendor_type: 92
+  allowed_vendor_type: 94
+  allowed_vendor_type: 113
+  allowed_vendor_type: 126
+  allowed_vendor_type: 128
+  allowed_vendor_type: 130
+  allowed_vendor_type: 144
+  allowed_vendor_type: 145
+  allowed_vendor_type: 146
+  allowed_vendor_type: 156
+  allowed_vendor_type: 179
+  allowed_vendor_type: 182
+  allowed_vendor_type: 198
+  allowed_vendor_type: 204
+  allowed_vendor_type: 225
+  allowed_vendor_type: 562
+  allowed_vendor_type: 542
+  allowed_vendor_type: 543
+  allowed_vendor_type: 550
+  allowed_vendor_type: 551
+  allowed_vendor_type: 231
+  allowed_vendor_type: 232
+  allowed_vendor_type: 233
+  allowed_vendor_type: 236
+  allowed_vendor_type: 237
+  allowed_vendor_type: 238
+  allowed_vendor_type: 255
+  allowed_vendor_type: 260
+  allowed_vendor_type: 267
+  allowed_vendor_type: 285
+  allowed_vendor_type: 303
+  allowed_vendor_type: 315
+  allowed_vendor_type: 564
+  allowed_vendor_type: 325
+  allowed_vendor_type: 331
+  allowed_vendor_type: 332
+  allowed_vendor_type: 334
+  allowed_vendor_type: 335
+  allowed_vendor_type: 342
+  allowed_vendor_type: 414
+  allowed_vendor_type: 566
+  allowed_vendor_type: 432
+  allowed_vendor_type: 441
+  allowed_vendor_type: 445
+  allowed_vendor_type: 472
+  allowed_vendor_type: 474
+  allowed_vendor_type: 476
+  allowed_vendor_type: 477
+  allowed_vendor_type: 480
+  allowed_vendor_type: 481
+  allowed_vendor_type: 485
+  allowed_vendor_type: 486
+  allowed_vendor_type: 489
+  allowed_vendor_type: 490
+  allowed_vendor_type: 497
+  allowed_vendor_type: 504
+  allowed_vendor_type: 556
+  allowed_vendor_type: 529
+  allowed_vendor_type: 534
+  allowed_vendor_type: 537
+  allowed_vendor_type: 538
+  excluded_sensitive_category: 19
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 23
+  excluded_sensitive_category: 30
+  excluded_sensitive_category: 10
+  excluded_sensitive_category: 3
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 5
+  excluded_sensitive_category: 8
+  excluded_sensitive_category: 24
+  excluded_sensitive_category: 18
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 750000
+    7: "\b\312\236\0030\300\226\261\002"
+    7: "\b\217\0220\360\271&"
+    7: "0\260\343-"
+  }
+  targetable_channel: "pack-brand-Zynga Gaming Network::All"
+  slot_visibility: ABOVE_THE_FOLD
+  excluded_product_category: 10048
+  excluded_product_category: 10137
+  excluded_product_category: 10453
+  excluded_product_category: 10491
+  excluded_product_category: 11870
+  excluded_product_category: 13423
+  excluded_product_category: 13566
+  ad_block_key: 1
+  publisher_settings_list_id: 7691466862508413292
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEJ6Dk4S0k8QvXvlCCm6u9rY"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 59
+detected_content_label: 41
+mobile {
+  platform: "android"
+  app_id: "com.zynga.wwf2.free"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60047
+  app_category_ids: 60008
+  app_category_ids: 60000
+  app_category_ids: 69500
+  brand: "alcatel"
+  model: "ot-a564c"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 4
+  }
+  screen_width: 320
+  screen_height: 569
+  is_mobile_web_optimized: true
+  carrier_id: 70092
+  device_pixel_ratio_millis: 1500
+  encrypted_advertising_id: "U.\216\337\000\002e\274\n\037$\020\001\000G\237+\212\373\242\\u?\241\3728YW\27563K\023\373\336\240"
+  24: "Words With Friends"
+  25: 0x4086cd8f
+}
+cookie_age_seconds: 9127372
+postal_code: "30318"
+geo_criteria_id: 9010937
+seller_network_id: 5660
+publisher_settings_list_id: 4091509475128414241

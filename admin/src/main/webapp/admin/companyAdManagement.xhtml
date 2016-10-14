@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Company ad management"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">${msg['page.generic.error.label']}</div>
+    <div class="infoContent">${msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+<hr/>
+
+<p>
+If the site or app has chosen automatic approval, all ads currently running will be shown below. Any ads deemed unsuitable can be removed by using the "Reject" button.
+</p>
+<p>
+For manual approval sites and apps, the ads will need to be reviewed and either approved or rejected
+</p>
+
+<h:form id="adManagementPublicationForm">
+ <div>
+   <h:messages/>
+   <h:outputText rendered="#{empty adminAdManagement.availablePublications}" ><p>Selected company has no publications</p></h:outputText>
+ </div>
+ <div class="form">
+   <div style="float: left; display:inline; width:150px">Select your site or app </div>
+   <div style="float: left; display:inline;">
+    <h:selectOneMenu id="publication"
+      value="#{adminAdManagement.publication}"
+      valueChangeListener="#{adminAdManagement.publicationChanged}"
+      immediate="true"
+      converter="jpaConverter"
+      onchange="submit()"
+      styleClass="styled">
+      <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+      <f:selectItems value="#{adminAdManagement.availablePublications}" />
+    </h:selectOneMenu>
+   </div>
+   <div class="clear"></div>
+ </div>
+
+<h:panelGroup layout="block" rendered="#{adminAdManagement.publication != null}" styleClass="form">
+   <div style="float: left; display:inline; width:150px">Ad queue </div>
+   <div style="float: left; display:inline;">
+      <h:selectOneMenu id="adQueue"
+       value="#{adminAdManagement.selectedQueue}"
+      immediate="true"
+       onchange="submit()"
+       styleClass="styled">
+       <f:selectItems value="#{adminAdManagement.availableQueues}" />
+      </h:selectOneMenu>
+   </div>
+   <div class="clear"></div>
+ </h:panelGroup>
+
+<h:panelGroup id="adTableGroup" layout="block" rendered="#{adminAdManagement.publication != null and adminAdManagement.selectedQueue != null}">
+<p><h:messages/></p>
+
+<div style="width:900px;">
+<table class="expandable">
+  <tr>
+    <th>
+    <div style="float:left">
+     <h:outputText value="#{adminAdManagement.selectedQueue}" /> (<h:outputText value="#{adminAdManagement.adDataModel.rowCount}" /> ad<h:outputText value="s" rendered="#{adminAdManagement.adDataModel.rowCount ne 1}" />)
+    </div>
+
+    <div class="clear"></div>
+    </th>
+  </tr>
+</table>
+<h:panelGroup layout="block" rendered="#{not empty adminAdManagement.adDataModel and adminAdManagement.adDataModel.rowCount gt 0}">
+<table class="summary">
+  <tr>
+    <th>
+      <div style="float:left">
+      </div>
+      <div style="float:right">
+        <pri:commandButton id="approveButton" value="Approve"
+                            rendered="#{adminAdManagement.selectedQueue == 'Rejected' || adminAdManagement.selectedQueue == 'Pending'}"
+                             action="#{adminAdManagement.doApprove}" update=":adManagementPublicationForm:adTableGroup"/>
+        <pri:commandButton id="rejectButton" value="Reject"
+                            rendered="#{adminAdManagement.selectedQueue == 'Approved' || adminAdManagement.selectedQueue == 'Pending'}"
+                             action="#{adminAdManagement.doReject}" update=":adManagementPublicationForm:adTableGroup"/>
+      </div>
+    </th>
+  </tr>
+</table>
+<pri:dataTable id="adDataTable" var="row" paginator="true" rows="10" lazy="true"
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 rowsPerPageTemplate="#{adminAdManagement.rowDisplay}" value="#{adminAdManagement.adDataModel}" styleClass="data" rowClasses="first,second" rendered="#{adminAdManagement.adDataModel.rowCount gt 0}"
+                 selection="#{adminAdManagement.selectedCreatives}">
+  <pri:column style="width:18px" selectionMode="multiple" />
+
+  <pri:column width="90">
+    <f:facet name="header">
+      <h:outputText value="Platforms" />
+    </f:facet>
+    <h:outputText value="#{ad:platformTargetDescription(row.segment)}" />
+  </pri:column>
+  <pri:column width="200">
+    <f:facet name="header">
+      <h:outputText value="Countries" />
+    </f:facet>
+    <h:outputText value="Global" rendered="#{empty row.segment.countries}" />
+    <h:outputText rendered="#{not empty row.segment.countries and !row.segment.countryListIsWhitelist}" value="Exclude: " />
+      <h:outputText value="#{ad:countryNamesBySegment(row.segment)}" />
+  </pri:column>
+  <pri:column>
+    <f:facet name="header">
+      <h:outputText value="Type" />
+    </f:facet>
+    <h:outputText rendered="#{row.campaign.advertiser.key}" value="Key" />
+    <h:outputText rendered="#{!row.campaign.advertiser.key}" value="Not Key" />
+  </pri:column>
+  <pri:column>
+    <f:facet name="header">
+      <h:outputText value="Excluded categories" />
+    </f:facet>
+    <h:outputText value="#{ad:excludedCategoryNamesBySegment(row.segment)}" />
+  </pri:column>
+  <pri:column>
+    <f:facet name="header">
+      <h:outputText value="Campaign name" />
+    </f:facet>
+    <h:outputText value="#{row.campaign.name}" />
+  </pri:column>
+  <pri:column width="200">
+    <f:facet name="header">
+      <h:outputText value="Ad creative" />
+    </f:facet>
+    <h:panelGroup>
+      <h:graphicImage rendered="#{row.format.systemName eq 'image728x90'}"
+              url="/showAsset/#{ad:assetExternalID(row,null,'image')}"
+              width="242" height="30" />
+      <h:graphicImage rendered="#{row.format.systemName eq 'image468x60'}"
+              url="/showAsset/#{ad:assetExternalID(row,null,'image')}"
+              width="233" height="30" />
+      <h:graphicImage rendered="#{row.format.systemName eq 'image120x600'}"
+              url="/showAsset/#{ad:assetExternalID(row,null,'image')}"
+              width="40" height="150" />
+      <h:graphicImage rendered="#{row.format.systemName eq 'banner'}"
+              url="/showAsset/#{ad:assetExternalID(row,null,'image')}"
+              width="168" height="28" />
+      <h:graphicImage rendered="#{row.format.systemName eq 'iab300x250'}"
+              url="/showAsset/#{ad:assetExternalID(row,null,'image')}"
+              width="168" height="140" />
+      <h:graphicImage rendered="#{row.format.systemName eq 'image320x480'}"
+              url="/showAsset/#{ad:assetExternalID(row,null,'image')}"
+              width="120" height="180" />
+      <h:outputText rendered="#{row.format.systemName eq 'text'}"
+            value="#{ad:assetText(row,null,'text')}" />
+    </h:panelGroup>
+  </pri:column>
+</pri:dataTable>
+<table class="summary">
+  <tr>
+    <th>
+      <div style="float:left">
+      </div>
+      <div style="float:right">
+        <pri:commandButton id="approveButtonFooter" value="Approve"
+                            rendered="#{adminAdManagement.selectedQueue == 'Rejected' || adminAdManagement.selectedQueue == 'Pending'}"
+                             action="#{adminAdManagement.doApprove}" update=":adManagementPublicationForm:adTableGroup"/>
+        <pri:commandButton id="rejectButtonFooter" value="Reject"
+                            rendered="#{adminAdManagement.selectedQueue == 'Approved' || adminAdManagement.selectedQueue == 'Pending'}"
+                             action="#{adminAdManagement.doReject}" update=":adManagementPublicationForm:adTableGroup"/>
+      </div>
+    </th>
+  </tr>
+</table>
+</h:panelGroup>
+</div>
+</h:panelGroup>
+</h:form>
+</ui:define>
+</ui:composition>

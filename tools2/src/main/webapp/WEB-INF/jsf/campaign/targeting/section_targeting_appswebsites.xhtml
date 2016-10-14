@@ -1,0 +1,18 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<pri:tab id="appTab" title="#{msg['page.campaign.targeting.app']}">
+	    <div class="form-row ovh app-site">
+	        <pri:selectManyCheckbox layout="pageDirection" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAppSiteMBean.mediumTargeting}">
+				<f:selectItem itemValue="APPLICATION" itemLabel="#{msg['page.campaign.targeting.app.label']}" />
+				<f:selectItem itemValue="SITE" itemLabel="#{msg['page.campaign.targeting.web.label']}" />
+	        </pri:selectManyCheckbox>
+	    </div> 
+	</pri:tab>
+</ui:composition>                                                           

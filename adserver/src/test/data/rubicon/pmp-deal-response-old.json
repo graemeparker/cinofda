@@ -1,0 +1,20 @@
+{
+	"id":"0709b91e4ac8262177d94f54b09d76e1170b8d88",
+	"bidid":"2421cd21-7d99-bafc-b5f0-79d61dc36f1f",
+	"seatbid":[ {
+			"bid":[
+				{
+					"impid":"1",
+					"price":16.388000000000001676880856393836438655853271484375,
+					"adomain":[ "lloydsbank.com" ],
+					"cid":"dc505a94-9693-4b0c-b2e7-61bd314edc73",
+					"crid":"e17ab2b9-ada3-41bb-9a2c-1090e2d0c1eb",
+					"iurl":"http://as.byyd.net/as//70e7727d-529a-4a71-b11c-7c37390db85c",
+					"adm":"<a href=\"%%click_macro%%?url=http%3A%2F%2Frubicon-rtb-us-east.byyd.net%2Fcr%2Fa47f6492-b677-4525-b29a-7ec3a6110e16%2Fe1309ada-dfc7-40dc-3622-eeef72da5524?redir=http%3A%2F%2Fad.doubleclick.net%2Fddm%2Fjump%2FN6010.1327842.WEVE.COM%2FB8640287.116734847%3Bsz%3D320x50%3Bord%3D1430233221868%3F\">\r\n\r\n<IMG SRC=\"http://ad.doubleclick.net/ddm/ad/N6010.1327842.WEVE.COM/B8640287.116734847;sz=320x50;ord=1430233221868?\" BORDER=0 WIDTH=320 HEIGHT=50 ALT=\"Advertisement\"></A><!-- Beacon 1 -->\n<img width=1 height=1 src=\"http://rubicon-rtb-us-east.byyd.net/bc/a47f6492-b677-4525-b29a-7ec3a6110e16/e1309ada-dfc7-40dc-3622-eeef72da5524.gif?sp=${AUCTION_PRICE:BF}\"/>\n",
+					"id":"3890945",
+					"deal_id":"BYD-7706-00143"
+				}
+			],
+			"seat":"a795ff8f-6c88-46e4-97cc-bd4c2cd2886a"
+	} ]
+}

@@ -1,0 +1,40 @@
+{
+	"id":"6515603016816033414",
+	"imp":[ {
+			"id":"1",
+			"tagid":"2073717",
+			"instl":0,
+			"banner":{ "w":300, "h":250,
+				"api":[ 3 ],
+				"id":"1",
+				"battr":[ ]
+			}
+	} ],
+	"user":{ "id":"3597789648436957713", "gender":"O" },
+	"site":{
+		"id":"575194", "domain":"dekalee.net",
+		"publisher":{ "id":"295840" }
+	},
+	"at":2,
+	"device":{
+		"dnt":0,
+		"ua":"Mozilla/5.0 (Linux; Android 4.4.2; GT-I9505 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.131 Mobile Safari/537.36",
+		"ip":"31.34.163.65",
+		"geo":{ "country":"FRA", "city":"Nantes", "zip":"44000" },
+		"language":"fr",
+		"make":"Samsung",
+		"model":"GT-I9505",
+		"os":"Android",
+		"devicetype":1,
+		"connectiontype":0
+	},
+	"bcat":[ ],
+	"badv":[ ],
+	"tmax":100,
+	"ext":{
+		"appnexus":{
+			"seller_member_id":1601,
+			"certified_supply":false
+		}
+	}
+}

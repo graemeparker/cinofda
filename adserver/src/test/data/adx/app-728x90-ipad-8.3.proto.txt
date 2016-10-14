@@ -1,0 +1,86 @@
+id: "U.\216\337\000\tRB\n4(\324\364\000\0065"
+ip: "F\301\364"
+user_agent: "Mozilla/5.0 (iPad; CPU OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F69,gzip(gfe)"
+url: "https://itunes.apple.com/app/id398890666"
+detected_language: "en"
+detected_vertical {
+  id: 39
+  weight: 0.38703373
+}
+detected_vertical {
+  id: 105
+  weight: 0.38703373
+}
+detected_vertical {
+  id: 926
+  weight: 0.22593254
+}
+adslot {
+  id: 1
+  width: 728
+  height: 90
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  excluded_sensitive_category: 3
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 5
+  excluded_sensitive_category: 24
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 9085571968998634873
+  17: 0
+  18: 0
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEK6JS24rUjlR-m84zCThujg"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 59
+detected_content_label: 39
+mobile {
+  platform: "ipad"
+  app_id: "398890666"
+  is_app: true
+  mobile_device_type: TABLET
+  screen_orientation: 2
+  app_category_ids: 60506
+  app_category_ids: 60504
+  app_category_ids: 60526
+  app_category_ids: 60530
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "ipad"
+  os_version {
+    os_version_major: 8
+    os_version_minor: 3
+  }
+  screen_width: 1024
+  screen_height: 768
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "U.\216\337\000\tRB\n4(\324\001\000\0065\234k\231xF\345_-\313\203\337R\203\260\330+x\217sM"
+}
+cookie_age_seconds: 9471528
+postal_code: "33607"
+geo_criteria_id: 9012099
+seller_network_id: 1
+publisher_settings_list_id: 5799317243173547264
+51: 3

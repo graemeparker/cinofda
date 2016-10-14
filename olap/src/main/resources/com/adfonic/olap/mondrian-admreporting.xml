@@ -1,0 +1,244 @@
+<Schema name="Adfonic">
+  <Cube name="Ads" cache="false" enabled="true">
+    <Table name="ADM" />
+    <Dimension type="StandardDimension" foreignKey="GMT_TIME_ID" name="GmtTime">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID">
+        <Table name="TIME_HIERARCHY" alias="gmt_time" />
+        <Level name="Year" column="YEAR" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" />
+        <Level name="Month" column="MONTH" ordinalColumn="MONTH" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" />
+        <Level name="Day" column="DAY" ordinalColumn="DAY" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" />
+        <Level name="Hour" column="HOUR" ordinalColumn="HOUR" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" />
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="MODEL_ID" name="Device">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID" primaryKeyTable="MODEL">
+        <Join leftAlias="MODEL" leftKey="VENDOR_ID" rightKey="ID" rightAlias="VENDOR">
+          <Table name="MODEL" />
+          <Table name="VENDOR" />
+        </Join>
+        <Level name="Vendor" table="VENDOR" column="ID" nameColumn="" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+        <Level name="Model" table="MODEL" column="ID" nameColumn="" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="OPERATOR_ID" name="Operator">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID" primaryKeyTable="OPERATOR">
+        <Join leftAlias="OPERATOR" leftKey="OPERATOR_GROUP_ID" rightKey="ID" rightAlias="OPERATOR_GROUP">
+          <Table name="OPERATOR" />
+          <Table name="OPERATOR_GROUP" />
+        </Join>
+        <Level name="OperatorGroup" table="OPERATOR_GROUP" column="ID" nameColumn="" captionColumn="NAME" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" />
+        <Level name="Operator" table="OPERATOR" column="ID" nameColumn="" captionColumn="NAME" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" />
+      </Hierarchy>
+    </Dimension>
+    <!-- There is a bootstrapping issue with the approach of having AdAction as a degenerate dimension as in the commented out configuration below: 
+         the queries will fail if "select(distinct AD_ACTION) from AD_EVENT_LOG" does not yet contain the full range of values.  
+         Also, an issue with the way Mondrian generates SQL means that on startup, the server is required to do a table scan on AD_EVENT_LOG in order 
+         to perform a count(distinct AD_ACTION) from AD_EVENT_LOG, which can take several minutes.  Mondrian 3.1.2 appears to work with the InlineTable 
+         approach below on the db engine, so we'll use that. -->
+    <!--
+        <Dimension name="AdAction">
+        <Hierarchy hasAll="false">
+        <Level name="AdAction" column="AD_ACTION" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" approxRowCount="3" />
+        </Hierarchy>
+        </Dimension>
+    -->
+    <Dimension name="AdAction" foreignKey="AD_ACTION">
+      <Hierarchy hasAll="true" primaryKey="id">
+        <InlineTable alias="AdActionInline">
+          <ColumnDefs>
+            <ColumnDef name="id" type="String" />
+            <ColumnDef name="name" type="String" />
+          </ColumnDefs>
+          <Rows>
+            <Row>
+              <Value column="id">UNFILLED_REQUEST</Value>
+              <Value column="name">Unfilled Requests</Value>
+            </Row>
+            <Row>
+              <!-- AD_SERVED/IMPRESSION migration (phase 1) -->
+              <Value column="id">AD_SERVED</Value>
+              <Value column="name">Impressions</Value>
+            </Row>
+            <Row>
+              <Value column="id">CLICK</Value>
+              <Value column="name">Clicks</Value>
+            </Row>
+            <Row>
+              <Value column="id">INSTALL</Value>
+              <Value column="name">Installations</Value>
+            </Row>
+            <Row>
+              <!-- AD_SERVED/IMPRESSION migration (phase 1) -->
+              <Value column="id">IMPRESSION</Value>
+              <Value column="name">Beacons</Value>
+            </Row>
+            <Row>
+              <Value column="id">CONVERSION</Value>
+              <Value column="name">Conversions</Value>
+            </Row>
+          </Rows>
+        </InlineTable>
+        <Level name="AdAction" column="id" type="String" captionColumn="name" uniqueMembers="true" />
+      </Hierarchy>
+    </Dimension>
+
+    <Dimension type="StandardDimension" foreignKey="COUNTRY_ID" name="Location">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID" primaryKeyTable="COUNTRY">
+        <Join leftAlias="COUNTRY" leftKey="REGION_ID" rightKey="ID" rightAlias="REGION">
+          <Table name="COUNTRY" />
+          <Table name="REGION" />
+        </Join>
+        <Level name="Region" table="REGION" column="ID" nameColumn="" captionColumn="NAME" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" />
+        <Level name="Country" table="COUNTRY" column="ID" nameColumn="" captionColumn="NAME" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+          <Property name="isoCode" column="ISO_CODE" dependsOnLevelValue="true" />
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="CREATIVE_ID" name="Advertiser">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID" primaryKeyTable="CREATIVE" caption="">
+        <Join leftKey="CAMPAIGN_ID" leftAlias="CREATIVE" rightKey="ID" rightAlias="CAMPAIGN">
+          <Table name="CREATIVE" />
+          <Join leftAlias="CAMPAIGN" leftKey="ADVERTISER_ID" rightAlias="ADVERTISER" rightKey="ID">
+            <Table name="CAMPAIGN" />
+            <Join leftAlias="ADVERTISER" leftKey="COMPANY_ID" rightAlias="advertiser_company" rightKey="ID">
+              <Table name="ADVERTISER" />
+              <Table name="COMPANY" alias="advertiser_company" />
+            </Join>
+          </Join>
+        </Join>
+        <Level name="Company" table="advertiser_company" column="ID" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME">
+          <Property name="advertiserCategory" column="ADVERTISER_CATEGORY" type="String" dependsOnLevelValue="true" />
+        </Level>
+        <Level name="Advertiser" table="ADVERTISER" column="ID" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME">
+          <Property name="isKey" column="IS_KEY" type="Boolean" dependsOnLevelValue="true" />
+        </Level>
+        <Level name="Campaign" table="CAMPAIGN" column="ID" nameColumn="" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME">
+          <Property name="houseAd" column="HOUSE_AD" type="Boolean" dependsOnLevelValue="true" />
+        </Level>
+        <Level name="Creative" table="CREATIVE" column="ID" nameColumn="" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME">
+          <Property name="format" column="FORMAT_ID" type="Numeric" dependsOnLevelValue="true" />
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="AD_SPACE_ID" name="Publisher">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID" primaryKeyTable="AD_SPACE" caption="">
+        <Join leftAlias="AD_SPACE" leftKey="PUBLICATION_ID" rightKey="ID" rightAlias="PUBLICATION">
+          <Table name="AD_SPACE" />
+          <Join leftAlias="PUBLICATION" leftKey="PUBLISHER_ID" rightKey="ID" rightAlias="PUBLISHER">
+            <Table name="vw_PUBLICATION" alias="PUBLICATION" />
+            <Join leftAlias="PUBLISHER" leftKey="COMPANY_ID" rightKey="ID" rightAlias="publisher_company">
+              <Table name="PUBLISHER" />
+              <Table name="COMPANY" alias="publisher_company"/>
+            </Join>
+          </Join>
+        </Join>
+        <Level name="Company" table="publisher_company" column="ID" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME">
+          <Property name="publisherCategory" column="PUBLISHER_CATEGORY" type="String" dependsOnLevelValue="true" />
+        </Level>
+        <Level name="Publisher" table="PUBLISHER" column="ID" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME">
+          <Property name="isKey" column="IS_KEY" type="Boolean" dependsOnLevelValue="true" />
+        </Level>
+        <Level name="Publication" table="PUBLICATION" column="ID" nameColumn="" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME">
+          <Property name="transparentNetwork" column="TRANSPARENT_NETWORK_ID" type="Numeric" dependsOnLevelValue="true" />
+        </Level>
+        <Level name="AdSpace" table="AD_SPACE" column="ID" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="AD_SPACE_ID" name="Network">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID" primaryKeyTable="AD_SPACE" caption="">
+        <Join leftKey="PUBLICATION_ID" rightKey="ID">
+          <Table name="AD_SPACE" />
+          <Join leftAlias="network_publication" leftKey="TRANSPARENT_NETWORK_ID" rightKey="ID">
+            <Table name="vw_PUBLICATION" alias="network_publication" />
+            <Table name="TRANSPARENT_NETWORK" />
+          </Join>
+        </Join>
+        <Level name="TransparentNetwork" table="TRANSPARENT_NETWORK" column="ID" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+        <Level name="Publication" table="network_publication" column="ID" nameColumn="" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+        <Level name="AdSpace" table="AD_SPACE" column="ID" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="GEOTARGET_ID" name="Geotarget">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="ID" primaryKeyTable="GEOTARGET" caption="">
+        <Table name="GEOTARGET" />
+        <Level name="Geotarget" table="GEOTARGET" column="ID" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="MODEL_ID" name="Platform">
+      <Hierarchy hasAll="true" allMemberName="All" primaryKey="MODEL_ID" primaryKeyTable="MODEL_PLATFORM" caption="">
+        <Join leftAlias="MODEL_PLATFORM" leftKey="PLATFORM_ID" rightKey="ID" rightAlias="PLATFORM">
+          <Table name="MODEL_PLATFORM" />
+          <Table name="PLATFORM" />
+        </Join>
+        <Level name="Platform" table="PLATFORM" column="ID" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" captionColumn="NAME" />
+      </Hierarchy>
+    </Dimension>
+    <Measure name="events" column="ID" datatype="Integer" aggregator="count" visible="true" />
+    <!-- This provides us with a convenient way to cheat on some additional statistical aggregate tables without confusing Mondrian about which aggregates to use -->
+    <Measure name="total" column="EVENT_TIME" datatype="Integer" aggregator="count" visible="true" />
+    <Measure name="value" column="ACTION_VALUE" datatype="Integer" aggregator="sum" visible="true" />
+    <Measure name="COST" column="COST" datatype="Numeric" formatString="#,###,##0.00" aggregator="sum" visible="true" />
+    <Measure name="BASE_PAYOUT" column="PAYOUT" datatype="Numeric" formatString="#,###,##0.00" aggregator="sum" visible="true" />
+    <Measure name="ADVERTISER_VAT" column="ADVERTISER_VAT" datatype="Numeric" formatString="#,###,##0.00" aggregator="sum" visible="true" />
+    <Measure name="PUBLISHER_VAT" column="PUBLISHER_VAT" datatype="Numeric" formatString="#,###,##0.00" aggregator="sum" visible="true" />
+    <CalculatedMember name="PAYOUT" dimension="Measures" formula="Measures.BASE_PAYOUT + Measures.PUBLISHER_VAT">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <!-- AD_SERVED/IMPRESSION migration (phase 1) -->
+    <CalculatedMember name="IMPRESSIONS" dimension="Measures" formula="(Measures.events, AdAction.AD_SERVED)">
+      <CalculatedMemberProperty name="DATATYPE" value="Integer"/>
+    </CalculatedMember>
+    <CalculatedMember name="BEACONS" dimension="Measures" formula="(Measures.events, AdAction.IMPRESSION)">
+      <CalculatedMemberProperty name="DATATYPE" value="Integer"/>
+    </CalculatedMember>    
+    <CalculatedMember name="CLICKS" dimension="Measures" formula="(Measures.events, AdAction.CLICK)">
+      <CalculatedMemberProperty name="DATATYPE" value="Integer"/>
+    </CalculatedMember>
+    <CalculatedMember name="CONVERSIONS" dimension="Measures" formula="(Measures.events, AdAction.INSTALL) + (Measures.events, AdAction.CONVERSION)">
+      <CalculatedMemberProperty name="DATATYPE" value="Integer"/>
+    </CalculatedMember>
+    <!-- AD_SERVED/IMPRESSION migration (phase 1) -->
+    <CalculatedMember name="REQUESTS" dimension="Measures" formula="(Measures.events, AdAction.AD_SERVED) + (Measures.events, AdAction.[UNFILLED_REQUEST])">
+      <CalculatedMemberProperty name="DATATYPE" value="Integer"/>
+    </CalculatedMember>
+    <CalculatedMember name="CTR" dimension="Measures" formula="Measures.CLICKS / Measures.IMPRESSIONS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="CONVERSION_PERCENT" dimension="Measures" formula="Measures.CONVERSIONS / Measures.CLICKS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="COST_PER_CONVERSION" dimension="Measures" formula="Measures.COST / Measures.CONVERSIONS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="ECPM_AD" dimension="Measures" formula="Measures.COST * 1000 / Measures.IMPRESSIONS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="ECPC_AD" dimension="Measures" formula="Measures.COST / Measures.CLICKS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="ECPM_PUB" dimension="Measures" formula="Measures.PAYOUT * 1000 / Measures.IMPRESSIONS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="ECPC_PUB" dimension="Measures" formula="Measures.PAYOUT / Measures.CLICKS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="FILL_RATE" dimension="Measures" formula="Measures.IMPRESSIONS / Measures.REQUESTS">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="DEVICE_PERCENT_REQUESTS" dimension="Measures" formula="Measures.REQUESTS / (Measures.REQUESTS, Device.[All])">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="DEVICE_PERCENT_IMPRESSIONS" dimension="Measures" formula="Measures.IMPRESSIONS / (Measures.IMPRESSIONS, Device.[All])">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="LOCATION_PERCENT_REQUESTS" dimension="Measures" formula="Measures.REQUESTS / (Measures.REQUESTS, Location.[All])">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="LOCATION_PERCENT_IMPRESSIONS" dimension="Measures" formula="Measures.IMPRESSIONS / (Measures.IMPRESSIONS, Location.[All])">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+    <CalculatedMember name="PLATFORM_PERCENT_LOCATION" dimension="Measures" formula="Measures.total / (Measures.total, Platform.[All])">
+      <CalculatedMemberProperty name="DATATYPE" value="Numeric"/>
+    </CalculatedMember>
+  </Cube>
+</Schema>

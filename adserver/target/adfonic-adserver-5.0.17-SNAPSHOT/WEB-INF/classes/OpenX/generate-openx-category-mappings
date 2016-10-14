@@ -1,0 +1,33 @@
+#! /usr/bin/perl
+
+use strict;
+use warnings;
+use Text::CSV;
+
+my $inputFile = "openx-category-to-iabid.csv";
+my $outputFile = "openx-category-to-iabid.properties";
+
+my $numHeaderLines = 2;
+
+my $csv = Text::CSV->new();
+
+# Replace carriage returns with newlines (Excel sucks)
+# Use awk to skip the first N line(s), the header line(s)
+open (INPUT, "-|", "cat $inputFile | tr '\r' '\n' | awk '{if(NR > $numHeaderLines) print}'") or die $!;
+
+open(OUTPUT, ">$outputFile");
+
+while (<INPUT>) {
+    $csv->parse($_) || die "Failed to parse line: $_";
+
+    # OpenX Id,Open X Name,OpenX Parent_category_id,OpenX Parent Category Name,IAB/ADF Category Name,IAB/ADF ID
+    my @columns = $csv->fields();
+    my $oxId = $columns[0];
+    my $iabId = $columns[5];
+    
+    print "OpenX Category $oxId => $iabId\n";
+
+    print OUTPUT "$oxId=$iabId\n";
+}
+close(INPUT);
+close(OUTPUT);

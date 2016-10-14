@@ -1,0 +1,40 @@
+{
+	"at":2,
+	"badv":[ "badoink.com" ],
+	"bcat":[ "IAB7-28", "IAB25-5", "IAB25-4", "IAB25-7", "IAB25-6", "IAB25-1", "IAB25-3", "IAB25-2",
+		"IAB9-9", "IAB19-3", "IAB17-18", "IAB7-44", "IAB26", "IAB25", "IAB8-5", "IAB24",
+		"IAB23", "IAB8-18", "IAB7-39", "IAB19", "IAB26-3", "IAB26-4", "IAB26-1", "IAB26-2", "IAB7-42", "APL8-6"
+	],
+	"device":{
+		"connectiontype":0,
+		"devicetype":1,
+		"geo":{ "country":"USA", "lat":32.8532, "lon":-97.696, "type":1 },
+		"ip":"76.222.218.203",
+		"js":1,
+		"make":"Samsung", "model":"SCH-I535", "os":"Android", "osv":"4.4",
+		"ua":"Mozilla/5.0 (Linux; Android 4.4.2; SCH-I535 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36"
+	},
+	"ext":{
+		"carriername":"unknown - probably WLAN", "coppa":0, "operaminibrowser":0, "udi":{ }
+	},
+	"id":"BkO2ONUoxK",
+	"imp":[ {
+			"banner":{
+				"battr":[ 1, 3, 5, 8, 9 ],
+				"h":50,
+				"mimes":[ "application/javascript", "image/gif", "image/jpeg", "image/png", "text/html", "text/javascript", "text/plain" ],
+				"w":320
+			},
+			"displaymanager":"SOMA",
+			"id":"1",
+			"instl":0
+	} ],
+	"site":{
+		"cat":[ "IAB1" ],
+		"domain":"www.giantrealm.com",
+		"id":"65853908",
+		"name":"Gaming_MobileWeb_320x50_RTB_Tier1",
+		"publisher":{ "id":"923877195", "name":"AdConductor" }
+	},
+	"user":{ "keywords":"http://adnxs.com/" }
+}

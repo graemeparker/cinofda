@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+${user.firstName} ${user.lastName},<br/><br/>
+Your recurring payment is now active:<br/><br/>
+<hr />
+Recurring Payment Details:<br/><br/>
+Account: ${user.email}<br/><br/>
+Payment Settings:<br/>
+Payment Method: Wire Transfer<br/>
+Wire transfer account: ${chequePayee}<br/><br/>
+Mailing Address:<br/>
+Name: ${address.firstName} ${address.lastName}<br/>
+Address Line 1: ${address.address1}<br/>
+Address Line 2: ${address.address2}<br/>
+City/Town: ${address.city}<br/>
+County/State/Province: ${address.state}<br/>
+Post/ZIP Code: ${address.postcode}<br/>
+Country: ${address.country}<br/>
+<hr /><br/>
+Questions? <a href="${urlRoot}/about/contact-us">Contact us</a>.<br/><br/>
+Kind regards,<br/>
+The ${companyName} Team<br/><br/>
+</body>
+</html>

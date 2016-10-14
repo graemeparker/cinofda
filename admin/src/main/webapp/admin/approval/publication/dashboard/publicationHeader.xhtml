@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+   
+	<!-- Poller still updates the dash board when the update couldn't run
+		 due to load balancer timeout in case of really slow query -->
+	<ui:param name="pollInterval" value="#{publicationApprovalDashboardMBean.pollInterval}" />
+	<pri:poll id="poller" widgetVar="resultsPoller"
+		autoStart="false"
+		interval="#{pollInterval}"
+		onstart="console.info('Refresh after #{pollInterval} sec...')"
+		update="poller, publicationToolbar, publicationResult, publicationResultInfo"
+		stop="#{not publicationApprovalDashboardMBean.queryRunning}"
+		async="true" />
+				
+	<pri:toolbar id="publicationToolbar" styleClass="publicationToolbar">
+			
+		<pri:toolbarGroup styleClass="centerToolbar">
+		
+			<!-- Display warning message if the query is still running -->
+			<pri:outputLabel value="#{(publicationApprovalDashboardMBean.queryRunning) ? 'Query is still running... ' : ''}" styleClass="warning"/>
+						
+			<!-- Run Query -->
+	     	<pri:commandButton id="runQueryButton" widgetVar="runQueryButtonWidget"
+	     					   value="#{msg['page.approval.publication.button.search.label']}"
+	     					   title="#{msg['page.approval.publication.button.search.title']}"
+							   actionListener="#{publicationApprovalDashboardMBean.runQuery}"
+							   onclick="PF('resultsPoller').stop();"
+							   onstart="ADT.showLoadingIcon(runQueryButtonWidget, 'ui-icon-search')"
+							   onerror="PF('runQueryButtonWidget').disable();
+							   			console.warn('Timeout during XHR request')"
+							   oncomplete="PF('runQueryButtonWidget').disable(); PF('resultsPoller').start();
+							   			   console.info('Polling has started to refresh results in each #{pollInterval} sec')"
+							   rendered="#{not publicationApprovalDashboardMBean.queryRunning}"
+							   update="publicationToolbar, publicationResult, publicationResultInfo"
+							   icon="ui-icon-search" styleClass="approvalAlignment" async="true" />
+			
+			<pri:spacer styleClass="horizontalDoubleSpace" />
+						   
+			<!-- Clear Filters -->
+	     	<pri:commandButton widgetVar="clearFiltersButtonWidget"
+	     					   value="#{msg['page.approval.publication.button.clear.label']}"
+	     					   title="#{msg['page.approval.publication.button.clear.title']}"
+	     					   actionListener="#{publicationApprovalDashboardMBean.initFilters}"
+							   onstart="PF('clearFiltersButtonWidget').disable(); PF('runQueryButtonWidget').disable()"
+							   oncomplete="PF('clearFiltersButtonWidget').enable()"
+	     					   update="publicationToolbar, publicationResult, publicationResultInfo"
+							   icon="ui-icon-close" styleClass="approvalAlignment" />
+	
+			<pri:spacer styleClass="horizontalDoubleSpace" />
+	
+			<!-- Publication Pagination Filters -->
+			<ui:include src="publicationPaginating.xhtml" />
+					
+			<!-- Publication Ordering Filters -->
+			<ui:include src="publicationOrdering.xhtml" />
+			
+		</pri:toolbarGroup>
+		
+		<pri:toolbarGroup>
+		    
+			<!-- Publication Filters -->
+			<ui:include src="publicationFiltering.xhtml" />
+			
+		</pri:toolbarGroup>
+		
+		<pri:toolbarGroup styleClass="centerToolbar">
+		
+			<!-- No results or proc error -->
+			<pri:outputPanel styleClass="publicationResult">
+				<pri:outputLabel id="publicationResultInfo"
+					value="#{ (hasProcError) ? msg['page.approval.publication.procerror'] : msg['page.approval.publication.empty']}"
+					styleClass="#{(hasProcError or emptyResult and not initResult) ? ((hasProcError) ? 'show warning' : 'show') : 'hide'}"/>
+			</pri:outputPanel>
+			
+		</pri:toolbarGroup>
+    
+    </pri:toolbar>
+	
+</ui:composition>

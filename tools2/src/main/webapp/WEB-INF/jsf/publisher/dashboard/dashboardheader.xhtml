@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+
+    <h:body>
+        <ui:component id="dashboardHeader">
+            
+           <!-- MAIN CONTENT -->
+           <div class="ninecol">
+               <!-- TEMPORARY MARKUP: -->
+               <h:form id="typeAheadFormId" prependId="false" >
+                <div class="f-left">      
+                    <pri:autoComplete
+	                        id="publicationTypeAheadId"
+	                        widgetVar="publicationTypeAheadWidget"
+	                        value="#{publisherDashBoardMBean.dashboardDto.publications}"
+	                        completeMethod="#{publisherDashBoardMBean.complete}"
+	                        styleClass="search-publisher-autocomplete"
+	                        panelStyleClass="search-publisher-dropdown"
+	                        oncomplete="ADT.escapeAutocompleteResults(); ADT.setFullsizeMenuDropdown('search-publisher-autocomplete', 'search-publisher-dropdown');"
+	                        var="c"
+	                        itemLabel="#{c.name}"
+	                        itemValue="#{c}"
+	                        multiple="true"
+	                        converter="com.adfonic.tools.converter.publication.PublicationConverter">
+                        <pri:ajax event="itemSelect"   oncomplete="ADT.toggleAutoCompleteWatermark(publicationTypeAheadWidget, publicationTypeAheadWatermark);" />
+                        <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(publicationTypeAheadWidget, publicationTypeAheadWatermark);" />
+                   	</pri:autoComplete>
+                    <pri:watermark widgetVar="publicationTypeAheadWatermark" for="publicationTypeAheadId" value="#{msg['page.dashboard.publisher.allpublications.placeholder']}" />
+                </div>
+                <pri:commandButton value="#{msg['page.dashboard.labels.campaign.search.button']}" id="applyPublicationButtonId" onclick="progressDialog.show();"
+                                   oncomplete="ADT.toggleAutoCompleteWatermark(publicationTypeAheadWidget, publicationTypeAheadWatermark); progressDialog.hide();"
+                                   actionListener="#{publisherDashBoardMBean.publicationFilter}" update="typeAheadFormId,:chartsFormId,:dataTableFormId" />
+               </h:form>                   
+           </div>
+           <div class="threecol last">
+
+               <ui:include src="../../dashboard/dashboarddatepicker.xhtml">
+               </ui:include>
+           </div><!-- END SIX COL -->
+           <div class="clear"></div>
+           <script type="text/javascript">
+            // <![CDATA[
+            $(function(){
+            	ADT.toggleAutoCompleteWatermark(publicationTypeAheadWidget, publicationTypeAheadWatermark);
+            });
+            // ]]>
+           </script>
+        </ui:component>
+    </h:body>
+</html>

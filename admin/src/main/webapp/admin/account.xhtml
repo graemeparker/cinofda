@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Company admin"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+<ui:define name="pageContent">
+
+<f:view contentType="text/html">
+
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+    <div class="infoContent">#{msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+
+<h3>Search by email</h3>
+<h:form id="mainForm">
+<table class="form" style="border:0px;width:700px">
+    <tr>
+        <td width="180px"></td>
+        <td>
+          <h:message for="userEmail" styleClass="error" />
+          <div class="formtip">Start typing a user email for suggestions.</div>
+        </td>
+    </tr>
+    <tr>
+        <td class="label" width="180px">User login (email)<span class="required">*</span></td>
+        <td>
+          <pri:autoComplete id="userEmail" size="50" maxlength="254"
+            value="#{adminAccountBean.email}"
+            required="true"
+            minQueryLength="3"
+            scrollHeight="300"
+            requiredMessage="#{msg['error.accountInfo.email']}"
+            validatorMessage="#{msg['error.accountInfo.email']}"
+            validator="#{util.validateEmail}"
+            style="width:330px"
+            completeMethod="#{adminAccountBean.doUserQuery}"/>
+        </td>
+    </tr>
+</table>
+    <div class="bottomButton">
+      <!-- button start -->
+      <h:commandLink id="findEmail" action="#{adminAccountBean.doFindEmail}" styleClass="largeButton">
+          <span>Load</span><span class="go"></span>
+      </h:commandLink>
+      <!-- button end -->
+    </div>
+</h:form>
+
+<ui:remove>
+  // TODO: fix this for agency accounts
+
+  <hr/>
+
+  <h3>Select an account that you own</h3>
+
+  <h:form id="myAccounts">
+  <table class="form" style="border:0px;width:700px">
+    <tr>
+        <td width="180px"></td>
+        <td>
+          <h:message for="myAccounts" styleClass="error" />
+        </td>
+    </tr>
+    <tr>
+      <td class="label" width="180px">User login (email)<span class="required">*</span></td>
+      <td>
+        <h:selectOneMenu id="myAccounts"
+          value="#{adminAccountBean.myAccountUser}"
+          required="true">
+          <f:selectItem itemValue="" itemLabel="--- Select a user ---" />
+          <f:selectItems value="#{adminAccountBean.myAccounts}"/>
+        </h:selectOneMenu>
+      </td>
+    </tr>
+  </table>
+  <div class="bottomButton">
+    <!-- button start -->
+    <h:commandLink id="loadUser" action="#{adminAccountBean.doLoadMyAccount}" styleClass="largeButton">
+      <span>Load</span><span class="go"></span>
+    </h:commandLink>
+    <!-- button end -->
+  </div>
+  </h:form>
+  </ui:remove>
+</f:view>
+</ui:define>
+</ui:composition>

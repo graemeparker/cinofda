@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      template="/WEB-INF/templates/template.xhtml">
+
+<ui:param name="pageTitle" value="Access Denied"/>
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+<h2>Access Denied</h2>
+
+<h3>You don't have permission to access this page.</h3>
+
+  <c:if test="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION != null}">
+  		<c:set var="errorMsg" value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}"/>
+  		<p>${errorMsg}</p>
+  </c:if>
+  
+<p>Please try logging in as a different user</p>
+  
+<p><a href="${request.contextPath}/logout">Logout</a></p>
+<p><a href="http://adfonic.com">Try visiting the <h:outputText value="#{rootBean.companyName}"/> homepage instead</a></p>
+
+</ui:define>
+</ui:composition>
+
+
+

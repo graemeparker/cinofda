@@ -1,0 +1,92 @@
+id: "U.\216\337\000\a\206\211\n4)\262\305\000}\n"
+ip: "l\346\214"
+user_agent: "Mozilla/5.0 (Linux; Android 4.4.4; SM-N900P Build/KTU84P) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/33.0.0.0 Mobile Safari/537.36 (Mobile; afma-sdk-a-v7099000.5089000.1),
+gzip(gfe)"
+url: "https://play.google.com/store/apps/details?id=com.monsterapk.bubblepandapop"
+detected_language: "en"
+detected_vertical {
+  id: 926
+  weight: 0.24792325
+}
+detected_vertical {
+  id: 1461
+  weight: 0.24792325
+}
+detected_vertical {
+  id: 1536
+  weight: 0.24792325
+}
+detected_vertical {
+  id: 1071
+  weight: 0.14035304
+}
+detected_vertical {
+  id: 1109
+  weight: 0.115877174
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 6287207715338561492
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEOjmSDjNN0ExD2rFIvlqxQY"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 59
+detected_content_label: 43
+mobile {
+  platform: "android"
+  app_id: "com.monsterapk.bubblepandapop"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60042
+  app_category_ids: 60008
+  app_category_ids: 60000
+  app_category_ids: 69500
+  brand: "samsung"
+  model: "sm-n900p"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 4
+  }
+  screen_width: 360
+  screen_height: 640
+  carrier_id: 0
+  device_pixel_ratio_millis: 3000
+  encrypted_advertising_id: "U.\216\337\000\a\206\211\n4)\262\001\000}\n\202\377\025.\355\325=k\313T^L\336\021\355\205\336<\251\253"
+  24: "Bubble Panda Pop"
+  25: 0x407ae736
+}
+cookie_age_seconds: 24688175
+postal_code: "29223"
+geo_criteria_id: 9051826
+seller_network_id: 1
+publisher_settings_list_id: 12937863612313038331
+51: 3
+  

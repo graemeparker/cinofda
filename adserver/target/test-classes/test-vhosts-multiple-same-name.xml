@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+<vhosts>
+
+  <!-- Virtual host configuration
+       Each vhost must have a "name" attribute, which is used to match against
+       request.getServerName() (i.e. the Host header).  If the name attribute is
+       omitted, that vhost represents a catch-all.  There must be one and only one
+       catch-all vhost configured.
+       Each vhost must have an "assetBaseUrl" element.  It may optionally have
+       "beaconBaseUrl" and/or "clickBaseUrl" elements as well.  If either of those
+       elements is omitted, when serving up beacon and/or click URLs respectively,
+       the current request's scheme (i.e. http or https), server name (i.e. the
+       Host header), port, and context path will be used when constructing URLs.
+       -->
+  
+  <!-- We may want to set this up at some point to enable "stickiness"
+       of beacons and clicks, i.e. make sure we serve those requests on
+       the same cluster that served the impression. -->
+  <!--
+  <vhost name="byyd.net">
+    <beaconBaseUrl>http://rf.byyd.net/bc</beaconBaseUrl>
+    <clickBaseUrl>http://rf.byyd.net/ct</clickBaseUrl>
+    <assetBaseUrl>http://as.byyd.net/as</assetBaseUrl>
+  </vhost>
+  -->
+
+  <!-- Mobaloo -->
+  <vhost name="ad1.mobaloo.com">
+    <!-- No "beaconBaseUrl" element = serve beacons using the Host header -->
+    <!-- No "clickBaseUrl" element = serve clicks using the Host header -->
+    <assetBaseUrl>http://asset1.mobaloo.com/as</assetBaseUrl>
+  </vhost>
+
+  <!-- duplicate for code coverage -->
+  <vhost name="ad1.mobaloo.com">
+    <!-- No "beaconBaseUrl" element = serve beacons using the Host header -->
+    <!-- No "clickBaseUrl" element = serve clicks using the Host header -->
+    <assetBaseUrl>http://asset1.mobaloo.com/as</assetBaseUrl>
+  </vhost>
+
+  <!-- The required catch-all -->
+  <vhost>
+    <!-- No "beaconBaseUrl" element = serve beacons using the Host header -->
+    <!-- No "clickBaseUrl" element = serve clicks using the Host header -->
+    <assetBaseUrl>http://as.byyd.net/as</assetBaseUrl>
+  </vhost>
+  
+</vhosts>

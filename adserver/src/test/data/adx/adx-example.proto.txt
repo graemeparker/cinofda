@@ -1,0 +1,208 @@
+id: "VrrutQADhpEKGI0H/QA/rQ=="
+ip: "\246\211\370"
+user_agent: "Mozilla/5.0 (Linux; Android 5.1.1; SM-G925F Build/LMY47X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.95 Mobile Safari/537.36"
+url: "http://www.autoexpress.co.uk/volvo/xc90/91336/volvo-xc90"
+detected_language: "en"
+detected_vertical {
+  id: 47
+  weight: 0.31113133
+}
+detected_vertical {
+  id: 473
+  weight: 1.0
+}
+detected_vertical {
+  id: 1057
+  weight: 0.20910907
+}
+detected_vertical {
+  id: 867
+  weight: 0.20631833
+}
+adslot {
+  id: 1
+  width: 300
+  height: 250
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 28
+  excluded_attribute: 30
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 48
+  excluded_attribute: 22
+  allowed_vendor_type: 10
+  allowed_vendor_type: 42
+  allowed_vendor_type: 43
+  allowed_vendor_type: 56
+  allowed_vendor_type: 113
+  allowed_vendor_type: 130
+  allowed_vendor_type: 132
+  allowed_vendor_type: 145
+  allowed_vendor_type: 182
+  allowed_vendor_type: 204
+  allowed_vendor_type: 225
+  allowed_vendor_type: 233
+  allowed_vendor_type: 237
+  allowed_vendor_type: 238
+  allowed_vendor_type: 242
+  allowed_vendor_type: 255
+  allowed_vendor_type: 260
+  allowed_vendor_type: 267
+  allowed_vendor_type: 303
+  allowed_vendor_type: 331
+  allowed_vendor_type: 332
+  allowed_vendor_type: 334
+  allowed_vendor_type: 342
+  allowed_vendor_type: 395
+  allowed_vendor_type: 414
+  allowed_vendor_type: 432
+  allowed_vendor_type: 441
+  allowed_vendor_type: 445
+  allowed_vendor_type: 472
+  allowed_vendor_type: 476
+  allowed_vendor_type: 477
+  allowed_vendor_type: 481
+  allowed_vendor_type: 485
+  allowed_vendor_type: 486
+  allowed_vendor_type: 489
+  allowed_vendor_type: 490
+  allowed_vendor_type: 497
+  allowed_vendor_type: 529
+  allowed_vendor_type: 537
+  allowed_vendor_type: 542
+  allowed_vendor_type: 543
+  allowed_vendor_type: 550
+  allowed_vendor_type: 551
+  allowed_vendor_type: 562
+  allowed_vendor_type: 564
+  allowed_vendor_type: 572
+  allowed_vendor_type: 573
+  allowed_vendor_type: 574
+  allowed_vendor_type: 575
+  allowed_vendor_type: 577
+  allowed_vendor_type: 606
+  allowed_vendor_type: 615
+  allowed_vendor_type: 616
+  allowed_vendor_type: 618
+  allowed_vendor_type: 623
+  allowed_vendor_type: 698
+  allowed_vendor_type: 704
+  allowed_vendor_type: 713
+  allowed_vendor_type: 724
+  allowed_vendor_type: 743
+  allowed_vendor_type: 745
+  allowed_vendor_type: 767
+  allowed_vendor_type: 776
+  allowed_vendor_type: 780
+  allowed_vendor_type: 785
+  allowed_vendor_type: 790
+  allowed_vendor_type: 791
+  allowed_vendor_type: 793
+  allowed_vendor_type: 797
+  allowed_vendor_type: 798
+  excluded_sensitive_category: 19
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 23
+  excluded_sensitive_category: 30
+  excluded_sensitive_category: 10
+  excluded_sensitive_category: 3
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 5
+  excluded_sensitive_category: 8
+  excluded_sensitive_category: 24
+  excluded_sensitive_category: 7
+  excluded_sensitive_category: 18
+  matching_ad_data {
+    billing_id: 4546339036
+    minimum_cpm_micros: 280000
+    pricing_rule {
+      blocked: true
+    }
+  }
+  targetable_channel: "pack-brand-Dennis Publishing::All"
+  targetable_channel: "pack-brand-Dennis Publishing::Dennis Auto, UK traffic"
+  targetable_channel: "pack-brand-Dennis Publishing::UK In- Market Car Buyers"
+  slot_visibility: NO_DETECTION
+  excluded_product_category: 10001
+  excluded_product_category: 10002
+  excluded_product_category: 10031
+  excluded_product_category: 10047
+  excluded_product_category: 10048
+  excluded_product_category: 10049
+  excluded_product_category: 10050
+  excluded_product_category: 10054
+  excluded_product_category: 10055
+  excluded_product_category: 10057
+  excluded_product_category: 10060
+  excluded_product_category: 10061
+  excluded_product_category: 10086
+  excluded_product_category: 10087
+  excluded_product_category: 10088
+  excluded_product_category: 10089
+  excluded_product_category: 10091
+  excluded_product_category: 10127
+  excluded_product_category: 10137
+  excluded_product_category: 10294
+  excluded_product_category: 10299
+  excluded_product_category: 10453
+  excluded_product_category: 10473
+  excluded_product_category: 10507
+  excluded_product_category: 10508
+  excluded_product_category: 10509
+  excluded_product_category: 10672
+  excluded_product_category: 10913
+  excluded_product_category: 11669
+  excluded_product_category: 12204
+  excluded_product_category: 13422
+  excluded_product_category: 13423
+  excluded_product_category: 13491
+  excluded_product_category: 13566
+  excluded_product_category: 13567
+  excluded_product_category: 13760
+  ad_block_key: 2678206543
+  publisher_settings_list_id: 17907334818302687011
+  publisher_settings_list_id: 17634400942089951107
+  publisher_settings_list_id: 3224061941735714102
+  iframing_state: UNKNOWN_IFRAME_STATE
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEBtqPkWEOsAlcnanEAX-CkA"
+detected_content_label: 26
+detected_content_label: 39
+mobile {
+  DEPRECATED_platform: "android"
+  is_app: false
+  DEPRECATED_mobile_device_type: HIGHEND_PHONE
+  DEPRECATED_brand: "samsung"
+  DEPRECATED_model: "sm-g925f"
+  DEPRECATED_os_version {
+    os_version_major: 5
+    os_version_minor: 1
+    os_version_micro: 1
+  }
+  DEPRECATED_screen_width: 360
+  DEPRECATED_screen_height: 640
+  DEPRECATED_carrier_id: 70063
+  DEPRECATED_device_pixel_ratio_millis: 4000
+}
+cookie_age_seconds: 86400
+geo_criteria_id: 1007133
+seller_network_id: 1542
+publisher_settings_list_id: 12519815645849528497
+device {
+  device_type: HIGHEND_PHONE
+  platform: "android"
+  brand: "samsung"
+  model: "sm-g925f"
+  os_version {
+    major: 5
+    minor: 1
+    micro: 1
+  }
+  carrier_id: 70063
+  screen_width: 360
+  screen_height: 640
+  screen_pixel_ratio_millis: 4000
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      xmlns:c="http://java.sun.com/jsp/jstl/core" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<!--  public template -->
+<ui:include src="/WEB-INF/includes/head.xhtml"/>
+<h:body>
+<div class="mainNavHorizBar"></div>
+<div class="main">
+  <div class="top">
+    <div class="logo"><p:link mappingId="home" styleClass="logoLink"></p:link></div>
+    <div class="topNav">
+      <div class="topNavContent">
+        <h:panelGroup rendered="#{adfonicUser != null}">
+            <span class="NavEmail">#{adfonicUser.email}</span>
+            <span class="topNavContent"><h:graphicImage url="/resources/images/topNavDiv.gif" /></span>
+            <span><p:link mappingId="logout" styleClass="NavSmall">Log out</p:link></span>
+        </h:panelGroup>
+      </div>
+      <div><h1>byyd Admin</h1></div>
+    </div>
+  </div>
+  <div class="mainNavShadow"></div>
+</div>
+<div id="mainWide">
+    <ui:insert name="pageContent"/>
+</div>
+<div class="footerDiv"> <p>Copyright &#169; <h:outputText value="#{ad:now()}"><f:convertDateTime pattern="yyyy"/></h:outputText> <h:outputText value="#{rootBean.companyLegalName}"/>(ver:<h:outputText value="#{applicationScope.VersionContextListener_VERSION}" /> build:<h:outputText value="#{applicationScope.VersionContextListener_BUILD}" />)</p></div>
+</h:body>
+</html>

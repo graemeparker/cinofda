@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://www.springframework.org/schema/integration/kafka http://www.springframework.org/schema/integration/kafka/spring-integration-kafka.xsd
+							http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+	<!-- Replaced by DcSpringBootConfig -->
+  <context:annotation-config/>
+  
+  <context:mbean-export/>
+  
+  <!-- Scan for @Component, etc. classes automatically -->
+  <context:component-scan base-package="com.adfonic.datacollector"/>
+
+  <!-- We use the explicit bean instantiation here instead of using the
+       task:executor declaration so that we can set daemon=true.  Otherwise
+       the default thread factory creates non-daemon threads. -->
+  <bean id="executor"
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler"
+        p:daemon="true"
+        p:threadNamePrefix="datacollector-scheduler-executor"
+        p:poolSize="10"/>
+
+  <!-- Allow @Scheduled and what not on component methods -->
+  <task:annotation-driven executor="executor" scheduler="executor" />
+  
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-datacollector.properties"/>
+
+  <bean id="socketCommandPort" class="java.lang.Integer">
+    <constructor-arg value="${socketCommandPort}"/>
+  </bean>
+  
+  <bean id="dataCollectorDomainCacheManager"
+        class="com.adfonic.domain.cache.DataCollectorDomainCacheManager">
+    <constructor-arg value="${adfonic.cache.home:/usr/local/adfonic/cache}"/>
+    <constructor-arg value="${DataCollectorDomainCache.label}"/>
+    <constructor-arg value="${DataCollectorDomainCache.useMemory}"/>
+  </bean>
+  
+  <bean id="kryoManager"
+        class="com.adfonic.adserver.KryoManager"/>
+  
+  <bean id="adEventFactory" class="com.adfonic.adserver.AdEventFactory">
+    <constructor-arg ref="kryoManager"/>
+  </bean>
+  
+  <!-- This is how we suck in routes from an XML file that lives outside the build.
+       This lets us dynamically change datacollector routes without doing a build. -->
+  <import resource="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-datacollector-routes.xml"/> 
+  
+  <bean id="ehCacheManager"
+        class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+        p:configLocation="file:${adfonic.config.home:/usr/local/adfonic/config}/ehcache-datacollector.xml"/>
+
+  <bean id="campaignStoppageCache"
+        class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="ehCacheManager"
+        p:cacheName="campaignStoppage"/>
+  <bean id="advertiserStoppageCache"
+        class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="ehCacheManager"
+        p:cacheName="advertiserStoppage"/>
+  <bean id="uaHeaderIdCache"
+        class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="ehCacheManager"
+        p:cacheName="uaHeaderId"/>
+  <bean id="missingCampaignsCache"
+        class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="ehCacheManager"
+        p:cacheName="missingCampaigns"/>
+
+  <!-- No id specified on this bean, it gets injected by type -->
+  <bean class="com.adfonic.tracker.jdbc.TrackerMultiServiceJdbcImpl"
+        p:uaHeaderIdCache-ref="uaHeaderIdCache">
+    <constructor-arg ref="trackerDataSource"/>
+  </bean>
+  
+  <task:scheduled-tasks scheduler="executor">
+    <task:scheduled ref="batchManager" method="flushBatches" fixed-rate="${BatchManager.batchDurationMs}"/>
+  </task:scheduled-tasks>
+  
+   <!-- We are creating a separate executor here, to keep it seperate from the advent batch manager -->
+	<!-- <bean id="executor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler" p:daemon="true" p:threadNamePrefix="adfonic-weve-executor" p:poolSize="3"/> -->
+<!-- 	<task:annotation-driven executor="missingCampaignExecutor" scheduler="missingCampaignScheduler" /> -->	
+	<task:executor id="missingCampaignExecutor" pool-size="5-10" queue-capacity="10000" rejection-policy="DISCARD_OLDEST"/>
+	<task:scheduler id="missingCampaignScheduler" pool-size="3"/>
+	
+	<task:executor id="kafkaMessageExecutor" pool-size="0-10"
+	    keep-alive="120" queue-capacity="500" />
+
+  <!-- Initialize TimeZoneUtils, taking the hit on that prior to the first ad event -->
+  <bean id="initializeTimeZoneUtils" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+        p:staticMethod="com.adfonic.util.TimeZoneUtils.getTimeZoneNonBlocking">
+    <property name="arguments">
+      <list>
+        <value>Europe/London</value>
+      </list>
+    </property>
+  </bean>
+  
+  <bean id="counterManager" class="com.adfonic.util.stats.CounterManager"/>  
+  <bean name="AdfonicCounters:mbean=GenericCounters" class="com.adfonic.util.stats.CounterJmxManager"/>
+
+  <bean id="jmsUtils" class="com.adfonic.jms.JmsUtils"/>
+  
+  <!-- Import kafka configuration -->
+  <import resource="adfonic-datacollector-kafka-context.xml"/>
+  
+</beans>

@@ -1,0 +1,25 @@
+<div advert-id="${adComponents.components.extendedData.advertName}">
+    <script type="text/javascript">    
+        window.analytics = window.analytics || {};
+        window.analytics.campaignManagerId = '${adComponents.components.extendedData.campaignManagerId}';
+        window.analytics.advertiserId = '${adComponents.components.extendedData.advertiserId}';
+        window.analytics.campaignId = '${adComponents.components.extendedData.campaignId}';
+        window.analytics.advertId = '${adComponents.components.extendedData.advertId}';
+        window.analytics.campaignManagerCertifiedPublisherNetworkId = '${adComponents.components.extendedData.campaignManagerCertifiedPublisherNetworkId}';
+        window.analytics.certifiedPublisherNetworkId = '16';
+        window.analytics.channelId = '${adComponents.components.extendedData.channelId}';
+        window.analytics.subChannelId = '${adComponents.components.extendedData.subChannelId}';
+
+        window.thirdParty = window.thirdParty || {};
+        window.thirdParty.clickUrl = '${adComponents.destinationUrl}?redir=';
+    </script>
+    <link rel="stylesheet" href="http://cdn.simplytics.com/adverts/${adComponents.components.extendedData.advertId}/${adComponents.components.extendedData.advertName}.css"/>
+    <script type="text/javascript" src="http://cdn.simplytics.com/adverts/${adComponents.components.extendedData.advertId}/${adComponents.components.extendedData.advertName}-combined.js"></script>
+</div>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<pri:panelGrid id="trackingTable" style="width:100%">
+		<f:facet name="header">  
+	    	<pri:row>
+	       		<pri:column colspan="3">
+	        		<pri:commandLink id="trackingLinkId" 
+							actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+							disabled="#{campaignNavigationSessionBean.trackingDisabled || userSessionBean.readOnlyUser}">
+						<f:attribute name="navigateTo" value="tracking"/>                    
+                  		<span>#{msg['page.campaign.conversiontracking.menu.label']}</span>
+                  	</pri:commandLink>
+             	</pri:column>
+	       	</pri:row>
+	 	</f:facet>
+	 	
+	  	<pri:row>
+	    	<pri:column>
+	       		<span><h:outputText value="#{msg['page.campaign.confirmation.tracking.label']}" /></span>
+			</pri:column>
+	      	<pri:column colspan="2">
+	      		<span><h:outputText value="#{(campaignMBean.campaignTrackingMBean.campaignDto !=null and campaignMBean.campaignTrackingMBean.convTrackingType!=null)?campaignMBean.campaignTrackingMBean.convTrackingTypeMenuText:'None Set'}"/></span>
+			</pri:column>
+		</pri:row>
+
+		
+		<pri:row rendered="#{campaignMBean.campaignTrackingMBean.campaignDto.applicationID!=null and campaignMBean.campaignTrackingMBean.campaignDto.applicationID ne ''}">
+		  	<pri:column>
+		    	<span><h:outputText value="#{msg['page.campaign.confirmation.tracking.app.label']}" /></span>
+		 	</pri:column>
+		   	<pri:column colspan="2">
+		    	<span><h:outputText value="#{campaignMBean.campaignConfirmationMBean.campaignDto.applicationID}" /></span>
+		   	</pri:column>
+		</pri:row>
+		
+		<pri:row rendered="#{campaignMBean.campaignTrackingMBean.campaignDto !=null and campaignMBean.campaignTrackingMBean.convTrackingType!=null and campaignMBean.campaignTrackingMBean.convTrackingType eq 'apptracking'}">
+		  	<pri:column>
+		    	<span><h:outputText value="#{msg['page.campaign.confirmation.tracking.method.label']}" /></span>
+		 	</pri:column>
+		   	<pri:column colspan="2" rendered="#{not empty campaignMBean.campaignTrackingMBean.selectedDeviceIdentifierTypes}">
+		   		<span><h:outputText value="#{campaignMBean.campaignTrackingMBean.selectedDeviceIdentifierTypesToConfirm}" /></span>
+		   	</pri:column>   	
+		</pri:row>
+		
+	</pri:panelGrid>
+</ui:composition>

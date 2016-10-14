@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:sec="http://www.springframework.org/security/tags">
+      
+<pri:tab id="deviceTab" title="#{msg['page.campaign.targeting.platformdevice.label']}">
+    <div class="form-row ovh device-tab">
+            <pri:selectManyCheckbox styleClass="devices" id="formatmanyCheckboxesId" layout="pageDirection"
+                                    value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.platformsList}"
+                                    converter="com.adfonic.tools.converter.platform.PlatformConverter"
+                                    valueChangeListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.onPlatformSelectedEvent}">
+                <f:selectItems value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.allPlatForms}"/>
+            </pri:selectManyCheckbox>
+    </div>
+
+    <div class="form-row ovh device-group">
+        <pri:selectOneRadio id="deviceGroupMode" 
+                value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.deviceGroupMode}"
+                valueChangeListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.onDeviceGroupChangedEvent}">
+            <f:selectItem itemValue="ALL" itemLabel="#{msg['page.campaign.targeting.platformdevice.devicegroup.all']} "/>
+            <f:selectItem itemValue="MOBILE" itemLabel="#{msg['page.campaign.targeting.platformdevice.devicegroup.mobile']}"/>
+            <f:selectItem itemValue="TABLET" itemLabel="#{msg['page.campaign.targeting.platformdevice.devicegroup.tablet']}"/>
+        </pri:selectOneRadio>    
+    </div>      
+      
+	<div class="form-row ovh device-exclusion">
+        <div class="form-col">
+            <pri:selectOneMenu styleClass="short" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.include}">
+                <f:selectItem itemLabel="Include" itemValue="0"/>
+                <f:selectItem itemLabel="Exclude" itemValue="1"/>
+            </pri:selectOneMenu>
+        </div>
+        <div class="form-col">
+            <ui:include src="/WEB-INF/jsf/commons/devicemodels_template.xhtml">
+                <ui:param name="deviceModelsMBean" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.deviceModelsMBean}" />
+            </ui:include>
+           	
+           	<pri:dialog id="confirmApplyDialog" header="#{msg['page.campaign.targeting.platformdevice.changesdialog.title']}" resizable="false" modal="true" closable="true"  
+		                styleClass="confirm-dialog" widgetVar="confirmationChanges">
+		    	<h3>
+		        	<h:outputText value="#{msg['page.campaign.targeting.platformdevice.changesdialog.question']}" />
+		        </h3>
+		        <p>
+		        	<h:outputText value="#{msg['page.campaign.targeting.platformdevice.changesdialog.text']}" />
+		    	</p>
+		       	<div class="buttons">
+		           	<pri:commandButton value="#{msg['page.campaign.creative.delete.confirmation.yes']}" id="confirmation" 
+            				   actionListener="#{campaignMBean.campaignTargetingMBean.continueWithChanges}"
+            				   onclick="confirmationChanges.hide();progressDialog.show();" oncomplete="progressDialog.hide()"
+                               update=":menuForm:panelSectionGroup,:navigationDiv" process="@form">
+		            </pri:commandButton>
+		           	<pri:commandButton id="declineApp" value="#{msg['page.campaign.creative.delete.confirmation.no']}" update=":navigationDiv" onclick="confirmationChanges.hide()" type="button" />
+		      	</div>
+			</pri:dialog>
+        </div>
+    </div>
+</pri:tab>
+
+</ui:composition>
+				

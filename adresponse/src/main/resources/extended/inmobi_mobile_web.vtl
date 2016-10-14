@@ -1,0 +1,11 @@
+<script type="text/javascript">
+new Image().src = "http://beacon.sproutbuilder.com/?v=4&spid=${adComponents.components.extendedData.ad}&rl=&at=4&n=&m=1&__t=" + new Date().getTime();</script>
+<a target="_top" href="${adComponents.destinationUrl}?redir=http://edgy.sproutbuilder.com/load/${adComponents.components.extendedData.ad}.w.html">
+<img src="http://edgy.sproutbuilder.com/asset/${adComponents.components.extendedData.asset}.gif" width="${adComponents.components.extendedData.width}" height="${adComponents.components.extendedData.height}" alt="banner"/></a>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

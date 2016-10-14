@@ -1,0 +1,80 @@
+@charset "UTF-8";
+/* CSS Document */
+
+* { margin:0; padding: 0; }
+
+body { 
+	font-size: 0.75em;
+	line-height: 1.2em;
+	color: #555;
+	font-family: 'Arial', sans-serif;
+ }
+ 
+ p {
+	 margin-bottom: 0.75em;
+	 padding: 0px 20px;
+ }
+ 
+ p.top {
+	 margin-top: 20px;
+	 background-image: url('../images/topParaBG.png');
+	 background-repeat:no-repeat;
+	 background-position: 20px 0;
+	 background-size: 18px 18px;
+	 padding:0 50px;x
+ }
+ 
+ p.optP {
+	 margin-top:1.2em;
+ }
+ 
+ a:link { color:#128baf; text-decoration:underline; }
+ a:hover { text-decoration:none; }
+ a:visited { color:#175f75; }
+ 
+ a.optOut { 
+ 		background-color: #625094; 
+		-webkit-border-radius: 6px; 
+		-moz-border-radius: 6px; 
+		border-radius: 6px; 
+		font-size: 1.25em; 
+		color:#fff; 
+		text-decoration:none; 
+		padding: 5px 12px;
+		cursor: pointer;
+}
+ 
+ h1 { font-weight: normal; font-size: 1.25em; color: #005575; padding: 20px 20px 0; margin-bottom: 0.75em;}
+ h1.background {  background-color: #e2ebef;  padding: 3px 20px; }
+ h2 { font-size:1em; color: #000; padding: 0px 20px; }
+ 
+ div.wifi { 
+ 		padding-left: 70px; 
+		background: url('../images/wifi.jpg');
+		background-repeat:no-repeat;
+		background-position: 20px 0;
+	 	background-size: 50px 44px;
+}
+ 
+ .bottom { padding-bottom: 70px; }
+
+ p.alert {
+ 	background-color: #e2ebef;
+	padding: 3px 20px;
+	display:none;
+ } 
+ footer { position:fixed; bottom: 0px; background-color:#e2ebef; width: 100%; }
+ p.back { background-color: #dde0e1;  padding: 5px 20px;}
+ p.privacy { margin-top: 0.75em; }
+ p.poweredBy { text-align:center; }
+ p.poweredBy a { color: #333; }
+ 
+ 
+ /* ----------------- TABLET SIZE ----------------- */
+ 
+ @media all and (min-width: 600px) {
+	 body { font-size: 0.875em; }
+	 footer { position:relative; bottom: auto; margin-top: 30px; }
+
+ }
+ 

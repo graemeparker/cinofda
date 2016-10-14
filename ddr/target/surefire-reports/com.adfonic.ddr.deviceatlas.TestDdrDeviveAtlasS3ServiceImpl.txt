@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.ddr.deviceatlas.TestDdrDeviveAtlasS3ServiceImpl
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.206 sec - in com.adfonic.ddr.deviceatlas.TestDdrDeviveAtlasS3ServiceImpl

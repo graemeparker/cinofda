@@ -1,0 +1,21 @@
+#!/bin/bash
+
+MMX_KEY=byyd:1s9WmYZ3QG2sabXbN6O8GyMBa1ZBC4/Qpsu6HZ8FUr/04tqjhAf9Pg== 
+MMX_URL=https://rt-test.mmx.io/events/byyd-auction-test
+MMX_URL2=https://rt-test.mmx.io/events/byyd-impression-test
+FILE=/opt/tomcat/logs/adserver-backup
+
+cd /mnt/data/logs/archive
+CP=
+for i in  /usr/local/adfonic/adfonic-archive/lib/*.jar; do
+  CP=$CP:$i
+done
+
+APPNAME=push-cont-mmx
+START_COMMAND="java -cp $CP:/usr/local/adfonic/adfonic-archive/conf/ net.byyd.archive.model.v1.ContinuousPushMMXBackupLog $FILE $MMX_KEY $MMX_URL $MMX_URL2"
+
+. /usr/local/adfonic/bin/init-env
+
+export HOSTNAME=`hostname`
+
+startProcess ${APPNAME} ${START_COMMAND}

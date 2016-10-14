@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="10 seconds">
+
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset class="java.nio.charset.Charset">UTF-8</charset>
+			<pattern>%d|%-10t|%-5p|%c{40}: %m%n</pattern>
+		</encoder>
+
+	</appender>
+
+	<logger name="org.apache.activemq" level="INFO" />
+	
+	<logger name="org.apache.http" level="INFO" />
+	
+	<logger name="org.apache.http.wire" level="INFO" />
+	
+	<logger name="org.hibernate.SQL" level="DEBUG" />
+	
+	<logger name="org.springframework" level="INFO" />
+	
+	<logger name="org.springframework.web" level="INFO" />
+	
+	<!-- Platform components -->
+	
+	<logger name="com.adfonic.domain" level="INFO" />
+	
+	<logger name="com.byyd.middleware" level="INFO" />
+	
+	<!-- Project components -->
+	
+	<logger name="com.adfonic.tracker" level="TRACE" />
+	
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  
+</configuration>

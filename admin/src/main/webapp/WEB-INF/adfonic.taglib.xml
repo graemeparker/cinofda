@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<facelet-taglib
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+  version="2.0">
+
+<namespace>http://byyd-tech.com/jsf/functions</namespace>
+
+<function>
+  <function-name>concat</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String concat(java.lang.String, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>enum</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.Enum enumValue(java.lang.String, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>keySet</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.util.Set keySet(java.util.Map)</function-signature>
+</function>
+
+<function>
+  <function-name>sort</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.util.Set sort(java.util.Set)</function-signature>
+</function>
+
+<function>
+  <function-name>sortByName</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.util.Set sortByName(java.util.Set)</function-signature>
+</function>
+
+<function>
+  <function-name>now</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.util.Date now()</function-signature>
+</function>
+
+<function>
+  <function-name>exampleDate</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.util.Date exampleDate()</function-signature>
+</function>
+
+<function>
+  <function-name>colorGradient</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String colorGradient(java.lang.String, java.lang.String, double)</function-signature>
+</function>
+
+<function>
+  <function-name>assetExternalID</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String assetExternalID(com.adfonic.domain.Creative, java.lang.String, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>assetText</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String assetText(com.adfonic.domain.Creative, java.lang.String, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>url</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String url(java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>currentYear</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>int currentYear()</function-signature>
+</function>
+
+<function>
+  <function-name>capitalize</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String capitalize(java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>budgetSpend</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.math.BigDecimal budgetSpend(com.adfonic.domain.Campaign, java.util.Date)</function-signature>
+</function>
+
+<function>
+  <function-name>adfonicTimeZoneDescription</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String adfonicTimeZoneDescription(java.util.TimeZone)</function-signature>
+</function>
+
+<function>
+  <function-name>toThousandsString</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String toThousandsString(java.lang.Integer)</function-signature>
+</function>
+
+<function>
+  <function-name>hasRole</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>boolean hasRole(com.adfonic.domain.User, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>hasAdminRole</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>boolean hasAdminRole(com.adfonic.domain.AdfonicUser, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>taxRate</function-name>
+  <function-class>com.adfonic.domain.TaxUtils</function-class>
+  <function-signature>java.math.BigDecimal getTaxRate(java.util.Date)</function-signature>
+</function>
+
+<function>
+  <function-name>calendarIcon</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String getCalendarIcon(java.util.Date, java.util.TimeZone, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>campaignStatus</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String getUICampaignStatus(com.adfonic.domain.Campaign)</function-signature>
+</function>
+
+<function>
+  <function-name>platformTargetDescription</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String getPlatformTargetDescription(com.adfonic.domain.Segment)</function-signature>
+</function>
+
+<function>
+  <function-name>countryNamesBySegment</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String getCountryNamesBySegment(com.adfonic.domain.Segment)</function-signature>
+</function>
+
+<function>
+  <function-name>excludedCategoryNamesBySegment</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String getExcludedCategoryNamesBySegment(com.adfonic.domain.Segment)</function-signature>
+</function>
+
+<function>
+  <function-name>urlEncode</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String urlEncode(java.lang.String, java.lang.String)</function-signature>
+</function>
+
+<function>
+  <function-name>publisherEmail</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.lang.String getPublisherEmail(com.adfonic.domain.Publisher)</function-signature>
+</function>
+
+<function>
+  <function-name>asList</function-name>
+  <function-class>com.adfonic.beans.Functions</function-class>
+  <function-signature>java.util.List asList(java.util.Collection)</function-signature>
+</function>
+
+<function>
+  <function-name>defaultTimeZone</function-name>
+  <function-class>com.adfonic.beans.BaseBean</function-class>
+  <function-signature>java.util.TimeZone getDefaultTimeZone()</function-signature>
+</function>
+</facelet-taglib>

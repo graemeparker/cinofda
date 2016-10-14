@@ -1,0 +1,226 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:pe="http://primefaces.org/ui/extensions"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:sec="http://www.springframework.org/security/tags"
+              xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+
+<pri:tab id="connectionTab" title="Connection" >
+    <sec:authorize ifAllGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+        <pri:commandLink 
+        	id="advancedBrowserTargeting" 
+            style="float:right;"
+            value="#{msg['page.campaign.targeting.connection.advancedbrowser.header']}" 
+            onclick="addBrowserDialog.show()"
+        />
+        <span class="admin status-indicator" style="float: right;"></span>
+        <div class="clear"></div>
+    </sec:authorize>
+    
+    <pri:selectManyCheckbox id="connectionManyId" layout="pageDirection" styleClass="connection" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.connectionTypes}"
+                            valueChangeListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.onConnectionEvent}">
+        <f:selectItem itemLabel="#{msg['page.campaign.targeting.connection.connectionoptions.wifi.label']}" itemValue="WIFI" />
+        <f:selectItem itemLabel="#{msg['page.campaign.targeting.connection.connectionoptions.operator.label']}" itemValue="OPERATOR" />
+    </pri:selectManyCheckbox>
+    
+    <div data-no="1" class="panel-connection inner-panel none">
+        <div class="form-row ovh">
+            <div class="form-col">
+                <pri:selectOneMenu id="inc-excl-isp" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ispOperatorsWhiteList}">
+                    <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.include.label']}" itemValue="true"/>
+                    <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.exclude.label']}" itemValue="false"/>
+                </pri:selectOneMenu>
+            </div>
+            <div class="form-col">
+	            <pri:autoComplete
+	                   id="exclude-isp-operator"
+	                   widgetVar="excludeIspWidget"
+	                   value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ispOperatorsList}"
+	                   completeMethod="#{campaignMBean.campaignTargetingMBean.completeIspOperator}"
+	                   minQueryLength="2"
+	                   var="c"
+	                   itemLabel="#{c.name}"
+	                   itemValue="#{c}"
+	                   multiple="true"
+	                   converter="com.adfonic.tools.converter.operator.OperatorConverter"
+	                   styleClass="conn-select">
+	         		<pri:ajax event="itemSelect"   oncomplete="ADT.toggleAutoCompleteWatermark(excludeIspWidget, excludeIspWatermark);" />
+                    <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(excludeIspWidget, excludeIspWatermark);" />     
+	            </pri:autoComplete>
+                <pri:watermark widgetVar="excludeIspWatermark" for="exclude-isp-operator" value="#{msg['page.campaign.targeting.connection.alloperators.placeholder']}" />
+            	<pri:focus id="ispFocus" for="exclude-isp-operator"/>
+            </div>
+        </div>
+        <pri:spacer height="20"/>
+    </div>
+
+    <div data-no="2" class="panel-connection inner-panel none">
+        <div class="form-row ovh">
+            <div class="form-col">
+                <pri:selectOneMenu id="inc-excl-operator" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.mobileOperatorsWhiteList}">
+                    <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.include.label']}" itemValue="true"/>
+                    <f:selectItem itemLabel="#{msg['page.campaign.targeting.location.exclude.label']}" itemValue="false"/>
+                </pri:selectOneMenu>
+            </div>
+            <div class="form-col">
+	            <pri:autoComplete
+	                   id="exclude-mobile-operator"
+	                   widgetVar="excludeMobileWidget"
+	                   value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.mobileOperatorsList}"
+	                   completeMethod="#{campaignMBean.campaignTargetingMBean.completeMobileOperator}"
+	                   minQueryLength="2"
+	                   var="c"
+	                   itemLabel="#{c.name}"
+	                   itemValue="#{c}"
+	                   multiple="true"
+	                   converter="com.adfonic.tools.converter.operator.OperatorConverter"
+	                   styleClass="conn-select">
+	         		<pri:ajax event="itemSelect"   oncomplete="ADT.toggleAutoCompleteWatermark(excludeMobileWidget, excludeMobileWatermark);" />
+                    <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(excludeMobileWidget, excludeMobileWatermark);" />     
+	            </pri:autoComplete>
+                <pri:watermark widgetVar="excludeMobileWatermark" for="exclude-mobile-operator" value="#{msg['page.campaign.targeting.connection.alloperators.placeholder']}" />
+            	<pri:focus id="operatorFocus" for="exclude-mobile-operator"/>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="form-row opera-link ovh">
+        	<pri:selectBooleanCheckbox id="excludedOpera" 
+                                       value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.excludedOpera}" 
+        							   itemLabel="#{msg['page.campaign.targeting.connection.connectionoptions.excludeopera.label']}">        
+            </pri:selectBooleanCheckbox>
+        </div>
+    </div>
+    
+    <!-- IP Targeting -->
+	<pri:spacer height="10"/>
+	<pri:panelGrid id="ipTargetingPanel" columns="2" styleClass="ipAddresesPanelGrid">
+	
+	 <pri:column>
+	  <pri:outputLabel for="ipTargeting-inc-excl"  styleClass="bl b"
+	                  value="#{msg['page.campaign.targeting.connection.ipaddresses.type.label']}"/>
+	  <pri:selectOneMenu id="ipTargeting-inc-excl" styleClass="short" style="display: block;"
+	                     value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ipAddressesListWhitelist}">
+	      <f:selectItem itemLabel="#{msg['page.campaign.targeting.connection.ipaddresses.type.include.label']}" itemValue="true"/>
+	      <f:selectItem itemLabel="#{msg['page.campaign.targeting.connection.ipaddresses.type.exclude.label']}" itemValue="false"/>
+	  </pri:selectOneMenu>
+	 </pri:column>
+	 
+	 <pri:column>
+	     <pri:outputLabel for="ipTargeting-inc-excl"  styleClass="bl b"
+	                     value="#{msg['page.campaign.targeting.connection.ipaddresses.list.label']}"/>
+	     <pri:inputText id="ipAddresses"
+	                    value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ipAddressesString}">
+	         <pri:ajax event="blur" listener="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.validateIpAddressesInputText}" 
+	                   onstart="progressDialog.show();" oncomplete="progressDialog.hide();"
+	                   update="ipAddresses, nonMatchedIpAddressesDialog" />
+	         <pri:watermark for="ipAddresses" value="#{msg['page.campaign.targeting.connection.ipaddresses.list.watermark']}" />
+	     </pri:inputText>
+	     <!-- Add button -->
+	     <pri:commandLink value="#{msg['page.commons.links.addlist']}" onclick="addIpAddressesDialogWidget.show()" update="ipAddresses, addIpAddressesTextArea" style="display: inherit;"/>
+	 </pri:column>
+	
+	</pri:panelGrid>
+	
+	<!-- Add ip addresses dialog -->
+	<pri:dialog id="addIpAddressesDialog" 
+	            widgetVar="addIpAddressesDialogWidget" 
+	            header="#{msg['page.commons.headers.addlist']}"
+	            modal="true" resizable="false" closable="false" draggable="false" width="560" styleClass="addIpAddressesDialogStyle">
+	    
+	    <!-- Ip addresses list -->
+	 <pri:inputTextarea id="addIpAddressesTextArea" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.addIpAddressesTextArea}" rows="15" cols="15"
+	                    placeholder="#{msg['page.commons.placeholders.addlist']}" />
+	 
+	 <pri:separator />
+	 
+	 <!-- Add button -->
+	 <pri:commandButton value="#{msg['page.commons.buttons.add']}"
+	                    actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.addIpAddresses}"
+	                    onclick="addIpAddressesDialogWidget.hide(); progressDialog.show(); "
+	                    oncomplete="progressDialog.hide();"
+	                    update="ipTargetingPanel, nonMatchedIpAddressesDialog"/>
+	        
+	 <!-- Cancel link -->
+	 <pri:commandLink value="#{msg['page.commons.links.cancel']}" onclick="addIpAddressesDialogWidget.hide()" />
+	</pri:dialog>
+	
+	<!-- Non matched IP addresses dialog -->
+	<pri:dialog id="nonMatchedIpAddressesDialog" widgetVar="nonMatchedIpAddressesDialogWidget" header="#{msg['page.commons.headers.addlist']}"
+	            modal="true" resizable="false" closable="false" draggable="false" styleClass="nonMatchedIpAddressesDialogStyle">
+	
+	
+	    <p><h:outputText value="#{msg['page.campaign.targeting.connection.ipaddresses.list.invalid.header']}"/></p>
+	    
+	    <pri:outputPanel styleClass="nonMatchedIpAddressesStyle">
+	        <ui:repeat var="element" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ipValidationResult}">
+	               <pri:fieldset rendered="#{!element.valid}">
+	                 <h:inputText value="#{element.ip}" />
+	                 <h:outputLabel value="#{msg['page.campaign.targeting.connection.ipaddresses.list.invalid.format']}" rendered="#{element.error.name() == 'FORMAT'}" style="margin-left: 10px;"/>
+	              <h:outputLabel value="#{msg['page.campaign.targeting.connection.ipaddresses.list.invalid.private']}" rendered="#{element.error.name() == 'PRIVATE'}" style="margin-left: 10px;"/>
+	      </pri:fieldset>
+	     </ui:repeat>
+	 </pri:outputPanel>
+	 
+	 <!-- Done button -->
+	 <pri:commandButton value="#{msg['page.campaign.targeting.connection.ipaddresses.nomatch.done']}"
+	                    actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.addNonMatchesIpAddresses}"
+	                    onclick="nonMatchedIpAddressesDialogWidget.hide();progressDialog.show()"
+	                    oncomplete="progressDialog.hide();"	                           
+	                    update="ipTargetingPanel, nonMatchedIpAddressesDialog" />
+	
+	 <!-- Cancel link -->
+	 <pri:commandLink value="#{msg['page.commons.links.cancel']}" onclick="nonMatchedIpAddressesDialogWidget.hide()" />                 
+	</pri:dialog>
+    
+    <!--  Browser Targeting -->
+    <pri:dialog id="browserDialog"
+                 styleClass="add-list-dialog"
+                 widgetVar="addBrowserDialog" 
+                 modal="true" 
+                 resizable="false" 
+                 closable="false"
+                 draggable="false" 
+                 width="560" 
+                 height="405"
+                 header="#{msg['page.campaign.targeting.connection.advancedbrowser.header']}">
+       <pri:selectManyCheckbox id="browserTargeting" 
+                               value="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.targetedBrowsers}" 
+                               layout="pageDirection"
+                               converter="com.adfonic.tools.converter.browser.BrowserConverter">
+           <f:selectItems var="browserItem"
+                          value="#{toolsApplicationBean.browsers}"
+                          itemLabel="#{browserItem.name}"
+                          itemValue="#{browserItem}" />
+       </pri:selectManyCheckbox>
+       
+       <pri:separator/>
+         <pri:commandButton id="addBrowserButton" 
+                            value="Ok"
+                            process="browserDialog,excludedOpera"
+                            update="browserDialog,excludedOpera"
+                            actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.addBrowsers}"
+                            onclick="addBrowserDialog.hide()" />
+         <pri:commandLink id="cancelBrowserButton" 
+                            value="Cancel"
+                            process="browserDialog,excludedOpera"
+                            update="browserDialog,excludedOpera"
+                            actionListener="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.cancelBrowsers}"
+                            onclick="addBrowserDialog.hide()" />
+     </pri:dialog>
+
+
+	<script type="text/javascript">
+	   // <![CDATA[
+	   $(function(){
+	       ADT.toggleAutoCompleteWatermark(excludeMobileWidget, excludeMobileWatermark);
+	       ADT.toggleAutoCompleteWatermark(excludeIspWidget, excludeIspWatermark);
+	   });
+	   // ]]>
+	</script>
+</pri:tab>
+</ui:composition>

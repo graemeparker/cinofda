@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Creative/AdSpace Eligibility"/>
+<ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+  <!-- Show error box if there are any errors -->
+  <h:panelGroup rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">#{msg['page.generic.error.label']}</div>
+    <div class="infoContent">#{msg['page.generic.error.box']}</div>
+    </div>
+  </h:panelGroup>
+
+  <h2>#{pageTitle}</h2>
+
+  <h:form id="creativeEligibilityForm">
+
+  <div class="error"><h:message for="creativeId"/></div>
+  <div class="error"><h:message for="publicationId"/></div>
+  <div class="error"><h:message for="adSpaceId"/></div>
+
+  <h:panelGroup layout="block" style="margin:10px 0px 10px 0px;" rendered="#{not empty creativeEligibilityBean.creative and not empty creativeEligibilityBean.adSpace}">
+    <b>Creative ID=#{creativeEligibilityBean.creative.id} is #{creativeEligibilityBean.eligible ? "ELIGIBLE" : "NOT ELIGIBLE"} under AdSpace ID=#{creativeEligibilityBean.adSpace.id}</b>
+    <h:panelGroup layout="block" rendered="#{!creativeEligibilityBean.eligible}">
+      <ul>
+      <pri:dataList var="reason" value="#{creativeEligibilityBean.reasonsWhyNot}" type="none" >
+        <li>#{reason}</li>
+      </pri:dataList>
+      </ul>
+    </h:panelGroup>
+  </h:panelGroup>
+
+  <h:panelGroup layout="block" style="margin:10px 0px 10px 0px;" rendered="#{not empty creativeEligibilityBean.creative and not empty creativeEligibilityBean.publication}">
+    <b>Creative ID=#{creativeEligibilityBean.creative.id} is #{creativeEligibilityBean.eligible ? "ELIGIBLE" : "NOT ELIGIBLE"} under Publication ID=#{creativeEligibilityBean.publication.id}</b>
+      <h:panelGroup layout="block" rendered="#{!creativeEligibilityBean.eligible}">
+      <ul>
+      <pri:dataList var="reason" value="#{creativeEligibilityBean.reasonsWhyNot}" type="none" >
+        <li>#{reason}</li>
+      </pri:dataList>
+      </ul>
+    </h:panelGroup>
+  </h:panelGroup>
+
+  <div>
+    <b>Creative ID:</b> <h:inputText id="creativeId" value="#{creativeEligibilityBean.creativeId}"/>
+    <br/>
+    <b>Ad Space ID:</b> <h:inputText id="adSpaceId" value="#{creativeEligibilityBean.adSpaceId}"/>
+    &#160;&#160;-or-&#160;&#160;
+    <b>Publication ID:</b> <h:inputText id="publicationId" value="#{creativeEligibilityBean.publicationId}"/>
+  </div>
+
+  <h:panelGroup layout="block" rendered="#{not empty creativeEligibilityBean.creative}">
+    <p>
+      <b>Campaign Stoppages for "#{creativeEligibilityBean.creative.campaign.name}" (Campaign id=#{creativeEligibilityBean.creative.campaign.id}):</b>
+      <h:panelGroup rendered="#{empty creativeEligibilityBean.campaignStoppages}"><i>none</i></h:panelGroup>
+      <pri:dataTable rendered="#{not empty creativeEligibilityBean.campaignStoppages}"
+          value="#{creativeEligibilityBean.campaignStoppages}"
+          styleClass="data"
+          var="cs">
+        <pri:column>
+          <f:facet name="header">Id</f:facet>
+          #{cs.id}
+        </pri:column>
+        <pri:column>
+          <f:facet name="header">Reason</f:facet>
+          #{cs.reason}
+        </pri:column>
+        <pri:column>
+          <f:facet name="header">Timestamp</f:facet>
+          #{cs.timestamp}
+        </pri:column>
+        <pri:column>
+          <f:facet name="header">Reactivation Date</f:facet>
+          #{cs.reactivateDate}
+        </pri:column>
+      </pri:dataTable>
+    </p>
+    <p>
+      <b>Advertiser Stoppages for "#{creativeEligibilityBean.creative.campaign.advertiser.name}" (Advertiser id=#{creativeEligibilityBean.creative.campaign.advertiser.id}):</b>
+      <h:panelGroup rendered="#{empty creativeEligibilityBean.advertiserStoppages}"><i>none</i></h:panelGroup>
+      <pri:dataTable rendered="#{not empty creativeEligibilityBean.advertiserStoppages}"
+          value="#{creativeEligibilityBean.advertiserStoppages}"
+          styleClass="data"
+          var="cs">
+        <pri:column>
+          <f:facet name="header">Id</f:facet>
+          #{cs.id}
+        </pri:column>
+        <pri:column>
+          <f:facet name="header">Reason</f:facet>
+          #{cs.reason}
+        </pri:column>
+        <pri:column>
+          <f:facet name="header">Timestamp</f:facet>
+          #{cs.timestamp}
+        </pri:column>
+        <pri:column>
+          <f:facet name="header">Reactivation Date</f:facet>
+          #{cs.reactivateDate}
+        </pri:column>
+      </pri:dataTable>
+    </p>
+  </h:panelGroup>
+
+  <h:commandButton style="margin-top:10px" action="#{creativeEligibilityBean.load}" value="Go"/>
+  </h:form>
+
+</ui:define>
+</ui:composition>

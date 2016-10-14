@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# This is a trick that lets developers use mvn to run this locally.
+if [ -f pom.xml ]; then
+    echo "Running in developer mode"
+    exec mvn \
+        compile \
+        exec:exec \
+        -Dexec.classpathScope=runtime \
+        -Dexec.executable="java" \
+        -Dexec.args="-Djava.util.logging.config.file=conf/logging.properties -cp %classpath com.adfonic.datacollector.app.DatabaseSmokeTest"
+fi
+
+exec ant -emacs -f `dirname $0`/../build.xml database-smoke-test

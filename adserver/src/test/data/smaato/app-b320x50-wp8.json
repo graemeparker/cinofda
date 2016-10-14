@@ -1,0 +1,42 @@
+{
+	"app":{
+		"cat":[ "IAB19" ],
+		"domain":"www.windowsphone.com",
+		"id":"65826735",
+		"name":"CloudSix for dropbox",
+		"publisher":{ "id":"923838229", "name":"HUYN VAN PHUONG Rudy" }
+	},
+	"at":2,
+	"badv":[ "delivery.first-impression.com", "ads.huntmad.com", "clickserv.sitescout.com", "cdas.buzzcity.net", "z6trax.com", "img.vserv.mobi", "cdn.adnxs.com", "nym1.mobile.adnxs.com", "edge.bnmla.com", "c.vserv.mobi", "ad.AjillionMAX.com", "cdn1sitescout.edgesuite.net" ],
+	"bcat":[ "IAB7-28", "IAB25-5", "IAB25-4", "IAB25-7", "IAB25-6", "IAB25-1", "IAB25-3", "IAB25-2", "IAB9-9", "IAB19-3", "IAB17-18", "IAB7-44", "IAB26", "IAB25", "IAB8-5", "IAB24", "IAB23", "IAB8-18", "IAB7-39", "IAB19", "IAB26-3", "IAB26-4", "IAB26-1", "IAB26-2", "IAB7-42", "APL8-6" ],
+	"device":{
+		"connectiontype":0,
+		"devicetype":1,
+		"geo":{ "country":"GBR", "type":3 },
+		"ip":"80.189.123.212",
+		"js":1,
+		"make":"Generic",
+		"model":"Windows Phone 8",
+		"os":"Windows Phone OS",
+		"osv":"8",
+		"ua":"Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone OS 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; RM-974_1045)"
+	},
+	"ext":{
+		"carriername":"unknown - probably WLAN", "coppa":0, "operaminibrowser":0,
+		"udi":{ }
+	},
+	"id":"BwyjK0bJVa",
+	"imp":[ {
+			"banner":{
+				"battr":[ 1, 3, 5, 8, 9 ],
+				"h":50,
+				"mimes":[ "application/javascript", "image/gif", "image/jpeg", "image/png", "text/html", "text/javascript", "text/plain" ],
+				"w":320
+			},
+			"displaymanager":"SOMA",
+			"displaymanagerver":"sdkwp8-100",
+			"id":"1",
+			"instl":0
+	} ],
+	"user":{ "keywords":"instagram vine twitter facebook picture", "yob":1990 }
+}

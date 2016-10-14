@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/WEB-INF/templates/fullWidthPageContentTemplate.xhtml">
+  <ui:param name="adminUser" value="#{adminAccountBean.user}"/>
+  <ui:define name="title">Creative Approvals Dashboard</ui:define>
+  <ui:define name="pageContent" >
+
+    <h:form id="form" style="margin-bottom: 50px;">
+
+        <pri:dataTable id="creatives"
+                       var="creative"
+                       lazy="true"
+                       widgetVar="creativesVar"
+                       value="#{creativeApprovalsDashboardBean.lazyModel}"
+                       paginator="true" rows="25" rowsPerPageTemplate="10,25,50,100"
+                       paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                       selection="#{creativeApprovalsDashboardBean.filteredRows}">
+
+          <pri:column selectionMode="multiple" style="width:18px" />
+
+          <pri:column headerText="ID" sortBy="id" filterBy="id">
+            <h:outputLink value="#{request.contextPath}/admin/approval/creative?id=#{creative.id}" target="_blank"><h:outputText value="#{creative.id}"/></h:outputLink>
+          </pri:column>
+
+          <pri:column headerText="Creative" sortBy="name" filterBy="name">
+            <h:outputText value="#{creative.name}" />
+          </pri:column>
+
+          <pri:column headerText="Campaign" sortBy="campaignName" filterBy="campaignName">
+            <h:outputText value="#{creative.campaignName}" />
+          </pri:column>
+
+		  <pri:column headerText="Domain" sortBy="campaignAdvertiserDomain" filterBy="campaignAdvertiserDomain">
+            <h:outputText value="#{creative.campaignAdvertiserDomain}" />
+          </pri:column>
+
+          <pri:column headerText="Status" sortBy="status" filterBy="status" filterOptions="#{creativeApprovalsDashboardBean.statusOptions}">
+            <h:outputText value="#{creative.status}" />
+          </pri:column>
+          
+          <pri:column headerText="ADX Status" filterBy="adxStatus" filterOptions="#{creativeApprovalsDashboardBean.adxStatusOptions}">
+            <h:outputText value="#{creative.adxPublisherAuditedInfo.status}" />
+          </pri:column>
+          
+          <pri:column headerText="APN Status" filterBy="apnStatus" filterOptions="#{creativeApprovalsDashboardBean.apnStatusOptions}">
+            <h:outputText value="#{creative.apnPublisherAuditedInfo.status}" />
+          </pri:column>
+
+          <pri:column headerText="Assigned To" sortBy="assignedTo" filterBy="assignedTo">
+            <h:outputText value="#{creative.assignedTo}" />
+          </pri:column>
+
+          <pri:column headerText="External ID" sortBy="externalID" filterBy="externalID">
+            <h:outputText value="#{creative.externalID}" />
+          </pri:column>
+
+          <pri:column headerText="Account Type" sortBy="keyAccount" filterBy="keyAccount" filterOptions="#{creativeApprovalsDashboardBean.accountTypeOptions}">
+            <h:outputText value="#{creative.keyAccount ? 'Key' : 'Standard'}" />
+          </pri:column>
+
+          <pri:column headerText="Country" sortBy="country" filterBy="country">
+            <h:outputText value="#{creative.country}" />
+          </pri:column>
+
+          <pri:column headerText="Destination" sortBy="destination" filterBy="destination">
+            <a href="#{creative.destination}" target="_blank">
+			  <h:outputText rendered="#{creative.destination.length() le 50}" value="#{creative.destination}" />
+              <h:outputText rendered="#{creative.destination.length() gt 50}" value="#{fn:substring(creative.destination, 0, 50)}..." />
+            </a>
+          </pri:column>
+
+          <pri:column headerText="Advertiser" sortBy="advertiser" filterBy="advertiser">
+            <h:outputText value="#{creative.advertiser}" />
+          </pri:column>
+
+          <pri:column headerText="From Address" sortBy="fromAddress" filterBy="fromAddress">
+            <h:outputText value="#{creative.fromAddress}" />
+          </pri:column>
+
+          <pri:column headerText="Submission Time" sortBy="submissionTime">
+            <h:outputText value="#{creative.submissionTime}" />
+          </pri:column>
+        </pri:dataTable>
+
+      <pri:panelGrid columns="3" id="commandPanel" styleClass="commandPanelGrid">
+        <h:outputText value="Assign Selected Creatives To:" />
+
+        <pri:selectOneMenu id="assignTo" value="#{creativeApprovalsDashboardBean.bulkAssignedToUserId}"
+        				   styleClass="approvalDetailWidth approvalAlignment">
+            <f:selectItem itemLabel="#{msg['page.approval.publication.approval.assignedto.unassign.label']}"
+                   		  itemValue="#{creativeApprovalsDashboardBean.noAssignedToId}" />
+			<f:selectItems value="#{creativeApprovalsDashboardBean.assignedToUsers}"
+           			   	   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+        </pri:selectOneMenu>
+
+        <pri:commandButton value="Go" update="form" id="assign"
+                           actionListener="#{creativeApprovalsDashboardBean.bulkAssignToUser}"
+                           styleClass="ui-priority-primary"/>
+      </pri:panelGrid>
+      <pri:commandButton value="Clear filters" onclick="creativesVar.clearFilters();"/>
+    </h:form>
+
+  </ui:define>
+</ui:composition>

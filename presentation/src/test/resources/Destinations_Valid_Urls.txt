@@ -1,0 +1,35 @@
+# VALID URLS
+
+###########################################################################
+# HTTP
+###########################################################################
+http://www.byyd-tech.com
+http://www.byyd_tech.com?adSpace=[6]&deviceId={123456789}
+http://www.byyd___tech.com
+http://www.byyd-tech.com    
+   http://www.byyd-tech.com
+http://www.happyhoroscope.today
+http://www.happyhoroscope.topleveldomaintest
+http://icann.org/
+http://www.happyhoroscope.today/sd
+http://www.happyhoroscope.today?id=456
+http://www.adfonic.today/#/
+http://209.126.220.5:8080/MobileRegGen/index.html
+http://209.126.220.5:8080/MobileRegGen/index.html'@@@@'
+http://byyd_tech.com
+
+###########################################################################
+# HTTPS
+###########################################################################
+https://www.byyd-tech.com
+
+###########################################################################
+# MARKET
+###########################################################################
+market://more_than_fourteen_character
+
+###########################################################################
+# PLUGIN
+###########################################################################
+plugin:
+plugin:https://

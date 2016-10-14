@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- Tell Spring where to find the context config -->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>com.adfonic.tracker.config.TrackerSpringConfig</param-value>
+	</context-param>
+	
+	<filter>
+		<filter-name>NoOp204Filter</filter-name>
+		<filter-class>com.adfonic.tracker.controller.NoOp204Filter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>NoOp204Filter</filter-name>
+		<url-pattern>/x/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>AppInfoServlet</servlet-name>
+		<servlet-class>com.adfonic.util.status.AppInfoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AppInfoServlet</servlet-name>
+		<url-pattern>/status</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>SpringMvcServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextClass</param-name>
+			<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+		</init-param>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>com.adfonic.tracker.config.TrackerWebMvcConfig</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/cb/*</url-pattern>
+    <url-pattern>/cs/*</url-pattern>
+    <url-pattern>/scb/*</url-pattern>
+    <url-pattern>/scs/*</url-pattern>
+    <url-pattern>/is/*</url-pattern>
+    <url-pattern>/ac/*</url-pattern>
+    <url-pattern>/vs/*</url-pattern>
+    <url-pattern>/ai/*</url-pattern>
+    <url-pattern>/v/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

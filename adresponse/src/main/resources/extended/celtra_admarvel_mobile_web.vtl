@@ -1,0 +1,23 @@
+<div class="celtra-ad-v2">
+    <script>
+        (function() {
+            var c = "${adComponents.destinationUrl}?redir=";
+            var sticky = "";
+
+            var scripts = document.getElementsByTagName("script");
+            var me = scripts[scripts.length-1];
+
+            var req = document.createElement("script");
+            req.id = "celtra-"+(Math.random()+"").slice(2);
+            req.src = "http://api.celtra.com/v1/creatives/${adComponents.components.extendedData.id}/compiled/ExpandableBanner/banner.js?channel=${adComponents.components.extendedData.channel}&c="+encodeURIComponent(c)+"&scriptId="+req.id+"&sticky="+sticky;
+            me.parentNode.insertBefore(req, me.nextSibling);
+        })();
+    </script>
+</div>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

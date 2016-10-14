@@ -1,0 +1,14 @@
+<script type="text/javascript">
+(function(a,f,b){var c,d=Math.floor(Math.random()*1E7),g=/[A-Za-z]+:[\/][\/][A-Za-z0-9.\-]+/,e='';a==a.parent?c='i':a.parent.location.href?c='f':(c='u',a=a.document.referrer.match(g),e=(a!==null)?'&loc='+a[0]:'');f.write('<scr'+'ipt id="'+b.tagID+"_"+d+'" src="http://c.medialytics.com/creative?tagID='+b.tagID+"&type="+c+"&imppx="+b.imppx+"&click="+b.click+e+"&r="+d+'"><\/scr'+'ipt>')})(window,document,{
+tagID:'${adComponents.components.extendedData.tagID}',
+imppx:'${adComponents.components.extendedData.imppx}',
+click:'${adComponents.destinationUrl}'
+});
+</script>
+#if($renderBeacons && $adComponents.components.beacons)
+#set($Integer = 0)
+#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+<!-- Beacon ${idx} -->
+<img width=1 height=1 src="#evaluate("$adComponents.components.beacons.beacon$idx")"/>
+#end
+#end

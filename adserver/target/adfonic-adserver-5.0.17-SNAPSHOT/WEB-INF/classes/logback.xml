@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="30 seconds">
+
+	<property name="LOG_DIR" value="${catalina.base}/logs" />
+	
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/adfonic-adserver.log</file>
+	
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/adfonic-adserver.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset class="java.nio.charset.Charset">UTF-8</charset>
+			<pattern>%d|%-10t|%-5p|%c{40}: %m%n</pattern>
+		</encoder>
+
+	</appender>
+
+	<logger name="org.hornetq" level="INFO" />
+	<logger name="org.apache.activemq" level="INFO" />
+	<logger name="org.apache.http" level="INFO" />
+	<logger name="org.apache.http.wire" level="INFO" />
+	<logger name="net.citrusleaf" level="INFO" />
+	<logger name="org.springframework" level="INFO" />
+	
+	<!-- Platform libraries -->
+	<logger name="com.adfonic.domain" level="INFO" />
+	<logger name="com.adfonic.retargeting" level="INFO" />
+	<logger name="com.adfonic.util" level="INFO" />
+	
+	<!-- AdServer's important Loggers -->
+	
+	<logger name="com.adfonic.adserver" level="INFO" />
+	<logger name="com.adfonic.adserver.plugin" level="WARN" />
+	<logger name="com.adfonic.adserver.controller" level="WARN" />
+	<logger name="com.adfonic.adserver.impl" level="INFO" />
+	<logger name="com.adfonic.adserver.rtb.impl" level="INFO" />
+	
+	<logger name="com.adfonic.adserver.deriver" level="WARN" />
+	
+  <root level="INFO">
+    <appender-ref ref="FILE" />
+  </root>
+  
+</configuration>

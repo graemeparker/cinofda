@@ -1,0 +1,62 @@
+api_version: 15
+auction_id: "48fa44f4-e7e6-4188-a8e7-64625907c6f1"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537149154"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "ff282897-d564-49c7-32e1-058bf5bcbfcb"
+user_ip_address: ")\327\2511"
+user_geo_country: "gh"
+user_geo_state: "greater accra"
+user_agent: "Opera/9.80 (Android; Opera Mini/7.6.40234/36.1633; U; en) Presto/2.12.423 Version/12.16"
+user_lang: "en"
+url: "http://mobile.ghanaweb.com/GhanaHomePage/entertainment/artikel.php?ID=354536"
+http_referer: "http://mobile.ghanaweb.com/GhanaHomePage/entertainment/artikel.php?ID=354536"
+ox_cat_tier_1: 21
+ox_cat_tier_2: 2102
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 8
+pub_blocked_content: 15
+pub_blocked_type: 11
+market_operator: "OX-GB"
+device {
+  dnt: 0
+  ua: "Opera/9.80 (Android; Opera Mini/7.6.40234/36.1633; U; en) Presto/2.12.423 Version/12.16"
+  ip: "41.215.169.49"
+  carrier: "620-03"
+  os: "Android"
+  osv: "Other"
+  language: "en"
+  make: "generic"
+  model: "touch phone"
+  geo {
+    lat: 5.544
+    lon: -0.196
+    country: "gh"
+    city: "accra"
+    type: 2
+    continent: "africa"
+    state: "greater accra"
+  }
+  browser: "Opera"
+  browser_version: "9"
+  idforad_enabled: false
+  category: "text"
+}
+is_test: false
+is_mobile_site: true
+is_application: false
+ssl_enabled: false
+user {
+}

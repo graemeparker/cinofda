@@ -1,0 +1,24 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <!-- Campaigns Template -->
+    <h:outputLabel styleClass="bl b" for="campaignSelection" value="#{msg['page.reporting.commons.campaigns.label']}" />
+    <pri:selectCheckboxMenu id="campaignSelection"
+                            widgetVar="campaignSelectionWidget"
+                            value="#{reportingMBean.selectedCampaignIds}"
+                            label="#{reportingMBean.allCampaignLabel}"
+                            filter="true" filterMatchMode="contains"
+                            onHide="ADT.toggleSelectCheckboxMenuWatermark(campaignSelectionWidget, allCampaignSelectionWatermark, someCampaignSelectionWatermark);"
+                            styleClass="campaignSelectionStyle" panelStyleClass="campaignSelectionPanelStyle">
+            <f:selectItems value="#{reportingMBean.campaigns}" var="campaign" itemLabel="#{campaign.name}" itemValue="#{campaign.id}"/>
+    </pri:selectCheckboxMenu>
+    
+    <!-- Store custom messages for selected campaigns -->
+    <pri:watermark for="campaignSelection" widgetVar="allCampaignSelectionWatermark"  value="#{msg['page.reporting.commons.campaigns.label.all']}" />
+    <pri:watermark for="campaignSelection" widgetVar="someCampaignSelectionWatermark" value="#{msg['page.reporting.commons.campaigns.label.some']}" />
+    
+</ui:composition>

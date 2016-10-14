@@ -1,0 +1,32 @@
+{
+	"id":"A2305501-ED9F-4DE8-B3A2-2BF0327175EE",
+	"imp":[ {
+			"id":"1", "tagid":"237774",
+			"banner":{
+				"w":728, "h":90, "topframe":1,
+				"battr":[ 1, 13, 14, 11, 12, 3, 2, 10, 7, 6, 5, 4, 9 ]
+			}
+		}
+	],
+	"site":{
+		"id":"64527",
+		"domain":"http://unitrending.co.uk",
+		"page":"http://unitrending.co.uk",
+		"publisher":{ "id":"39087" }
+	},
+	"device":{
+		"ip":"80.192.142.206",
+		"ua":"Mozilla/5.0 (Linux; U; Android 4.2.2; en-gb; GT-I9195 Build/JDQ39) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 [FB_IAB/FB4A;FBAV/27.0.0.25.15;]",
+		"carrier":"Virgin Media",
+		"language":"en-GB, en-US",
+		"make":"Samsung",
+		"model":"All Other Smart Phones",
+		"os":"Android",
+		"Osv":"4",
+		"osv":"4",
+		"devicetype":1,
+		"geo":{ "country":"GB", "region":"P7", "city":"Wigan", "zip":"WN5" },
+		"ext":{ "res":"-1x-1", "pf":2 }
+	},
+	"badv":[ "18exgfs.com", "gohookup.com" ]
+}

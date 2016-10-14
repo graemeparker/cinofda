@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+	<h:form id="mainForm">
+		<section class="form-box ui-corner-all" id="confirmation">
+            <h2 class="sec-title">#{msg['page.campaign.confirmation.title']}</h2>
+            <ui:include src="/WEB-INF/jsf/campaign/confirmation/section_confirmation_setup.xhtml">
+            </ui:include>
+            <ui:include src="/WEB-INF/jsf/campaign/confirmation/section_confirmation_scheduling.xhtml">
+            </ui:include>
+            <ui:include src="/WEB-INF/jsf/campaign/confirmation/section_confirmation_targeting.xhtml">
+            </ui:include>
+           	<ui:include src="/WEB-INF/jsf/campaign/confirmation/section_confirmation_inventory.xhtml">
+           	</ui:include>
+            <ui:include src="/WEB-INF/jsf/campaign/confirmation/section_confirmation_creative.xhtml">
+            </ui:include>
+            <ui:include src="/WEB-INF/jsf/campaign/confirmation/section_confirmation_tracking.xhtml">
+            </ui:include>
+            <ui:include src="/WEB-INF/jsf/campaign/confirmation/section_confirmation_bidding.xhtml">
+            </ui:include>
+
+           	<pri:spacer height="10" />
+           	<h:panelGroup layout="block" class="form-row" rendered="#{!userSessionBean.readOnlyUser}">
+           		<pri:commandButton id="confirmLaunchBtn" 
+           						   value="#{campaignMBean.campaignConfirmationMBean.continueButtonMessage}"
+           						   action="#{campaignMBean.campaignConfirmationMBean.showCampaignConfirmation}"
+                                   oncomplete="ADT.panelsTop();" />
+        	</h:panelGroup>
+       	 
+       	 <pri:dialog id="confirmCampaignDialog" header="#{msg['page.campaign.confirmation.dialog.header']}" resizable="false" modal="true" closable="true"  
+                styleClass="confirm-dialog" widgetVar="confirmCampaignChanges">
+	    	<h3>
+	    	    <h:outputText value="#{msg['page.campaign.confirmation.dialog.title.part1']}"/><br/>
+                   <h:outputText value="#{msg['page.campaign.confirmation.dialog.title.part2']}"/>
+	    	</h3>
+	        <p><h:outputText value="#{msg['page.campaign.confirmation.dialog.text']}"/></p>
+	        <div class="buttons">
+	           	<pri:commandButton id="pendingToActiveBtn" value="#{msg['page.dashboard.labels.table.filter.status.options.pending']}"  
+								   action="#{campaignMBean.campaignConfirmationMBean.pendingToActive}"
+								   onclick="confirmCampaignChanges.hide(); progressDialog.show();"
+								   oncomplete="progressDialog.hide()">
+	            </pri:commandButton>
+	           	<pri:commandButton id="pendingToPausedBtn" value="#{msg['page.dashboard.labels.table.filter.status.options.pendingpaused']}"
+								   action="#{campaignMBean.campaignConfirmationMBean.pendingToPaused}"
+								   onclick="confirmCampaignChanges.hide(); progressDialog.show();"
+								   oncomplete="progressDialog.hide()">
+                   </pri:commandButton>
+	      	</div>
+		</pri:dialog>
+		</section>
+	</h:form>
+        
+	<h:form id="mainFormAdops" rendered="#{campaignMBean.adminUserLoggedIn}">
+        <h:panelGroup id="adOpsNewCampaignActivationOutputPanel">
+	      	<pri:spacer height="10" />
+	        
+			<section class="form-box ui-corner-all" id="adOpsActivation">
+	        <h2 class="sec-title">
+	        	#{msg['page.campaign.adopsapproval.title']}
+		  		<span class="admin status-indicator"></span>
+	        </h2>
+		
+	        	<pri:outputPanel styleClass="form-row" layout="block">
+		            <h:outputLabel styleClass="bl b" id="advertiserDomainLabel" for="advertiserDomain"
+		             value="#{msg['page.campaign.adopsapproval.campaigndomain.label']}"/>
+			        <pri:inputText value="#{campaignMBean.campaignConfirmationMBean.advertiserDomain}"
+			                     id="advertiserDomain"
+			                     label="Campaign Domain"
+			                     style="width:200px"
+			                     converter="stringTrimConverter"
+			                     required="true"
+			                     maxlength="2047" 
+			                     requiredMessage="#{msg['page.campaign.validation.campaigndomain.required']}" 
+			                     validator="CampaignDomainValidator" 
+			                     validatorMessage="#{msg['page.error.validation.invalidcampaigndomain']}">
+						<pri:ajax process="@this" update="campaignDomainErrorMessage"/>            				
+			        </pri:inputText>
+			        <pri:message id="campaignDomainErrorMessage" for="advertiserDomain"/>
+		        </pri:outputPanel>
+                		
+	        	<pri:outputPanel styleClass="form-row" layout="block">
+	            <h:outputLabel styleClass="bl b" id="selectedExcludedCategoryAutoCompleteLabel" for="selectedExcludedCategoryAutoComplete"
+	   	             value="#{msg['page.campaign.adopsapproval.blacklistedpublicationscategories.label']}"/>
+			        <pri:autoComplete
+			            id="selectedExcludedCategoryAutoComplete"
+			            value="#{campaignMBean.campaignConfirmationMBean.excludedCategories}"
+			            completeMethod="#{campaignMBean.campaignConfirmationMBean.categorySearchMBean.doQuery}"
+			            minQueryLength="1"
+			            queryDelay="100"
+			            size="60"
+			            scrollHeight="200"
+			            multiple="true"
+			            forceSelection="true"
+			            var="c"
+			            itemValue="#{c}"
+			            itemLabel="#{campaignMBean.campaignConfirmationMBean.getCategoryHierarchyName(c)}"
+                        oncomplete="ADT.escapeAutocompleteResults();"
+			            converter="categoryHierarchyConverter">
+			          <pri:ajax event="itemSelect" listener="#{campaignMBean.campaignConfirmationMBean.handleSelectedExcludedCategory}" update="@this"/>
+			          <pri:ajax event="itemUnselect" listener="#{campaignMBean.campaignConfirmationMBean.handleSelectedExcludedCategory}" update="@this"/>
+			        </pri:autoComplete>
+			    </pri:outputPanel>
+		
+	        	<pri:outputPanel styleClass="form-row" layout="block">
+	            <h:outputLabel styleClass="bl b" id="campaignIabCategoryAutoCompleteLabel" for="campaignIabCategoryAutoComplete"
+	   	             value="#{msg['page.campaign.adopsapproval.campaigniabcategory.label']}"/>
+			        <pri:autoComplete
+			            id="campaignIabCategoryAutoComplete"
+			            value="#{campaignMBean.campaignConfirmationMBean.campaignIabCategory}"
+			            completeMethod="#{campaignMBean.campaignConfirmationMBean.categorySearchMBean.doQuery}"
+			            minQueryLength="1"
+			            queryDelay="100"
+			            size="60"
+			            scrollHeight="200"
+			            multiple="true"
+			            forceSelection="true"
+			            var="c"
+			            itemValue="#{c}"
+			            itemLabel="#{campaignMBean.campaignConfirmationMBean.getCategoryHierarchyName(c)}"
+                        oncomplete="ADT.escapeAutocompleteResults();"
+			            converter="categoryHierarchyConverter"
+			            >
+			          <pri:ajax event="itemSelect" listener="#{campaignMBean.campaignConfirmationMBean.handleSelectedCampaignIabCategory}" update="@this"/>
+			          <pri:ajax event="itemUnselect" listener="#{campaignMBean.campaignConfirmationMBean.handleSelectedCampaignIabCategory}" update="@this"/>
+			        </pri:autoComplete>
+			        <pri:message id="campaignIabCategoryErrorMessage" for="campaignIabCategoryAutoComplete"/>
+				</pri:outputPanel>
+		
+		      	<pri:spacer height="10" />
+		      	<h:panelGroup rendered="#{!campaignMBean.newCampaign}">
+			      	<div class="form-row">
+	    		        <pri:selectBooleanCheckbox
+	    		        id="approveAllNewCreatives"
+	    		        value="#{campaignMBean.campaignConfirmationMBean.approveAllNewCreatives}" />
+	    		        <h:outputLabel value="#{msg['page.campaign.confirmation.adopsapproval.approveallnewcreatives.label']}" for="approveAllNewCreatives" />
+	                </div>
+                </h:panelGroup>
+                <div class="form-row">
+	    			<h:outputLabel styleClass="bl b" value="#{msg['page.campaign.confirmation.adopsapproval.campaignstatus.label']}" />
+	    			<pri:selectOneMenu style="width:100px" value="#{campaignMBean.campaignConfirmationMBean.selectedStatus}">
+	    				<f:selectItems value="#{campaignMBean.campaignConfirmationMBean.status}"/>
+	    			</pri:selectOneMenu>
+	            </div>
+		       	<h:panelGroup layout="block" class="form-row" rendered="#{!userSessionBean.readOnlyUser}">
+		       		<pri:commandButton value="#{campaignMBean.campaignConfirmationMBean.approvalButtonMessage}" id="adOpsApprovalBtn"
+		                               action="#{campaignMBean.campaignConfirmationMBean.adOpsApproval}"
+		                               onclick="progressDialog.show();"
+		                               oncomplete="progressDialog.hide();"
+		                               process="adOpsNewCampaignActivationOutputPanel"
+		                               update=":navigationDiv,:menuForm:side-panel" />
+		    	</h:panelGroup>
+
+		    </section>
+		</h:panelGroup>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+   
+	<ui:param name="historyFound" value="#{not empty publicationApprovalDetailMBean.publicationHistories}" />
+	
+	<h2>
+		<pri:spacer styleClass="horizontalSpace" />
+		<pri:outputLabel value="#{msg['page.approval.publication.history.header']}" />
+	</h2>
+	<pri:outputPanel id="publicationHistory">
+		<pri:dataTable var="history"
+			value="#{publicationApprovalDetailMBean.publicationHistories}"
+			emptyMessage="#{msg['page.approval.publication.history.empty']}"
+			styleClass="publicationHistoryTable #{historyFound ? 'show' : 'hide'}">
+			
+			<!-- Event Time -->
+			<pri:column headerText="#{msg['page.approval.publication.history.event.time']}">
+				<pri:outputLabel value="#{history.eventTime}" />
+			</pri:column>
+			
+			<!-- Logged By -->
+			<pri:column headerText="#{msg['page.approval.publication.history.loggedby']}">
+				<pri:outputLabel value="#{history.loggedBy}" />
+			</pri:column>
+			
+			<!-- Assigned To -->
+			<pri:column headerText="#{msg['page.approval.publication.history.assignedto']}">
+				<pri:outputLabel value="#{history.assignedTo}" />
+			</pri:column>
+			
+			<!-- Approval Status -->
+			<pri:column headerText="#{msg['page.approval.publication.history.approval.status']}">
+				<pri:outputLabel value="#{history.status}" />
+			</pri:column>
+			
+			<!-- AdOps Status -->
+			<pri:column headerText="#{msg['page.approval.publication.history.adops.status']}">
+				<pri:outputLabel value="#{history.adOpsStatus}" />
+			</pri:column>
+			
+			<!-- Comment -->
+			<pri:column headerText="#{msg['page.approval.publication.history.comment']}">
+				<pri:outputLabel value="#{history.comment}" />
+			</pri:column>
+		</pri:dataTable>
+		
+		<!-- No History -->
+		<pri:outputPanel styleClass="#{not historyFound ? 'show' : 'hide'}">
+			<pri:spacer styleClass="horizontalDoubleSpace" />
+			<pri:outputLabel value="#{msg['page.approval.publication.history.empty']}" />
+		</pri:outputPanel>
+		
+	</pri:outputPanel>
+	
+</ui:composition>

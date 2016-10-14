@@ -1,0 +1,128 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Digest::MD5 qw(md5_hex);
+use Digest::SHA1 qw(sha1_hex);
+use JSON;
+use LWP::UserAgent;
+
+my $ipAddress = "32.128.108.158"; # AT&T US
+
+# Mobclix AdSpace (used to test the Mobclix shard)
+my $adSpaceID = "d1bb3f0c-a23a-4c97-bc05-99c35b84e136";
+my $trackingId = "0123456789abcdef"; # 16-char Android device ID
+my $userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; nl-nl; Desire_A8181 Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+  
+my $clickUserAgent = $userAgent;
+
+my %params = ();
+$params{"r.ip"} = $ipAddress;
+if ($trackingId) {
+    $params{"r.id"} = $trackingId;
+}
+
+$params{"h.user-agent"} = $userAgent;
+
+# We want a JSON response
+$params{"t.format"} = "json";
+# We'll piece it together ourselves
+$params{"t.markup"} = "false";
+# Uncomment this to test a warning condition
+#$params{"t.beacons"} = "markup";
+
+my $urlBase = "http://mobclix.byyd.net";
+
+my $queryString = "";
+print "*** Request Parameters:\n";
+foreach my $key (sort(keys(%params))) {
+    print "$key = $params{$key}\n";
+    if (length($queryString) > 0) {
+        $queryString .= '&';
+    }
+    $queryString .= $key;
+    $queryString .= '=';
+    $queryString .= CGI::escape($params{$key});
+}
+
+my $url = $urlBase . "/ad/" . $adSpaceID . '?' . $queryString;
+print "*** Hitting URL: $url\n";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+
+my $response = $ua->get($url);
+print "*** HTTP Status: ".$response->status_line."\n";
+#$response->headers->scan(sub { my ($key, $value) = @_; print "*** Response Header: $key: $value\n"; });
+if (!$response->is_success) {
+    exit(1);
+}
+
+my $content = $response->decoded_content;
+#print "*** Response Content:\n$content\n";
+
+# Parse the JSON response
+my $json = JSON->new->decode($content);
+unless ($json->{"status"} eq "success") {
+    print "*** ERROR: status=".$json->{"status"}.", error=".$json->{"error"}."\n";
+    exit(1);
+}
+
+my $adId = $json->{"adId"};
+my $destinationType = $json->{"destination"}->{"type"};
+my $destinationUrl = $json->{"destination"}->{"url"};
+my $components = $json->{"components"};
+my $adContent = $json->{"adContent"};
+if ($adContent) {
+  print "*** Ad Content:\n$adContent\n";
+}
+
+my @beaconUrls = ();
+
+# Display the response attributes
+print "------------------------------------------------------------\n";
+print "*** adId = $adId\n";
+if ($json->{"trackingId"}) {
+    print "*** trackingId = ".$json->{"trackingId"}."\n";
+}
+print "*** format = ".$json->{"format"}."\n";
+print "*** destination = $destinationUrl\n";
+if ($components) {
+    foreach my $compKey (keys(%$components)) {
+        my $component = $components->{$compKey};
+        foreach my $attr (keys(%$component)) {
+            my $value = $component->{$attr};
+            if ($value =~ /^(data:[^;]+;base64,).+/) {
+                print "*** $compKey.$attr = $1...(data not shown)\n";
+            }
+            else {
+                print "*** $compKey.$attr = ".$component->{$attr}."\n";
+            }
+            if ($compKey eq "beacons" && $attr =~ /^beacon(\d+)/) {
+              push(@beaconUrls, $component->{$attr});
+            }
+        }
+    }
+}
+
+# Provide a beacon/click URL that passes the same IP and User-Agent as the
+# impression so it won't bump into a 401 due to mismatch
+$queryString = "?r.ip=$ipAddress&h.user-agent=" . CGI::escape($clickUserAgent) . "&r.id=" . CGI::escape($trackingId);
+my $clickUrl = $destinationUrl . $queryString;
+print "------------------------------------------------------------\n";
+print "*** Click URL:\n$destinationUrl$queryString\n";
+
+# Convert "mobclix.byyd.net" to "byyd.net" in the click URL and hit it
+$clickUrl =~ s/http:\/\/mobclix\.byyd\.net/http:\/\/byyd.net/;
+print "*** Hitting Click URL:\n$clickUrl\n";
+
+$response = $ua->get($clickUrl);
+# Make sure we got a proper redirect and not a 500
+if (!$response->is_redirect) {
+    print "*** HTTP Status: ".$response->status_line."\n";
+    exit(1);
+}
+print "*** Destination URL: " . $response->header("Location") . "\n";

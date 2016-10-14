@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+       					   http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+	
+	<!-- Webflow Actions -->
+	<bean id="signUpAction" class="com.adfonic.sso.flows.signup.SignUpAction"/>
+	<bean id="forgottenPasswordAction" class="com.adfonic.sso.flows.forgottenpwd.ForgottenPasswordAction"/>
+	<bean id="verifyAction" class="com.adfonic.sso.flows.verify.VerifyAction"/>
+	<bean id="resetPasswordAction" class="com.adfonic.sso.flows.resetpwd.ResetPasswordAction"/>
+	
+	<!-- Services -->
+	<bean id="ssoUserService" class="com.adfonic.sso.services.UserServiceImpl"/>
+	<bean id="ssoEmailService" class="com.adfonic.sso.services.EmailServiceImpl"/>
+	<bean id="ssoVerificationCodeService" class="com.adfonic.sso.services.VerificationCodeServiceImpl"/>
+	<bean id="ssoSystemService" class="com.adfonic.sso.services.SystemServiceImpl"/>
+	
+	<!-- Others Beans -->
+	<bean id="applicationContextProvider" class="com.adfonic.sso.beans.ApplicationContextProvider"></bean>
+	<bean id="rootBean" class="com.adfonic.sso.beans.RootBean"/>
+	
+	<!-- SSO Properties -->
+	<bean id="configurationBean" class="com.adfonic.sso.beans.ConfigurationBean"/>
+	
+</beans>

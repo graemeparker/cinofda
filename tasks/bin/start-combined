@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# This is a trick that lets developers use mvn to run this locally.
+if [ -f pom.xml ]; then
+    echo "Running in developer mode"
+    exec mvn \
+        compile \
+        exec:exec \
+        -Dexec.classpathScope=runtime \
+        -Dexec.executable="java" \
+        -Dexec.args="-Xmx1024m -Djava.util.logging.config.file=conf/logging.properties -Dlog4j.configurationFile=/usr/local/adfonic/config/virtualcp/adfonic-tasks/log4j2.xml -cp %classpath com.adfonic.tasks.combined.CombinedTask"
+fi
+
+APPNAME=combined
+START_COMMAND="ant -emacs -f `dirname $0`/../build.xml combined"
+
+. /usr/local/adfonic/bin/init-env
+
+startProcess ${APPNAME} ${START_COMMAND}

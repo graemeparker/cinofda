@@ -1,0 +1,167 @@
+@import "../utils/_mixins";
+
+/*=================== AUDIENCE ===================*/
+
+.addaudience #opt2, #audienceOption {
+    margin-left: 15px;
+}
+
+#audienceForm {
+    helpInner {
+        top: inherit;
+    }
+}
+
+#uploadDeviceHistory {
+    .ui-datatable {
+        font-size: 14px;
+/*        
+        thead {
+            font-size: 12px;
+        }
+*/    
+        th {
+            vertical-align: top;
+        }
+        
+        .num {
+            text-align: right;
+        }
+    }
+}
+
+.borderlessList {
+    .ui-widget-content {
+        border: none;
+    }
+}
+
+#audienceBuilder {
+    .ui-datatable {
+        .ui-inputtext {
+            display:inline;
+            margin-left: 3px;
+            min-width: 200px;
+        }
+        
+        .ui-selection-column {
+            width: 19px;
+        }        
+    }
+    
+    .confirm-dialog {
+		@include default-confirm-dialog;
+    }
+}
+
+#source {
+  #dmpSegmentPanel {
+    .ui-autocomplete-input-token input {
+      width: 250px;
+    }
+  }
+  
+  .ui-overlaypanel {
+    width: 400px;
+  }
+        
+  .inner-panel {
+    padding: 20px 20px;
+  }
+  
+  .ui-selectonemenu.long {
+    width: 250px !important;
+  }  
+  
+  .ui-selectoneradio tr td {
+        width: auto;
+  }
+
+  .confirm-dialog {
+    @include default-confirm-dialog;
+  }
+  
+  .ui-panelgrid td {
+      padding: 4px 25px 4px 10px;
+  }
+  
+  .s3CredentialsPanelGrid {
+    @extend %panelGrid;
+    
+	width: 100%;
+    
+    .ui-widget-content {
+        border: none;
+    }
+    
+    td {
+        white-space: nowrap;
+        border: none;
+        padding: 0px 0px 10px 0px;
+        vertical-align: top;
+    }
+    
+    .ui-widget-content {
+        background: none !important;
+    }
+    
+    .fix_col {
+        min-width: 100px;
+        max-width: 100px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+     }
+  }
+  
+  #audienceTypeOptions {
+    width: auto;
+    
+    .ui-widget-content {
+        border: none;
+    }
+    
+    td {
+        white-space: nowrap;
+        border: none;
+    }
+    
+    .ui-widget-content {
+    	background: none !important;
+    }
+  }
+  #uploadDeviceIds{
+	  .ui-fileupload-buttonbar{
+	  	border: none;
+		background: none;
+	  }
+	  .ui-fileupload-content{
+	    display:none;
+	  }
+	  .ui-button-text{
+	    color: #444;
+		padding: 5px 12px;
+		font-size: 14px;
+		font-weight: bold;
+		text-shadow: 1px 1px 1px #fff;
+	  }
+	  .ui-button{
+	  	@include default-ui-button();
+		margin-right: 20px;
+	  }
+  }
+  
+  .s3FilesTableStyle {
+	.select-col				{ width: 10px; }
+	.name-col				{ @include fixWrapWidth(130px); }
+	.statusLastModified-col { width: 71px; }
+	
+	td.hide-chkbox .ui-chkbox {
+		display: none;
+	}
+  }
+  
+  #filemoverConnectivityErrorMessage {
+  	margin-left: 111px;
+  }
+  
+}

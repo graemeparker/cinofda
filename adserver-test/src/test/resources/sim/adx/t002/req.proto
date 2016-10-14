@@ -1,0 +1,52 @@
+id: "S,)\342\000\fzA\n|\331\003\232\0001\230"
+user_agent: "Mozilla/5.0 (Linux; U; Android 2.2; en-ca; GT-P1000M Build/FROYO) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1,gzip(gfe)"
+url: "http://mbappgiwwg33nfzzw65lmojuw4zzomrxxo43jnztwizlmov4gk888.com/"
+detected_language: "en"
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 7
+  excluded_attribute: 32
+  excluded_attribute: 30
+  excluded_attribute: 8
+  excluded_attribute: 9
+  excluded_attribute: 22
+  excluded_sensitive_category: 19
+  excluded_sensitive_category: 10
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 24
+  matching_ad_data {
+	adgroup_id: 4546339036
+	minimum_cpm_micros: 1780000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 7171541410938523948
+  17: 0
+  18: 0
+}
+is_test: false
+mobile {
+  platform: "android"
+  DEPRECATED_carrier_name: ""
+  DEPRECATED_carrier_country: ""
+  app_id: "com.soulring.dowsingdeluxe"
+  is_app: true
+  mobile_device_type: TABLET
+  screen_orientation: 1
+  brand: "samsung"
+  model: "gt-p1000"
+  os_version {
+	os_version_major: 2
+	os_version_minor: 2
+  }
+  screen_width: 320
+  screen_height: 796
+  carrier_id: 0
+  device_pixel_ratio_millis: 1500
+}
+postal_code_prefix: "BT5"
+geo_criteria_id: 1007274
+seller_network_id: 1
+publisher_settings_list_id: 7171541410938523948

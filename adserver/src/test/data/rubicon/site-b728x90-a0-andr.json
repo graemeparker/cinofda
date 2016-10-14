@@ -1,0 +1,47 @@
+{
+	"id":"e5c95c5b3b3ef81a554118c4b6c2186d0bdafb58",
+	"at":2,
+	"tmax":120,
+	"imp":[ {
+			"id":"1",
+			"tagid":"42146",
+			"secure":0,
+			"iframebuster":[ ],
+			"banner":{
+				"w":728, "h":90, "pos":3,
+				"battr":[ 14018, 1, 3, 8, 9, 10, 12, 14 ],
+				"api":[ ],
+				"topframe":0
+			},
+			"instl":0
+	} ],
+	"site":{
+		"id":"16792",
+		"domain":"http://www.curse.com",
+		"name":"Curse INTL",
+		"cat":[
+			"IAB9"
+		],
+		"page":"http://www.futhead.com/14/players/all/silver/all/all/all/all/all/all/all/rating/table/",
+		"publisher":{
+			"id":"9454"
+		}
+	},
+	"device":{
+		"os":"Android",
+		"model":"E960",
+		"connectiontype":0,
+		"geo":{ "country":"GBR", "region":"HRT" },
+		"osv":"4.2",
+		"js":1,
+		"ua":"Mozilla/5.0 (Linux; Android 5.0.1; Nexus 4 Build/LRX22C) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36",
+		"devicetype":1,
+		"language":"en",
+		"make":"Google",
+		"ext":{ "xff":"" },
+		"ip":"149.254.235.165"
+	},
+	"user":{ "id":"4024efeb011a3cfc66a22c7d11184be114cc0766",
+		"ext":{ "sessiondepth":5 }
+	}
+}

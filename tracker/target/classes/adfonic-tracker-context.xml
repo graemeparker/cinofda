@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+
+	<!-- Superseded by TrackerSpringConfig @Configuration. Delete next time you read me -->
+	
+  <context:annotation-config/>
+
+  <context:mbean-export/>
+  
+  <tx:annotation-driven />
+  
+  <!-- Scan for @Component, etc. classes automatically -->
+  <context:component-scan base-package="com.adfonic.tracker">
+    <!-- Include anything annotated as @Component -->
+    <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+    <!-- Exclude controllers...they get picked up in the dispatcher context -->
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    <!-- Exclude views...they get picked up in the dispatcher context DOES NOT EXIST-->
+    <context:exclude-filter type="regex" expression="com\.adfonic\.tracker\.view\..*"/>
+  </context:component-scan>
+ 
+  <bean id="trackerProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tracker.properties"/>
+  
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:properties-ref="trackerProperties"/>
+  
+  <bean id="toolsDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.jdbc.driverClassName}"
+        p:url="${tools.jdbc.url}"
+        p:username="${tools.jdbc.username}"
+        p:password="${tools.jdbc.password}"
+        p:initialSize="${tools.dbcp.initialSize:0}"
+        p:maxActive="${tools.dbcp.maxActive}"
+        p:minIdle="${tools.dbcp.minIdle:0}"
+        p:maxIdle="${tools.dbcp.maxIdle}"
+        p:maxWait="${tools.dbcp.maxWait:-1}"
+        p:testOnBorrow="${tools.dbcp.testOnBorrow:true}"
+        p:validationQuery="${tools.dbcp.validationQuery}"
+        p:validationQueryTimeout="${tools.dbcp.validationQueryTimeout:-1}"
+        p:testOnReturn="${tools.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${tools.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tools.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tools.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+  <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        p:persistenceUnitName="adfonic-domain"
+        p:packagesToScan="com.adfonic.domain"
+        p:dataSource-ref="toolsDataSource">
+    <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+            p:database="MYSQL"
+            p:showSql="false"
+            p:generateDdl="false"/>
+    </property>
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.generate_statistics">false</prop>
+        <prop key="hibernate.jdbc.fetch_size">10</prop>
+        <prop key="hibernate.jdbc.batch_size">10</prop>
+      </props>
+    </property>
+  </bean>
+  
+  <bean id="transactionManager"
+        class="org.springframework.orm.jpa.JpaTransactionManager"
+        p:entityManagerFactory-ref="entityManagerFactory"
+        p:dataSource-ref="toolsDataSource"/>
+
+  <bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory" init-method="init"/>
+  
+    <!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+    <context:component-scan base-package="com.byyd.middleware">
+        <context:exclude-filter type="annotation" expression="com.byyd.middleware.iface.service.NotAutoScan"/>
+    </context:component-scan>
+    
+  <bean id="trackerDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close"
+        p:driverClassName="${tracker.jdbc.driverClassName}"
+        p:url="${tracker.jdbc.url}"
+        p:username="${tracker.jdbc.username}"
+        p:password="${tracker.jdbc.password}"
+        p:initialSize="${tracker.dbcp.initialSize:0}"
+        p:maxActive="${tracker.dbcp.maxActive}"
+        p:minIdle="${tracker.dbcp.minIdle:0}"
+        p:maxIdle="${tracker.dbcp.maxIdle}"
+        p:maxWait="${tracker.dbcp.maxWait:-1}"
+        p:testOnBorrow="${tracker.dbcp.testOnBorrow:true}"
+        p:validationQuery="${tracker.dbcp.validationQuery}"
+        p:validationQueryTimeout="${tracker.dbcp.validationQueryTimeout:-1}"
+        p:testOnReturn="${tracker.dbcp.testOnReturn:false}"
+        p:testWhileIdle="${tracker.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tracker.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tracker.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tracker.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="2"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+  <bean id="ehCacheManager"
+        class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+        p:configLocation="file:${adfonic.config.home:/usr/local/adfonic/config}/ehcache-tracker.xml"/>
+
+  <bean id="uaHeaderIdCache"
+        class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="ehCacheManager"
+        p:cacheName="uaHeaderId"/>
+  
+  <!-- No id specified on this bean, it gets injected by type -->
+  <bean class="com.adfonic.tracker.jdbc.TrackerMultiServiceJdbcImpl"
+        p:uaHeaderIdCache-ref="uaHeaderIdCache">
+    <constructor-arg ref="trackerDataSource"/>
+  </bean>
+  
+  <bean id="videoViewAdEventLogic"
+        class="com.adfonic.tracker.VideoViewAdEventLogic">
+    <constructor-arg ref="adEventFactory"/>
+  </bean>
+  
+  <bean id="kryoManager"
+        class="com.adfonic.adserver.KryoManager"/>
+        
+  <bean id="adEventFactory" class="com.adfonic.adserver.AdEventFactory">
+    <constructor-arg ref="kryoManager"/>
+  </bean>
+  
+  <!-- =====================================================================
+       Trackerjms
+       ===================================================================== -->
+
+  <bean id="trackerJms" class="com.adfonic.tracker.jms.hornetq.TrackerJmsHornetQImpl">
+    <constructor-arg ref="embeddedHornetQManager"/>
+    <constructor-arg value="embedded.queue.adEvent"/>
+  </bean>
+  
+  <!-- =====================================================================
+       HornetQ and bridges from embedded to admq
+       ===================================================================== -->
+  
+  <!-- SC-206 - we now support explicitly setting minLargeMessageSize.
+       The HornetQ default is 100k, but allow property overrides. -->
+  <bean id="embeddedHornetQManager" class="com.adfonic.hornetq.EmbeddedHornetQManager"
+        p:persistenceEnabled="${hornetq.embedded.persistenceEnabled:true}"
+        p:dataDirectory="${hornetq.embedded.dataDirectory:/usr/local/adfonic/tracker-hornetq-data}"
+        p:journalMinFiles="${hornetq.embedded.journalMinFiles:10}"
+        p:minLargeMessageSize="${hornetq.embedded.minLargeMessageSize:102400}"/>
+
+  <bean id="bridge.adEvent" class="com.adfonic.hornetq.HornetQToJmsBridge">
+    <constructor-arg ref="embeddedHornetQManager"/>
+    <constructor-arg value="embedded.queue.adEvent"/>
+    <constructor-arg ref="jmsUtils"/>
+    <constructor-arg ref="admqJmsTemplate"/>
+    <constructor-arg ref="admqAdEventQueue"/>
+    <constructor-arg value="BYTES"/>
+    <constructor-arg value="${embeddedToAdmq.concurrentConsumers}"/>
+    <constructor-arg value="${TrackerJms.blockAdmq:false}"/>
+    <constructor-arg value="tracker"/>
+  </bean>
+
+  <!-- =====================================================================
+       "Ad Event" JMS cluster connectivity
+       ===================================================================== -->
+  <bean id="admqJmsConnectionFactory"
+        class="org.apache.activemq.pool.PooledConnectionFactory"
+        destroy-method="stop"
+        p:maxConnections="${adevent.jms.pool.maxConnections}">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory"
+            p:brokerURL="${adevent.jms.broker.url}"
+            p:alwaysSessionAsync="${adevent.jms.alwaysSessionAsync}"
+            p:copyMessageOnSend="${adevent.jms.copyMessageOnSend}"
+            p:disableTimeStampsByDefault="${adevent.jms.disableTimeStampsByDefault}"
+            p:dispatchAsync="${adevent.jms.dispatchAsync}"
+            p:useAsyncSend="${adevent.jms.useAsyncSend}"
+            p:useCompression="${adevent.jms.useCompression}"/>
+    </property>
+  </bean>
+ 
+
+  <bean id="admqJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+    <constructor-arg ref="admqJmsConnectionFactory"/>
+  </bean>
+  <amq:queue id="admqAdEventQueue" physicalName="adfonic.adEvent.v3"/>
+ 
+  <bean id="jmsUtils" class="com.adfonic.jms.JmsUtils"/>
+<!-- 
+  <bean id="velocityEngine"
+	  class="org.springframework.ui.velocity.VelocityEngineFactoryBean"
+	  p:resourceLoaderPath="/WEB-INF/velocity" />
+ -->
+ 
+	<bean id="velocityConfig"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath">
+			<value>/</value>
+		</property>
+	</bean>
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="exposeSpringMacroHelpers"><value>true</value></property>
+	</bean>
+	
+	<bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+</beans>

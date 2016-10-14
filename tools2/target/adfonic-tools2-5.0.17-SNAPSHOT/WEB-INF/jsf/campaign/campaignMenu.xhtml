@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions" 
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+      
+<pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+<pe:importConstants className="com.adfonic.domain.Role" var="RoleConstants" />
+
+<h:body>
+	<h:form id="menuForm" prependId="false">
+		<h:panelGroup id="panelSectionGroup" layout="block" class="fourcol">  
+            <h:panelGroup layout="block" id="side-panel" class="ui-corner-all #{campaignNavigationSessionBean.menuStyleClass['section']}">
+            
+            	<!-- Campaign Setup -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['sectionClass']}">
+                    <h2>
+	                    <pri:commandLink id="setupMenuLinkId" oncomplete="ADT.panelsTop()" disabled="#{userSessionBean.readOnlyUser}"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv">
+								<f:attribute name="navigateTo" value="setup"/>
+	                    	<span>#{msg['page.campaign.setup.menu.label']}</span>
+	                    </pri:commandLink>	
+                    </h2>
+                    
+                    <h:panelGroup layout="block" class="props t1">
+                        <ul>
+                        	<!-- Campaign name -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.setup.name']}</span>
+                                <span class="val">#{campaignMBean.campaignSetupMBean.campaignDto.name}</span>
+                            </li>
+                            
+                            <!-- IO Reference -->
+                            <pri:outputPanel rendered="#{not empty campaignMBean.campaignSetupMBean.campaignDto.reference}">
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.setup.reference']}</span>
+	                                <span class="val">#{campaignMBean.campaignSetupMBean.campaignDto.reference}</span>
+	                            </li>
+                            </pri:outputPanel>
+                            
+                            <!-- Opportunity ID -->
+                            <pri:outputPanel rendered="#{IS_ADMIN and not empty campaignMBean.campaignSetupMBean.campaignDto.opportunity}">
+	                            <li>
+									<pri:outputPanel layout="inline" styleClass="label">
+										<pri:outputLabel value="#{msg['page.campaign.setup.opportunity']}" />
+			                            <pri:outputPanel layout="inline" styleClass="admin status-indicator" style="float: right" />
+									</pri:outputPanel>
+	                                <span class="val">#{campaignMBean.campaignSetupMBean.campaignDto.opportunity}</span>
+	                            </li>
+                            </pri:outputPanel>
+                            
+                            <!-- External ID -->
+                            <pri:outputPanel rendered="#{campaignMBean.savedCampaign}">
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.setup.campaignid.label']}</span>
+	                                <span class="val">#{campaignMBean.campaignSetupMBean.campaignDto.externalID}</span>
+	                            </li>
+                            </pri:outputPanel>
+                        </ul>
+                    </h:panelGroup>
+                </section>
+                
+                <!-- Scheduling -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['schedulingClass']}">
+                    <h2>
+                    <pri:commandLink id="schedulingMenuLinkId" onsuccess="ADT.runDateTimeRange(); ADT.panelsTop()"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.schedulingDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="scheduling"/>
+                    	<span>#{msg['page.campaign.scheduling.menu.label']}</span>
+                    </pri:commandLink>	
+                    </h2>
+                    <h:panelGroup layout="block" class="props t2">
+                    	<ui:repeat var="cdate" value="#{campaignMBean.campaignSchedulingMBean.campaignDto.timePeriods}" varStatus="status">
+	                        <ul>
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.scheduling.menu.startdate.label']}</span>
+	                                <span class="val">
+	                                	<h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.startDate)!=null?toolsApplicationBean.getTimeZoneDate(cdate.startDate):msg['page.campaign.menu.asap.label']}">
+	                                		<f:convertDateTime type="date" locale="#{languageSessionBean.locale}" pattern="#{languageSessionBean.getLongDateFormat()}"/>
+	                                	</h:outputText>
+	                                	<h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.startDate)!=null?toolsApplicationBean.getTimeZoneHour(cdate.startDate):''}">
+	                                	</h:outputText>	                                	
+	                                </span>
+	                            </li>
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.scheduling.menu.enddate.label']}</span>
+	                                <span class="val">
+	                                	<h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.endDate)!=null?toolsApplicationBean.getTimeZoneDate(cdate.endDate):msg['page.campaign.menu.noend.label']}">
+	                                		<f:convertDateTime type="date" locale="#{languageSessionBean.locale}" pattern="#{languageSessionBean.getLongDateFormat()}"/>
+	                                	</h:outputText>
+	                                	<h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.endDate)!=null?toolsApplicationBean.getTimeZoneHour(cdate.endDate):''}">
+	                                	</h:outputText>	                               	
+	                                </span>
+	                            </li>
+                            	
+	                            <ui:remove>
+	                            	<li>
+	                                <span class="label">#{msg['page.campaign.scheduling.menu.timeperiod.label']}</span>
+	                                <span class="val">None Set</span>
+	                            	</li>
+		                            <li>
+		                                <span class="label">#{msg['page.campaign.scheduling.menu.timeweekday.label']}</span>
+		                                <span class="val">None Set</span>
+		                            </li>
+		                            <li>
+		                                <span class="label">#{msg['page.campaign.scheduling.menu.timeweekend.label']}</span>
+		                                <span class="val">None Set</span>
+		                            </li>
+															</ui:remove>
+	                        </ul>
+                        </ui:repeat>
+                        
+                        <ui:repeat var="campaignTrigger" value="#{campaignMBean.campaignSchedulingMBean.campaignTriggers}" varStatus="status">
+                            <ul>
+                                <li>
+	                                   <span class="label">#{msg['page.campaign.scheduling.plugintype.label']} [#{campaignTrigger.pluginVendor.name}]</span>
+                                     <span class="val">#{msg[campaignTrigger.pluginType.displayName]}</span>
+                                </li>
+                            </ul>
+                        </ui:repeat>
+                        
+                    </h:panelGroup>
+                </section>
+                
+                <!-- Targeting -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['targetingClass']}">
+                    <h2>
+                    <pri:commandLink id="targetingMenuLinkId" oncomplete="ADT.panelsTop()"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.targetingDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="targeting"/>                    
+                    <span>#{msg['page.campaign.targeting.menu.label']}</span>
+                    </pri:commandLink>	
+                    </h2>
+                    <h:panelGroup layout="block" class="props t3">
+                        <ul>
+                            <!-- Audience -->
+                            <pri:outputPanel rendered="#{toolsApplicationBean.audienceEnabled}">
+                                <li>
+                                  <span class="label">#{msg['page.campaign.targeting.menu.audience.label']}</span>
+                                  <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.getAudienceSummary(false),25)}</span>                              
+                                </li>
+                            </pri:outputPanel>
+                        	<!-- Location -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.location.panel.label']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingLocationMBean.getLocationSummary(false),21)}</span>
+                            </li>
+                            <!-- Platforms -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.menu.platforms.label']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.getPlatformsSummary(false),21)}</span>
+                            </li>
+                            <!-- Device types -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.menu.devicegroups.label']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.getDeviceGroupsSummary(false),21)}</span>
+                            </li>
+                            <!-- Devices -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.menu.devices.label']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingDeviceMBean.getDevicesSummary(false),21)}</span>
+                            </li>
+                            <!-- Connection -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.menu.connection.label']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.getConnectionsSummary(false),21)}</span>
+                            </li>
+                             <!-- ISP -->
+                            <li style="${campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ispOperatorsStyle}">
+                                <span class="label">#{msg['page.campaign.targeting.menu.isp.label']}
+                                </span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.getIspOperatorsSummary(false),21)}</span>
+                            </li>
+                            <!-- Mobile Operators -->
+                            <li style="${campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.mobileOperatorsStyle}">
+                                <span class="label">#{msg['page.campaign.targeting.menu.mobileoperators.label']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.getMobileOperatorsSummary(false),21)}</span>
+                            </li>
+                            <!-- IP address -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.connection.ipaddresses.menu.label']}</span>
+                                <c:if test="#{campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ipAddressTargetingEnabled}">
+                                    <span class="val">#{msg['page.campaign.targeting.connection.ipaddresses.menu.value.on']}</span>
+                                </c:if>
+                                <c:if test="#{!campaignMBean.campaignTargetingMBean.campaignTargetingConnectionMBean.ipAddressTargetingEnabled}">
+                                    <span class="val">#{msg['page.campaign.targeting.connection.ipaddresses.menu.value.off']}</span>
+                                </c:if>
+                            </li>
+                            <!-- Demographics -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.menu.demographics.label']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingDemographicsMBean.getDemographicsSummary(false),25)}</span>
+                            </li>
+                            <!-- Apps vs Websites -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.targeting.app']}</span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignTargetingMBean.campaignTargetingAppSiteMBean.appsSummary,25)}</span>
+                            </li>
+                        </ul>
+                    </h:panelGroup>
+                </section>
+                
+                <!-- Inventory Targeting -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['inventoryTargetingClass']}">
+                    <h2>
+                    <pri:commandLink id="inventorytargetingMenuLinkId" oncomplete="ADT.panelsTop()"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.inventoryTargetingDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="inventoryTargeting"/>                    
+                    <span>#{msg['page.campaign.inventory.menu.label']}</span>
+                    </pri:commandLink>	
+                    </h2>
+                    <h:panelGroup layout="block" class="props t4">
+                        <ul>
+	                    	<li>
+                                <span class="label">#{msg['page.campaign.inventory.menu.inventory.label']}</span>
+                                <span class="val">#{campaignMBean.campaignInventoryTargetingMBean.inventorySelectionSummary}</span>
+                            </li>
+                            <li>
+                                <span class="label"><h:outputText value="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory eq 'CATEGORY'?msg['page.campaign.inventory.menu.category.label']:msg['page.campaign.inventory.menu.targeting.label']}"/></span>
+                                <span class="val">#{toolsApplicationBean.shortMessage(campaignMBean.campaignInventoryTargetingMBean.getExchangeSummary(false),25)}</span>
+                            </li>
+                            <li>
+                                <span class="label"><h:outputText value="#{campaignMBean.campaignInventoryTargetingMBean.inventoryLabel}"/></span>
+                                <span class="val">#{campaignMBean.campaignInventoryTargetingMBean.whiteListBlackListOrDealIdName}</span>
+                            </li>
+                            <c:if test="#{campaignMBean.campaignInventoryTargetingMBean.selectedInventory ne 'PRIVATE_MARKET_PLACE' and campaignMBean.campaignInventoryTargetingMBean.selectedInventory ne 'WHITELIST'}">
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.inventory.menu.safetylevel.label']}</span>
+	                                <span class="val">#{campaignMBean.campaignInventoryTargetingMBean.safetySummary}</span>
+	                            </li>
+                            </c:if>
+                        </ul>
+                    </h:panelGroup>
+                </section>
+                
+                <!-- Creative -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['creativeClass']}"> 
+                    <h2>
+                    <pri:commandLink id="creativeMenuLinkId" oncomplete="ADT.panelsTop();"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.creativeDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="creative"/>                    
+                    	<span>#{msg['page.campaign.creative.menu.label']}</span>
+                    </pri:commandLink>
+                    </h2>
+                    <h:panelGroup layout="block" class="props t5">
+                    	<ul>
+                    	<ui:repeat varStatus="status" value="#{campaignMBean.campaignCreativeMBean.campaignDto.creatives}"
+                                   var="creative" type="ordered">
+                    		<li>
+                    		<pri:outputPanel autoUpdate="false">
+                                <h:outputText value="#{status.index + 1}. #{creative.name}" />
+                    		</pri:outputPanel>
+                    		<pri:outputPanel autoUpdate="false">
+                    			<h:outputText value="#{msg['page.campaign.confirmation.creative.format.label']}" styleClass="label" />
+                    			<h:outputText value="#{campaignMBean.campaignCreativeMBean.getCreativeSummaryFormat(status.index)}" styleClass="val"/>
+                    		</pri:outputPanel>
+                    		</li>
+                    	</ui:repeat>
+                    	</ul>
+                    </h:panelGroup>
+                </section>
+                
+                <!-- Conversion Tracking -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['trackingClass']}">
+                    <h2>
+                    	<pri:commandLink id="trackingMenuLinkId" oncomplete="ADT.panelsTop()"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.trackingDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="tracking"/>                    
+                    	<span>#{msg['page.campaign.conversiontracking.menu.label']}</span>
+                    	</pri:commandLink>
+                    </h2>
+                    <h:panelGroup layout="block" class="props t6">
+                        <ul>
+                            <li>
+                                <span class="label">#{msg['page.campaign.conversiontracking.menu.title.label']}</span>
+                                <span class="val">#{(campaignMBean.campaignTrackingMBean.campaignDto !=null and campaignMBean.campaignTrackingMBean.convTrackingType!=null)?campaignMBean.campaignTrackingMBean.convTrackingTypeMenuText:'None Set'}</span>
+                            </li>
+                        </ul>
+                    </h:panelGroup>
+                </section>
+                
+                <!-- Bidding & Budget -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['budgetClass']}">
+                    <h2>
+                    <pri:commandLink id="biddingMenuLinkId" oncomplete="ADT.panelsTop()"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.biddingDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="bid"/>                    
+                    	<span>#{msg['page.campaign.bidbudget.menu.label']}</span>
+                    </pri:commandLink>
+                    </h2>
+                    <h:panelGroup layout="block" class="props t7">
+                        <ul>
+                        	<!-- Bid Type -->
+                        	<li>
+                                <span class="label">#{msg['page.campaign.confirmation.bidding.bidtype.label']}</span>
+                                <span class="val">
+									<h:outputText value="#{(campaignMBean.campaignBidMBean.campaignDto.currentBid!=null and campaignMBean.campaignBidMBean.campaignDto.currentBid.bidType!=null)?campaignMBean.campaignBidMBean.campaignDto.currentBid.bidType:msg['page.campaign.menu.noneset.label']}">
+									</h:outputText>                                
+								</span>
+                            </li>
+                            
+                            <!-- Bid -->
+                        	<li>
+                                <span class="label">#{msg['page.campaign.bidbudget.menu.bidprice.label']}</span>
+                                <h:panelGroup class="val" rendered="#{campaignMBean.campaignBidMBean.campaignDto.priceOverridden}">
+                                    <h:outputText value="#{(campaignMBean.campaignBidMBean.campaignDto.currentBid!=null and campaignMBean.campaignBidMBean.campaignDto.currentBid.amount!=null)?campaignMBean.campaignBidMBean.campaignDto.currentBid.amount:msg['page.campaign.menu.noneset.label']}">
+                                        <f:convertNumber currencyCode="USD" type="currency" maxFractionDigits="3" />
+                                    </h:outputText>
+                                </h:panelGroup>
+                                <h:panelGroup class="val" rendered="#{not campaignMBean.campaignBidMBean.campaignDto.priceOverridden}">
+                                    <h:outputText value="#{(campaignMBean.campaignBidMBean.campaignDto.currentBid!=null and campaignMBean.campaignBidMBean.campaignDto.currentBid.amount!=null)?campaignMBean.campaignBidMBean.campaignDto.currentBid.amount:msg['page.campaign.menu.noneset.label']}">
+                                        <f:convertNumber currencyCode="USD" type="currency" maxFractionDigits="2" />
+                                    </h:outputText>
+                                </h:panelGroup>
+                            </li>
+                            
+                            <!-- CTR/CPA Goal -->
+                           	<c:if test="#{campaignMBean.campaignBidMBean.targeted}">
+	                            <li>
+	                                <span class="label">#{campaignMBean.campaignBidMBean.targetLabel}</span>
+	                                <span class="val">
+										<h:outputText value="#{campaignMBean.campaignBidMBean.externalCTR}" rendered="#{campaignMBean.campaignBidMBean.CPM}">
+												<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+										</h:outputText><h:outputText value="%" rendered="#{campaignMBean.campaignBidMBean.CPM}"/>
+										<h:outputText value="#{campaignMBean.campaignBidMBean.externalCVR}" rendered="#{campaignMBean.campaignBidMBean.CPC}">
+												<f:convertNumber currencyCode="USD" type="currency" />
+										</h:outputText>                     
+									</span>
+	                            </li>
+                            </c:if>
+                            
+                            <!-- Campaign Budget -->
+                        	<li>
+                                <span class="label">#{msg['page.campaign.confirmation.bidding.budget.label']}</span>
+                                <span class="val">
+									<h:outputText value="#{campaignMBean.campaignBidMBean.overallBudgetSummary}">
+							    	</h:outputText>                         
+								</span>
+                            </li>
+                            
+                            <!-- Daily Budget -->
+                            <li>
+                                <span class="label">#{msg['page.campaign.confirmation.bidding.dailybudget.label']}</span>
+                                <span class="val">
+									<c:choose>
+										<c:when test="#{(campaignMBean.campaignBidMBean.evenDistributionOverallBudget eq 'EVEN') or
+										                (campaignMBean.campaignBidMBean.evenDistributionOverallBudget eq 'EVEN_DAY')}">
+                                            <h:outputText value="#{msg['page.campaign.bidbudget.menu.evenspacing.label']}"/>
+										</c:when>
+										<c:otherwise>
+                                            <h:outputText value="#{campaignMBean.campaignBidMBean.dailyBudgetSummary}"/>
+										</c:otherwise>
+									</c:choose>					    	                     
+								</span>
+                            </li>
+                            
+                            <!-- Daily Budget (Sat-Sun) -->
+                            <c:if test="#{campaignMBean.campaignBidMBean.renderWeekDay}">
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.confirmation.bidding.weekendbudget.label']}</span>
+	                                <span class="val">
+										<h:outputText value="#{campaignMBean.campaignConfirmationMBean.campaignDto.dailyBudgetWeekend!=null?campaignMBean.campaignConfirmationMBean.campaignDto.dailyBudgetWeekend:msg['page.campaign.menu.noneset.label']}">
+								    		<f:convertNumber currencyCode="USD" type="currency" />
+								    	</h:outputText>                       
+									</span>
+	                            </li>
+                            </c:if>
+                            
+                            <!-- Bidding Strategy --> 
+                            <li>
+                                <span class="label">#{msg['page.campaign.bidbudget.biddingstrategy.mediacost']}</span>
+                                <span class="val">
+					                <c:if test="#{campaignMBean.campaignBidMBean.mediaCostOptimisationEnabled}">#{msg['page.campaign.targeting.connection.ipaddresses.menu.value.on']}</c:if>
+					                <c:if test="#{!campaignMBean.campaignBidMBean.mediaCostOptimisationEnabled}">#{msg['page.campaign.targeting.connection.ipaddresses.menu.value.off']}</c:if>
+					            </span>
+                            </li>
+                            
+                            <!-- Fixed Margin -->
+                            <sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE},#{RoleConstants.COMPANY_ROLE_FIXED_MARGIN}"> 
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.bidbudget.fixedmargin.label']}</span>
+	                                <span class="val">
+										<h:outputText value="#{campaignMBean.campaignConfirmationMBean.fixedMargin!=null?campaignMBean.campaignConfirmationMBean.fixedMargin:msg['page.campaign.menu.noneset.label']}">
+											<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+								    	</h:outputText>                       
+									</span>
+	                            </li>
+	                        </sec:authorize>
+	                        
+	                        <!-- Ad Serving CPM Fee -->
+	                        <sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE},#{RoleConstants.COMPANY_ROLE_AD_SERVING_CPM_FEE}">
+	                            <li>
+	                                <span class="label">#{msg['page.campaign.bidbudget.adservingcpmfee.label']}</span>
+	                                <span class="val">
+										<h:outputText value="#{campaignMBean.campaignConfirmationMBean.campaignDto.currentRichMediaAdServingFee.richMediaAdServingFee!=null?campaignMBean.campaignConfirmationMBean.campaignDto.currentRichMediaAdServingFee.richMediaAdServingFee:msg['page.campaign.menu.noneset.label']}">
+								    		<f:convertNumber currencyCode="USD" type="currency" />
+								    	</h:outputText>                         
+									</span>
+	                            </li>
+	                        </sec:authorize>
+	                        
+	                        <!-- Agency Discount -->
+	                        <li>
+                                <span class="label">#{msg['page.campaign.bidbudget.agencydiscount.label']}</span>
+                                <span class="val">
+									<h:outputText value="#{campaignMBean.campaignConfirmationMBean.agencyDiscount!=null?campaignMBean.campaignConfirmationMBean.agencyDiscount:msg['page.campaign.menu.noneset.label']}">
+							    		<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+							    	</h:outputText>                         
+							    	<h:outputText value="#{campaignMBean.campaignConfirmationMBean.agencyDiscount!=null?'%':''}"/>  
+								</span>
+	                        </li>
+	                        
+	                        <!-- Frequency Cap -->	   
+                            <li>
+                                <span class="label">#{msg['page.campaign.confirmation.bidding.frequency.label']}</span>
+                                <span class="val">
+									<h:outputText value="#{campaignMBean.campaignBidMBean.frecuencySummary}" />
+								</span>
+                            </li>
+                            
+                            <!-- Invoice Currency -->     
+                            <li>
+                                <span class="label">#{msg['page.campaign.confirmation.bidding.invoicecurrency.label']}</span>
+                                <span class="val">
+                                    <h:outputText value="#{campaignMBean.campaignBidMBean.invoiceCurrencySummary}" />
+                                </span>
+                            </li>
+                        </ul>
+                    </h:panelGroup>
+                </section>
+                
+                <!-- Confirmation -->
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['confirmationClass']}">
+                    <h2>
+                       <pri:commandLink id="confirmationMenuLinkId" oncomplete="ADT.panelsTop()"
+								actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+								disabled="#{campaignNavigationSessionBean.confirmationDisabled || userSessionBean.readOnlyUser}">
+								<f:attribute name="navigateTo" value="confirmation"/>                    
+                    	<span>#{msg['page.campaign.confirmation.menu.label']}</span>
+                    	</pri:commandLink>
+                    </h2>
+                </section>
+                <section class="#{campaignNavigationSessionBean.menuStyleClass['historyClass']}">
+                    <h2>
+                       <pri:commandLink id="historyMenuLinkId" oncomplete="ADT.panelsTop()"
+                                actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv"
+                                rendered="#{not campaignMBean.isNewCampaign()}">
+                                <f:attribute name="navigateTo" value="history"/>                    
+                        <span>#{msg['page.campaign.history.menu.label']}</span>
+                        </pri:commandLink>
+                    </h2>
+                </section>
+            </h:panelGroup>
+        </h:panelGroup>
+		</h:form>
+	</h:body>
+</html>

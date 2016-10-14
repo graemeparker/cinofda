@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+<ui:remove>THIS CAMPAIGNFORM.XHTML IS DEPRECATED!!!! IE. NOT USED! KEEP ONLY FOR PEDALING FASTER IF NEEDED</ui:remove>
+        <!-- ===============================  SETUP SECTION  =============================== -->
+        <ui:insert name="contentSetup" >	
+		   <ui:include src="/WEB-INF/jsf/campaign/section_setup.xhtml" />
+		</ui:insert>    
+		
+        <!-- ===============================  SCHEDULING SECTION  =============================== -->
+        <ui:insert name="contentScheduling" >	
+		   <ui:include src="/WEB-INF/jsf/campaign/section_scheduling.xhtml" />
+		</ui:insert>
+		
+        <!-- ===============================  TARGETING SECTION  =============================== -->
+        <ui:insert name="contentTargeting" >	
+		   <ui:include src="/WEB-INF/jsf/campaign/section_targeting.xhtml" />
+		</ui:insert>
+        
+
+        <!-- ===============================  CREATIVE SECTION  =============================== -->
+        <ui:insert name="contentCreative" >	
+		   <ui:include src="/WEB-INF/jsf/campaign/section_creative.xhtml" />
+		</ui:insert>
+		
+        <!-- ===============================  BIDDING SECTION  =============================== -->
+        <ui:insert name="contentBidding" >	
+		   <ui:include src="/WEB-INF/jsf/campaign/section_bidding.xhtml" />
+		</ui:insert>
+		        
+        <!-- ===============================  TRACKING SECTION  =============================== -->
+        <ui:insert name="contentTracking" >	
+		   <ui:include src="/WEB-INF/jsf/campaign/section_tracking.xhtml" />
+		</ui:insert>        
+        
+</h:body>
+</html>        

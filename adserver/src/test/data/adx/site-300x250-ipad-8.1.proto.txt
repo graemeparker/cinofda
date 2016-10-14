@@ -1,0 +1,75 @@
+id: "U.\216\337\000\t^\335\n\037#J)\000Qt"
+ip: "\263o$"
+user_agent: "Mozilla/5.0 (iPad; CPU OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4,gzip(gfe)"
+url: "http://m.tudogostoso.com.br/receitas/87620-pao-de-lo-massa"
+detected_language: "pt"
+detected_vertical {
+  id: 122
+  weight: 1.0
+}
+detected_vertical {
+  id: 1526
+  weight: 0.26845136
+}
+detected_vertical {
+  id: 907
+  weight: 0.23652701
+}
+adslot {
+  id: 1
+  width: 300
+  height: 250
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 27
+  excluded_sensitive_category: 3
+  excluded_sensitive_category: 5
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: BELOW_THE_FOLD
+  ad_block_key: 3793316060
+  publisher_settings_list_id: 15758229370172011164
+  17: 904
+  18: 768
+  19: 0
+  21: 40
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEO9E0GXcZ54RLRvP6CBMMDw"
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 26
+detected_content_label: 39
+mobile {
+  platform: "ipad"
+  mobile_device_type: TABLET
+  brand: "apple"
+  model: "ipad"
+  os_version {
+    os_version_major: 8
+    os_version_minor: 1
+  }
+  screen_width: 768
+  screen_height: 1024
+  carrier_id: 0
+}
+cookie_age_seconds: 49475094
+geo_criteria_id: 1001773
+seller_network_id: 1
+publisher_settings_list_id: 12314089165294475153
+51: 3

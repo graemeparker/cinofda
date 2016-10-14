@@ -1,0 +1,60 @@
+body {
+    font-family: Arial;
+    font-size: 10pt;
+}
+th {
+    font-family: Arial;
+    font-size: 9pt;
+}
+td {
+    font-family: Courier;
+    font-size: 9pt;
+}
+
+table.diagnostic {
+    border-width: 1px;
+    border-spacing: 0px;
+    border-style: solid;
+    border-color: black;
+    border-collapse: collapse;
+}
+table.diagnostic th {
+    font-family: Arial;
+    font-size: 9pt;
+    padding: 1px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+table.diagnostic td {
+    font-family: Arial;
+    font-size: 9pt;
+    padding: 1px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+
+table.diagnosticSmall {
+    border-width: 1px;
+    border-spacing: 0px;
+    border-style: solid;
+    border-color: black;
+    border-collapse: collapse;
+}
+table.diagnosticSmall th {
+    font-family: Arial;
+    font-size: 8pt;
+    padding: 1px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+table.diagnosticSmall td {
+    font-family: Arial;
+    font-size: 8pt;
+    padding: 1px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}

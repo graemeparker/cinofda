@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+   
+	<ui:param name="adfonicUser" value="#{publicationApprovalDetailMBean.adfonicUser()}" />
+	
+	<!-- For status validation -->
+	<ui:param name="originalSelectedStatus" value="#{publicationApprovalDetailMBean.publicationDetails.status}" />
+	<ui:param name="commentRequiredMsg" value="#{msg['page.approval.publication.approval.comment.required.label']}" />
+	
+	<!-- For IAB validation -->
+	<ui:param name="iabRequiredMsg" value="#{msg['page.approval.publication.iab.category.required.label']}" />
+   
+	<h2><pri:outputLabel value="#{msg['page.approval.publication.approval.header']}" /></h2>
+	<pri:panelGrid styleClass="panelGrid">
+					
+		<!-- Status -->
+		<pri:row>
+    		<pri:column><pri:outputLabel value="#{msg['page.approval.publication.approval.status.label']}" /></pri:column>
+    		<pri:column>
+				<pri:selectOneMenu widgetVar="statusSelectWidget"
+								   value="#{publicationApprovalDetailMBean.publicationDetails.status}"
+								   onchange="ADT.commentRequiredWhenStatusHasChanged('commentInputAreaErr', PF('commentInputAreaWidget'), PF('savePublicationButtonWidget'), PF('statusSelectWidget'), '#{originalSelectedStatus}', '#{commentRequiredMsg}');
+								   			 ADT.iabRequiredWhenStatusChangedToActive('iabInputErr', PF('iabInputWidget'), PF('savePublicationButtonWidget'), PF('statusSelectWidget'), 'ACTIVE', '#{iabRequiredMsg}')"
+								   styleClass="approvalDetailWidth">
+					<c:forEach items="#{PublicationStatus.ALL_VALUES}" var="publicationStatus">
+						<!-- Hide ALL predefined option -->
+						<c:if test="#{PublicationStatus.ALL != publicationStatus.name()}">
+							<f:selectItem itemValue="#{publicationStatus.name()}" itemLabel="#{msg[publicationStatus.publicationStatusStr]}" />
+						</c:if>
+					</c:forEach>
+				</pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- AdOps Status -->
+		<pri:row>
+    		<pri:column><pri:outputLabel value="#{msg['page.approval.publication.approval.adops.status.label']}" /></pri:column>
+    		<pri:column>
+				<pri:selectOneMenu value="#{publicationApprovalDetailMBean.publicationDetails.adOpsStatus}"
+								   styleClass="approvalDetailWidth">
+		            <f:selectItems value="#{AdOpsStatus.ALL_VALUES}" var="adOpsStatus"
+                 			   		   itemValue="#{adOpsStatus}" itemLabel="#{msg[adOpsStatus.label]}" />
+				</pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Assigned To -->
+		<pri:row>
+    		<pri:column><pri:outputLabel value="#{msg['page.approval.publication.approval.assignedto.label']}" /></pri:column>
+    		<pri:column>
+				<pri:selectOneMenu value="#{publicationApprovalDetailMBean.publicationDetails.assignedTo}"
+								   filter="true" filterMatchMode="contains"
+                      			   styleClass="approvalDetailWidth">
+                      	<f:selectItem itemLabel="#{msg['page.approval.publication.approval.assignedto.unassign.label']}"
+                      				  itemValue="#{publicationApprovalDetailMBean.noAssignedToId}" />
+		            <f:selectItems value="#{publicationApprovalDetailMBean.assignedToUsers}"
+		            			   var="nameIdModel" itemLabel="#{nameIdModel.name}" itemValue="#{nameIdModel.id}" />
+		            <!-- the original assigned to user will be enabled for check/uncheck amongs watchers -->
+		            <pri:ajax event="change" update="watcherSelection" />
+			    </pri:selectOneMenu>
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Comment -->
+
+		<pri:row>
+    		<pri:column><pri:outputLabel value="#{msg['page.approval.publication.approval.comment.label']}" /></pri:column>
+    		<pri:column>
+    			<pri:inputTextarea widgetVar="commentInputAreaWidget"
+    							   value="#{publicationApprovalDetailMBean.publicationDetails.comment}" rows="2" autoResize="true"
+    							   onkeyup="ADT.commentRequiredWhenStatusHasChanged('commentInputAreaErr', PF('commentInputAreaWidget'), PF('savePublicationButtonWidget'), PF('statusSelectWidget'), '#{originalSelectedStatus}', '#{commentRequiredMsg}')"
+    							   styleClass="inputTextStyle" />
+    			<pri:outputLabel id="commentInputAreaErr" styleClass="hide warning filterPadding" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Watchers -->
+		<pri:row>
+    		<pri:column><pri:outputLabel value="#{msg['page.approval.publication.approval.watchers.label']}" /></pri:column>
+    		<pri:column>
+				<pri:selectCheckboxMenu id="watcherSelection" widgetVar="watcherSelectionWidget"
+										value="#{publicationApprovalDetailMBean.publicationDetails.watchers}"
+										label="#{publicationApprovalDetailMBean.publicationMultiSelectWatcherLabel}"
+										onHide="ADT.toggleSelectCheckboxMenuWatermark(watcherSelectionWidget, allWatcherSelectionWatermark, someWatcherSelectionWatermark);"
+                      					filter="true" filterMatchMode="contains"
+                      					styleClass="approvalDetailWidth">
+                    <!-- current adfonic user and assigned to user both always watchers so maked it disabled and checked -->
+		            <f:selectItems value="#{publicationApprovalDetailMBean.publicationWatchers}"
+		            			   var="publicationWatcher" itemLabel="#{publicationWatcher.name}" itemValue="#{publicationWatcher.id}"
+		            			   itemDisabled="#{adfonicUser.id eq publicationWatcher.id or publicationApprovalDetailMBean.publicationDetails.assignedTo eq publicationWatcher.id}" />
+			    </pri:selectCheckboxMenu>
+			    <!-- Store custom messages for selected algorithm status -->
+    			<pri:watermark for="watcherSelection" widgetVar="allWatcherSelectionWatermark"  value="#{msg['page.approval.publication.approval.watchers.label.all']}" />
+    			<pri:watermark for="watcherSelection" widgetVar="someWatcherSelectionWatermark" value="#{msg['page.approval.publication.approval.watchers.label.some']}" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Email Watchers -->
+		<pri:row>
+    		<pri:column><pri:outputLabel value="#{msg['page.approval.publication.approval.email.watchers.label']}" /></pri:column>
+    		<pri:column>
+					<pri:selectBooleanButton value="#{publicationApprovalDetailMBean.publicationDetails.notifyWatchers}"
+											 onLabel="#{msg['page.approval.publication.on.label']}" onIcon="ui-icon-check"
+											 offLabel="#{msg['page.approval.publication.off.label']}" offIcon="ui-icon-close" />
+    		</pri:column>
+    	</pri:row>
+    	
+    	<!-- Email Publisher -->
+		<pri:row>
+    		<pri:column><pri:outputLabel value="#{msg['page.approval.publication.approval.email.publisher.label']}" /></pri:column>
+    		<pri:column>
+					<pri:selectBooleanButton value="#{publicationApprovalDetailMBean.publicationDetails.notifyPublisher}"
+											 onLabel="#{msg['page.approval.publication.on.label']}" onIcon="ui-icon-check"
+											 offLabel="#{msg['page.approval.publication.off.label']}" offIcon="ui-icon-close" />
+    		</pri:column>
+    	</pri:row>
+    	
+	</pri:panelGrid>
+	
+</ui:composition>

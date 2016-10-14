@@ -1,0 +1,60 @@
+{
+  "app" : {
+    "bundle" : "mobi.ifunny",
+    "cat" : [ "IAB1", "entertainment" ],
+    "id" : "a0a09c50c76711e281c11231392559e4",
+    "name" : "iFunny :) Android New",
+    "publisher" : {
+      "id" : "agltb3B1Yi1pbmNyEAsSB0FjY291bnQY-ePWFQw",
+      "name" : "Flysoft"
+    },
+    "ver" : "4.4.3"
+  },
+  "at" : 2,
+  "badv" : [ "b-moving.co.il", "blismedia.com", "bulgari.com", "facebook.com", "komlimobile.go2cloud.org", "mentalhealthsos.org", "tobaccofreeflorida.com", "tribalddb.com", "www.applift.com", "www.tap4fun.com/kingsempire/*", "yp.com" ],
+  "bcat" : [ "IAB25", "IAB26", "IAB7-39", "IAB8-18", "IAB8-5", "IAB9-9" ],
+  "device" : {
+    "carrier" : "655-01",
+    "connectiontype" : 3,
+    "dnt" : 0,
+    "geo" : {
+      "city" : "Johannesburg",
+      "country" : "ZAF",
+      "region" : "06",
+      "zip" : "2041"
+    },
+    "h" : 1280,
+    "ifa" : "336120c1-f17c-4a45-b7e8-94fb5ca51cd4",
+    "ip" : "41.13.28.12",
+    "js" : 1,
+    "language" : "en",
+    "make" : "samsung",
+    "model" : "SM-J500F",
+    "os" : "Android",
+    "osv" : "5.1.1",
+    "ua" : "Mozilla/5.0 (Linux; Android 5.1.1; SM-J500F Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/46.0.2490.76 Mobile Safari/537.36",
+    "w" : 720
+  },
+  "id" : "8bcf43f5-20d2-4476-a641-4d0d2d2d26e3",
+  "imp" : [ {
+    "banner" : {
+      "api" : [ 3, 5 ],
+      "battr" : [ 3, 8, 9, 10, 14, 6 ],
+      "btype" : [ 4 ],
+      "h" : 50,
+      "pos" : 1,
+      "w" : 320
+    },
+    "bidfloor" : 1.36,
+    "displaymanager" : "mopub",
+    "displaymanagerver" : "3.13.0",
+    "ext" : {
+      "brsrclk" : 1,
+      "dlp" : 1
+    },
+    "id" : "1",
+    "instl" : 0,
+    "secure" : 0,
+    "tagid" : "a0c371f8c76711e281c11231392559e4"
+  } ]
+}

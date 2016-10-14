@@ -1,0 +1,22 @@
+{
+	"iconimage":"${adComponents.components.app_icon.url}",
+	"mainimage":"${adComponents.components.image.url}",
+	"title":"${adComponents.components.extendedData.title}",
+	"text":"${adComponents.components.extendedData.description}",
+	"ctatext":"${adComponents.components.extendedData.click_to_action}",
+	"clk":"${adComponents.destinationUrl}"
+	
+	## Impression URL trackers
+	#if($adComponents.components.beacons)
+		,
+		"imptracker": [
+		#set($Integer = 0)
+		#foreach ($idx in [1..$Integer.parseInt($adComponents.components.beacons.numBeacons)])
+			#if($idx>1)
+				,
+			#end
+			"#evaluate("$adComponents.components.beacons.beacon$idx")"
+		#end
+	]
+	#end
+}

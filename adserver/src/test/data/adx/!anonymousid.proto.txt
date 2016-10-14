@@ -1,0 +1,150 @@
+id: "U.\216\317\000\005\247d\n4(\324\364\000\0065"
+user_agent: "Mozilla/5.0 (Linux; U; Android 4.1.2; pt-br; XT918 Build/2_330_2009) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 (Mobile; afma-sdk-a-v7099000.5077000.1),gzip(gfe)"
+detected_language: "pt"
+detected_vertical {
+  id: 926
+  weight: 0.24157251
+}
+detected_vertical {
+  id: 444
+  weight: 0.24157251
+}
+detected_vertical {
+  id: 1461
+  weight: 0.24157251
+}
+detected_vertical {
+  id: 41
+  weight: 0.1400014
+}
+detected_vertical {
+  id: 105
+  weight: 0.13528107
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 28
+  excluded_attribute: 30
+  excluded_attribute: 34
+  excluded_attribute: 8
+  excluded_attribute: 9
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  excluded_attribute: 52
+  allowed_vendor_type: 10
+  allowed_vendor_type: 28
+  allowed_vendor_type: 42
+  allowed_vendor_type: 51
+  allowed_vendor_type: 63
+  allowed_vendor_type: 92
+  allowed_vendor_type: 94
+  allowed_vendor_type: 113
+  allowed_vendor_type: 126
+  allowed_vendor_type: 128
+  allowed_vendor_type: 130
+  allowed_vendor_type: 144
+  allowed_vendor_type: 145
+  allowed_vendor_type: 146
+  allowed_vendor_type: 179
+  allowed_vendor_type: 198
+  allowed_vendor_type: 204
+  allowed_vendor_type: 225
+  allowed_vendor_type: 232
+  allowed_vendor_type: 233
+  allowed_vendor_type: 237
+  allowed_vendor_type: 238
+  allowed_vendor_type: 255
+  allowed_vendor_type: 260
+  allowed_vendor_type: 267
+  allowed_vendor_type: 303
+  allowed_vendor_type: 325
+  allowed_vendor_type: 331
+  allowed_vendor_type: 332
+  allowed_vendor_type: 334
+  allowed_vendor_type: 335
+  allowed_vendor_type: 342
+  allowed_vendor_type: 414
+  allowed_vendor_type: 432
+  allowed_vendor_type: 445
+  allowed_vendor_type: 472
+  allowed_vendor_type: 504
+  excluded_sensitive_category: 19
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 23
+  excluded_sensitive_category: 30
+  excluded_sensitive_category: 10
+  excluded_sensitive_category: 3
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 5
+  excluded_sensitive_category: 8
+  excluded_sensitive_category: 24
+  excluded_sensitive_category: 7
+  excluded_sensitive_category: 18
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 200000
+    7: "0\300\232\f"
+  }
+  targetable_channel: "pack-anon-8283319490::All"
+  slot_visibility: ABOVE_THE_FOLD
+  excluded_product_category: 10048
+  excluded_product_category: 10049
+  excluded_product_category: 10050
+  excluded_product_category: 10058
+  excluded_product_category: 10085
+  excluded_product_category: 10086
+  excluded_product_category: 10087
+  excluded_product_category: 10088
+  excluded_product_category: 10089
+  excluded_product_category: 10091
+  excluded_product_category: 11841
+  excluded_product_category: 13422
+  ad_block_key: 1
+  17: 0
+  18: 0
+}
+is_test: false
+anonymous_id: "6650c05a70dda916.anonymous.google"
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 59
+detected_content_label: 39
+mobile {
+  platform: "android"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 2
+  app_category_ids: 60028
+  app_category_ids: 60008
+  app_category_ids: 60000
+  app_category_ids: 69500
+  brand: "motorola"
+  model: "xt918"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 1
+  }
+  screen_width: 480
+  screen_height: 320
+  carrier_id: 0
+  device_pixel_ratio_millis: 1000
+  24: "Angry Birds"
+  25: 0x408c73f3
+}
+geo_criteria_id: 1001538
+is_predicted_to_be_ignored: true
+user_data_treatment: TAG_FOR_CHILD_DIRECTED_TREATMENT

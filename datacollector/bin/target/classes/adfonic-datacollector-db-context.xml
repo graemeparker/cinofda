@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+  
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-datacollector.properties"/>
+  
+  <bean id="toolsDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.jdbc.driverClassName}"
+        p:url="${tools.jdbc.url}"
+        p:username="${tools.jdbc.username}"
+        p:password="${tools.jdbc.password}"
+        p:maxActive="${tools.dbcp.maxActive}"
+        p:maxWait="${tools.dbcp.maxWait}"
+        p:minIdle="${tools.dbcp.minIdle}"
+        p:maxIdle="${tools.dbcp.maxIdle}"
+        p:validationQuery="${tools.dbcp.validationQuery}"
+        p:testWhileIdle="${tools.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tools.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tools.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+  <!-- For now the accounting data source is the tools data source.
+       Eventually we'll split out the accounting db and this can be
+       its own separate DataSource bean. -->
+  <alias name="toolsDataSource" alias="accountingDataSource"/>
+  
+  <bean id="clusterDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${cluster.jdbc.driverClassName}"
+        p:url="${cluster.jdbc.url}"
+        p:username="${cluster.jdbc.username}"
+        p:password="${cluster.jdbc.password}"
+        p:maxActive="${cluster.dbcp.maxActive}"
+        p:maxWait="${cluster.dbcp.maxWait}"
+        p:minIdle="${cluster.dbcp.minIdle}"
+        p:maxIdle="${cluster.dbcp.maxIdle}"
+        p:validationQuery="${cluster.dbcp.validationQuery}"
+        p:testWhileIdle="${clutser.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${cluster.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${cluster.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${cluster.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="2"/>
+
+  <bean id="trackerDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close"
+        p:driverClassName="${tracker.jdbc.driverClassName}"
+        p:url="${tracker.jdbc.url}"
+        p:username="${tracker.jdbc.username}"
+        p:password="${tracker.jdbc.password}"
+        p:maxActive="${tracker.dbcp.maxActive}"
+        p:maxWait="${tracker.dbcp.maxWait}"
+        p:minIdle="${tracker.dbcp.minIdle}"
+        p:maxIdle="${tracker.dbcp.maxIdle}"
+        p:validationQuery="${tracker.dbcp.validationQuery}" 
+        p:testWhileIdle="${tracker.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tracker.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tracker.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tracker.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true" 
+        p:defaultTransactionIsolation="2"
+        p:removeAbandoned="true" 
+        p:removeAbandonedTimeout="300" 
+        p:logAbandoned="true"/>
+  
+  <bean id="userAgentDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${useragent.jdbc.driverClassName}"
+        p:url="${useragent.jdbc.url}"
+        p:username="${useragent.jdbc.username}"
+        p:password="${useragent.jdbc.password}"
+        p:maxActive="${useragent.dbcp.maxActive}"
+        p:maxWait="${useragent.dbcp.maxWait}"
+        p:minIdle="${useragent.dbcp.minIdle}"
+        p:maxIdle="${useragent.dbcp.maxIdle}"
+        p:validationQuery="${useragent.dbcp.validationQuery}"
+        p:testWhileIdle="${clutser.dbcp.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${useragent.dbcp.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${useragent.dbcp.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${useragent.dbcp.minEvictableIdleTimeMillis:1800000}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="2"/>
+  
+</beans>

@@ -1,0 +1,49 @@
+{
+	"app":{
+		"bundle":"com.pinger.ppa",
+		"cat":[ "IAB19" ],
+		"domain":"play.google.com",
+		"id":"65766049",
+		"name":"Pinger Phone_Android_320x50_Tier 1",
+		"publisher":{ "id":"923841999", "name":"Pinger, Inc." }
+	},
+	"at":2,
+	"badv":[ "wechat.com", "skout.com", "textnow.com", "lightinthebox.com", "heywire.com", "blucigs.com" ],
+	"bcat":[
+		"IAB7-28","IAB25-5","AND21","IAB25-4","IAB25-7","AND1-3","IAB25-6","IAB19-23","IAB25-1","IAB19-15",
+		"IAB25-3","IAB25-2","IAB9-9","AND5","IAB14-4","IAB3-11","IAB22-1","IAB19-3","IAB22-2","IAB14-1","IAB14-2","IAB14-3",
+		"IAB17-18","IAB13-1","IAB7-44","IAB26","IAB7-3","IAB25","IAB8-5","IAB24","IAB23","IAB8-18","IAB7-39","IAB19",
+		"IAB26-3","IAB26-4","IAB26-1","IAB26-2","IAB7-41","APL18","IAB7-42","APL8-6","IAB11-4","IAB11"
+	],
+	"device":{
+		"connectiontype":0,
+		"devicetype":1,
+		"dnt":0,
+		"geo":{ "country":"USA", "lat":33.534206, "lon":-84.68909, "type":1, "zip":"30268" },
+		"ip":"216.130.134.34",
+		"js":1,
+		"make":"LG", "model":"MS770", "os":"Android", "osv":"4.0",
+		"ua":"Mozilla/5.0 (Linux; U; Android 4.0.4; en-us; LG-MS770 Build/IMM76I) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
+	},
+	"ext":{
+		"carriername":"unknown - probably WLAN",
+		"coppa":0,
+		"operaminibrowser":0,
+		"udi":{ "googleadid":"ceb69677-c634-45bd-b1cb-cd1db69d3b39", "googlednt":0 }
+	},
+	"id":"BL1HDMIKcy",
+	"imp":[ {
+			"banner":{
+				"api":[ 3 ],
+				"battr":[ 1, 3, 5, 8, 9 ],
+				"h":50,
+				"mimes":[ "application/javascript", "image/gif", "image/jpeg", "image/png", "text/html", "text/javascript", "text/plain" ],
+				"w":320
+			},
+			"displaymanager":"SOMA",
+			"displaymanagerver":"somaapi-400",
+			"id":"1",
+			"instl":0
+	} ],
+	"user":{ "gender":"F", "yob":1998 }
+}

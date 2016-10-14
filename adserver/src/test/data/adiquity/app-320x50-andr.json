@@ -1,0 +1,28 @@
+{
+	"id":"AKUDMURQCZACAG",
+	"app":{
+		"name":"Enchanted Gems banner",
+		"domain":"184.173.165.26",
+		"bundle":"com.sirmionecorp.crystalls",
+		"pid":"15384689",
+		"aid":"15414187"
+	},
+	"tmax":300,
+	"imp":[ {
+			"w":320,
+			"btype":[ 1 ],
+			"impid":"AKUDMURQCZACAG_1",
+			"h":50
+	} ],
+	"device":{
+		"os":"android",
+		"model":"others",
+		"ua":"Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; G2 Build/ICS.Trio_Stealth_G2.20130321) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30",
+		"dpid":"99bf607b0b173770",
+		"make":"mach speed",
+		"country":"USA",
+		"ip":"12.48.203.128"
+	},
+	"at":2,
+	"user":{ "uid":"99bf607b0b173770" }
+}

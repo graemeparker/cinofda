@@ -1,0 +1,149 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:sec="http://www.springframework.org/security/tags">
+	<pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+ 
+  <h:panelGroup id="dest-wrapper">
+ 
+	   <h:outputLabel id="dest-label" styleClass="bl b" for="dest" value="#{msg['page.campaign.creative.destination.label']}"/>
+	                             
+	   <pri:selectOneMenu styleClass="long" id="destType" value="#{creative.destination.destinationType}" rendered="#{!creative.vastVideo}">
+	        <pri:ajax event="change" update=":creatives-container" listener="#{campaignCreativeMBean.destinationTypeChangeListener}" process="@this"/>
+	        <f:attribute name="creativeIndex" value="#{status.index}"/>
+	        <f:selectItems value="#{campaignCreativeMBean.destinationTypes}" var="dt" itemValue="#{dt}" itemLabel="#{msg[dt.name]}"/>
+	   </pri:selectOneMenu>
+	
+		<h:panelGroup id="dest">
+		  	<h:panelGroup id="destPanelGroup">
+		 		<h:panelGroup rendered="#{!creative.call}">
+		 		
+		 			<!-- Destination -->
+		     		<pri:inputText id="destURL" styleClass="bl dest-input" value="#{creative.destination.data}" 
+		     					   required="true" requiredMessage="#{msg['page.campaign.creative.destination.required']}" disabled="#{creative.vastVideo}">
+		            	<f:validator validatorId="URLValidator"/>
+		            	<pri:ajax event="blur" listener="#{campaignCreativeMBean.destinationChangeListener}" update="warning,saveButton"/>       
+		     			<f:attribute name="creativeIndex" value="#{status.index}"/>
+		        	</pri:inputText>
+		            <pri:watermark id="destURLWatermark" for="destURL" value="#{campaignCreativeMBean.calculateWatermark(creative.destination.destinationType, creative.vastVideo)}"/>
+		            <pri:message id="urlMessage" for="destURL"/>
+		            
+		            <!-- Test Link -->
+		            <pri:commandLink value="#{msg['page.campaign.creative.testlink']}" process="@this,destURL" update="urlMessage" actionListener="#{campaignCreativeMBean.testLink}">
+		            	<f:attribute name="creativeIndex" value="#{status.index}"/>
+		            </pri:commandLink>
+		            
+		            <!-- Copy to all creative -->
+		            <pri:commandLink value="#{msg['page.campaign.creative.applyall']}" 
+		            				 process="@this,destURL,destType,finalDestinationWrapper" 
+		            				 update="@this,urlMessage,warning,saveButton,confirmApplyDialogWarningContent"
+		                             styleClass="to-all" 
+		                             actionListener="#{campaignMBean.campaignCreativeMBean.processApply}"
+		                             rendered="#{!creative.vastVideo}">
+		           		<f:attribute name="creativeIndex" value="#{status.index}"/>
+		               	<f:attribute name="applyTo" value="destination"/>
+		           	</pri:commandLink>
+		            
+		           	<h:panelGroup id="finalDestinationWrapper" styleClass="form-row-small final-dest-wrapper" layout="block">
+		           		<sec:authorize ifAnyGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+		                	
+		                	<div>
+			                	<h:outputLabel styleClass="bl b field-label" value="#{msg['page.campaign.creative.finaldestination.label']}"/>
+							  	<span class="admin status-indicator"></span>
+						  	</div>
+						  	
+						  	<!-- Destination is final destination -->
+		                	<pri:selectBooleanCheckbox id="dataIsFinalDestination"
+		                       						   value="#{creative.destination.dataIsFinalDestination}" 
+		                       						   itemLabel="#{msg['page.campaign.creative.finaldestination.dataisfinaldestination.label']}">
+		                     	<pri:ajax event="change" listener="#{campaignCreativeMBean.dataIsFinalDestinationChangeListener}" update="warning,saveButton,finalDestinationWrapper"/>       
+		                     	<f:attribute name="creativeIndex" value="#{status.index}"/>
+		                	</pri:selectBooleanCheckbox>
+		                 
+		                   	<h:panelGroup id="finalDestinationURLWrapper" rendered="#{!creative.destination.dataIsFinalDestination}">
+		                   	
+		                    	<pri:inputText styleClass="bl dest-input" id="finalDestinationURL" value="#{creative.destination.finalDestination}"
+		                    	      required="#{!creative.destination.dataIsFinalDestination}" requiredMessage="#{msg['page.campaign.creative.destination.required']}">
+		                        	<f:validator validatorId="URLValidator"/>
+		                         	<pri:ajax event="blur" listener="#{campaignCreativeMBean.finalDestinationChangeListener}" update="warning,saveButton,finalDestinationWrapper"/>       
+		                         	<f:attribute name="creativeIndex" value="#{status.index}"/>
+		                    	</pri:inputText>
+		                    	<pri:watermark id="finalDestURLWatermark" for="finalDestinationURL" value="#{campaignCreativeMBean.calculateWatermark(creative.destination.destinationType, creative.vastVideo)}" rendered="#{!creative.vastVideo}"/>
+		                    	<pri:message id="finalDestinationUrlMessage" for="finalDestinationURL"/>
+								
+								<pri:commandLink value="#{msg['page.campaign.creative.applyall']}" 
+												 process="@this,destURL,destType,finalDestinationWrapper" 
+												 update="@this,urlMessage"
+		                            			 actionListener="#{campaignMBean.campaignCreativeMBean.processApply}"
+		                            			 rendered="#{!creative.vastVideo}">
+		              				<f:attribute name="creativeIndex" value="#{status.index}"/>
+		                  			<f:attribute name="applyTo" value="finalDestination"/>
+		              			</pri:commandLink>
+							</h:panelGroup>
+		           		</sec:authorize>
+		          	</h:panelGroup>
+				</h:panelGroup>
+			</h:panelGroup>
+		         
+		    <h:panelGroup id="phonePanelGroup">
+		        <h:panelGroup rendered="#{creative.call}">
+		            <pri:inputText id="destPHONE" 
+		            			   styleClass="bl dest-input" 
+		            			   maxlength="35"
+		                           value="#{creative.destination.data}" 
+		                           required="true" requiredMessage="#{msg['page.error.validation.phone.empty']}"
+		                           validator="PHONEValidator">
+		                <pri:ajax event="blur" listener="#{campaignCreativeMBean.phoneChangeListener}" update="warning,saveButton"/>       
+		     			<f:attribute name="creativeIndex" value="#{status.index}"/>
+		            </pri:inputText>
+		            <pri:watermark id="destPHONEWatermark" for="destPHONE" value="#{msg['page.creative.destinationtype.watermark.call']}" />
+		            <pri:message id="phonemessage" for="destPHONE"/>
+		            
+		            <pri:commandLink value="#{msg['page.campaign.creative.applyall']}" 
+		            				 process="@this,destPHONE,destType" 
+		            				 update="@this,phonemessage,warning,saveButton,confirmApplyDialogWarningContent"
+		             				 actionListener="#{campaignMBean.campaignCreativeMBean.processApply}">
+		            	<f:attribute name="creativeIndex" value="#{status.index}"/>
+		             	<f:attribute name="applyTo" value="destination"/>
+		            </pri:commandLink>
+		        </h:panelGroup>
+			</h:panelGroup>
+		   	<pri:dialog id="confirmApplyDialog" 
+		   				header="#{msg['page.campaign.creative.applyall']}" 
+		   				resizable="false" modal="true" closable="true"  
+		         		styleClass="confirm-dialog" widgetVar="confirmationApply#{status.index}">
+				<h3>
+		        	<h:outputText value="#{msg['page.campaign.creative.apply.confirmation.message']}" />
+		       	</h3>
+		       	<pri:outputPanel id="confirmApplyDialogWarningContent">
+			        <p>
+			        	<h:outputText value="#{msg['page.campaign.creative.apply.confirmation.warning']}"
+			        				  rendered="#{campaignMBean.campaignCreativeMBean.isCreativeGoToPendingWarningVisible(creative)}" />
+			        </p>
+		       	</pri:outputPanel>
+		        <div class="buttons">
+		        	<pri:commandButton id="confirmation" 
+		        					   value="#{msg['page.campaign.creative.delete.confirmation.yes']}" 
+		        					   update=":navigationDiv,:menuForm:side-panel" 
+		        					   process="@this,destPHONE,destType"
+		                               onclick="confirmationApply#{status.index}.hide();progressDialog.show();" oncomplete="progressDialog.hide()"
+		                               actionListener="#{campaignMBean.campaignCreativeMBean.applyToAll}">
+		            	<f:attribute name="creativeIndex" value="#{status.index}"/>
+		            </pri:commandButton>
+		            <pri:commandButton id="declineApp" 
+		            				   value="#{msg['page.campaign.creative.delete.confirmation.no']}" 
+		            				   onclick="confirmationApply#{status.index}.hide()"
+		            				   actionListener="#{campaignMBean.campaignCreativeMBean.applyToAllCancelled}"
+		            				   update="warning,saveButton,confirmApplyDialogWarningContent" />
+				</div>
+			</pri:dialog>
+		</h:panelGroup>
+	
+	</h:panelGroup>
+</ui:composition>

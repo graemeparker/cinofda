@@ -1,0 +1,129 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    xmlns:p="http://ocpsoft.com/prettyfaces"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs">
+    
+    <!-- Devices Models Template -->
+    
+    <!-- Device Models -->
+	<pri:autoComplete
+	        id="deviceModels"
+            widgetVar="deviceModelsWidget"
+            value="#{deviceModelsMBean.selectedDeviceAndVendorModels}"
+            completeMethod="#{deviceModelsMBean.completeDeviceModels}"
+            minQueryLength="2"
+            multiple="true" 
+            var="c"
+            itemLabel="#{(c.id lt 0) ? c.name : c.vendor.name.concat(' ').concat(c.name)}"
+            itemValue="#{c}"
+            emptyMessage="#{msg['page.commons.messages.nosuchdevice']}"
+            cache="true"
+            converter="com.adfonic.tools.converter.model.ModelConverter"
+            styleClass="deviceModelsStyle">
+        <pri:ajax event="itemSelect" oncomplete="ADT.toggleAutoCompleteWatermark(deviceModelsWidget, deviceModelsWatermark);
+                                                 ADT.toggleClearDeviceModelsLink(deviceModelsWidget)" />
+        <pri:ajax event="itemUnselect" oncomplete="ADT.toggleAutoCompleteWatermark(deviceModelsWidget, deviceModelsWatermark);
+                                                   ADT.toggleClearDeviceModelsLink(deviceModelsWidget)" />
+    </pri:autoComplete>
+	<pri:watermark for="deviceModels" widgetVar="deviceModelsWatermark" value="#{msg['page.commons.placeholders.alldevices']}" />
+	
+	<!-- Add device models link -->
+	<pri:commandLink value="#{msg['page.commons.links.addlist']}" onclick="addDeviceModelsDialogWidget.show()" update="deviceModelsTextArea" />
+	
+	<pri:spacer width="10"/>
+	
+	<!-- Clear device models link -->
+	<pri:commandLink id="clearDeviceModelsLink"
+	                 value="#{msg['page.commons.links.clearlist']}"
+	                 onstart="progressDialog.show()"
+	                 oncomplete="ADT.toggleAutoCompleteWatermark(deviceModelsWidget, deviceModelsWatermark);
+	                             ADT.toggleClearDeviceModelsLink(deviceModelsWidget);
+	                             progressDialog.hide();"
+	                 actionListener="#{deviceModelsMBean.clearSelectedDeviceAndVendorModels}" update="deviceModels" />
+
+    <!-- Add device models dialog -->
+	<pri:dialog id="addDeviceModelsDialog" widgetVar="addDeviceModelsDialogWidget" header="#{msg['page.commons.headers.addlist']}"
+	            modal="true" resizable="false" closable="false" draggable="false" width="560" styleClass="addDeviceModelsDialogStyle">
+	    
+	    <!-- Devices list -->
+	    <pri:inputTextarea id="deviceModelsTextArea" value="#{deviceModelsMBean.deviceModelsTextArea}" rows="15" cols="15"
+	                       placeholder="#{msg['page.commons.placeholders.addlist']}" />
+	    
+	    <pri:separator />
+	    
+	    <!-- Add button -->
+	    <pri:commandButton value="#{(empty deviceModelsMBean.selectedDeviceModels) ? msg['page.commons.buttons.add'] : msg['page.commons.buttons.update']}"
+	                       actionListener="#{deviceModelsMBean.addDeviceModels}"
+	                       oncomplete="progressDialog.hide(); nonMatchedDeviceModelsDialogWidget.show()"
+	                       onclick="addDeviceModelsDialogWidget.hide(); progressDialog.show()"
+	                       update="nonMatchedDeviceModelsDialog" />
+	           
+	    <!-- Cancel link -->
+	    <pri:commandLink value="#{msg['page.commons.links.cancel']}" onclick="addDeviceModelsDialogWidget.hide()" />
+	</pri:dialog>
+
+    <!-- Non matched model devices dialog -->
+	<pri:dialog id="nonMatchedDeviceModelsDialog" widgetVar="nonMatchedDeviceModelsDialogWidget" header="#{msg['page.commons.headers.addlist']}"
+	            modal="true" resizable="false" closable="false" draggable="false" styleClass="nonMatchedDeviceModelsDialogStyle">
+
+        <ui:param name="addedDeviceModelsSize" value="#{deviceModelsMBean.addedDeviceModels.size()}" />
+        <ui:param name="nonMatchedDeviceModelsSize" value="#{deviceModelsMBean.nonMatchedDeviceModels.size()}" />
+
+	    <p><h:outputFormat value="#{msg['page.commons.messages.itemsfound']}">
+		   <f:param value="#{addedDeviceModelsSize + nonMatchedDeviceModelsSize}" />
+		   <f:param value="#{addedDeviceModelsSize}" />
+		</h:outputFormat></p>
+
+	    <p><h:outputFormat value="#{msg['page.commons.messages.notmatch']}">
+           <f:param value="#{nonMatchedDeviceModelsSize}" />
+        </h:outputFormat></p>
+	    
+	    <pri:outputPanel styleClass="nonMatchedDeviceModelsStyle">
+	        <ui:repeat var="model" value="#{deviceModelsMBean.nonMatchedDeviceModels}">
+	            <fieldset>
+	                <h:outputLabel value="#{model.name}" />
+	                <pri:autoComplete
+	                    value="#{model.dto}"
+                        completeMethod="#{deviceModelsMBean.completeDeviceModels}"
+                        minQueryLength="2"
+                        multiple="false"
+                        var="c"
+                        itemLabel="#{(c.id lt 0) ? c.name : c.vendor.name.concat(' ').concat(c.name)}"
+                        itemValue="#{c}"
+                        emptyMessage="#{msg['page.commons.messages.nosuchdevice']}"
+                        cache="true"
+                        converter="com.adfonic.tools.converter.model.ModelConverter" />
+	            </fieldset>
+	        </ui:repeat>
+	        <pri:commandLink value="#{msg['page.commons.labels.export.excel']}" rendered="#{not empty deviceModelsMBean.nonMatchedDeviceModels}" ajax="false">
+	            <pri:fileDownload value="#{deviceModelsMBean.exportNonMatchedDeviceModelsToExcel()}" />  
+	        </pri:commandLink>
+	    </pri:outputPanel>
+	    
+	    <!-- Done button -->
+	    <pri:commandButton value="#{msg['page.campaign.targeting.location.addlist.done.button']}"
+	                       actionListener="#{deviceModelsMBean.addNonMatchedToSelectedDeviceModels}"
+	                       oncomplete="progressDialog.hide(); ADT.toggleClearDeviceModelsLink(deviceModelsWidget)"
+	                       onclick="nonMatchedDeviceModelsDialogWidget.hide();progressDialog.show()"
+	                       update="deviceModels, deviceModelsTextArea" />
+
+        <!-- Cancel link -->
+	    <pri:commandLink value="#{msg['page.commons.links.cancel']}" onclick="nonMatchedDeviceModelsDialogWidget.hide()" />                 
+	</pri:dialog>
+
+    <script type="text/javascript">
+       // <![CDATA[
+       $(function(){
+    	   ADT.toggleAutoCompleteWatermark(deviceModelsWidget, deviceModelsWatermark);
+    	   ADT.toggleClearDeviceModelsLink(deviceModelsWidget);
+       });
+       // ]]>
+    </script>
+    
+</ui:composition>

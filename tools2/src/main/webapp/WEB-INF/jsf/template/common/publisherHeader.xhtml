@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"                
+                xmlns:sec="http://www.springframework.org/security/tags">
+
+    <header class="top">
+        <ui:insert name="adminHeader">
+            <ui:include src="/WEB-INF/jsf/template/common/adminHeader.xhtml" />
+        </ui:insert>
+    	<h:form id="headerForm" prependId="false">
+	        <div class="row">
+	            <nav id="top">
+	                <div class="f-left">
+	                	<pri:menubar rendered="#{(userSessionBean.map['userDto']).userType ne 'agency'}">
+                            <pri:menuitem value="#{msg['page.header.label.link.advertisers']}" action="#{userSessionBean.switchToAdvertiser}" rendered="#{userSessionBean.advertiser}" onclick="progressDialog.show()"/>
+                            <pri:menuitem value="#{msg['page.header.label.link.appandpublishers']}" url="/" styleClass="current" />
+                            <pri:menuitem value="#{(userSessionBean.map['userDto']).advertiserDto.name}" />
+                        </pri:menubar>
+	                </div>
+	                <div class="f-right">
+	
+	                    <pri:menubar>
+	                        <pri:submenu label="#{msg['page.header.label.link.documents']}">
+                        		<pri:menuitem value="#{msg['page.header.label.link.creativespecs']}" url="#{toolsApplicationBean.externalUrls['creativeSpecsUrl']}" target="_blank"/>
+                        		<pri:menuitem value="#{msg['page.header.label.link.developersdocs']}" url="#{toolsApplicationBean.externalUrls['devDocsUrl']}" target="_blank"/>
+                        	</pri:submenu>
+	                        <pri:menuitem styleClass="support-form-link" value="#{msg['page.header.label.link.customercontact']}" oncomplete="contactForm.show();" actionListener="contactUsMBean.init" update=":contact-form"/>
+	                        <pri:submenu label="#{(userSessionBean.map['userDto']).email}">
+	                            <pri:menuitem value="#{msg['page.header.label.link.accountsettings']}"
+	                                          action="#{navigationSessionBean.gotoAccountDetails}"/>
+	                            <sec:authorize ifNotGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+	                               <pri:menuitem value="#{msg['page.header.label.link.logout']}" url="/logout" />
+	                            </sec:authorize>
+	                        </pri:submenu>
+	                    </pri:menubar>
+	
+	                </div>
+	                <div class="clear"></div>
+	            </nav>
+	            <p:link mappingId="home" styleClass="logo">
+	                <pri:graphicImage url="/resources/images/external-icon.png" width="100%" />
+	            </p:link>
+	            <nav>
+	                <ul id="nav">
+	                    <li id="headerPublicationDashboardLink" class="#{navigationSessionBean.tabClass('dashboard')}">
+	                    	<pri:commandLink action="#{navigationSessionBean.gotoPublisherDashboard}" process="@this">
+	                    		<span class="tabLink">#{msg['page.header.label.link.dashboard']}</span><span class="rightTab"></span>
+	                    	</pri:commandLink>
+	                   	</li>
+	                    <li id="headerAddPublicationCampaignLink" class="#{navigationSessionBean.tabClass('addpublication')}">
+	                    	<pri:commandLink action="#{publicationMBean.doInitPublication}" process="@this">
+	                    		<span class="tabLink">#{msg['page.header.label.link.addnewpublication']}</span><span class="rightTab"></span>
+	                    	</pri:commandLink>
+	                    </li>
+	                    <li id="headerTransactionsLink" class="#{navigationSessionBean.tabClass('transactions')}">
+	                    	<pri:commandLink action="#{navigationSessionBean.gotoTransactions}" process="@this">
+	                    		<span class="tabLink">#{msg['page.header.label.link.transactions']}</span><span class="rightTab"></span>
+	                    	</pri:commandLink>
+	                    </li>
+	                </ul>
+	            </nav>
+	
+	            <div class="accFigures">
+	                <h2>#{msg['page.header.label.accountbalance']}</h2>
+	                <span class="accBalance">
+	                	<h:outputText id="balance" value="#{accountSessionBean.balance}" >
+	                		<f:convertNumber type="currency" currencySymbol="$" />
+	                	</h:outputText>
+	                	<pri:poll interval="300" update="balance" />
+	                </span>
+	            </div>
+	        </div>
+		</h:form>
+    </header>
+</ui:composition>
+
+
+

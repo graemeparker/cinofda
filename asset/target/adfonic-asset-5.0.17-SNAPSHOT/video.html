@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name=”viewport” content=”width=320″ />
+  <title>Adfonic Video</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js"></script>
+  <script type="text/javascript">
+var lastPos = -1;
+var maxPos = 0;
+var duration = 0;
+var ticker = null;
+window.clickId = "";
+var ua = navigator.userAgent;
+var android = /Android/.test(ua);
+
+// Report back that the page was loaded ok.
+function reportLoad() {
+  url = "http://tracker.byyd.net/vs/" + clickId + "?pageLoad=true";
+  $('bug').setAttribute('src', url);
+}
+
+// Report back how much of the video was viewed.
+function report() {
+  var url;
+  var reportDuration;
+  if (duration == 0) {
+    reportDuration = $('myVideo').duration;
+  } else {
+    reportDuration = duration / 1000;
+  }
+  reportDuration = Math.round(reportDuration);
+  
+  // Found that max pos isn't always accurate 
+  // alert(maxPos + "" + $('myVideo').currentTime);
+  if (maxPos == 0) {
+      maxPos = $('myVideo').currentTime;
+  }
+    
+  // Round up because if they only watch < 1 it looks like they didn't view.
+  maxPos = Math.ceil(maxPos);
+ 
+  // Don't let the view be bigger than video 
+  if (maxPos > reportDuration){
+    maxPos = reportDuration;
+  }  
+
+  if (window.urlId == null ||  window.urlId == 1) {
+    url = "http://tracker.byyd.net/vs/" + clickId + "?viewMs=" + (maxPos * 1000) + "&clipMs=" + (reportDuration * 1000);
+  } else if (window.urlId == 2) {
+    url = "http://tracker.test.byyd.net/vs/" + clickId + "?viewMs=" + (maxPos * 1000) + "&clipMs=" + (reportDuration * 1000);
+  }
+  if (maxPos <= lastPos) {
+    return;
+  }
+  lastPos = maxPos;
+  $('bug').setAttribute('src', url);
+}
+
+function pauseReport() {
+ //alert('pause' + $('myVideo').currentTime);
+ // Don't report back if viewing time is 0, android play button
+ if ($('myVideo').currentTime == 0){
+  $('myVideo').play(); 
+ } 
+}
+
+// Page load
+document.observe('dom:loaded', function() {
+  // Let us know when the user has reached the video HTML5 player
+  Event.observe(window, 'load', reportLoad);
+  
+  // unload not supported on iPhone  
+  Event.observe(window, 'unload', report);
+
+  // Android HTML5 play button causes pause 
+  $('myVideo').observe('pause', pauseReport);
+
+  var qs = $H(window.location.search.substring(1).toQueryParams());
+  var miid = qs.get('miid');
+  var fid = qs.get('fid');
+  duration = qs.get('clipMs') || 0;
+  window.urlId = qs.get('urlId') || 1;
+  window.clickId = qs.get('clickId');
+  var thumb = "http://cds1.yospace.com/access/d/u/0/1/thumb/840x480/" + miid;
+  var video = "http://cds1.yospace.com/access/d/800/u/0/1/" + miid + "?f=" + fid;
+  $('myVideo').setAttribute('poster', thumb);
+  $('myVideo').setAttribute('src', video);
+  var clickId = qs.get('clickId');
+
+  // Video plaything
+  $('myVideo').observe('playing', function(ev) {
+    ticker = new PeriodicalExecuter(function(pe) {
+      if ($('myVideo').currentTime > maxPos) {
+      maxPos = $('myVideo').currentTime;
+    }
+  }, 0.1);
+  });
+
+var videoClick = document.getElementById('myVideo');
+  videoClick.addEventListener('click',function(){
+   // alert("video click");   
+   $('myVideo').play();
+  },false);
+
+  // Video finished report back.
+  $('myVideo').observe('ended', function(ev) {
+    //alert("ended");
+    report();
+    if (!ticker) return;
+    ticker.stop();
+    ticker = null;
+  });
+
+  // Video paused, report back unload not supported property on iOS.
+  $('myVideo').observe('pause', function(ev) {
+    //alert("paused2");
+    
+    // Don't report back if viewing time is 0, android play button
+    if ($('myVideo').currentTime == 0){
+      $('myVideo').play(); 
+    }else{
+      report();
+    }
+ 
+    if (!ticker) return;
+    ticker.stop();
+    ticker = null;
+  });
+});
+  </script>
+  </head>
+  <style>
+.video {
+  height: 100%;
+  text-align: center;
+}
+body {
+  background-color: black;
+}
+    </style>
+  <body>
+    <table style="width:100%; height:100%; border:0;">
+      <tr height="1%">
+        <td style="width:100%;"></td>
+      </tr>
+      <tr style="height:100%; vertical-align:middle;">
+        <td style="text-align:center;">
+          <video id="myVideo" width="840" height="480" controls="controls" autoplay="autoplay" onclick="this.play();"></video>
+        </td>
+      </tr>
+      <tr height="1%">
+        <td></td>
+      </tr>
+    </table>
+    <img id="bug" src="" width="1" height="1" alt="" border="0" />
+  </body>
+</html>

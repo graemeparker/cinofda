@@ -1,0 +1,43 @@
+{
+   "id":"@{adEvent.messageHash}",
+   "timestamp":"@{dateFmt(adEvent.eventTime)}",
+   "bcat":[],
+   "bid_request":{  
+      "at": @{adEvent.rtb == 1 ? 2 : 0}, 
+      "device":{  
+         "model":"@{adEvent.modelId}",
+         "carrier":"@{adEvent.operatorId}",
+         "connectiontype":"@{adEvent.operatorId == null ? 2 : 3}",
+         "geo":{  
+            @if{adEvent.geoCountry == 'US' || adEvent.geoCountry == 'UK' || adEvent.geoCountry == 'GB' }"zip": "@{adEvent.geoPostalCode != null? adEvent.geoPostalCode : ''}",@end{}
+            "city": "@{adEvent.geoCity != null ? adEvent.geoCity : ''}",
+            "type": "@{adEvent.geoType != null ? adEvent.geoType : ''}", 
+            "country": "@{adEvent.geoCountry != null ? adEvent.geoCountry : ''}"
+         },
+         "ext":{  
+            "didtypes":[@{keySet(adEvent.deviceIdentifiers)}]
+         }
+      },
+      "user":{  
+         "id":"@{hashFirstDeviceId(adEvent.deviceIdentifiers)}"
+      },
+      "imp":[  
+         {  
+            "tagid":"@{adEvent.adSpaceExternalId}"
+         }
+      ],
+      @if{adEvent.application == 1} "app" @else{} "site" @end{}: {  
+         "id":"@{adEvent.publicationId}",
+         "domain":"@if{adEvent.publicationDomain != null}@{adEvent.publicationDomain}@end{}"
+      }
+   },
+   "bid_responses":[ ],
+   "exchange_id": "@{adEvent.exchangeId}",
+   "ext":{  
+	  "nobid_reason": "@{adEvent.isNoCreative() ? '8' : '7'}",
+      "byyd":{  
+         "shard": "@{adEvent.shard}",
+         "server": "@{adEvent.serverName}"
+      }
+   }
+}

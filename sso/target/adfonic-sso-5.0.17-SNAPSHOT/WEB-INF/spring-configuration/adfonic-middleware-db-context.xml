@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+  <!-- Allow @Scheduled and what not on component methods -->
+  <task:annotation-driven executor="executor" scheduler="executor" />
+  
+  <bean id="toolsDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.jdbc.driverClassName}"
+        p:url="${tools.jdbc.url}"
+        p:username="${tools.jdbc.username}"
+        p:password="${tools.jdbc.password}"
+        p:initialSize="${tools.jdbc.initialSize:0}"
+        p:maxActive="${tools.jdbc.maxActive}"
+        p:minIdle="${tools.jdbc.minIdle:0}"
+        p:maxIdle="${tools.jdbc.maxIdle}"
+        p:maxWait="${tools.jdbc.maxWait:-1}"
+        p:testOnBorrow="${tools.jdbc.testOnBorrow:true}"
+        p:validationQuery="${tools.jdbc.validationQuery}"
+        p:validationQueryTimeout="${tools.jdbc.validationQueryTimeout:-1}"
+        p:testOnReturn="${tools.jdbc.testOnReturn:false}"
+        p:testWhileIdle="${tools.jdbc.testWhileIdle:false}"
+        p:timeBetweenEvictionRunsMillis="${tools.jdbc.timeBetweenEvictionRunsMillis:-1}"
+        p:numTestsPerEvictionRun="${tools.jdbc.numTestsPerEvictionRun:3}"
+        p:minEvictableIdleTimeMillis="${tools.jdbc.minEvictableIdleTimeMillis:1800000}"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+  
+  <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="persistenceUnitName" value="adfonic-domain"></property>
+    <property name="dataSource" ref="toolsDataSource"/>
+    <property name="packagesToScan" value="com.adfonic.domain"></property>
+    <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+            p:database="MYSQL"
+            p:showSql="false"
+            p:generateDdl="false"/>
+    </property>
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.generate_statistics">false</prop>
+        <prop key="hibernate.jdbc.fetch_size">10</prop>
+        <prop key="hibernate.jdbc.batch_size">10</prop>
+      </props>
+    </property>
+  </bean>
+  
+  <bean id="toolsTransactionManager" 
+  		class="org.springframework.orm.jpa.JpaTransactionManager" 
+  		p:entityManagerFactory-ref="entityManagerFactory"/>
+  
+  <tx:advice id="toolsTxAdvice" transaction-manager="toolsTransactionManager">
+  	 <tx:attributes>
+  	 	<!-- all methods starting with 'get' are read-only -->
+      <tx:method name="get*" read-only="true"/>
+      <!-- other methods use the default transaction settings (see below) -->
+      <tx:method name="*"/>
+  	 </tx:attributes>
+  </tx:advice>
+  
+  <aop:config>
+    <aop:pointcut id="adfonicTxOperation" expression="execution(* com.adfonic.sso.services.*.*(..))"/>
+    <aop:advisor advice-ref="toolsTxAdvice" pointcut-ref="adfonicTxOperation"/>
+  </aop:config>
+  
+</beans>

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SHARD="default"
+until [ -z "$1" ]; do
+    if [[ $1 =~ ^-Dshard.+$ ]]; then
+        SHARD="${1:8}"
+    else
+        echo "Unrecognized option: $1"
+    fi
+    shift
+done
+
+APPNAME=domainserializer-${SHARD}
+
+echo "Stopping ${APPNAME}"
+
+STOP_COMMAND=
+
+. /usr/local/adfonic/bin/init-env
+
+stopProcess ${APPNAME} ${STOP_COMMAND}

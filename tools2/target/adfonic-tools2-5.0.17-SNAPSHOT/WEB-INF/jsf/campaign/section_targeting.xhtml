@@ -1,0 +1,208 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:pri="http://primefaces.org/ui"
+    		  xmlns:pe="http://primefaces.org/ui/extensions"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<!-- Variables -->
+<ui:param name="hasLocationAudience" value="#{campaignMBean.campaignTargetingMBean.campaignTargetingAudienceMBean.hasLocationAudience()}" />
+
+<section id="targeting" class="form-box ui-corner-all">
+    <h2 class="sec-title">#{msg['page.campaign.targeting.menu.label']}</h2>
+    <h:form id="campaign-targeting" class="options" prependId="false" enctype="multipart/form-data">
+
+        <pri:accordionPanel id="accordionAgrupationTabs" multiple="true" activeIndex="9">
+			
+			<!-- Audience -->
+			<c:if test="#{toolsApplicationBean.audienceEnabled}">			
+				<ui:insert name="sectionAudience">
+	                <ui:include src="/WEB-INF/jsf/campaign/targeting/section_targeting_audience.xhtml" />
+	            </ui:insert>
+	        </c:if>
+
+			<!-- Location -->
+            <ui:insert name="sectionLocation">
+                <ui:include src="/WEB-INF/jsf/campaign/targeting/section_targeting_location.xhtml" />
+            </ui:insert>
+
+			<!-- OS Platform & Device -->
+            <ui:insert name="sectionDevice">
+                <ui:include src="/WEB-INF/jsf/campaign/targeting/section_targeting_device.xhtml" />
+            </ui:insert>
+
+			<!-- Connection -->
+			<ui:insert name="sectionConnection">
+			    <ui:include src="/WEB-INF/jsf/campaign/targeting/section_targeting_connection.xhtml" />
+			</ui:insert>
+            
+            <!-- Demographics -->		
+            <ui:insert name="sectionDemographic">
+                <ui:include src="/WEB-INF/jsf/campaign/targeting/section_targeting_demographic.xhtml" />
+            </ui:insert>
+            
+            <!-- Apps vs Websites -->
+            <ui:insert name="sectionAppsWebsites">
+                <ui:include src="/WEB-INF/jsf/campaign/targeting/section_targeting_appswebsites.xhtml" />
+            </ui:insert>
+
+        </pri:accordionPanel>
+
+		<!-- Buttons -->
+        <pri:outputPanel styleClass="form-row">
+        
+        	<!-- Save & continue -->
+        	<pri:commandButton value="#{campaignMBean.continueButtonMessage}" id="continueTargetingBtn1" 
+            				   actionListener="#{campaignMBean.campaignTargetingMBean.checkContinue}"
+            				   onclick="progressDialog.show();" 
+            				   oncomplete="progressDialog.hide(); ADT.panelsTop()"
+                               update=":menuForm:panelSectionGroup,:navigationDiv" process="@form">                
+            </pri:commandButton>
+         
+         	<!-- Cancel -->
+            <pri:commandLink value="#{msg['page.campaign.creative.cancel.label']}" actionListener="#{campaignMBean.campaignTargetingMBean.cancel}" rendered="#{!campaignMBean.newCampaign}"
+	    		process="@this" update=":navigationDiv,:menuForm:side-panel" onclick="progressDialog.show();" oncomplete="progressDialog.hide()">
+			</pri:commandLink>
+	       
+        </pri:outputPanel>
+		
+    </h:form>
+    
+    <pri:dialog
+    	id="locationDialog"
+		widgetVar="mapDlg" 
+		width="625" 
+		height="400" 
+		modal="true" 
+		resizable="false" 
+		position="center center" 
+		onShow="popupOpen();"
+		onHide="popupClose();"
+		header="Display your Locations with radius">
+		
+		<!-- Google Map section -->
+	    <div id="map" style="width:100%; height:100%;" />
+	</pri:dialog> 
+    
+	<script type="text/javascript">
+        $(function () {
+            ADT.updateAudienceRecencySelect();
+            ADT.dualSlider('#audience-date-range');
+            ADT.subElExpander('radio', 'location');
+            ADT.subElExpander('check', 'connection');
+        });
+    </script>
+    
+ 	<script type="text/javascript">
+    // <![CDATA[
+        var map;
+		var markers = [];
+		var circles = [];
+		
+	  	var defaultLocation = {
+	  		lat: 51.5072, 	
+	  		lon: -0.1475	
+	  	};
+	  	
+	  	function popupOpen(){
+	  		$(document).trigger("popuploaded");
+	  		ADT.togglePageScroll(true);
+			if($(".map").length > 1){
+				$cull = $(".map:last");
+				$cull.closest(".ui-dialog").remove();
+			}
+	  	}
+		
+		function gMapInitialize() {
+			$(document).one("popuploaded", function(){
+				mapInit();
+			});
+			
+			function mapInit(){
+				var mapOptions = {
+				    zoom: 11,
+				    center: google.maps.LatLng(defaultLocation.lat, defaultLocation.lon),
+				    mapTypeId: google.maps.MapTypeId.TERRAIN
+			  	};
+				
+				var markerBounds = new google.maps.LatLngBounds();
+				map = new google.maps.Map(document.getElementById("map"), mapOptions);	
+				google.maps.visualRefresh = true;
+				$(document).trigger("mapinitialised");	
+			}
+		}
+		
+		// Add a marker to the map and push to the array.
+		function addMarker(lat, lon, title, radius) {
+			$(document).one("mapinitialised", function(){
+				drawMarker();
+			});
+			
+			function drawMarker(){
+				var location = new google.maps.LatLng(lat, lon);
+				var marker = new google.maps.Marker({
+					position: location,
+					title: title,
+					map: map
+				});
+			 
+				var circle = new google.maps.Circle({
+					map: map,
+					fillColor: '#E22A83',
+					radius: radius,    // radius in meters
+					strokeColor: '#E22A83'
+				});
+				circle.bindTo('center', marker, 'position');
+				var infowindow = new google.maps.InfoWindow({
+					content: title
+				});
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.open(map,marker);
+				});
+				
+				markers.push(marker);
+				circles.push(circle);
+				markerBounds.extend(location);
+				map.fitBounds(markerBounds);
+				map.setCenter(markerBounds.getCenter());
+			}
+		}
+	
+		// Removes the overlays from the map, but keeps them in the array.
+		function clearOverlays() {
+			$(document).one("mapinitialised", function(){
+				for (var i = 0; i < markers.length; i++) {
+					markers[i].setMap(null);
+					circles[i].setMap(null);
+				}
+			});
+		}
+		
+		function setState(table){
+			progressDialog.hide();						
+			if($(table).find("table").has(".ui-datatable-odd, .ui-datatable-even").length){
+				$(table).find(".select-all").show();
+			} else {
+				selectAllOption.table = false;
+			}
+		}
+	
+		// Deletes all markers in the array by removing references to them.
+		function deleteOverlays() {
+			$(document).one("mapinitialised", function(){
+				clearOverlays();
+				markers = [];
+				circles = [];
+				markerBounds = new google.maps.LatLngBounds();
+				map.setCenter(new google.maps.LatLng(defaultLocation.lat, defaultLocation.lon));
+			});
+		}
+		
+		// Make the page scrollable once more.
+		function popupClose(){ ADT.togglePageScroll(); }
+	// ]]>
+   </script>
+</section>
+
+</ui:composition>

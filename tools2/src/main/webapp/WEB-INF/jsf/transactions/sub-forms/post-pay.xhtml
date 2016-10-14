@@ -1,0 +1,73 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+> 
+	<h:body>
+		<pri:dialog 
+			id="postpayDialogId" 
+			widgetVar="postpayDialog"
+			modal="true" 
+			resizable="false"
+			header="#{msg['page.transactions.postpay.dialog.header']}"
+		>
+			<h:form id="postpayForm" prependId="false">
+				<div class="form-row message">
+					<h:outputLabel styleClass="bl b"
+						value="#{msg['page.transactions.postpay.dialog.date']}" />
+					<h:outputText
+						value="#{transactionMBean.transactionPostPayMBean.company.postPayActivationDate}">
+						<f:convertDateTime pattern="d MMMM yyyy"
+							timeZone="#{transactionMBean.transactionPostPayMBean.company.defaultTimeZone}" />
+					</h:outputText>
+				</div>
+				<div class="form-row message">
+					<h:outputLabel styleClass="bl b"
+						value="#{msg['page.transactions.postpay.dialog.credit']}" />
+					<h:outputText
+						value="#{transactionMBean.transactionPostPayMBean.company.creditLimit}">
+						<f:convertNumber type="currency" currencySymbol="$" />
+					</h:outputText>
+				</div>
+				<h:panelGroup layout="block" styleClass="form-row message"
+					rendered="#{transactionMBean.transactionPostPayMBean.company.discount != null and transactionMBean.transactionPostPayMBean.company.discount > 0}">
+					<h:outputLabel styleClass="bl b"
+						value="#{msg['page.transactions.postpay.dialog.discount']}" />
+					<h:outputText
+						value="#{transactionMBean.transactionPostPayMBean.company.discount}">
+						<f:convertNumber type="percent" />
+					</h:outputText>
+				</h:panelGroup>
+				<div class="form-row message">
+					<h:outputLabel styleClass="bl b"
+						value="#{msg['page.transactions.postpay.dialog.invoice.date']}" />
+					<h:outputText
+						value="#{transactionMBean.transactionPostPayMBean.startOfNextMonth}">
+						<f:convertDateTime pattern="d MMMM yyyy"
+							timeZone="#{transactionMBean.transactionPostPayMBean.company.defaultTimeZone}" />
+					</h:outputText>
+				</div>
+				<div class="form-row message">
+					<h:outputLabel styleClass="bl b"
+						value="#{msg['page.transactions.postpay.dialog.payment.date']}" />
+					<h:outputText
+						value="#{transactionMBean.transactionPostPayMBean.paymentDueDate}">
+						<f:convertDateTime pattern="d MMMM yyyy"
+							timeZone="#{transactionMBean.transactionPostPayMBean.company.defaultTimeZone}" />
+					</h:outputText>
+				</div>
+				<div class="form-row">
+					<pri:commandButton id="postpayClose"
+						value="#{msg['page.transactions.postpay.dialog.close.label']}"
+						onclick="postpayDialog.hide();">
+					</pri:commandButton>
+				</div>
+			</h:form>
+		</pri:dialog>
+	</h:body>
+</ui:composition>

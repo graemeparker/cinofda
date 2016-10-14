@@ -1,0 +1,66 @@
+id: "U.\216\337\000\bmz\n4\'\201\314\000\001\373"
+ip: "\246\211\364"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70 [FBAN/FBIOS;FBAV/28.0.0.10.10;FBBV/8930087;FBDV/iPhone7,2;FBMD/iPhone;FBSN/iPhone OS;FBSV/8.3;FBSS/2; FBCR/AT&T;FBID/phone;FBLC/en_US;FBOP/5],gzip(gfe)"
+url: "http://www.innamag.com/russia-crazy-place/"
+detected_language: "en"
+detected_vertical {
+  id: 3
+  weight: 1.0
+}
+adslot {
+  id: 1
+  width: 300
+  height: 250
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: BELOW_THE_FOLD
+  ad_block_key: 1061598353
+  publisher_settings_list_id: 3765131406663908489
+  17: 504
+  18: 320
+  19: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEDUdAhA3QZ1Xwqm6usPbk40"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 26
+detected_content_label: 40
+mobile {
+  platform: "iphone"
+  mobile_device_type: HIGHEND_PHONE
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 8
+    os_version_minor: 3
+  }
+  screen_width: 320
+  screen_height: 568
+  is_mobile_web_optimized: true
+  carrier_id: 70090
+}
+cookie_age_seconds: 4341424
+geo_criteria_id: 1014895
+seller_network_id: 1
+publisher_settings_list_id: 14511701256270171680
+51: 3

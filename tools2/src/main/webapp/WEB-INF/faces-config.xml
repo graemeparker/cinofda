@@ -1,0 +1,101 @@
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+	version="2.0">
+	<!-- 
+	    Settings for application 
+	    http://www.java-forum.org/646175-post4.html 
+		http://forum.springsource.org/showthread.php?86577-Spring-3-JSF-2 
+		http://stackoverflow.com/questions/5295514/jsf2-managed-bean-annotation-scope-injection-confusion 
+	-->
+
+	<application>
+		<locale-config>
+			<!-- UK -->
+			<default-locale>en_GB</default-locale>
+			
+			<!-- US -->
+			<supported-locale>en_US</supported-locale>
+			<!-- JAPANESE -->
+			<supported-locale>ja</supported-locale>
+			<!-- JAPAN -->
+			<supported-locale>ja_JP</supported-locale>
+			<!-- CHINESE -->
+			<supported-locale>zh</supported-locale>
+			<!-- CHINA -->
+			<supported-locale>zh_CN</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>com.adfonic.tools.i18n.adfonic</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+	</application>
+	<factory>
+		<exception-handler-factory>com.adfonic.tools.error.ExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+	<converter>
+		<converter-id>tools2.converter.numberFormatConverter</converter-id>
+		<converter-class>com.adfonic.tools.converter.format.NumberFormatConverter</converter-class>
+	</converter>
+	<validator>
+		<validator-id>URLValidator</validator-id>
+		<validator-class>com.adfonic.tools.validator.URLValidator</validator-class>
+	</validator>
+    <validator>
+        <validator-id>EmailValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.EmailValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>PHONEValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.PhoneValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>DuplicatedNameValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.DuplicatedNameValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>MaxLengthNameValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.LengthNameValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>MinBidValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.MinBidValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>LanguageValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.LanguageValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>ExtendedCreativeTypeValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.ExtendedCreativeTypeValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>CampaignNameValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.NameValidCharacterValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>NameValidCharacterValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.NameValidCharacterValidator</validator-class>
+    </validator>
+    <validator>
+        <validator-id>MaximumRecencyValidator</validator-id>
+        <validator-class>com.adfonic.tools.validator.MaximumRecencyValidator</validator-class>
+    </validator>
+    <render-kit>
+ 		<renderer>
+  			<component-family>org.primefaces.component</component-family>
+   			<renderer-type>org.primefaces.component.SelectManyCheckboxRenderer</renderer-type>
+   			<renderer-class>com.adfonic.tools.renderer.SelectManyCheckboxRenderer</renderer-class>
+  		</renderer>
+ 	</render-kit>
+ 	
+	<component>
+		<component-type>jawr.JavascriptBundle</component-type>
+		<component-class>net.jawr.web.taglib.jsf.JavascriptBundleTag</component-class>
+	</component>
+	<component>
+		<component-type>jawr.CSSBundle</component-type>
+		<component-class>net.jawr.web.taglib.jsf.CSSBundleTag</component-class>
+	</component>
+</faces-config>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<f:metadata>
+  <f:event type="preRenderView" listener="#{adminAccountBean.adminAccountUserCheck}" />
+</f:metadata>
+
+<table class="form">
+<tr>
+  <td class="label">User full name</td>
+  <td><b><h:outputText value="#{adminAccountBean.user.firstName} #{adminAccountBean.user.lastName}" /></b></td>
+</tr>
+<tr>
+  <td>User status</td>
+  <td><b><h:outputText value="#{adminAccountBean.user.status}"/></b></td>
+</tr>
+<tr>
+  <td>Account ID</td>
+  <td><b>AD<h:outputText value="#{adminAccountBean.user.company.id}"><f:convertNumber type="number" pattern="000000" /></h:outputText></b></td>
+</tr>
+<tr>
+  <td>Company name</td>
+  <td><b><h:outputText value="#{adminAccountBean.user.company.name}" /><h:outputText value="N/A" rendered="#{adminAccountBean.user.company.name eq ''}" /></b></td>
+</tr>
+<tr>
+  <td>Company publisher bal.</td><td><b>
+    <h:outputText value="#{adminAccountBean.companyPublisherBalance}">
+      <f:convertNumber type="currency" currencySymbol="$" />
+    </h:outputText>
+  </b></td>
+ </tr>
+<tr>
+  <td>Agency bal.</td>
+  <td><b>
+    <h:outputText value="#{adminAccountBean.companyAdvertiserBalance}">
+      <f:convertNumber type="currency" currencySymbol="$" />
+    </h:outputText>
+   </b></td>
+</tr>
+</table>
+
+</ui:component>

@@ -1,0 +1,82 @@
+{
+	"app":{
+		"bundle":"com.sega.sonicdash",
+		"cat":[
+			"IAB1",
+			"IAB9",
+			"IAB9-30",
+			"entertainment",
+			"games"
+		],
+		"id":"320c7428cc1f4e06915977929e4b4fb7",
+		"name":"Sonic Dash (Android)",
+		"publisher":{
+			"id":"cd88b122eefd432a89f15ba18936fdda",
+			"name":"SEGA"
+		},
+		"ver":"2.0.0.Go"
+	},
+	"at":2,
+	"badv":[ "..." ],
+	"bcat":["..." ],
+	"device":{
+		"connectiontype":2,
+		"devicetype":1,
+		"dnt":1,
+		"dpidmd5":"180107c43c27384c9cd3c0498f7f1310",
+		"dpidsha1":"faf4170018be447d02d83744ec9f8f2bed93f119",
+		"ext":{
+			"idfa":"159de0cc-5d97-4efc-86da-3220550e87fd"
+		},
+		"geo":{
+			"city":"Vienna",
+			"country":"AUT",
+			"region":"09",
+			"zip":"1130"
+		},
+		"ip":"80.121.42.203",
+		"js":1,
+		"make":"htc",
+		"model":"Nexus 9",
+		"os":"Android",
+		"osv":"5.0.1",
+		"ua":"Mozilla/5.0 (Linux; Android 5.0.1; Nexus 9 Build/LRX22C) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Safari/537.36"
+	},
+	"id":"712945b3-c68a-4015-b2d0-adb85f2e447c",
+	"imp":[
+		{
+			"banner":{
+				"api":[ 3 ],
+				"battr":[ 9, 10, 14 ],
+				"btype":[ 4 ],
+				"ext":{
+					"mraid":[ {
+							"functions":[ "storePicture", "supports", "playVideo", "createCalendarEvent" ],
+							"version":"2.0"
+					} ],
+					"nativebrowserclick":1
+				},
+				"h":1024,
+				"pos":1,
+				"w":768
+			},
+			"bidfloor":5.560,
+			"displaymanager":"mopub",
+			"displaymanagerver":"3.2.2",
+			"id":"1",
+			"instl":1,
+			"tagid":"6da28757634c4992b9dfa9721118fe2a",
+			"video":{
+				"battr":[ 9, 10, 14 ],
+				"h":1024,
+				"linearity":1,
+				"maxduration":30,
+				"mimes":[ "video/mp4", "video/.3gp" ],
+				"minduration":16,
+				"protocol":2,
+				"protocols":[ 2, 5 ],
+				"w":768
+			}
+		}
+	]
+}

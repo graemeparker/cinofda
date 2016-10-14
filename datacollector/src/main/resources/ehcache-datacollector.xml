@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="true"
+         monitoring="autodetect"
+         dynamicConfig="true">
+  <diskStore path="java.io.tmpdir"/>
+  <defaultCache
+       maxElementsInMemory="10000"
+       eternal="false"
+       timeToIdleSeconds="120"
+       timeToLiveSeconds="120"
+       overflowToDisk="false"
+       diskPersistent="false"
+       memoryStoreEvictionPolicy="LRU"
+       statistics="false"
+       />
+
+  <!-- This is the cache datacollector uses to track Campaigns that have recently been stopped -->
+  <cache name="campaignStoppage"
+         maxElementsInMemory="1000"
+         eternal="false"
+         overflowToDisk="false"
+         timeToIdleSeconds="3600"
+         timeToLiveSeconds="3600"
+         memoryStoreEvictionPolicy="LRU"
+         />
+
+  <!-- This is the cache datacollector uses to track missing Campaigns from domain cache-->
+  <cache name="missingCampaigns"
+         maxElementsInMemory="1000"
+         eternal="false"
+         overflowToDisk="false"
+         timeToIdleSeconds="3600"
+         timeToLiveSeconds="3600"
+         memoryStoreEvictionPolicy="LRU"
+         />
+  
+	<!-- This is the cache datacollector uses to track Advertisers that have recently been stopped -->
+  <cache name="advertiserStoppage"
+         maxElementsInMemory="1000"
+         eternal="false"
+         overflowToDisk="false"
+         timeToIdleSeconds="3600"
+         timeToLiveSeconds="3600"
+         memoryStoreEvictionPolicy="LRU"
+         />
+
+  <!-- This is the cache used to look up ids by User-Agent header -->
+  <cache name="uaHeaderId"
+         maxElementsInMemory="10000"
+         eternal="false"
+         overflowToDisk="false"
+         timeToIdleSeconds="3600"
+         timeToLiveSeconds="3600"
+         memoryStoreEvictionPolicy="LRU"
+         />
+  
+</ehcache>

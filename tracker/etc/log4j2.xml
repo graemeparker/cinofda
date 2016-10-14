@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{MMM dd, YYYY h:mm:ss a} %C %M %n%p: %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.adfonic" level="INFO" additivity="true">
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<Logger name="com.byyd.middleware" level="INFO" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>		
+		<Logger name="com.byyd.middleware.iface.service.jpa.GenericCachingEntityResolver" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>	
+		<Logger name="com.adfonic.retargeting" level="DEBUG" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>		
+		<Logger name="com.adfonic.tracker" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>		
+		<Logger name="com.adfonic.tracker.controller.InstallController" level="DEBUG" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>
+		<Logger name="com.adfonic.util.DeviceIdentifierUtils" level="DEBUG" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>		
+		<Logger name="org.apache.activemq" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>			
+		<Logger name="org.apache.kahadb" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>		
+		<Logger name="org.springframework" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>			
+		<Logger name="org.hibernate" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>			
+		<Logger name="net.citrusleaf" level="WARN" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>			
+		<Logger name="net.citrusleaf.CitrusleafClient" level="INFO" additivity="false">
+			<AppenderRef ref="Console"/>
+		</Logger>	
+		<Root level="INFO"> 
+			<AppenderRef ref="Console"/> 
+		</Root>
+	</Loggers>
+</Configuration>

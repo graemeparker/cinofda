@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- Replaced by ImpcacheCitrusleafConfig -->
+	
+	<!-- This one is in use on production servers -->
+	
+  <bean id="citrusleafClient"
+        class="net.citrusleaf.CitrusleafClient"
+        destroy-method="close">
+    <constructor-arg value="${Citrusleaf.hostName}"/>
+    <constructor-arg value="${Citrusleaf.port}"/>
+  </bean>
+
+  <bean id="cacheManager" 
+        class="com.adfonic.cache.citrusleaf.CitrusleafCacheManagerImpl">
+    <constructor-arg ref="citrusleafClient"/>
+    <constructor-arg value="${Citrusleaf.namespace.cache}"/>
+    <constructor-arg value="${Citrusleaf.connectTimeoutMs}"/>
+    <constructor-arg value="${Citrusleaf.operationTimeoutMs}"/>
+  </bean>
+  
+  <bean id="impressionService"
+        class="com.adfonic.adserver.impl.NamespaceAwareImpressionService"/>
+  
+  <bean id="frequencyCounter"
+        class="com.adfonic.adserver.impl.NamespaceAwareFrequencyCounter"/>
+  
+  <bean id="rtbCacheService"
+        class="com.adfonic.adserver.rtb.impl.NamespaceAwareRtbCacheService"/>
+  
+  <bean id="parallelModeCacheService"
+        class="com.adfonic.adserver.impl.NamespaceAwareParallelModeCacheService"/>
+
+</beans>

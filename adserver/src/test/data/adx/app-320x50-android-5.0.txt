@@ -1,0 +1,348 @@
+id: "U.\216\311\000\004t2\n4\'\305\312\000.\200"
+ip: "\246\211\374"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_2 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A501,gzip(gfe)"
+url: "https://itunes.apple.com/app/id429610587"
+detected_language: "en"
+detected_vertical {
+  id: 182
+  weight: 0.33333334
+}
+detected_vertical {
+  id: 1222
+  weight: 0.33333334
+}
+detected_vertical {
+  id: 1462
+  weight: 0.33333334
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 18102231193939099096
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEJUaPl86A6LTucbTmEkAjJM"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 42
+mobile {
+  platform: "iphone"
+  app_id: "429610587"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60504
+  app_category_ids: 60514
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 7
+    os_version_minor: 0
+  }
+  screen_width: 320
+  screen_height: 568
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "U.\216\311\000\004t2\n4\'\305\001\000.\200\016_tu\360\213\b_\350\315\344\273(\231w\206\237\250\227\203"
+}
+cookie_age_seconds: 2560319
+geo_criteria_id: 1023191
+seller_network_id: 1
+publisher_settings_list_id: 2615817228438609337
+51: 3
+
+FINE; 15-Apr-2015 16:16:09; tid:182; AdXMapper withDeviceIdentifiersCopiedIn; Found Encrypted Advertising ID
+FINE; 15-Apr-2015 16:16:09; tid:182; AdXMapper withDeviceIdentifiersCopiedIn; Found Encrypted Advertising ID with platform: ios
+FINE; 15-Apr-2015 16:16:09; tid:182; AdXMapper getRequest; No private deals to add
+WARNING; 15-Apr-2015 16:16:10; tid:183; RtbLogicImpl ensureDeviceIdentifiersInContext; Device.dpid (CD8BF46C-9E3A-41DE-80AE-59F47DC402AA) normalized(cd8bf46c-9e3a-41de-80ae-59f47dc402aa) doesn't match the validation pattern for idfa. Adspace: 30977525
+FINE; 15-Apr-2015 16:16:10; tid:176; AdXMapper getRequest; Request  >>
+id: "U.\216\312\000\005`8\n\037.M\276\0006%"
+user_agent: "Mozilla/5.0 (Linux; Android 5.0.2; XT1069 Build/LXB22.46-28) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/40.0.0.0 Mobile Safari/537.36 (Mobile; afma-sdk-a-v6.2.1),gzip(gfe)"
+url: "https://play.google.com/store/apps/details?id=com.freemusicdownload.ichrakmp3"
+detected_language: "pt"
+detected_vertical {
+  id: 220
+  weight: 0.24792325
+}
+detected_vertical {
+  id: 1461
+  weight: 0.24792325
+}
+detected_vertical {
+  id: 1536
+  weight: 0.24792325
+}
+detected_vertical {
+  id: 1071
+  weight: 0.14035304
+}
+detected_vertical {
+  id: 1109
+  weight: 0.115877174
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 8
+  excluded_attribute: 9
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 17902473152695711352
+  17: 0
+  18: 0
+}
+is_test: false
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 43
+mobile {
+  platform: "android"
+  app_id: "com.freemusicdownload.ichrakmp3"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60015
+  app_category_ids: 60000
+  app_category_ids: 69500
+  brand: "motorola"
+  model: "xt1069"
+  os_version {
+    os_version_major: 5
+    os_version_minor: 0
+  }
+  screen_width: 360
+  screen_height: 592
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  24: "T\303\251l\303\251charger Musique gratuite."
+  25: 0x406eb716
+}
+geo_criteria_id: 1001773
+seller_network_id: 1
+publisher_settings_list_id: 4147590492477574005
+51: 3
+
+INFO; 15-Apr-2015 16:16:10; tid:176; ProtoBufMapper abort; IP absent. aborting
+FINE; 15-Apr-2015 16:16:10; tid:186; AdXMapper getRequest; Request  >>
+id: "U.\216\312\000\ng\373\n\037\034\327\246\000 Z"
+ip: "\277\367\347"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B466,gzip(gfe)"
+url: "https://itunes.apple.com/app/id907371246"
+detected_language: "pt"
+detected_vertical {
+  id: 220
+  weight: 0.22621018
+}
+detected_vertical {
+  id: 1462
+  weight: 0.22621018
+}
+detected_vertical {
+  id: 1536
+  weight: 0.22621018
+}
+detected_vertical {
+  id: 1461
+  weight: 0.19330852
+}
+detected_vertical {
+  id: 1071
+  weight: 0.12806094
+}
+adslot {
+  id: 1
+  width: 320
+  height: 480
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 6286960277486296870
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESECF2WGjPafIRUZ8LSLu0Hsw"
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 43
+mobile {
+  platform: "iphone"
+  app_id: "907371246"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  is_interstitial_request: true
+  app_category_ids: 60504
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 8
+    os_version_minor: 1
+  }
+  screen_width: 320
+  screen_height: 480
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "U.\216\312\000\ng\373\n\037\034\327\001\000 Z[\271\3129`a\240\326c\314za\335\223\253Z\023\277O\277"
+}
+cookie_age_seconds: 13741491
+geo_criteria_id: 1001773
+seller_network_id: 1
+publisher_settings_list_id: 8188497629006279527
+51: 3
+
+FINE; 15-Apr-2015 16:16:10; tid:186; AdXMapper withDeviceIdentifiersCopiedIn; Found Encrypted Advertising ID
+FINE; 15-Apr-2015 16:16:10; tid:186; AdXMapper withDeviceIdentifiersCopiedIn; Found Encrypted Advertising ID with platform: ios
+FINE; 15-Apr-2015 16:16:10; tid:186; AdXMapper getRequest; No private deals to add
+FINE; 15-Apr-2015 16:16:10; tid:183; AdXMapper getRequest; Request  >>
+
+
+FINE; 15-Apr-2015 16:16:10; tid:183; AdXMapper getRequest; No private deals to add
+FINE; 15-Apr-2015 16:16:10; tid:171; AdXMapper getRequest; Request  >>
+id: "U.\216\312\000\v\304(\n\037(V\304\000_\344"
+ip: "F\322L"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_2 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Mobile/11D257,gzip(gfe)"
+url: "https://itunes.apple.com/app/id840919914"
+detected_language: "en"
+detected_vertical {
+  id: 937
+  weight: 0.2521569
+}
+detected_vertical {
+  id: 1462
+  weight: 0.2521569
+}
+detected_vertical {
+  id: 926
+  weight: 0.2521569
+}
+detected_vertical {
+  id: 105
+  weight: 0.24352923
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 30
+  excluded_sensitive_category: 31
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 8424323618381212864
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEP97HSfcTryp1Qnwv6iA3VM"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 59
+detected_content_label: 39
+mobile {
+  platform: "iphone"
+  app_id: "840919914"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60506
+  app_category_ids: 60504
+  app_category_ids: 60525
+  app_category_ids: 60533
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 7
+    os_version_minor: 1
+  }
+  screen_width: 320
+  screen_height: 568
+  carrier_id: 70092
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "U.\216\312\000\v\304(\n\037(V\001\000_\344\366r\273\022\331Z!\374jU\245\374\033vK;p\255\033"
+}
+cookie_age_seconds: 1008168
+postal_code: "48104"
+geo_criteria_id: 9016852
+seller_network_id: 1
+publisher_settings_list_id: 17694776254770655010
+51: 3

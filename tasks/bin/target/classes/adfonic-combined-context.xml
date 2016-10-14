@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+  <!-- Auto-instantiate up all components in com.adfonic.tasks.combined -->
+  <context:component-scan base-package="com.adfonic.tasks.combined"/>
+  <context:component-scan base-package="com.adfonic.tickets.proc"/>
+  <context:component-scan base-package="com.adfonic.service.impl"/>
+  <context:component-scan base-package="com.adfonic.adserver.impl"/>
+  <context:component-scan base-package="com.adfonic.mmc.adserver.impl"/>  
+  <context:component-scan base-package="com.adfonic.tasks.combined.truste.dao"/>  
+  <context:component-scan base-package="com.adfonic.service.impl.appnxs"/>  
+
+  <!-- 
+    <bean id="velocityEngine"
+        class="org.springframework.ui.velocity.VelocityEngineFactoryBean"
+        p:resourceLoaderPath="/templates"/>
+  -->
+
+  <amq:topic id="mondrianCacheFlushTopic" physicalName="adfonic.mondrian.cache.flush"/>
+  <amq:topic id="statusChangeTopic" physicalName="adfonic.status.change"/>
+  <amq:topic id="unStopAdvertiserTopic" physicalName="adfonic.unStopAdvertiser"/>
+  <amq:topic id="unStopCampaignTopic" physicalName="adfonic.unStopCampaign"/>
+  
+  <jms:listener-container connection-factory="centralJmsConnectionFactory" destination-type="queue" concurrency="1">
+    <jms:listener destination="adfonic.adSpace.verified" ref="adSpaceVerifier" method="onAdSpaceVerified"/>
+    <jms:listener destination="adfonic.adSpace.dormant.reactivate" ref="dormantAdSpaceReactivator" method="reactivateDormantAdSpace"/>
+    <jms:listener destination="adfonic.rtb.adspace.format" ref="rtbPersistenceHandler" method="onRtbAdSpaceAddFormatRequest"/>
+    <jms:listener destination="adfonic.click.forward" ref="clickForwardHandler" method="onClickForwardRequest"/>
+    <jms:listener destination="adfonic.tracking.action" ref="trackingMessageHandler" method="onTrackingActionMessage"/>
+  </jms:listener-container>
+  
+  <jms:listener-container connection-factory="centralJmsConnectionFactory" destination-type="queue" concurrency="${RtbPersistenceHandler.concurrentConsumers:1}">
+    <jms:listener destination="adfonic.rtb.publication.persistence" ref="rtbPersistenceHandler" method="onRtbPublicationPersistenceRequest"/>
+    <jms:listener destination="adfonic.rtb.bundle.persistence" ref="rtbPersistenceHandler" method="onRtbBundlePersistenceRequest"/>
+  </jms:listener-container>
+  
+  <jms:listener-container connection-factory="centralJmsConnectionFactory" destination-type="queue" concurrency="1-5">
+    <jms:listener destination="adfonic.email.outbound" ref="outboundEmailHandler" method="onOutboundEmail"/>
+  </jms:listener-container>
+  
+  <jms:listener-container connection-factory="centralJmsConnectionFactory" destination-type="queue" concurrency="${PublisherCreativeHandler.concurrentConsumers:1}">
+    <jms:listener destination="adfonic.publisher.creative.approval" ref="publisherCreativeHandler" method="onCreativeApprovalNotification"/>
+  </jms:listener-container>
+  
+  <jms:listener-container connection-factory="centralJmsConnectionFactory" destination-type="topic" concurrency="${ResubmittedCreativesManager.concurrentConsumers:1}">
+    <jms:listener destination="adfonic.status.change" ref="resubmittedCreativesManager" method="onStatusChange"/>
+  </jms:listener-container>
+  
+  <bean id="campaignManager" class="com.byyd.middleware.campaign.service.jpa.CampaignManagerJpaImpl"/>
+  <bean id="advertiserManager" class="com.byyd.middleware.account.service.jpa.AdvertiserManagerJpaImpl"/>
+  
+  <bean id="mailSender"
+        class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${email.outbound.host}"/>
+    <property name="port" value="${email.outbound.port}"/>
+    <property name="protocol" value="${email.outbound.protocol}"/>
+    <property name="username" value="${email.outbound.username}"/>
+    <property name="password" value="${email.outbound.password}"/>
+  </bean>
+
+  <!-- No id specified on this bean, it gets injected by type -->
+  <bean class="com.adfonic.tracker.jdbc.TrackerMultiServiceJdbcImpl">
+    <constructor-arg ref="trackerDataSource"/>
+  </bean>
+
+  <bean id="kryoManager"
+        class="com.adfonic.adserver.KryoManager"/>
+  
+  <bean id="adEventFactory"
+        class="com.adfonic.adserver.AdEventFactory"/>
+  
+  <bean id="videoViewAdEventLogic"
+        class="com.adfonic.tracker.VideoViewAdEventLogic">
+    <constructor-arg ref="adEventFactory"/>
+  </bean>
+  
+  <bean id="admqJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop" p:maxConnections="${adevent.jms.pool.maxConnections}">
+    <property name="connectionFactory">
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory"
+            p:brokerURL="${adevent.jms.broker.url}" />
+    </property>
+  </bean>
+
+  <bean id="admqJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+    <constructor-arg ref="admqJmsConnectionFactory"/>
+  </bean>
+  
+  <amq:queue id="admqAdEventQueue" physicalName="adfonic.adEvent.v3"/>
+  
+  <bean id="citrusleafClient"
+        class="net.citrusleaf.CitrusleafClient"
+        destroy-method="close">
+    <constructor-arg value="${Citrusleaf.hostName}"/>
+    <constructor-arg value="${Citrusleaf.port}"/>
+  </bean>
+
+  <bean id="weveBeaconUrl" class="java.lang.String">
+    <constructor-arg value="${weve.beacon.url}" />
+  </bean>
+
+  <bean id="adserverProperties"
+ 		class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+        p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tasks.properties"/>
+
+  <bean id="weveAdvertisers" scope="singleton" class="java.util.HashSet" >
+    <constructor-arg>
+    <bean class="org.springframework.util.StringUtils" factory-method="commaDelimitedListToSet">
+    <constructor-arg type="java.lang.String" value="${weve.company_ids:}"/>
+    </bean>
+    </constructor-arg>
+  </bean> 
+    
+	<bean id="trusteWeveAeskey" class="java.lang.String">
+		<constructor-arg value="${truste.weve.aeskey:}" />
+	</bean>
+	<bean id="trusteWevePid" class="java.lang.String">
+		<constructor-arg value="${truste.weve.pid:}" />
+	</bean>
+	<bean id="trusteWeveWebAid" class="java.lang.String">
+		<constructor-arg value="${truste.weve.web-aid:}" />
+	</bean>
+	<bean id="trusteWeveAppAid" class="java.lang.String">
+		<constructor-arg value="${truste.weve.app-aid:}" />
+	</bean>
+	<bean id="trusteDefaultAeskey" class="java.lang.String">
+		<constructor-arg value="${truste.default.aeskey:}" />
+	</bean>
+	<bean id="trusteDefaultPid" class="java.lang.String">
+		<constructor-arg value="${truste.default.pid:}" />
+	</bean>
+	<bean id="trusteDefaultWebAid" class="java.lang.String">
+		<constructor-arg value="${truste.default.web-aid:}" />
+	</bean>
+	<bean id="trusteDefaultAppAid" class="java.lang.String">
+		<constructor-arg value="${truste.default.app-aid:}" />
+	</bean>
+
+	<bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<props>
+				<prop key="resource.loader">class</prop>
+				<prop key="class.resource.loader.class">
+					org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+				</prop>
+				<prop key="class.resource.loader.resourceLoaderPath">/velocity</prop>
+			</props>
+		</property>
+	</bean>
+
+  <bean id="appNexusVhostManager"
+        class="com.adfonic.service.impl.AppNexusVhostManager">
+    <property name="assetUrl" value="${asset.base.url}"/>
+    <property name="adserverBaseUrl" value="${appnexus.base.url}"/>
+  </bean>  
+  
+  <bean name="appNexusCreativeSystem" class="com.adfonic.service.impl.appnxs.AppNexusCreativeSystem">
+  <constructor-arg>
+   <bean class="org.springframework.util.StringUtils"
+    factory-method="commaDelimitedListToSet">
+    <constructor-arg type="java.lang.String" value="${appnxs.publisherid}" />
+   </bean>
+  </constructor-arg>
+  <constructor-arg type="java.lang.String" value="${asset.service.baseurl}" />
+ </bean>
+  
+ <bean name="publisherCreativeSyncServiceFactory" class="com.adfonic.service.impl.PublisherCreativeSyncServiceFactory"
+ 	p:appNexusPublisherIds="#{'${appnxs.publisherid}'.split(',')}" />
+ 
+ <import resource="classpath:adfonic-mmx-context.xml" />
+  
+</beans>

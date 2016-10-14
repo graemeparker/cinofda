@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:ad="http://byyd-tech.com/jsf/functions">
+
+<h:form id="menuForm">
+<pri:graphicImage url="/resources/images/logo_118_32.png" styleClass="byydLogoStyle"/>
+<pri:menubar styleClass="mainMenu" id="mainMenu">
+  <pri:submenu label="Business admin">  
+      <pri:menuitem value="Company admin" url="/admin/account.jsf" title="Search/load account"/>  
+      <pri:menuitem value="Details" url="/admin/accountDetails.jsf" rendered="#{adminUser ne null}" title="Login as"/>  
+      <pri:menuitem value="Account Settings" url="/admin/accountSettings.jsf" rendered="#{adminUser ne null}"/>  
+      <pri:menuitem value="Administration" url="/admin/companyAdministration.jsf" rendered="#{adminUser ne null}"/>  
+      <pri:menuitem value="Ad management" url="/admin/companyAdManagement.jsf" rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>  
+      <pri:submenu label="Advertiser" rendered="#{adminUser ne null}">
+        <pri:menuitem value="Category" url="/admin/accountAdvertiserCategory.jsf"/>  
+      </pri:submenu>
+      <pri:submenu label="Publisher" rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}">
+          <pri:menuitem value="Category" url="/admin/accountPublisherCategory.jsf" />  
+          <pri:menuitem value="IAB excluded categories" url="/admin/publisherExcludedCategory.jsf" />  
+          <pri:menuitem value="Blocked bid types" url="/admin/publisherBlockedBidType.jsf" />  
+      </pri:submenu>
+      <pri:menuitem value="Rate card" url="/admin/companyRateCard.jsf" rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>  
+      <pri:menuitem value="Credit / debit" url="/admin/accountTransaction.jsf" rendered="#{adminUser ne null}"/>
+      <pri:menuitem value="PID optimisation" url="/admin/pidoptimisation.jsf" rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>  
+      <pri:menuitem value="Transactions" url="/admin/accountTransactions.jsf" rendered="#{adminUser ne null}"/> 
+      <pri:separator rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>
+      <pri:menuitem value="User status" url="/admin/changeStatus.jsf" rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>  
+      <pri:menuitem value="User roles" url="/admin/accountRoles.jsf" rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>  
+      <pri:menuitem value="User verification codes" url="/admin/accountVerificationCodes.jsf" rendered="#{adminUser ne null and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>  
+  </pri:submenu>
+  
+  <pri:menuitem value="Creative eligibility" url="/admin/creativeEligibility.jsf" rendered="#{!ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>
+
+  <pri:submenu label="Approvals" rendered="#{ad:hasAdminRole(adfonicUserBean.adfonicUser,'CreativeApproval') || ad:hasAdminRole(adfonicUserBean.adfonicUser,'PublicationApproval')}">
+    <pri:menuitem value="Creatives" url="/admin/approval/creatives" rendered="#{ad:hasAdminRole(adfonicUserBean.adfonicUser,'CreativeApproval')}"/>
+    <!--pri:menuitem value="Publications (old)" url="/admin/approval/deprecated/publications" rendered="#{ad:hasAdminRole(adfonicUserBean.adfonicUser,'PublicationApproval') and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/-->
+    <pri:menuitem value="Publications" url="/admin/approval/publications" rendered="#{ad:hasAdminRole(adfonicUserBean.adfonicUser,'PublicationApproval') and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}"/>
+  </pri:submenu>
+  
+  <pri:submenu label="Vendor Management" rendered="#{!ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}">
+    <pri:menuitem value="3rd party segments" url="/admin/vendor/thirdPartySegments.jsf"/>  
+  </pri:submenu>
+  
+  <pri:submenu label="Settings" rendered="#{!ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}">
+    <pri:menuitem value="Affiliate programs" url="/admin/affiliateProgramSummary.jsf"/>  
+    <pri:menuitem value="Premium network pricing" url="/admin/premiumNetworkPricing.jsf"/>  
+    <pri:menuitem value="Publication settings" url="/admin/publicationSettings.jsf"/>  
+  </pri:submenu>
+  
+  <pri:submenu label="Admin" rendered="#{ad:hasAdminRole(adfonicUserBean.adfonicUser,'SuperAdmin') and !ad:hasAdminRole(adfonicUserBean.adfonicUser,'RestrictedAdmin')}">
+    <pri:menuitem value="Admin user management" url="/admin/adfonicUserSummary.jsf"/>  
+    <pri:menuitem value="RootBean cache" url="/admin/rootBeanCache.jsf"/>  
+  </pri:submenu>
+ 
+  <pri:submenu label="#{adfonicUser.email}">
+    <pri:menuitem value="Log out" onclick="confirmation.show()" icon="ui-icon-close"/>
+  </pri:submenu>
+</pri:menubar>
+
+<pri:confirmDialog id="confirmDialog" message="Are you sure you want to log out?" closeOnEscape="true"
+            header="Logging out #{adfonicUser.email}" severity="alert" widgetVar="confirmation" appendTo="@(body)">
+  <pri:commandButton id="confirm" value="Ok" onclick="document.location.href = '${request.contextPath}/logout';" oncomplete="confirmation.hide()"/>  
+  <pri:commandButton id="decline" value="Cancel" onclick="confirmation.hide()" />
+</pri:confirmDialog>  
+      
+</h:form>    
+</ui:component>

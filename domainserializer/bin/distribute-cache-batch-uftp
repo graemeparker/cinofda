@@ -1,0 +1,181 @@
+#! /usr/bin/perl
+
+# distribute-cache-batch
+#
+# Make a domain cache batch available to the apps that need it, where
+# they need it -- whether off site, on site but on a different cluster,
+# or locally on this machine.
+#
+# Usage: distribute-cache-batch -b <batchId> [-c <cluster> [-t <transferNode>]] [-j <jmsTopic>] [-d]
+#
+# <batchId> is the name of the cache data file that has been created by
+# domain serializer under /srv/cache, i.e.
+# /srv/cache/AdserverDomainCache-default-20110428130827.dat
+#
+# <cluster> is the optional prefix/name of the server cluster to which
+# the given batch should be pushed, i.e. "rfadserver" or "dc1".  This
+# prefix should correspond to func minions when wildcarded.  When this
+# option is omitted, no batch transfer is done at all.
+#   
+# <transferNode> is the optional server to which the batch will be
+# pushed first, and then UFTP'd from there.  When omitted, but when a
+# cluster is specified, the batch will be transferred directly to the
+# given cluster.
+#
+# <jmsTopic> is the optional name of the JMS topic to which a message
+# (containing the batch id) will be published once distribution is done.
+# When omitted, no JMS notification is published.
+#
+# The -d argument, when present, will force the cache file to be
+# deleted once it has been distributed successfully.  This is used
+# primarily in production only at this point.  In test and local
+# development setups, the same cache dir is shared by DS and the apps,
+# so we want to leave the cache files around in that scenario, and
+# the apps will take care of cleaning up old batches periodically.
+
+$|++;
+
+use strict;
+use warnings;
+use Getopt::Long;
+use Log::Log4perl;
+use JSON;
+use File::Basename;
+use File::Pid;
+use Sys::Hostname;
+use LWP::UserAgent;
+    
+# This sets up the same sort of one-line logging format we use in all of
+# our other apps.  This will enable us to use the java-log-scavenger on
+# this script's output/log in order to detect errors.
+Log::Log4perl::init(\q(
+log4perl.category.Local = INFO, Screen
+log4perl.appender.Screen = Log::Log4perl::Appender::Screen
+log4perl.appender.Screen.stderr = 0
+log4perl.appender.Screen.layout = Log::Log4perl::Layout::PatternLayout
+log4perl.appender.Screen.layout.ConversionPattern = %p; %d{MMM d, yyyy H:mm:ss a}; tid:%P; %m%n
+)); 
+my $logger = Log::Log4perl::get_logger("Local");
+
+sub usage { 
+    if (@_) {
+        print "Unknown option: @_\n";
+    }
+    print "usage: $0 -b <batchId> -c <cluster> -t <transferNode> [-j <jmsTopic>] [-d]\n";
+    exit; 
+}
+
+# Grab command line args
+my $batchId;
+my $cluster;
+my $transferNode;
+my $jmsTopic;
+my $deleteAfterDistributed = 0;
+
+usage() if @ARGV < 1;
+usage() if !GetOptions("batchId=s" => \$batchId,
+                       "cluster=s" => \$cluster,
+                       "transferNode=s" => \$transferNode,
+                       "jmsTopic=s" => \$jmsTopic,
+                       "deleteAfterDistributed!" => \$deleteAfterDistributed);
+usage() if !defined($batchId);
+
+# Make sure the specified cache file exists
+my $cacheFileName = "$batchId.dat";
+my $cacheFileFullPath = "/usr/local/adfonic/cache/$cacheFileName";
+die "Cache file not found: $cacheFileFullPath" if (! -f $cacheFileFullPath);
+
+my $pidFile;
+if (defined($cluster)) {
+    # Make sure this script isn't already running for the given cache and
+    # shard/cluster combo.  We do that on a per-cache-per-cluster basis,
+    # since it's totally ok for multiple instances of this script to be
+    # running for different caches and/or different shards/clusters.
+    # Figure out the cache type and cluster by looking at the batch id, which
+    # we expect to be in a format like:
+    #      <cacheType>-<shard>-<timestamp>
+    # i.e. AdserverDomainCache-default-20110418122114
+    # or
+    #      <rtbCacheType>-<cluster>-<timestamp>
+    # i.e. RtbAdserverDomainCache-dc1adserver-20110418122114
+    if ($batchId =~ /^([^-]+)-([^-]+)-.+$/) {
+        my $cacheType = $1;
+        my $shard = $2;
+        my $scriptName = basename($0);
+        $pidFile = File::Pid->new({ file => "/var/run/adfonic/" . $scriptName . "-" . $cacheType . "-" . $shard . "-" . $cluster . ".pid", pid => $$ });
+        if ($pidFile->running) {
+            $logger->error("$scriptName is already running for $cacheType-$shard -> $cluster");
+            exit 1;
+        }
+        # Write our pid to the pid file
+        $logger->debug("Writing PID file for $cacheType-$shard -> $cluster");
+        $pidFile->write;
+    } else {
+        # Weird...
+        $logger->warn("Unrecognized batchId format: $batchId");
+    }
+
+    my $sourceHost = hostname;
+    $logger->debug("Using source hostname: $sourceHost");
+
+    # See if we need to do the two-phase rsync+UFTP transfer...
+    if (defined($transferNode)) {
+        $logger->info("Issuing transfer of $batchId to $transferNode");
+        system("/bin/uftp -R 50000 -q -L /var/log/uftp.log -U -H $transferNode -f $cacheFileFullPath");
+
+        if ($? != 0) {
+            $logger->error("Unable to uftp $cacheFileName successfully");
+            if ($deleteAfterDistributed) {
+                $logger->debug("Deleting: $cacheFileFullPath");
+                system("rm -f $cacheFileFullPath");
+            }
+            exit 1
+        }
+        $logger->info("sent \"$batchId\" to $transferNode via uftp successfully");
+
+    } 
+}
+
+if ($deleteAfterDistributed) {
+    $logger->debug("Deleting: $cacheFileFullPath");
+    system("rm -f $cacheFileFullPath");
+}
+
+# Send a JMS message to announce the changes, if applicable
+if (defined($jmsTopic)) {
+    $logger->info("Publishing message \"$batchId\" to JMS topic: $jmsTopic");
+
+    # Use ActiveMQ REST to publish the JMS message.
+# To do that we need to grab the base URL from properties.
+    my $propertiesFile = "/usr/local/adfonic/config/adfonic-domainserializer.properties";
+    my $jmsRestBaseUrl;
+
+    open PROPERTIES, $propertiesFile or die $!;
+    while (<PROPERTIES>) {
+        chomp($_);
+        if ($_ =~ /^jms\.rest\.baseUrl=(.+)$/) {
+            $jmsRestBaseUrl = $1;
+            last;
+        }
+    }
+
+    close PROPERTIES;
+    if (!defined($jmsRestBaseUrl)) {
+        $logger->error("jms.rest.baseUrl not defined in $propertiesFile");
+        die "Exiting";
+    }
+
+    # Build the full ActiveMQ REST URL, appending the topic name, etc.
+    my $jmsRestUrl = $jmsRestBaseUrl . $jmsTopic . "?type=topic";
+    $logger->info("Posting message to $jmsRestUrl");
+
+    # Do the HTTP POST to the ActiveMQ REST URL
+    my $ua = LWP::UserAgent->new;
+    $ua->post($jmsRestUrl, { "body" => $batchId });
+
+}
+
+if ($pidFile) {
+    $logger->debug("Removing pid file");
+    $pidFile->remove;
+}

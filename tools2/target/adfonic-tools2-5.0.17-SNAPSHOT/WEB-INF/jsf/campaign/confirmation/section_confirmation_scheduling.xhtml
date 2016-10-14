@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:p="http://ocpsoft.com/prettyfaces"
+    xmlns:sec="http://www.springframework.org/security/tags"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<table id="sechedulingTable" style="width:100%" class="ui-panelgrid ui-widget" role="grid">
+		<thead class="ui-panelgrid-header">  
+	     	<tr class="ui-widget-header" role="row">
+	     		<td role="columnheader" class="ui-wiget-header" colspan="5">
+	     			<pri:commandLink id="schedulingLinkId" onsuccess="ADT.runDateTimeRange();"
+							actionListener="#{campaignNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv"
+							disabled="#{userSessionBean.readOnlyUser}">
+						<f:attribute name="navigateTo" value="scheduling"/>
+	              		<span>#{msg['page.campaign.scheduling.menu.label']}</span>
+	              </pri:commandLink>	
+	     		</td>
+	     	</tr>
+	    </thead>
+        <ui:repeat var="cdate" value="#{campaignMBean.campaignConfirmationMBean.campaignDto.timePeriods}" varStatus="status">
+		    	<tr class="ui-wiget-content" role="row">
+		    		<td role="gridcell">
+		    			<h:outputText value="#{msg['page.campaign.scheduling.menu.startdate.label']}"/>
+		    		</td>
+		    		<td role="gridcell">
+		                <h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.startDate)!=null?toolsApplicationBean.getTimeZoneDate(cdate.startDate):msg['page.campaign.menu.asap.label']}">
+		                    <f:convertDateTime type="date" locale="#{languageSessionBean.locale}" pattern="#{languageSessionBean.getLongDateFormat()}"/>
+		                </h:outputText>
+		                <span class="time">
+		                    <h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.startDate)}">
+		                        <f:convertDateTime type="date" locale="#{languageSessionBean.locale}" pattern="HH:mm"/>
+		                    </h:outputText>
+		                </span>
+		    		</td>
+		    	</tr>
+		    	<tr class="ui-wiget-content" role="row">
+		    		<td role="gridcell">
+		    			<h:outputText value="#{msg['page.campaign.scheduling.menu.enddate.label']}"/>
+		    		</td>
+		    		<td role="gridcell">
+		                <h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.endDate)!=null?toolsApplicationBean.getTimeZoneDate(cdate.endDate):msg['page.campaign.menu.noend.label']}">
+		                    <f:convertDateTime type="date" locale="#{languageSessionBean.locale}" pattern="#{languageSessionBean.getLongDateFormat()}"/>
+		                </h:outputText>
+		                <span class="time">
+		                    <h:outputText value="#{toolsApplicationBean.getTimeZoneDate(cdate.endDate)}">
+		                        <f:convertDateTime type="date" locale="#{languageSessionBean.locale}" pattern="HH:mm"/>
+		                    </h:outputText>
+		                </span>
+		    		</td>
+		    	</tr>
+        </ui:repeat>
+
+        <ui:repeat var="campaignTrigger" value="#{campaignMBean.campaignSchedulingMBean.campaignTriggers}" varStatus="status">
+            <tr class="ui-wiget-content" role="row">
+                <td role="gridcell">
+                    <h:outputText value="#{msg['page.campaign.scheduling.plugintype.label']} [#{campaignTrigger.pluginVendor.name}]"/>
+                </td>
+                <td role="gridcell">
+                    <h:outputText value="#{msg[campaignTrigger.pluginType.displayName]}"/>
+                </td>
+            </tr>
+        </ui:repeat>
+
+    </table>
+</ui:composition>

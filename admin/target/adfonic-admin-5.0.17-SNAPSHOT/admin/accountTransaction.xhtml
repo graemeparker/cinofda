@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ad="http://byyd-tech.com/jsf/functions"
+      template="/WEB-INF/templates/adminTemplate.xhtml">
+
+<ui:param name="pageTitle" value="Account transaction"/>
+<ui:param name="adminUser" value="#{accountTransactionBean.user}"/>
+
+<ui:define name="title">#{pageTitle}</ui:define>
+
+<ui:define name="pageContent">
+<h:panelGroup layout="block" rendered="#{!empty facesContext.maximumSeverity}">
+    <div class="infoError">
+    <div class="infoErrorImage"></div>
+    <div class="infoErrorHeader">${msg['page.generic.error.label']}</div>
+    <div class="infoContent">${msg['page.generic.error.box']}</div>
+    </div>
+</h:panelGroup>
+
+<h:panelGroup layout="block" styleClass="infoOK" rendered="#{requestScope.didUpdateBalance}">
+  <div class="infoOKImage"></div>
+  <div class="infoOKHeader">Saved</div>
+  <div class="infoContent">
+    Your changes have been saved.
+  </div>
+</h:panelGroup>
+
+<h2>#{pageTitle}</h2>
+
+<ui:include src="/WEB-INF/includes/adminUserHeader.xhtml"/>
+<hr/>
+
+<h:form id="accountTypeForm">
+  <table class="form">
+    <tr class="error"><td></td><td><h:message for="accountType" styleClass="error" /></td></tr>
+    <tr>
+      <td class="label">Account type <span class="required">*</span></td>
+      <td>
+        <h:selectOneMenu id="accountType"
+                        value="#{accountTransactionBean.accountType}"
+                        required="true" style="width:335px"
+                        onchange="submit()">
+          <f:selectItem itemValue="ADVERTISER" itemLabel="Advertiser"/>
+          <f:selectItem itemValue="PUBLISHER" itemLabel="Publisher" />
+        </h:selectOneMenu>
+      </td>
+    </tr>
+  </table>
+</h:form>
+
+<h:form id="selectAdvertiserForm" rendered="#{accountTransactionBean.agencyAccount and accountTransactionBean.accountType eq 'ADVERTISER'}">
+  <table class="form">
+    <tr class="error"><td></td><td><h:message for="advertiser" styleClass="error" /></td></tr>
+    <tr>
+      <td class="label">Advertiser <span class="required">*</span></td>
+      <td>
+        <h:selectOneMenu id="advertiser"
+          converter="jpaConverter"
+          required="true"
+          onchange="submit()"
+          value="#{accountTransactionBean.advertiser}">
+            <f:selectItem itemValue="" itemLabel="#{msg['page.generic.pleaseSelect']}" />
+            <f:selectItems value="#{accountTransactionBean.companyAdvertisers}"/>
+        </h:selectOneMenu>
+      </td>
+    </tr>
+    <h:panelGroup rendered="#{not empty accountTransactionBean.advertiser}">
+      <tr>
+        <td class="label">Advertiser balance</td>
+        <td>
+          <h:outputText value="#{accountTransactionBean.balance}">
+            <f:convertNumber type="currency" currencySymbol="$" />
+          </h:outputText>
+        </td>
+      </tr>
+    </h:panelGroup>
+  </table>
+</h:form>
+
+<h:form id="transactionForm">
+  <table class="form">
+    <tr>
+        <td class="label"></td><td class="formtip">${msg['page.generic.tip.currency']}</td>
+    </tr>
+    
+    <!-- Account Amount USD -->
+    <tr class="error"><td></td><td><h:message for="amount" styleClass="error" /></td></tr>
+    <tr>
+        <td>Amount USD($) <span class="required">*</span></td>
+        <td>
+          <h:inputText rendered="#{not empty accountTransactionBean.accountType}"
+                id="amount"
+                label="amount"
+                required="true"
+                value="#{accountTransactionBean.accountDetail.amount}"
+                size="14"
+                maxlength="14"
+                style="width:100px"
+                validatorMessage="#{msg['error.generic.currency']}">
+            <f:validateDoubleRange minimum="0.01" maximum="9999999999.99" />
+          </h:inputText>
+        </td>
+    </tr>
+    <tr>
+        <td>Transaction type <span class="required">*</span></td>
+        <td><h:selectOneMenu rendered="#{not empty accountTransactionBean.accountType}" id="transactionType"
+                           value="#{accountTransactionBean.accountDetail.transactionType}"
+                           required="true" style="width:335px">
+                            <f:selectItem itemValue="FUNDS_IN" itemLabel="Credit"/>
+                            <f:selectItem itemValue="FUNDS_OUT" itemLabel="Debit" />
+                  </h:selectOneMenu>
+        </td>
+    </tr>
+
+	<!-- Account description -->
+    <tr>
+        <td>Description</td>
+        <td><h:inputText rendered="#{not empty accountTransactionBean.accountType}" id="description"
+            size="30" maxlength="255" style="width:350px"
+            value="#{accountTransactionBean.accountDetail.description}" /></td>
+    </tr>
+    
+    <!-- Account IO Reference -->
+    <tr>
+        <td>Reference</td>
+        <td>
+        	<pri:inputText value="#{accountTransactionBean.accountDetail.reference}" rendered="#{not empty accountTransactionBean.accountType}"
+        				   size="30" maxlength="255" style="width:350px" />
+        </td>
+    </tr>
+    
+    <!-- Account Opportunity ID -->
+    <tr>
+        <td>Opportunity ID</td>
+        <td>
+        	<pri:inputText value="#{accountTransactionBean.accountDetail.opportunity}" rendered="#{not empty accountTransactionBean.accountType}"
+        				   size="30" maxlength="255" style="width:350px" />
+        </td>
+    </tr>
+
+  </table>
+  <div class="bottomButton">
+    <!-- button start -->
+          <h:commandLink action="#{accountTransactionBean.doCreateTransaction}" styleClass="largeButton">
+              <span>Save transaction</span><span class="go"></span>
+          </h:commandLink>
+    <!-- button end -->
+  </div>
+</h:form>
+
+</ui:define>
+</ui:composition>

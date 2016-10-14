@@ -1,0 +1,29 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:pri="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <!-- Reporting Start Date Template -->
+    <pri:outputLabel for="startDate" value="#{msg['page.reporting.commons.date.start.label']}" styleClass="bl b" />
+    <pri:calendar
+        id="startDate"
+        widgetVar="startDateCalendar"
+        pattern="#{languageSessionBean.dateFormat}" 
+        mode="popup"
+        value="#{reportingMBean.startDate}"
+        maxdate="#{reportingMBean.today}"
+        pages="2"
+        onclick="ADT.setStartDateCalendar()"
+        locale="#{languageSessionBean.locale}"
+        timeZone="#{reportingMBean.companyTimeZone}"
+        required="true"
+        requiredMessage="#{msg['page.reporting.commons.date.start.required']}"
+        styleClass="calendarStyle">
+            <pri:ajax event="dateSelect"
+                      disabled="#{not reportingMBean.is(Tools2Constants.REPORT_CAMPAIGNS)}"/>
+            <pri:ajax event="dateSelect" oncomplete="ADT.adjustEndDate()" />
+        </pri:calendar>
+    <pri:message id="startDateMessage" for="startDate" />
+    <pri:watermark for="startDate" value="#{msg['page.reporting.commons.date.start.placeholder']}" />
+    
+</ui:composition>

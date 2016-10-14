@@ -1,0 +1,51 @@
+{
+	"id":"8fe1267b6328c61a96620482a873b1bde0160fca",
+	"at":2,
+	"tmax":30,
+	"imp":[ {
+			"id":"1",
+			"tagid":"193782",
+			"secure":0,
+			"iframebuster":[ ],
+			"banner":{ 
+				"w":300, "h":250, "pos":0,
+				"battr":[ ],
+				"api":[ 3, 5 ],
+				"topframe":0
+			},
+			"instl":0
+	} ],
+	"app":{
+		"id":"xapi:43290:LOsdoWWFD2Nw",
+		"cat":[ "IAB24" ],
+		"storeurl":"https://itunes.apple.com/us/app/meetme-chat-meet-new-people/id372648912?mt=8",
+		"name":"MeetMe_iPhone",
+		"domain":"http://www.gamut.media",
+		"bundle":"com.myYearbook.MyYearbook",
+		"ver":"9.5.1",
+		"ext":{ },
+		"publisher":{ "id":"12060" }
+	},
+	"device":{
+		"os":"iOS",
+		"model":"iPhone",
+		"geo":{ "country":"USA", "region":"NC", "lat":40.085751, "lon":-74.977135 },
+		"osv":"8.1.2",
+		"js":1,
+		"ext":{ "xff":"" },
+		"dpidmd5":"c977712df25ed9bab57c5559cd778742",
+		"ip":"172.56.35.12",
+		"connectiontype":0,
+		"dpidsha1":"562327529e0be0fb4b4aaf60c930ace37438d1d3",
+		"ua":"Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B44",
+		"carrier":"Other",
+		"devicetype":1,
+		"language":"en",
+		"make":"Apple",
+		"ifa":"6FDF07BD-8D60-4CA2-971B-8E9A5FFAACCA"
+	},
+	"user":{
+		"id":"6fc3b735140625153b14665c7f8570852624f4cc",
+		"ext":{ "sessiondepth":339 }
+	}
+}

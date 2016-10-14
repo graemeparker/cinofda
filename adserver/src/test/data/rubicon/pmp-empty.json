@@ -1,0 +1,59 @@
+{
+	"id":"100161430232061000074",
+	"at":2,
+	"allimps":0,
+	"imp":[ {
+			"id":"1",
+			"bidfloorcur":"USD",
+			"pmp":{ "private_auction":0, "deals":[ ] },
+			"banner":{
+				"w":300,
+				"h":250,
+				"pos":3,
+				"battr":[ 1, 3, 8, 9, 10, 11, 12, 13, 14 ],
+				"api":[ 3, 5 ],
+				"id":"banner_1"
+			},
+			"tagid":"1389856052",
+			"bidfloor":1.2
+		}
+	],
+	"device":{
+		"dnt":0,
+		"geo":{
+			"country":"DEU",
+			"city":"d\u00fcsseldorf",
+			"zip":"40227",
+			"lat":51.211700439453,
+			"lon":6.8070001602173,
+			"type":2,
+			"regionfips104":"DE07"
+		},
+		"ua":"Mozilla\/5.0 (iPhone; CPU iPhone OS 8_1_3 like Mac OS X) AppleWebKit\/600.1.4 (KHTML, like Gecko) Version\/8.0 Mobile\/12B466 Safari\/600.1.4",
+		"ip":"178.9.81.101",
+		"make":"Apple",
+		"model":"iPhone",
+		"os":"iOS",
+		"osv":"8.1.3",
+		"carrier":"vodafone dsl",
+		"devicetype":4,
+		"language":"tr",
+		"connectiontype":2,
+		"dpidsha1":"f0dbf25981f10be79a1a57d59bbba3b8764f8cd7",
+		"dpidmd5":"21c83062089451ae89325e9628fe8fc7",
+		"ifa":"100181547267310440153"
+	},
+	"user":{
+		"id":"100181547267310440153"
+	},
+	"site":{
+		"id":"4128",
+		"name":"Hurriyet Mobile Site",
+		"domain":"http:\/\/www.hurriyet.com.tr",
+		"cat":[ "IAB1", "IAB12", "IAB12-3", "IAB17" ],
+		"publisher":{ "id":"4471442047", "name":"Hurriyet" },
+		"content":{ "id":"1", "qagmediarating":1 },
+		"ref":"http:\/\/m.hurriyet.com.tr\/"
+	},
+	"bcat":[ "IAB11", "IAB23", "IAB25", "IAB26" ]
+}

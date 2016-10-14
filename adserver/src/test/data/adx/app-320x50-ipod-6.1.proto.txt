@@ -1,0 +1,84 @@
+id: "U.\216\337\000\t?\376\n\037,\t\315\000\\l"
+ip: "\245\212\000"
+user_agent: "Mozilla/5.0 (iPod; CPU iPhone OS 6_1_6 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Mobile/10B500,gzip(gfe)"
+url: "https://itunes.apple.com/app/id976203576"
+detected_language: "en"
+detected_vertical {
+  id: 1536
+  weight: 0.34625334
+}
+detected_vertical {
+  id: 1461
+  weight: 0.29589173
+}
+detected_vertical {
+  id: 1071
+  weight: 0.19601916
+}
+detected_vertical {
+  id: 1109
+  weight: 0.16183579
+}
+adslot {
+  id: 1
+  width: 320
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 4579199226300893762
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEKC-QO4rTm-zSHzTcETUb50"
+vertical_dictionary_version: 2
+timezone_offset: -240
+detected_content_label: 43
+mobile {
+  platform: "iphone"
+  app_id: "976203576"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  app_category_ids: 60510
+  app_category_ids: 60520
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "ipod"
+  os_version {
+    os_version_major: 6
+    os_version_minor: 1
+  }
+  screen_width: 320
+  screen_height: 480
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "U.\216\337\000\t?\376\n\037,\t\001\000\\l\205YY\215p\026\003Mt\350\004\277\221\351{`\303\a\230\024"
+}
+cookie_age_seconds: 61377
+postal_code: "46203"
+geo_criteria_id: 9016138
+seller_network_id: 1
+publisher_settings_list_id: 15576648599457571204
+51: 3

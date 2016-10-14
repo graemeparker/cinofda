@@ -1,0 +1,158 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Digest::MD5 qw(md5_hex);
+use LWP::UserAgent;
+
+my $adSpaceID = "c70135db-b587-4777-9ec2-3ad16f310f93";
+
+my $trackingId = md5_hex("Dan Checkoway");
+
+my $ipAddress = "67.32.183.150"; # home Georgetown, KY
+
+my $userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+
+my %params = ();
+#$params{"s.test"} = "1";
+$params{"r.ip"} = $ipAddress;
+#$params{"r.client"} = "danfoo";
+$params{"h.user-agent"} = $userAgent;
+#$params{"u.latitude"} = "38.228625"; $params{"u.longitude"} = "-84.6885";
+#$params{"u.latitude"} = "34.0"; $params{"u.longitude"} = "-117.0";
+#$params{"u.latitude"} = "0"; $params{"u.longitude"} = "0";
+#$params{"o.country"} = "US";
+#$params{"o.state"} = "MA";
+#$params{"o.postalCode"} = "91709";
+#$params{"o.dma"} = "800";
+#$params{"u.gender"} = "m";
+#$params{"u.dob"} = "19740509";
+#$params{"u.age"} = "36";
+#$params{"u.ageLow"} = "30";
+#$params{"u.ageHigh"} = "40";
+#$params{"u.lang"} = "en";
+#$params{"t.colorScheme"} = "purple";
+#$params{"t.pretty"} = "0";
+#$params{"t.constraints"} = "width=300;height=50";
+if ($trackingId) {
+    $params{"r.id"} = $trackingId;
+}
+#$params{"p.tags"} = "sports,football";
+#$params{"h.x-forwarded-for"} = "192.168.1.100,10.1.100.40, 201.88.16.12";
+#$params{"o.format"} = "image728x90";
+
+# We want a URL encoded response
+$params{"t.format"} = "urlencode";
+# We'll piece it together ourselves
+$params{"t.markup"} = "false";
+
+my $urlBase = "http://localhost:8080/adfonic-adserver";
+
+my $queryString = "";
+print "*** Request Parameters:\n";
+foreach my $key (sort(keys(%params))) {
+    print "$key = $params{$key}\n";
+    if (length($queryString) > 0) {
+        $queryString .= '&';
+    }
+    $queryString .= $key;
+    $queryString .= '=';
+    $queryString .= CGI::escape($params{$key});
+}
+
+my $url = $urlBase . "/ad/" . $adSpaceID . '?' . $queryString;
+print "*** Hitting URL: $url\n";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+
+my $response = $ua->get($url);
+print "*** HTTP Status: ".$response->status_line."\n";
+#$response->headers->scan(sub { my ($key, $value) = @_; print "*** Response Header: $key: $value\n"; });
+if (!$response->is_success) {
+    exit(1);
+}
+
+my $content = $response->decoded_content;
+#print "*** Response Content:\n$content\n";
+
+print "*** Parsing Name/Value Pairs...\n";
+my @pairs = split(/&/, $content);
+my %hash = ();
+foreach my $pair (@pairs) {
+  (my $name, my $value) = split(/=/, $pair);
+  $value = CGI::unescape($value);
+  $hash{$name} = $value;
+#  print "$name = $value\n";
+}
+
+my $errors = 0;
+
+my $status = $hash{"status"};
+if (!$status) {
+  print "Error: status is missing\n";
+  $errors++;
+} elsif ($status eq "success") {
+  if (!$hash{"adId"}) {
+    print "Error: adId is missing\n";
+    $errors++;
+  }
+  if (!$hash{"format"}) {
+    print "Error: format is missing\n";
+    $errors++;
+  }
+  if (!$hash{"destination.type"}) {
+    print "Error: destination.type is missing\n";
+    $errors++;
+  }
+  if (!$hash{"destination.url"}) {
+    print "Error: destination.url is missing\n";
+    $errors++;
+  }
+  if (!$hash{"components"}) {
+    print "Error: components is missing\n";
+    $errors++;
+  } else {
+    my @components = split(/,/, $hash{"components"});
+    for my $component (@components) {
+      print "*** Checking Component: $component\n";
+      if ($component eq "image") {
+        if (!$hash{"component.$component.url"}) {
+          print "Error: component.$component.url is missing\n";
+          $errors++;
+        } elsif (!$hash{"component.$component.width"}) {
+          print "Error: component.$component.width is missing\n";
+          $errors++;
+        } elsif (!$hash{"component.$component.height"}) {
+          print "Error: component.$component.height is missing\n";
+          $errors++;
+        }
+      } elsif ($component eq "text") {
+        if (!$hash{"component.$component.content"}) {
+          print "Error: component.$component.content is missing\n";
+          $errors++;
+        }
+      } elsif ($component eq "backgroundImage") {
+        if (!$hash{"component.$component.url"}) {
+          print "Error: component.$component.url is missing\n";
+          $errors++;
+        }
+      }
+    }
+  }
+} else {
+  print "*** Status: $status\n";
+  if ($hash{"error"}) {
+    print "*** Error: ".$hash{"error"}."\n";
+  }
+}
+
+if ($errors > 0) {
+  print "*** $errors error(s) found\n";
+  exit(1);
+} else {
+  print "*** All tests passed\n";
+}

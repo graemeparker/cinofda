@@ -1,0 +1,76 @@
+{
+	"app":{
+		"bundle":"488628250",
+		"cat":["IAB1","IAB9","IAB9-30","entertainment","games" ],
+		"id":"065770e1ba0f422498973cbdcae5d6d2",
+		"name":"Draw Something 1 iPad",
+		"publisher":{ "id":"eb99c87f16d44af380cca10c8691f91a", "name":"Zynga"},
+		"storeurl":"https://itunes.apple.com/us/app/draw-something-free/id488628250?mt=8&uo=4",
+		"ver":"2.3.5"
+	},
+	"tmax":5000,
+	"at":2,
+	"badv":[ "..."
+	],
+	"bcat":[ "..." ],
+	"device":{
+		"carrier":"311-480",
+		"connectiontype":2,
+		"devicetype":1,
+		"dnt":1,
+		"dpidmd5":"8e1379f50efbd4c0e822c664d89a6976",
+		"dpidsha1":"182263a17566e598c74d1048fbfae6cffa7ce91e",
+		"ext":{
+			"idfa":"4953AAA6-F7E2-4216-8C10-9A44B07D7195"
+		},
+		"geo":{
+			"country":"USA"
+		},
+		"ip":"72.106.236.39",
+		"js":1,
+		"language":"en",
+		"make":"Apple",
+		"model":"iPad 3 (GSM+CDMA)",
+		"os":"iOS",
+		"osv":"8.1.1",
+		"ua":"Mozilla/5.0 (iPad; CPU OS 8_1_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12B435"
+	},
+	"id":"ec6eab45-e7c9-4e17-a697-66e04ca59936",
+	"imp":[
+		{
+			"banner":{
+				"api":[ 3 ],
+				"battr":[ 1, 2, 3, 9, 10, 13, 14 ],
+				"btype":[ 4 ],
+				"ext":{
+					"mraid":[ {
+							"functions":[ "storePicture", "supports", "playVideo", "createCalendarEvent" ],
+							"version":"2.0"
+					} ],
+					"nativebrowserclick":1
+				},
+				"h":1024,
+				"pos":1,
+				"w":768
+			},
+			"bidfloor":8.650,
+			"displaymanager":"mopub",
+			"displaymanagerver":"2.1.1",
+			"id":"1",
+			"instl":1,
+			"tagid":"da3af8d47fc54628b9405dbca3f727aa",
+			"video":{
+				"battr":[ 1, 2, 3, 9, 10, 13, 14 ],
+				"h":1024,
+				"linearity":1,
+				"maxduration":30,
+				"mimes":[ "video/3gpp", "video/3gpp2", "video/mp4", "video/quicktime", "video/x-m4v" ],
+				"minduration":16,
+				"protocol":2,
+				"protocols":[ 2, 5 ],
+				"w":768
+			}
+		}
+	],
+	"wseat":[ "146b3e8d64b24381bd8e486d8420e12e" ]
+}

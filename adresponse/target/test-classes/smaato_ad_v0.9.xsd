@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!-- XML schema definition for smaato ad markup standard -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- string type for richmedia content -->
+	<xs:simpleType name="richmediaContent">
+		<xs:restriction base="xs:string">
+			<xs:pattern value=".*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+  <!-- Model version is always constrained to the current version of this document -->
+	<xs:simpleType name="currentModelVersion">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="0.9" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- string type for urls -->
+	<xs:simpleType name="url">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="http\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,4}.*" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- possible elements of ads -->
+	<xs:element name="additionalText" type="xs:string" />
+	<xs:element name="clickText" type="xs:string" />
+	<xs:element name="height" type="xs:positiveInteger" />
+	<xs:element name="width" type="xs:positiveInteger" />
+	<xs:element name="beacon" type="url" />
+	<xs:element name="clickUrl" type="url" />
+	<xs:element name="imgUrl" type="url" />
+	<xs:element name="content" type="richmediaContent" />
+	<xs:element name="toolTip" type="xs:string" />
+
+	<!-- beacons -->
+	<xs:complexType name="beacons">
+		<xs:sequence>
+			<xs:element ref="beacon" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- element types of different ad types -->
+	<!-- text ad -->
+	<xs:complexType name="textAd">
+		<xs:all>
+			<xs:element ref="clickText" />
+			<xs:element ref="clickUrl" />
+			<xs:element ref="additionalText" minOccurs="0" />
+			<xs:element ref="toolTip" minOccurs="0" />
+			<xs:element name="beacons" type="beacons" minOccurs="0" />
+		</xs:all>
+	</xs:complexType>
+
+	<!-- image ad -->
+	<xs:complexType name="imageAd">
+		<xs:all>
+			<xs:element ref="clickUrl" />
+			<xs:element ref="imgUrl" />
+			<xs:element ref="height" minOccurs="0" />
+			<xs:element ref="width" minOccurs="0" />
+			<xs:element ref="additionalText" minOccurs="0" />
+			<xs:element ref="toolTip" minOccurs="0" />
+			<xs:element name="beacons" type="beacons" minOccurs="0" />
+		</xs:all>
+	</xs:complexType>
+
+	<!-- richmedia ad -->
+	<xs:complexType name="richmediaAd">
+		<xs:all>
+			<xs:element ref="content" />
+			<xs:element ref="height" minOccurs="0" />
+			<xs:element ref="width" minOccurs="0" />
+			<xs:element name="beacons" type="beacons" minOccurs="0" />
+		</xs:all>
+	</xs:complexType>
+
+	<!-- root element -->
+	<xs:element name="ad">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="textAd" type="textAd" />
+				<xs:element name="imageAd" type="imageAd" />
+				<xs:element name="richmediaAd" type="richmediaAd" />
+			</xs:choice>
+			<xs:attribute name="modelVersion" use="required" type="currentModelVersion" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

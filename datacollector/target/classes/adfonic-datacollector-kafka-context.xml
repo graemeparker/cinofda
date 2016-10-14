@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:file="http://www.springframework.org/schema/integration/file"
+       xsi:schemaLocation="http://www.springframework.org/schema/integration/kafka http://www.springframework.org/schema/integration/kafka/spring-integration-kafka.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd 
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+		
+	<!-- Producer Configuration -->	
+	<int:publish-subscribe-channel id="inputToKafka" />
+
+	<int-kafka:outbound-channel-adapter
+	    id="kafkaOutboundChannelAdapter" kafka-producer-context-ref="kafkaProducerContext"
+	    auto-startup="true" order="1" channel="inputToKafka" />
+	<int-kafka:producer-context id="kafkaProducerContext"
+	    producer-properties="producerProperties">
+	    <int-kafka:producer-configurations>
+	        <int-kafka:producer-configuration 
+	            broker-list="${kafka.producer.broker.list}"
+	            topic="${kafka.topic.failed}"
+	            key-class-type="java.lang.String" 
+	            value-class-type="java.lang.String" 
+	            key-encoder="encoder"
+	            value-encoder="encoder"
+	            partitioner="partitioner"/>
+	    </int-kafka:producer-configurations>
+	</int-kafka:producer-context>
+
+	
+	<bean id="producerProperties"
+    class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	    <property name="properties">
+	    	<props>
+			    <prop key="queue.buffering.max.ms">${kafka.producer.queue.buffering.max.ms}</prop>
+			    <prop key="topic.metadata.refresh.interval.ms">${kafka.producer.topic.metadata.refresh.interval.ms}</prop>
+			    <prop key="queue.buffering.max.messages">${kafka.producer.queue.buffering.max.messages}</prop>
+			    <prop key="retry.backoff.ms">${kafka.producer.retry.backoff.ms}</prop>
+			    <prop key="message.send.max.retries">${kafka.producer.message.send.max.retries}</prop>
+			    <prop key="send.buffer.bytes">${kafka.producer.send.buffer.bytes}</prop>
+			    <prop key="socket.request.max.bytes">${kafka.producer.socket.request.max.bytes}</prop>
+			    <prop key="socket.receive.buffer.bytes">${kafka.producer.socket.receive.buffer.bytes}</prop>
+			    <prop key="socket.send.buffer.bytes">${kafka.producer.socket.send.buffer.bytes}</prop>
+			    <prop key="request.required.acks">${kafka.producer.request.required.acks}</prop>
+		    </props>
+		</property>
+	</bean>
+	
+	<bean id="encoder"
+	    class="org.springframework.integration.kafka.serializer.common.StringEncoder" />
+	
+	<bean id="partitioner" class="org.springframework.integration.kafka.support.DefaultPartitioner"/>
+	
+	<task:executor id="taskExecutor" pool-size="5"
+	    keep-alive="120" queue-capacity="500" />
+		
+    <!-- Conusmer configuration -->    	
+	<int:channel id="inputFromKafka">
+	    <int:dispatcher task-executor="kafkaMessageExecutor" />
+	</int:channel>
+	
+	<int-kafka:zookeeper-connect id="zookeeperConnect"
+	    zk-connect="${kafka.zk.connection}" zk-connection-timeout="${kafka.zk.connection.timeout}"
+	    zk-session-timeout="${kafka.zk.session.timeout}" zk-sync-time="${kafka.zk.sync.time}" />
+	
+	<int-kafka:inbound-channel-adapter
+	    id="kafkaInboundChannelAdapter" kafka-consumer-context-ref="consumerContext"
+	    auto-startup="true" channel="inputFromKafka" group-id="datacollector">
+	    <int:poller fixed-delay="10" time-unit="MILLISECONDS"
+	        max-messages-per-poll="5" />
+	</int-kafka:inbound-channel-adapter>
+	
+	<bean id="consumerProperties"
+    class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	    <property name="properties">
+	        <props>
+	            <prop key="auto.offset.reset">${kafka.auto.offset.reset}</prop>
+	            <prop key="socket.receive.buffer.bytes">${kafka.socket.receive.buffer.bytes}</prop>
+	            <prop key="fetch.message.max.bytes">${kafka.fetch.message.max.bytes}</prop>
+	            <prop key="auto.commit.interval.ms">${kafka.auto.commit.interval.ms}</prop>
+	        </props>
+	    </property>
+	</bean>
+	
+	<int-kafka:consumer-context id="consumerContext"
+	    zookeeper-connect="zookeeperConnect"
+	    consumer-properties="consumerProperties">
+	    <int-kafka:consumer-configurations>
+	        <int-kafka:consumer-configuration 
+	            group-id="datacollector" max-messages="20000">
+	            <int-kafka:topic id="${kafka.topic.prefix}.A_iad3_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.a}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.A_lon2_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.a}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.C_iad3_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.c}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.C_lon2_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.c}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.I_iad3_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.i}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.I_lon2_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.i}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.RL_iad3_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.rl}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.RL_lon2_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.rl}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.UR_iad3_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.ur}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.UR_lon2_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.ur}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.IN_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.low}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.CS_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.low}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.Q1_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.low}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.Q2_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.low}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.Q3_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.low}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.Q4_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.low}" />
+	            <int-kafka:topic id="${kafka.topic.prefix}.CV_${kafka.environment}_${kafka.topic.postfix}" streams="${kafka.topic.streams.low}" />
+	            <int-kafka:topic id="${kafka.topic.failed}" streams="2" />
+	        </int-kafka:consumer-configuration>
+	    </int-kafka:consumer-configurations>
+	</int-kafka:consumer-context>
+	
+	<task:executor id="kafkaMessageExecutor" pool-size="6-30" 
+	    keep-alive="120" queue-capacity="500" />
+	
+	<int:outbound-channel-adapter channel="inputFromKafka"
+    	ref="kafkaConsumer" method="processMessage" />   
+	    	
+
+</beans>

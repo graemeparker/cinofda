@@ -1,0 +1,66 @@
+api_version: 15
+auction_id: "cd3a5a27-3f09-411b-8af4-c200b9a15199"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537102797"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "c2e0e46b-fc40-0fc0-2cfd-9cce4706c6e0"
+user_ip_address: "K\227:\364"
+user_geo_country: "us"
+user_geo_state: "kentucky"
+user_geo_dma: 632
+user_agent: "Mozilla/5.0 (Linux; U; Android 4.3; en-us; SM-S975L Build/JSS15J) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
+url: "http://play.google.com/store/apps/details?id=com.pinger.textfree.call"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2028
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 8
+pub_blocked_content: 15
+pub_blocked_type: 10
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (Linux; U; Android 4.3; en-us; SM-S975L Build/JSS15J) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
+  ip: "75.151.58.244"
+  os: "Android"
+  osv: "4"
+  make: "generic"
+  model: "touch phone"
+  connectiontype: "carrier"
+  geo {
+    lat: 37.090954
+    lon: -88.72156
+    country: "us"
+    city: "paducah"
+    zip: "42001"
+    type: 1
+    continent: "north america"
+    state: "kentucky"
+    dma: 632
+  }
+  browser: "Mobile InApp View"
+  api: 3
+  idforad: "9be523c8-ed8e-474f-8048-1f678191dab1"
+  idforad_enabled: true
+  category: "text"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+  yob: 1989
+  gender: "M"
+}

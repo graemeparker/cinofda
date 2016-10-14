@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+. ./common-env
+
+cd ${ADF_DB_ROOT}
+mysql < bootstrap.sql
+cd -
+mysql event < event-test-dump.sql
+mysql adfonic < adfonic-test-dump.sql
+cd ${ADF_DB_ROOT}

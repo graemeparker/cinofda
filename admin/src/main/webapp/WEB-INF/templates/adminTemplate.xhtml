@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ad="http://byyd-tech.com/jsf/functions">
+
+<!-- Admin page template -->
+
+<!-- Head -->
+<ui:include src="/WEB-INF/includes/head.xhtml"/>
+<h:body>
+	<pe:layout togglerTipClosed="Show content" togglerTipOpen="Hide content">
+	
+		<!-- North Pane -->
+		<pe:layoutPane position="north" size="41" closable="true" resizable="false" styleClassContent="layoutPaneNorthStyle">  
+			<ui:include src="/WEB-INF/includes/mainNav.xhtml"/>
+		</pe:layoutPane>
+		
+		<!-- Center Pane -->
+		<pe:layoutPane position="center" styleClassContent="layoutPaneCenterStyle">  
+			<pri:outputPanel id="mainWide">
+			    <ui:include src="/WEB-INF/includes/progress_dialog_template.xhtml"/>
+				<ui:insert name="pageContent" />
+			</pri:outputPanel>
+		</pe:layoutPane>
+		
+		<!-- Footer Pane -->
+		<pe:layoutPane position="south" size="26" closable="true" resizable="false" styleClassContent="layoutPaneSouthStyle">  
+			<pri:outputPanel styleClass="footerDiv">
+				<p>Copyright &#169; <h:outputText value="#{ad:now()}"><f:convertDateTime pattern="yyyy"/></h:outputText> <h:outputText value="#{rootBean.companyLegalName}"/>(ver:<h:outputText value="#{applicationScope.VersionContextListener_VERSION}" /> build:<h:outputText value="#{applicationScope.VersionContextListener_BUILD}" />)</p>
+			</pri:outputPanel>
+		</pe:layoutPane>
+
+	</pe:layout>
+</h:body>
+</html>

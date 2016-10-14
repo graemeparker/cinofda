@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+ <bean id="auditorConfig"
+        class="com.adfonic.audit.AuditorConfig">
+    <property name="auditedProperties">
+      <props>
+        <prop key="com.adfonic.domain.User">
+          email,firstName,lastName,country,phoneNumber,emailOptIn
+        </prop>
+        <prop key="com.adfonic.domain.Company">
+          accountTypeFlags,individual,country,taxCode,defaultTimeZone,autoTopupLimit,autoTopupAmount
+        </prop>
+        <prop key="com.adfonic.domain.Advertiser">
+          name,status,dailyBudget,notifyLimit,notifyAdditionalEmails,users,key,adOpsOwner,salesOwner
+        </prop>
+        <prop key="com.adfonic.domain.Publisher">
+          name,pendingAdType,defaultAdRequestTimeout,defaultRevShare,trusted,rtbConfig,key,adOpsOwner,salesOwner,currentRevShare
+        </prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- Auditor -->
+  <bean id="entityAuditor" class="com.byyd.middleware.domainlog.EntityAuditorJpaImpl">
+      <constructor-arg ref="auditorConfig"/>
+      <constructor-arg ref="domainLogManager"/>
+      <constructor-arg value="sso-jpa"/>
+  </bean>
+  
+</beans>

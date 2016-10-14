@@ -1,0 +1,91 @@
+#! /usr/bin/perl
+
+$|++;
+
+use strict;
+use warnings;
+use CGI;
+use Digest::MD5 qw(md5_hex);
+use JSON;
+use LWP::UserAgent;
+use HTTP::Request::Common;
+use Data::UUID;
+
+my $numArgs = $#ARGV + 1;
+
+my $winMode = 0;
+if ($numArgs >= 1 && $ARGV[0] eq "win") {
+    $winMode = 1;
+}
+print "*** Win mode: " . ($winMode ? "ENABLED" : "DISABLED") . "\n";
+
+my $bidRequest;
+
+my $publisherExternalID = "dae7df2e-91bb-4a48-b17d-296677655806";
+
+#my $userAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
+my $userAgent = "Mozilla/5.0 (Linux; U; Android 2.1-update1; de-at; GT-I9000 Build/ECLAIR) AppleWebKit/530.17 (KHTML, like Gecko)     Version/4.0 Mobile Safari/530.17";
+
+my $aid = "73737";
+
+$bidRequest = '{ "id":"b9c8e5f2-50ae-102c-8da0-dv8gb9f250ae", "at":2, "tmax":100, "imp":[ { "impid":"dv8gb9f2-50ae-102c-8da0-12313a002cd2", "h":50, "w":320,   "instl":0 } ], "app":{ "aid":"'. $aid . '", "name":"We Rule", "ver":"2.1.3" }, "device":{ "dpid":"e9f2bdfe9f2bdfe9f2bdfe9f2bdfe9f2bdfe9f2b", "ip":  "77.118.208.165", "ua":"' . $userAgent . '"} }';
+
+# Parse it just to be sure it's valid json
+my $jsonRequest = JSON->new->decode($bidRequest);
+
+print "*** Posting JSON bid request:\n$bidRequest\n";
+
+my $urlBase = "http://localhost:8080/adfonic-adserver";
+
+my $url = $urlBase . "/rtb/mcx/bid/" . $publisherExternalID;
+print "*** Posting to URL: $url\n";
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(30);
+# We want JSON back
+#$ua->default_header("Accept" => "application/json");
+
+my $response = $ua->request(POST $url, Content_Type => "application/json", Content => $bidRequest);
+
+print "*** HTTP Status: ".$response->status_line."\n";
+#$response->headers->scan(sub { my ($key, $value) = @_; print "*** Response Header: $key: $value\n"; });
+
+my $content = $response->decoded_content;
+print "*** Response Content:\n$content\n";
+
+if (!$response->is_success) {
+    exit(1);
+}
+
+# Parse the JSON response
+my $json = JSON->new->decode($content);
+if ($json->{"seatbid"}) {
+    my $seatbids = $json->{"seatbid"};
+    foreach my $seatbid (@$seatbids) {
+        my $bids = $seatbid->{"bid"};
+        foreach my $bid (@$bids) {
+            # There will be a "price" if there was a bid
+            if ($bid->{"price"}) {
+                print "*** Got bid for \$" . $bid->{"price"} . " for impid=" . $bid->{"impid"} . "\n";
+                my $winNoticeUrl = $bid->{"nurl"};
+                if (defined $winNoticeUrl) {
+                    $winNoticeUrl =~ s/\${AUCTION_PRICE}/$bid->{"price"}/g;
+                    if ($winMode) {
+                        print "*** Hitting win notice URL:\n$winNoticeUrl\n";
+                        $response = $ua->get($winNoticeUrl);
+                        print "*** HTTP Status: ".$response->status_line."\n";
+                        if (!$response->is_success) {
+                            exit(1);
+                        }
+                        $content = $response->decoded_content;
+                        print "*** Win notice response:\n$content\n";
+                    } else {
+                        print "*** Win mode disabled, not hitting win notice URL:\n$winNoticeUrl\n";
+                    }
+                }
+            } else {
+                print "*** No bid\n";
+            }
+        }
+    }
+}

@@ -1,0 +1,68 @@
+api_version: 15
+auction_id: "e02f272f-4d95-4ecd-b64a-d1e7d6dd1448"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537185133"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "3c8668c5-e908-4f53-f16b-17bb232b2173"
+user_ip_address: "\315\323`\036"
+user_geo_country: "ca"
+user_geo_state: "ontario"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_3 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11B511"
+url: "http://itunes.apple.com/us/app/textplus-free-text-+-calls/id314487667?mt=8"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2028
+pub_blocked_cat: 34
+pub_blocked_cat: 1
+pub_blocked_cat: 8
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_cat: 31
+pub_blocked_content: 1
+pub_blocked_content: 3
+pub_blocked_content: 6
+pub_blocked_content: 8
+pub_blocked_content: 9
+pub_blocked_content: 11
+pub_blocked_content: 14
+pub_blocked_content: 15
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_3 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11B511"
+  ip: "205.211.96.30"
+  os: "iOS"
+  osv: "7"
+  make: "Apple"
+  model: "iPhone"
+  connectiontype: "wifi"
+  geo {
+    lat: 44.312588
+    lon: -79.88315
+    country: "ca"
+    city: "borden"
+    type: 1
+    continent: "north america"
+    state: "ontario"
+  }
+  browser: "Mobile Safari"
+  idforad: "37BF031B-8DDB-4F63-88EF-46C426A969C0"
+  idforad_enabled: true
+  category: "phone"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+  yob: 2000
+  gender: "F"
+}

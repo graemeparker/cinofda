@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- Variables -->
+	<ui:param name="isProximityOption" value="#{audienceMBean.audienceSourceMBean.dmpFactualType eq AudienceSourceMBean.DMP_FACTUAL_PROXIMITY_TYPE}" />
+	<ui:param name="isAudienceOption" value="#{audienceMBean.audienceSourceMBean.dmpFactualType eq AudienceSourceMBean.DMP_FACTUAL_AUDIENCE_TYPE}" />
+	<ui:param name="customFactualAudienceRepeatId" value="#{AudienceSourceMBean.FACTUAL_AUDIENCE_REPEAT_CLIENT_ID}" />
+
+	<!-- Proximity vs. Audience  -->
+	<pri:selectOneRadio id="factual-options"
+		value="#{audienceMBean.audienceSourceMBean.dmpFactualType}"
+		valueChangeListener="#{audienceMBean.audienceSourceMBean.onDmpFactualTypeChangedEvent}"
+		layout="custom">
+		<f:selectItem itemLabel="#{msg['page.audience.source.label.option.factual.proximity']}" itemValue="#{AudienceSourceMBean.DMP_FACTUAL_PROXIMITY_TYPE}" />
+		<f:selectItem itemLabel="#{msg['page.audience.source.label.option.factual.audience']}" itemValue="#{AudienceSourceMBean.DMP_FACTUAL_AUDIENCE_TYPE}" />
+		<pri:ajax event="change" update="dmpPanel" />
+	</pri:selectOneRadio>
+
+	<!-- Proximity -->
+	<pri:radioButton id="proximityOption" for="factual-options" itemIndex="0" onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	<h:outputLabel for="proximityOption" value="#{msg['page.audience.source.label.option.factual.proximity']}" />
+
+	<!-- Audience -->
+	<pri:radioButton id="audienceOption" for="factual-options" itemIndex="1" onclick="progressDialog.show();" oncomplete="progressDialog.hide();" />
+	<h:outputLabel for="audienceOption"	value="#{msg['page.audience.source.label.option.factual.audience']}" />
+
+	<pri:message id="dmpFactualAudienceSelectorsErrorMessage" for="#{customFactualAudienceRepeatId}" />
+
+	<!-- Proximity part -->
+	<ui:param name="customFactualProximityId" value="#{AudienceSourceMBean.FACTUAL_PROXIMITY_CLIENT_ID}" />
+	<pri:outputPanel rendered="#{isProximityOption}" styleClass="inner-panel">
+		<pri:inputMask id="#{customFactualProximityId}"
+	     			   value="#{audienceMBean.audienceSourceMBean.customFactualProximitySelector.externalID}"
+	     			   maxlength="255"
+	     			   mask="********-****-****-****-************"
+	     			   styleClass="longer">
+		</pri:inputMask>
+	    <pri:watermark for="#{customFactualProximityId}" value="#{msg['page.audience.source.customSegmentId.factual.placeholder']}" />
+	    
+	    <!-- Error section -->
+        <pri:message id="customFactualProximityIdError" for="#{customFactualProximityId}" />
+	</pri:outputPanel>
+		
+	<!-- Audience part -->
+	<pri:outputPanel rendered="#{isAudienceOption}"	styleClass="inner-panel">
+		
+		<!-- Audience Header -->
+		<pri:panelGrid styleClass="panelGrid">
+			<pri:row>
+				<pri:column>
+					<pri:outputPanel styleClass="width short tal">
+						<pri:outputLabel value="#{msg['page.audience.source.label.header.factual.exchange']}" styleClass="b" />
+					</pri:outputPanel>
+				</pri:column>
+				<pri:column>
+					<pri:outputLabel value="#{msg['page.audience.source.label.header.factual.audienceid']}" styleClass="b" />
+				</pri:column>
+			</pri:row>
+		</pri:panelGrid>
+
+		<!-- Audience Rows -->
+		<ui:repeat id="#{customFactualAudienceRepeatId}" var="customSelector"
+				   value="#{audienceMBean.audienceSourceMBean.customFactualAudienceSelectors}" varStatus="status">
+			<ui:param name="customFactualAudienceId" value="#{AudienceSourceMBean.FACTUAL_AUDIENCE_CLIENT_ID}" />
+			
+			<pri:panelGrid styleClass="panelGrid">
+				<pri:row>
+					<!-- Exchange -->
+					<pri:column>
+						<pri:outputPanel styleClass="width short tal">
+							<pri:outputLabel value="#{customSelector.publisher.name}" />
+						</pri:outputPanel>
+					</pri:column>
+					
+					<!-- Factual design Id -->
+					<pri:column>
+						<pri:inputMask id="#{customFactualAudienceId}"
+					     			   value="#{customSelector.externalID}"
+					     			   maxlength="255"
+					     			   mask="********-****-****-****-************"
+					     			   styleClass="longer">
+					    	<pri:ajax event="blur" update="#{customFactualAudienceId}, customFactualAudienceIdError"
+					    			  listener="#{audienceMBean.audienceSourceMBean.changeFactualAudienceSegment}"
+					    			  onstart="progressDialog.show();" oncomplete="progressDialog.hide();" />
+		                    <f:attribute name="#{Tools2Constants.EXCHANGE_INDEX}" value="#{status.index}" />
+						</pri:inputMask>
+					    <pri:watermark for="#{customFactualAudienceId}" value="#{msg['page.audience.source.customSegmentId.factual.placeholder']}" />
+					    
+    			        <!-- Error section -->
+                        <pri:message id="customFactualAudienceIdError" for="#{customFactualAudienceId}" />
+					</pri:column>
+				</pri:row>
+			</pri:panelGrid>
+		</ui:repeat>
+	</pri:outputPanel>
+
+</ui:composition>

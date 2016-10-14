@@ -1,0 +1,75 @@
+id: "U.\216\337\000\001\236+\n\037&F\247\000*n"
+ip: "\310\241\342"
+user_agent: "Mozilla/5.0 (Linux; U; Android 4.0.4; pt-br; LG-E615f Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 (Mobile; afma-sdk-a-v6603000.5089000.1),gzip(gfe)"
+url: "https://play.google.com/store/apps/details?id=com.domobile.applock"
+detected_language: "pt"
+detected_vertical {
+  id: 224
+  weight: 0.26578254
+}
+detected_vertical {
+  id: 1461
+  weight: 0.26578254
+}
+detected_vertical {
+  id: 5
+  weight: 0.26578254
+}
+detected_vertical {
+  id: 1071
+  weight: 0.20265241
+}
+adslot {
+  id: 1
+  width: 320
+  height: 480
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  excluded_attribute: 22
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 10646248024452064342
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEGTS2jpvqrDLOIYcxOaOeM4"
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 39
+mobile {
+  platform: "android"
+  app_id: "com.domobile.applock"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  is_interstitial_request: true
+  app_category_ids: 60023
+  app_category_ids: 60000
+  app_category_ids: 69500
+  app_category_ids: 60027
+  brand: "lg"
+  model: "e615f"
+  os_version {
+    os_version_major: 4
+    os_version_minor: 0
+  }
+  screen_width: 320
+  screen_height: 480
+  carrier_id: 0
+  device_pixel_ratio_millis: 1000
+  encrypted_advertising_id: "U.\216\337\000\001\236+\n\037&F\001\000*n\366\274\f\302\204\242\325\255\260\0305\270\032e\277\323\211}\001\344"
+  24: "AppLock"
+  25: 0x408b51b9
+}
+cookie_age_seconds: 7010
+geo_criteria_id: 1031739
+seller_network_id: 1
+publisher_settings_list_id: 16490331863601120030
+51: 3

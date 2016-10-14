@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. ./common-env
+
+for i in ${ADF_DB_ROOT}/misc/testdata.*.bootstrap.sql
+do
+  SCH=$(echo $i|sed 's/.*data\.\(.*\)\.boot.*/\1/')
+  cp ${ADF_DB_ROOT}/misc/testdata.${SCH}.bootstrap.sql ${SCH}-test-dump.sql
+done

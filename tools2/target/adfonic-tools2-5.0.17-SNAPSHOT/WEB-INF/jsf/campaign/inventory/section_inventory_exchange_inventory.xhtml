@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:c="http://java.sun.com/jsp/jstl/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+              xmlns:pri="http://primefaces.org/ui"
+              xmlns:p="http://ocpsoft.com/prettyfaces"
+              xmlns:sec="http://www.springframework.org/security/tags"
+              xmlns:ui="http://java.sun.com/jsf/facelets">
+
+					<h:panelGrid id="networkTable" columns="2" columnClasses="select-all-group,select-all-group,select-all-group">
+                       	<h:panelGroup id="rtb-container"
+                       			  	  layout="block" 
+                       			  	  rendered="#{not empty campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.rtbList}">
+                       		<h:outputLabel id="rtbLabel" style="font-weight:bold" value="#{msg['page.campaign.targeting.inventory.rtb']}"/>
+                       		<pri:message id="selectionMessage1" for="rtbLabel"/>
+                       		<h:panelGrid>
+					          	<pri:selectBooleanCheckbox 
+					          		id="select_all_rtb"
+					          		itemLabel="Select All" 
+									styleClass="rtb-select-all select-all" 
+									value="#{campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.selectAllRtbCheckbox}"/>
+					        	
+	                            <pri:selectManyCheckbox 
+	                            	id="rtb_networks"
+	                            	layout="pageDirection" 
+	                            	value="#{campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.rtb}" 
+            					    converter="com.adfonic.tools.converter.targetpublisher.TargetPublisherConverter"
+           					    	styleClass="indent-chkbox"
+             					>
+	                                <f:selectItems 
+	                                	var="rtbVar" 
+	                      				value="#{campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.rtbList}"
+	           							itemLabel="#{rtbVar.name}"
+	          							itemValue="#{rtbVar}" 
+	          						/>
+	                            </pri:selectManyCheckbox>
+                            </h:panelGrid>
+                       	</h:panelGroup>
+                       	<h:panelGroup id="nonrtb-container"
+                       				  layout="block" 
+                       				  rendered="#{!userSessionBean.hasTechFee()}">
+                       		<h:outputLabel id="nonRtbLabel" style="font-weight:bold" value="#{msg['page.campaign.targeting.inventory.nonrtb']}"/>
+                       		<pri:message id="selectionMessage" for="nonRtbLabel"/>
+                       		
+                       		<h:panelGrid>
+                                <pri:selectBooleanCheckbox id="select_all_nonrtb"
+						        						   itemLabel="Select All" 
+						          						   styleClass="rtb-select-all select-all" 
+						          					  	   value="#{campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.selectAllNonrtbCheckbox}" />
+					        	    
+                                <pri:selectManyCheckbox id="nonrtb_networks"
+                                						layout="pageDirection" 
+                                  						value="#{campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.nonRtb}"
+                                                        converter="com.adfonic.tools.converter.targetpublisher.TargetPublisherConverter"
+                                                        styleClass="indent-chkbox" >
+                                      <f:selectItems var="nonRtbVar" 
+                                      				 value="#{campaignMBean.campaignInventoryTargetingMBean.campaignTargetingInventoryMBean.nonRtbList}"
+                                                     itemLabel="#{nonRtbVar.name}" 
+                                                     itemValue="#{nonRtbVar}" />
+                                </pri:selectManyCheckbox>
+	                                
+                             </h:panelGrid>
+                       	</h:panelGroup>
+                    </h:panelGrid>
+
+				   	<script type="text/javascript">
+						 // <![CDATA[
+							ADT.selectAllElement("#rtb-container");
+							ADT.selectAllElement("#nonrtb-container");
+						// ]]>
+				    </script>  
+</ui:composition>                                                           

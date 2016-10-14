@@ -1,0 +1,46 @@
+{
+	"id":"e5b78b7b0a4fa8d579a52adb3abcc9d0024603d2",
+	"at":2,
+	"tmax":120,
+	"imp":[ {
+			"id":"1",
+			"tagid":"94910",
+			"secure":0,
+			"iframebuster":[ "ALL" ],
+			"banner":{
+				"w":300, "h":250, "pos":3,
+				"battr":[ 14018, 14019, 1, 2, 3, 5, 8, 9, 10, 12, 14, 14005, 14015, 14014 ],
+				"api":[ ],
+				"topframe":1
+			},
+			"instl":0
+		}
+	],
+	"site":{
+		"id":"2017271",
+		"domain":"http://04-edito-mtf-laplacemedia-6.fr",
+		"name":"http://04-edito-mtf-laplacemedia-6.fr",
+		"cat":[ "IAB12" ],
+		"page":"http://04-edito-mtf-laplacemedia-6.fr",
+		"publisher":{ "id":"207794" },
+		"ext":{ "page_id":"301e2e5f9ff2e37870422e31184b171f9557bac5" }
+	},
+	"device":{
+		"os":"iOS",
+		"model":"iPhone",
+		"connectiontype":0,
+		"geo":{ "country":"FRA", "region":"J" },
+		"osv":"7.0.3",
+		"js":1,
+		"ua":"Mozilla/5.0 (Mobile; Windows Phone 8.1; Android 4.0; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; Microsoft; Lumia 535) like iPhone OS 7_0_3 Mac OS X AppleWebKit/537 (KHTML, like Gecko) Mobile Safari/537",
+		"devicetype":1,
+		"language":"fr",
+		"make":"Apple",
+		"ext":{ "xff":"" },
+		"ip":"92.90.16.73"
+	},
+	"user":{
+		"id":"e064f0c52c0c165714b277b5ea6a0a111e5134f3",
+		"ext":{ "sessiondepth":1 }
+	}
+}

@@ -1,0 +1,71 @@
+api_version: 15
+auction_id: "6d5776d3-c6f1-44eb-ab5c-93b6362faee9"
+matching_ad_ids {
+  campaign_id: 537259129
+  placement_id: 537436021
+  creative_id: 537702657
+  ad_height: 50
+  ad_width: 320
+}
+pub_website_id: "537099156"
+ad_height: 50
+ad_width: 320
+user_cookie_id: "5e4f1ae5-6db1-34df-49a9-662648aa6c0b"
+user_ip_address: "\b#}\320"
+user_geo_country: "us"
+user_geo_state: "kansas"
+user_geo_dma: 638
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70 QuantcastSDK/iOS_1.4.5/15f1xa0k98ns3do0-0ghb7wxc7vm0mpum"
+url: "http://itunes.apple.com/us/app/whitepages/id287734809?mt=8"
+ox_cat_tier_1: 20
+ox_cat_tier_2: 2026
+pub_blocked_cat: 1
+pub_blocked_cat: 99
+pub_blocked_cat: 10
+pub_blocked_cat: 26
+pub_blocked_cat: 12
+pub_blocked_content: 1
+pub_blocked_content: 2
+pub_blocked_content: 4
+pub_blocked_content: 6
+pub_blocked_content: 7
+pub_blocked_content: 8
+pub_blocked_content: 10
+pub_blocked_content: 11
+pub_blocked_content: 12
+pub_blocked_content: 14
+pub_blocked_content: 15
+pub_blocked_type: 10
+pub_blocked_type: 11
+market_operator: "OX"
+device {
+  dnt: 0
+  ua: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70 QuantcastSDK/iOS_1.4.5/15f1xa0k98ns3do0-0ghb7wxc7vm0mpum"
+  ip: "8.35.125.208"
+  os: "iOS"
+  osv: "8"
+  make: "Apple"
+  model: "iPhone"
+  connectiontype: "wifi"
+  geo {
+    lat: 39.85904
+    lon: -95.26717
+    country: "us"
+    city: "highland"
+    zip: "66035"
+    type: 1
+    continent: "north america"
+    state: "kansas"
+    dma: 638
+  }
+  browser: "Mobile Safari"
+  idforad: "83AF12C4-6860-49B8-8359-3677C90015CB"
+  idforad_enabled: true
+  category: "phone"
+}
+is_test: false
+is_mobile_site: false
+is_application: true
+ssl_enabled: false
+user {
+}

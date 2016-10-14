@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Opting out of tailored adds</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="js/purl.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+
+	<article class="bottom">
+		<h1>Opting out of tailored ads</h1>
+        <div class="wifi">
+        	<p id="ooError" class="alert">There was a problem opting out. Please try again later!</p>
+        	<h2>Connected via Wi-Fi?</h2>
+        	<p>If you currently have a mobile signal it's best to switch off your Wi-Fi connection before clicking the opt out button below.</p>
+        	<h2>You are not opting out of seeing ads</h2>
+        	<p>When you opt out you may still see the same number of ads, but they will not be chosen for you based on information available to O2.</p>
+        	<p class="optP"><a class="optOut">Opt out now</a></p>
+        </div>
+    </article>
+        <footer>
+        <p class="back"><a href="index.html" onclick="location.href=this.href+location.search;return false;" style="cursor:pointer;">Back to main page</a></p>
+    	<p class="privacy"><a href="privacypolicies.html" onclick="location.href=this.href+location.search;return false;" style="cursor:pointer;">Privacy Policy</a></p>
+        <p class="poweredBy"><a href="http://weve.com">Powered by Weve</a></p>
+    </footer>
+<script type="text/javascript">
+$(document).ready(function(){
+	//extract URL cid parameter
+	var cid = $.url().param('cid');
+	cid = decodeURIComponent(cid);
+	cid = cid.replace(/\~/g,"=");
+	cid = cid.replace(/\^/g,"&");
+	$(".optOut").click(function(event){
+    	$("#ooError").hide();
+  		$.ajax({
+		    url : "/weve/oo/?"+cid,
+		    type: "GET",
+		    success: function(data, textStatus, jqXHR) {
+		    	$("#ooError").hide();
+		    	document.location.href='thankyou.html';
+		    }, 
+		    error: function (jqXHR, textStatus, errorThrown) {
+		    	$("#ooError").show();
+		    }
+		});	
+ 	});
+	
+	$.urlParam = function(name){
+	    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	    return results[1] || 0;
+	}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: Adfonic Asset
+Implementation-Version: 5.0.38-SNAPSHOT
+Build: 
+Built-By: graemeparker
+Implementation-Vendor-Id: com.adfonic
+Build-Jdk: 1.8.0_45
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Adfonic Ltd
+Revision: 
+

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+]>
+
+<project name="adfonic-asset" default="intentionallyBroken" basedir=".">
+
+<property environment="env."/>
+
+<property name="webapp.home" value="${env.TOMCAT_HOME}/webapps/adfonic-asset"/>
+
+<target name="get-version">
+   <exec executable="bash" outputproperty="projectVersion">
+    <arg value="-c"/>
+    <arg value="grep '&lt;version&gt;' pom.xml | head -1 | cut -d '&gt;' -f2 | cut -d '&lt;' -f1"/>
+  </exec>
+  <echo message="project version is ${projectVersion}"/>
+</target>
+
+<target name="web" depends="get-version,mvn-package">
+  <mkdir dir="${webapp.home}"/>
+  <copy todir="${webapp.home}">
+    <fileset dir="target/adfonic-asset-${projectVersion}"/>
+  </copy>
+</target>
+
+<target name="mvn-package">
+  <exec executable="mvn">
+    <arg value="-DskipTests=true"/>
+    <arg value="package"/>
+  </exec>
+</target>
+
+<target name="distclean">
+  <delete dir="${webapp.home}" failonerror="false"/>
+  <exec executable="mvn">
+    <arg value="clean"/>
+  </exec>
+</target>
+
+</project>

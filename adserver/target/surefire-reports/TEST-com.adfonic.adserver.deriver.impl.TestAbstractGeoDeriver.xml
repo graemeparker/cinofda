@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.757" tests="120" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib"/>
+    <property name="java.vm.version" value="25.45-b02"/>
+    <property name="user.country.format" value="GB"/>
+    <property name="gopherProxySet" value="false"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/Users/graemeparker/Documents/workspace/byyd-tech/projects"/>
+    <property name="java.runtime.version" value="1.8.0_45-b14"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/endorsed"/>
+    <property name="os.arch" value="x86_64"/>
+    <property name="java.io.tmpdir" value="/var/folders/g6/lc2bz3_n2j72x0r9zv7byf7w0000gn/T/"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="classworlds.conf" value="/opt/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/graemeparker/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.9.5"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="user.home" value="/Users/graemeparker"/>
+    <property name="user.timezone" value="Europe/London"/>
+    <property name="java.awt.printerjob" value="sun.lwawt.macosx.CPrinterJob"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="user.name" value="graemeparker"/>
+    <property name="java.class.path" value="/Users/graemeparker/Documents/workspace/byyd-tech/projects/common-api/target/classes:"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="en"/>
+    <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_45"/>
+    <property name="java.ext.dirs" value="/Users/graemeparker/Library/Java/Extensions:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"/>
+    <property name="sun.boot.class.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/opt/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="sun.font.fontmanager" value="sun.font.CFontManager"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase name="testDeriveCoordinates02_mobile_operator" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.04"/>
+  <testcase name="deriveAustrianPostalCodeCorrect" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.016"/>
+  <testcase name="testDeriveDmaFromParameter02_id" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.021"/>
+  <testcase name="deriveAustrianProvinceByIp" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.011"/>
+  <testcase name="testDeriveCountryFromParameter05_country_not_found" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.002"/>
+  <testcase name="deriveAustrianProvinceEmptyIfNoDataAvailable" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDerivePostalCode08_GB_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.022"/>
+  <testcase name="testDeriveGeolocatable02_coordinates_not_specified" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.021"/>
+  <testcase name="testDeriveIpBasedDataReliable05_country_mismatch" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveDmaFromParameter03_name" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="deriveSpanishPostalCodeConcrete" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDerivePostalCode06_GB_no_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="deriveChinesePostalCodeUseNearestIfNotPresent" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.008"/>
+  <testcase name="testDeriveIpBasedDataReliable01_all_null" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.014"/>
+  <testcase name="testDeriveUSState03_ip_based" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.006"/>
+  <testcase name="derivePostalCodeForSpainEmpty" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.014"/>
+  <testcase name="testDeriveUSState02_ip_based_not_US" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="deriveSpagnishProvinceByIp" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="deriveAustrianProvinceFromParameterEmptyIfNotStateAvailable" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="testDeriveCanadianProvince05_derived" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.01"/>
+  <testcase name="testDerivePostalCode01_parameter" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="testDeriveDmaFromParameter01_nothing" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveCoordinatesFromParameters04_invalid_coords" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="deriveAustrianProvinceEmptyIfIpDataIfOutsideAustria" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.006"/>
+  <testcase name="testDerivePostalCode03_no_country" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.029"/>
+  <testcase name="testDeriveCoordinatesFromParameters05_number_format_exception" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveIpBasedDataReliable03_dma_mismatch" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveUKPostalCode01_no_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveIpBasedDataReliable09_postal_code_mismatch" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="testDeriveTimeZone03_ip_based" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.006"/>
+  <testcase name="testDeriveCanadianProvince04_derived_null" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.039"/>
+  <testcase name="deriveSpanishProvinceConcrete" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.186"/>
+  <testcase name="deriveChineseProvinceFromParameterEmptyIfNotStateAvailable" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveDma03_derived_null" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveUSZipCode02_not_US" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDeriveCountryFromParameter04_country_name" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="testDeriveCoordinatesFromParameters03_device_coords" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCanadianPostalCode03_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveUnknownAttribute" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveDma02_ip_based" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="testDeriveDma02_ip_based_not_US" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveUSStateFromParameter01_nothing" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="deriveSpanishProvinceByIp" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDerivePostalCode09_CA_no_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.002"/>
+  <testcase name="deriveAustrianProvinceFromPostalCodeIfNoReliableIp" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCanadianProvince03_ip_based" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveTimeZone02_parameter_not_found" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="deriveSpanishPostalCodeCorrect" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="deriveAustrianProvinceFromParameterEmptyIfInvalidState" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="deriveAustrianProvinceByParam" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testGetDmaManager" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCoordinates01_from_parameters" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCountryFromIp01_" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="derivePostalCodeForChinaEmpty" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="deriveChineseProvinceEmptyIfIpDataIfOutsideChina" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCoordinates03_mobile_no_operator" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="derivePostalCodeForAustriaEmpty" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="testDeriveIpBasedDataReliable02_dma_same" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="testDeriveIpBasedDataReliable07_state_mismatch" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="derivePostalCodeForChina" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveUSStateFromParameter03_invalid" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="derivePostalCodeForSpain" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveUSZipCode03_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0"/>
+  <testcase name="testDeriveCanadianProvinceFromParameter02_valid" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.002"/>
+  <testcase name="testDeriveCanadianPostalCode01_no_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDeriveCanadianPostalCode02_not_CA" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveUKPostalCode02_not_UK" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="deriveSpagnishProvinceByParam" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.006"/>
+  <testcase name="deriveAustrianPostalCodeEmptyIfNotPresentAndNoCoordinates" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDeriveTimeZone01_parameter_found" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDeriveUSStateFromIp01_" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="testDeriveCoordinatesFromParameters01_nothing" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="deriveChinesePostalCodeCorrect" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.017"/>
+  <testcase name="deriveChineseProvinceByParam" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCoordinates04_non_mobile" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCountry02_from_ip" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.002"/>
+  <testcase name="deriveAustrianPostalCodeUseNearestIfNotPresent" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="deriveChinesePostalCodeEmptyIfNotPresentAndNoCoordinates" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDeriveCoordinatesFromParameters02_user_coords" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.006"/>
+  <testcase name="deriveChineseProvinceFromParameterFromState" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCanadianProvinceFromParameter01_nothing" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="derivePostalCodeForAustria" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="deriveChineseProvinceByIp" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveCountryFromParameter01_no_country_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveUKPostalCode03_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.014"/>
+  <testcase name="testDeriveUSState01_parameter" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveDma01_parameter" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveDmaFromIp01_" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveIpBasedDataReliable06_state_same" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="testDeriveUSState03_derived_null" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.007"/>
+  <testcase name="testDerivePostalCode04_US_no_zip" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveIpBasedDataReliable04_country_same" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCanadianProvinceFromParameter03_invalid" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveIpBasedDataReliable08_postal_code_same" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDeriveCountryFromParameter02_country_code_alpha2" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveUSStateFromParameter02_valid" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.002"/>
+  <testcase name="testDeriveCanadianProvince01_parameter" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="testDeriveGeolocatable01_coordinates_specified" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveCanadianProvince02_ip_based_not_CA" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.015"/>
+  <testcase name="testDeriveUSState04_derived_unrecognized" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="deriveChinesePostalCodeEmptyIfOtherCountry" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDerivePostalCodeFromIp01_" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDerivePostalCode11_some_other_country" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="testDeriveCountryFromParameter03_country_code_alpha3" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="deriveAustrianProvinceFromParameterFromState" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveDma04_derived" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="deriveChineseProvinceEmptyIfNoDataAvailable" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="deriveAustrianPostalCodeEmptyIfOtherCountry" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.007"/>
+  <testcase name="deriveSpanishProvinceByParam" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.005"/>
+  <testcase name="testDerivePostalCode05_US_zip" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.017"/>
+  <testcase name="testDerivePostalCode10_CA_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.009"/>
+  <testcase name="testDerivePostalCode02_ip_based_data_reliable" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="deriveChineseProvinceFromParameterEmptyIfInvalidState" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveCountry01_from_parameter" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.003"/>
+  <testcase name="testDerivePostalCode07_GB_distance_too_great" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveDmaFromParameter04_invalid" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="deriveChineseProvinceFromPostalCodeIfNoReliableIp" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.004"/>
+  <testcase name="testDeriveUSState05_derived" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.016"/>
+  <testcase name="testDeriveUSZipCode01_no_postal_code" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.001"/>
+  <testcase name="testDeriveIpBasedDataReliable10_coordinates" classname="com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver" time="0.002"/>
+</testsuite>

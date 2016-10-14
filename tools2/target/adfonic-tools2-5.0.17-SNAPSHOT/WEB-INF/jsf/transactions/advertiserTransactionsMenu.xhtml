@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+	<pe:importConstants className="com.adfonic.domain.Role" var="RoleConstants" />
+
+	<h:body>
+		<h:form id="menuForm" prependId="false">
+			<pri:remoteCommand name="updateMenu" update="@form" />
+			<h:panelGroup id="panelSectionGroup" layout="block" class="fourcol">
+				<h:panelGroup layout="block" id="side-panel" class="ui-corner-all t1">
+					<section class="true">
+						<h2>
+							<pri:commandLink id="advertiserInvoicesLinkId"
+								disabled="#{userSessionBean.readOnlyUser}"
+								onclick="advertiserInvoiceDialog.show()">
+								<span>#{msg['page.transactions.advertiser.invoices.menu.label']}</span>
+							</pri:commandLink>
+						</h2>
+					</section>
+	
+					<section
+						class="#{!transactionMBean.transactionDailyBudgetMBean.enabled}">
+						<h2>
+							<pri:commandLink id="dailyBudgetMenuLinkId"
+								disabled="#{userSessionBean.readOnlyUser}"
+								onclick="dailyBudgetDialog.show()">
+								<span>#{msg['page.transactions.dailybudget.menu.label']} <span
+									class="state-indicator"><h:outputText value="Off"
+											rendered="#{!transactionMBean.transactionDailyBudgetMBean.enabled}" /></span></span>
+							</pri:commandLink>
+						</h2>
+						<h:panelGroup layout="block" class="props t1">
+							<ul>
+								<li><span class="label">#{msg['page.transactions.totalcampaignbudgets.menu.label']}</span>
+									<span class="val"> 
+										<h:outputText value="#{transactionMBean.transactionDailyBudgetMBean.totalCampaignBudgets}">
+											<f:convertNumber type="currency" currencySymbol="$" />
+										</h:outputText> per day
+									</span>
+								</li>
+								<li>
+									<span class="label">#{msg['page.transactions.dailybudget.menu.label']}</span> 
+									<span class="val"> 
+										<h:outputText
+											value="#{transactionMBean.transactionDailyBudgetMBean.amount}"
+											rendered="#{transactionMBean.transactionDailyBudgetMBean.enabled}"
+										>
+											<f:convertNumber type="currency" currencySymbol="$" />
+										</h:outputText> 
+										<h:outputText value="Off" rendered="#{!transactionMBean.transactionDailyBudgetMBean.enabled}" />
+									</span>
+								</li>
+							</ul>
+						</h:panelGroup>
+					</section>
+	
+					<section class="#{!transactionMBean.transactionAdNotificationMBean.enabled}">
+						<h2>
+							<pri:commandLink 
+								id="balanceNotificationMenuLinkId"
+								disabled="#{userSessionBean.readOnlyUser}"
+								onclick="balanceNotificationDialog.show()"
+							>
+								<span>#{msg['page.transactions.balancenotification.menu.label']}
+									<span class="state-indicator">
+										<h:outputText 
+											value="Off"
+											rendered="#{!transactionMBean.transactionAdNotificationMBean.enabled}" 
+										/>
+									</span>
+								</span>
+							</pri:commandLink>
+						</h2>
+						<h:panelGroup layout="block" class="props t1">
+							<ul>
+								<li><span class="label">#{msg['page.transactions.balancenotification.menu.threshold']}</span>
+									<span class="val"> <h:outputText
+											value="#{transactionMBean.transactionAdNotificationMBean.notifyLimit}"
+											rendered="#{transactionMBean.transactionAdNotificationMBean.enabled}">
+											<f:convertNumber type="currency" currencySymbol="$" />
+										</h:outputText> <h:outputText value="Off"
+											rendered="#{!transactionMBean.transactionAdNotificationMBean.enabled}" />
+								</span></li>
+								<h:panelGroup layout="inline"
+									rendered="#{transactionMBean.transactionAdNotificationMBean.enabled}">
+									<ui:repeat id="notificationRecipients" type="none" var="email"
+										varStatus="status"
+										value="#{transactionMBean.transactionAdNotificationMBean.recipientEmails}">
+										<li><span class="label">#{msg['page.transactions.balancenotification.menu.recipient']}</span>
+											<span class="value">#{email}</span></li>
+									</ui:repeat>
+								</h:panelGroup>
+							</ul>
+						</h:panelGroup>
+					</section>
+	
+					<sec:authorize ifNotGranted="#{RoleConstants.COMPANY_ROLE_PREPAY}">
+						<section class="true">
+							<h2>
+								<pri:commandLink id="postpaySettingsMenuLinkId"
+									disabled="#{userSessionBean.readOnlyUser}"
+									onclick="postpayDialog.show()">
+									<span>#{msg['page.transactions.advertiser.postpay.menu.label']}</span>
+								</pri:commandLink>
+							</h2>
+						</section>
+					</sec:authorize>
+	
+					<section class="true">
+						<h2>
+							<pri:commandLink id="fundsInMenuLinkId"
+								disabled="#{userSessionBean.readOnlyUser}"
+								onclick="fundsInDialog.show()">
+								<span>#{msg['page.transactions.fundsin.menu.label']}</span>
+							</pri:commandLink>
+						</h2>
+						<h:panelGroup layout="block" class="props t1">
+							<ul>
+								<li><span class="label">#{msg['page.transactions.fundsacross.menu.advertiser.balance']}</span>
+									<span class="val"> <h:outputText
+											value="#{transactionMBean.transactionFundsInMBean.advertiserBalance}">
+											<f:convertNumber type="currency" currencySymbol="$" />
+										</h:outputText>
+								</span></li>
+							</ul>
+						</h:panelGroup>
+					</section>
+	
+					
+					<h:panelGroup rendered="#{userSessionBean.publisher and userSessionBean.advertiser}">
+						<section class="true">
+							<h2>
+								<pri:commandLink id="transferAcrossMenuLinkId"
+									disabled="#{userSessionBean.readOnlyUser}"
+									onclick="fundsAcrossDialog.show()">
+									<span>#{msg['page.transactions.transfer.menu.label']}</span>
+								</pri:commandLink>
+							</h2>
+							<h:panelGroup layout="block" class="props t1">
+								<ul>
+									<li><span class="label">#{msg['page.transactions.fundsacross.menu.advertiser.balance']}</span>
+										<span class="val"> <h:outputText
+												value="#{transactionMBean.transactionFundsAcrossMBean.advertiserBalance}">
+												<f:convertNumber type="currency" currencySymbol="$" />
+											</h:outputText>
+									</span></li>
+									<li><span class="label">#{msg['page.transactions.fundsacross.menu.publisher.balance']}</span>
+										<span class="val"> <h:outputText
+												value="#{transactionMBean.transactionFundsAcrossMBean.publisherBalance}">
+												<f:convertNumber type="currency" currencySymbol="$" />
+											</h:outputText>
+									</span></li>
+								</ul>
+							</h:panelGroup>
+						</section>
+					</h:panelGroup>
+				</h:panelGroup>
+			</h:panelGroup>
+		</h:form>
+	</h:body>
+</html>

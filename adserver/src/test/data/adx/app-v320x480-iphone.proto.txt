@@ -1,0 +1,78 @@
+id: "U.\216\337\000\a\027A\n\037\034V\317\000bJ"
+ip: "\203\377p"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Mobile/12F70,gzip(gfe)"
+url: "https://itunes.apple.com/app/id583845719"
+detected_language: "pt"
+detected_vertical {
+  id: 220
+  weight: 0.30001634
+}
+detected_vertical {
+  id: 1462
+  weight: 0.30001634
+}
+detected_vertical {
+  id: 497
+  weight: 0.23688404
+}
+detected_vertical {
+  id: 5
+  weight: 0.1630833
+}
+adslot {
+  id: 1
+  width: 320
+  height: 480
+  excluded_attribute: 70
+  excluded_attribute: 7
+  excluded_attribute: 34
+  matching_ad_data {
+    adgroup_id: 4546339036
+    minimum_cpm_micros: 10000
+  }
+  slot_visibility: ABOVE_THE_FOLD
+  ad_block_key: 1
+  publisher_settings_list_id: 3807927037240917302
+  17: 0
+  18: 0
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEA5ACPFuH33R5EI2lAcMNow"
+vertical_dictionary_version: 2
+timezone_offset: -180
+detected_content_label: 42
+mobile {
+  platform: "iphone"
+  app_id: "583845719"
+  is_app: true
+  mobile_device_type: HIGHEND_PHONE
+  screen_orientation: 1
+  is_interstitial_request: true
+  app_category_ids: 60510
+  app_category_ids: 60500
+  app_category_ids: 69500
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    os_version_major: 8
+    os_version_minor: 3
+  }
+  screen_width: 320
+  screen_height: 480
+  carrier_id: 0
+  device_pixel_ratio_millis: 2000
+  encrypted_advertising_id: "U.\216\337\000\a\027A\n\037\034V\001\000bJ\344\223\354\021.\301f\003d`ea\222?\253A+\204*1"
+}
+video {
+  videoad_start_delay: 0
+  max_ad_duration: 1
+  inventory_type: 2
+  video_ad_skippable: REQUIRE_SKIPPABLE
+  allowed_video_formats: VIDEO_HTML5
+}
+cookie_age_seconds: 6346676
+geo_criteria_id: 1031688
+seller_network_id: 1
+publisher_settings_list_id: 2448790864124766955
+51: 3

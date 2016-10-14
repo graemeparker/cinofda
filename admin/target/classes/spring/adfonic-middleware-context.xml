@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+              			   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <context:annotation-config />
+  
+  <!-- Allow @Scheduled and what not on component methods -->
+  <task:annotation-driven executor="executor" scheduler="executor" />
+
+  <!-- We use the explicit bean instantiation here instead of using the
+       task:executor declaration so that we can set daemon=true.  Otherwise
+       the default thread factory creates non-daemon threads. -->
+  <bean id="executor"
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler"
+        p:daemon="true"
+        p:threadNamePrefix="adfonic-scheduler-executor"
+        p:poolSize="20"/>
+
+  <!-- Fetch Strategy support beans -->
+  <bean id="fetchesfactory" class="com.byyd.middleware.iface.dao.jpa.FetchesFactory"/>
+  <bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory" init-method="init"/>
+  
+  <!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+  <context:component-scan base-package="com.byyd.middleware">
+    <context:exclude-filter type="annotation" expression="com.byyd.middleware.iface.service.NotAutoScan"/>
+  </context:component-scan>
+
+  <!-- Transactional Runner -->
+  <bean id="transactionalRunner" class="com.byyd.middleware.utils.TransactionalRunner"/>
+
+  <!-- Bean Dispatcher -->
+  <bean id="adfonicBeanDispatcher" class="com.byyd.middleware.utils.AdfonicBeanDispatcher"/>
+  
+  <bean id="categorySearchService" class="com.byyd.middleware.common.service.jpa.CachingCategoryService">
+    <constructor-arg ref="commonManager"/>
+    <constructor-arg value="${CachingCategoryService.reload.periodSec}"/>
+  </bean>
+  <alias name="categorySearchService" alias="categoryHierarchyService"/>
+  
+</beans>

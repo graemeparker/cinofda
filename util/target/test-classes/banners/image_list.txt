@@ -1,0 +1,30 @@
+
+XL = width 300 x height 50
+L = 216 x 36
+M = 168 x 28
+S = 120 x 20
+
+
+1) 	1 - XL - JPG  -- call it something like image_1_xl.jpg... 
+2)	2 - L - GIF  -- image_2_l.gif .. etc.
+3)	3 - M - PNG
+4)	4 - S - JPG
+5)	5 - XL - GIF
+6)	5 - L - PNG
+7)	6 - M - JPG
+8)	6 - S - GIF
+9)	7 - XL - PNG
+10)	7 - L - JPG
+11)	7 - M - GIF
+12)	8 - L - PNG
+13)	8 - M - JPG
+14)	8 - S - GIF
+15)	9 - XL - PNG
+16)	9 - L - JPG
+17)	9 - M - GIF
+18)	9 - S - PNG
+19)	10 - XL - JPG
+20)	10 - L - GIF
+21)	10 - M - PNG
+22)	10 - S - JPG
+

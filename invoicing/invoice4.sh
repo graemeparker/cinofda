@@ -1,0 +1,7 @@
+# Update this script with the maximum invoice numbers that have already been generated from the previous month (LASTNR variables)
+# also update the name of the month and timestamp to be the last day of the month.
+
+awk 'BEGIN { LASTNR = 9799; QT=sprintf("%c",39) } { LONGNR=sprintf("%07d",LASTNR + NR); print "insert into ACCOUNT_DETAIL (TRANSACTION_TIME, ACCOUNT_ID, AMOUNT, TAX, TOTAL, DESCRIPTION, REFERENCE, TRANSACTION_TYPE) values (" QT "2015-08-31 23:59:59" QT ",\n" $0 QT "Activity for August 2015" QT ", " QT "P" LONGNR QT ", " QT "PUBLISHER_EARNINGS" QT ");" }' < /tmp/invoice-publishers.csv
+
+awk -F',' 'BEGIN { LASTNR = 105013; QT=sprintf("%c",39) } { LONGNR=sprintf("%07d",LASTNR + NR); print "select concat(NAME, if(REFERENCE !=" QT QT ", concat(" QT " (" QT ", REFERENCE, " QT ")" QT "), " QT QT ")) into @cref from CAMPAIGN where ID = " $2 "; select if(COMPANY.ACCOUNT_TYPE_FLAGS & 2 = 2, concat(" QT "for advertiser " QT ", ADVERTISER.NAME, " QT " " QT "), " QT QT ") into @aref from CAMPAIGN inner join ADVERTISER on CAMPAIGN.ADVERTISER_ID = ADVERTISER.ID inner join COMPANY on COMPANY.ID = ADVERTISER.COMPANY_ID where CAMPAIGN.ID = " $2 "; insert into ACCOUNT_DETAIL (TRANSACTION_TIME, ACCOUNT_ID, AMOUNT, TAX, TOTAL, DESCRIPTION, REFERENCE, TRANSACTION_TYPE) values (" QT "2015-08-31 23:59:59" QT ",\n" $1 "," $3 "," $4 "," $5 ", concat("  QT "Activity for August 2015 " QT ", @aref, " QT "on campaign " QT ", @cref), " QT "A" LONGNR QT ", " QT "ADVERTISER_SPEND" QT ");" }' < /tmp/invoice-advertisers.csv
+

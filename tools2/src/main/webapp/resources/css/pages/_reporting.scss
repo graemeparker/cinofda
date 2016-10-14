@@ -1,0 +1,183 @@
+/*=================== REPORTING ===================*/
+@import "../utils/_mixins";
+
+
+/*========== VARIABLES =========*/
+$reportingIconWidth:    39px;
+$reportingIconOffset:   3px;
+$campaignDropdownWidth: 380px;
+
+/*========== REPORTING MENU =========*/
+#reportingMenu {
+
+    /* Reporting menu icons */
+    .reporting-icon {
+        width: $reportingIconWidth;
+        height: 20px;
+        display: inline-block;
+        vertical-align: middle;
+        
+        &.snapshot      { @include reporting-icons-bg ( $offsetX: sub(0, $reportingIconOffset) ); }
+        &.campaigns     { @include reporting-icons-bg ( $offsetX: sub(multiply($reportingIconWidth, -1), $reportingIconOffset) ); }
+        &.devices       { @include reporting-icons-bg ( $offsetX: sub(multiply($reportingIconWidth, -2), $reportingIconOffset) ); }
+        &.budgets       { @include reporting-icons-bg ( $offsetX: sub(multiply($reportingIconWidth, -3), $reportingIconOffset) ); }
+        &.creatives     { @include reporting-icons-bg ( $offsetX: sub(multiply($reportingIconWidth, -4), $reportingIconOffset) ); }
+        &.locations     { @include reporting-icons-bg ( $offsetX: sub(multiply($reportingIconWidth, -5), $reportingIconOffset) ); }
+        &.connections   { @include reporting-icons-bg ( $offsetX: sub(multiply($reportingIconWidth, -6), $reportingIconOffset) ); }
+    }
+    
+    /* Reporting menu text */
+    .reporting-text {
+        font-size: 9px;
+        text-align: center;
+    }
+}
+
+/*========== REPORTING CONTENT =========*/
+#reportingContent {
+    
+    /* PRIMEFACES */
+    .ui-chkbox .ui-chkbox-label {
+        vertical-align: text-bottom;
+    }
+    
+    /* COMMON */
+    /* Campaign drop down */
+    .campaignSelectionStyle {
+        width: $campaignDropdownWidth;
+        
+        border: 1px solid $borderColour !important;
+        box-shadow: inset 0 2px 2px #e3e3e3 !important;
+        &:hover {
+            border: 1px solid #e3e3e3 !important;
+        }
+    }
+    
+    /* Report view drop down */
+    .reportViewStyle, .reportViewPanelStyle {
+        width: $campaignDropdownWidth !important;
+        margin-right: 0px !important;
+    }
+    
+    .ui-message-error {
+        margin-left: add($campaignDropdownWidth, 20px) !important;
+    }
+    
+    /* REPORTING TABLES */
+    #reportingTables {
+        font-size: 12px;
+        
+        #reportingSummaryTable {
+            width: 100% !important;
+        }
+        
+        #reportingDetailTable {
+            width: 100% !important;
+
+            table {
+                text-align: center;
+                
+                thead th {
+                    white-space: nowrap;
+                
+                    /* specific columns */
+                    $fixColWidth: 47px;
+                    
+                    &.reportingDetailTableCol-CTR                   {width: $fixColWidth !important;}
+                    &.reportingDetailTableCol-ECPM_AD               {width: $fixColWidth !important;}
+                    &.reportingDetailTableCol-ECPC_AD               {width: $fixColWidth !important;}
+                    &.reportingDetailTableCol-CONVERSION_PERCENT    {width: $fixColWidth !important;}
+                    &.reportingDetailTableCol-COST_PER_CONVERSION   {width: $fixColWidth !important;}
+                }
+                
+                tr {
+                    height: 20px;
+                    
+                    td {
+                        word-break: break-all;
+                    }
+                }
+            }
+         }
+    }
+    
+    /* GENERATE BUTTON */
+    .ui-icon-loading {
+        background-image: url('../../images/ajax-loader-circle.gif') !important;
+    }
+
+    /* CAMPAIGNS */
+    #campaigns {
+        .chartFilterStyle.ui-selectmanybutton {
+    
+          .ui-button {
+            border-right: none !important;
+        
+            }
+            
+          .ui-corner-right {
+              border-right: 1px solid #e3e3e3 !important;
+          }
+        }
+    }
+
+    /* DEVICES */
+    #devices {
+      
+        .deviceModelsStyle {
+            @extend %device-models;
+            .ui-autocomplete-multiple-container {
+                width: sub($campaignDropdownWidth, 6px);
+            }
+        }
+        
+        .addDeviceModelsDialogStyle {
+            @extend %device-addlist;
+        }
+    
+        .nonMatchedDeviceModelsDialogStyle {
+            @extend %nonmatched-dialog;
+        }
+        
+        .nonMatchedDeviceModelsStyle {
+            @extend %nonmatched;
+        }
+    }
+    
+    /* BUDGETS */
+    #budgets {
+        .campaignSelectionStyle.ui-selectonemenu {
+            width: $campaignDropdownWidth !important;
+            margin-right: 0px;
+        }
+    }
+    
+    /* CREATIVES */
+    #creatives {
+        .campaignSelectionStyle.ui-selectonemenu {
+            width: $campaignDropdownWidth !important;
+            margin-right: 0px;
+        }
+    }
+    
+    /* LOCATIONS */
+    #locations {
+        .chartBorder {
+            border: solid 1px #bbbbbb !important;
+        }
+        
+        .emptyBorder {
+            border: none !important;
+        }
+    }
+    
+    /* CONNECTIONS */
+    #connections {
+    }
+}
+
+/* Campaign drop down dialog */
+.campaignSelectionPanelStyle {
+    min-width: sub($campaignDropdownWidth, 5px);
+    max-width: 960px;
+}

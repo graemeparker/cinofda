@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <ziplistDataFile>"
+    exit 1
+fi
+
+ZIPLIST_DATA_FILE=$1
+
+# This is a trick that lets developers use mvn to run this locally.
+if [ -f pom.xml ]; then
+    echo "Running in developer mode"
+    exec mvn \
+        compile \
+        exec:exec \
+        -Dexec.classpathScope=runtime \
+        -Dexec.executable="java" \
+        -Dexec.args="-Xmx1024m -Djava.util.logging.config.file=conf/logging.properties -cp %classpath com.adfonic.tasks.UpdateCanadianPostalCodeData ${ZIPLIST_DATA_FILE}"
+fi
+
+echo "Not really intended for use in production, just run this locally."
+exit 1

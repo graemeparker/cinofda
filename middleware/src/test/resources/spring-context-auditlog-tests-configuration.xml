@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    ">
+
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+	<context:annotation-config />
+	
+	<!-- Middleware (DAOs, Services and other needed beans configuration -->
+		<!-- Fetch Stragegy support beans -->
+	<bean id="fetchesfactory" class="com.byyd.middleware.iface.dao.jpa.FetchesFactory" />
+	<bean id="fetchStrategyFactory" class="com.byyd.middleware.iface.dao.FetchStrategyFactory" init-method="init" />
+
+	<!-- Auto-scan for DAO and Service impls via their @Repository / @Service annotations -->
+    <context:component-scan base-package="com.byyd.middleware">
+        <context:exclude-filter type="annotation" expression="com.byyd.middleware.iface.service.NotAutoScan"/>
+    </context:component-scan>
+    
+		<!-- Bean Dispatcher -->
+	<bean id="adfonicBeanDispatcher" class="com.byyd.middleware.utils.AdfonicBeanDispatcher" />
+		<!-- Transactional Runner -->
+	<bean id="transactionalRunner" class="com.byyd.middleware.utils.TransactionalRunner" />
+	
+	<!-- Load configuration settings -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:spring-context-auditlog-tests-configuration.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+    <!-- Domain (EntityManagerFactory) -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="domainDataSource" />
+        <property name="packagesToScan" value="com.adfonic.domain" />
+        <property name="persistenceUnitName" value="adfonic-domain" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+                p:database="${domain.jdbc.jpaVendorAdapter.dialect}" 
+                p:showSql="${domain.jdbc.jpaVendorAdapter.showSql}" 
+                p:generateDdl="false" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${domain.jdbc.jpaProperties.hibernate.dialect}</prop>
+                <prop key="hibernate.format_sql">${domain.jdbc.jpaProperties.hibernate.format_sql}</prop>
+                <prop key="hibernate.generate_statistics">${domain.jdbc.jpaProperties.hibernate.generate_statistics}</prop>
+                <prop key="hibernate.jdbc.fetch_size">${domain.jdbc.jpaProperties.hibernate.jdbc.fetch_size}</prop>
+                <prop key="hibernate.jdbc.batch_size">${domain.jdbc.jpaProperties.hibernate.jdbc.batch_size}</prop>
+                <prop key="hibernate.max_fetch_depth">${domain.jdbc.jpaProperties.hibernate.max_fetch_depth}</prop>
+                <prop key="hibernate.connection.isolation">${domain.jdbc.jpaProperties.hibernate.connection.isolation}</prop> 
+            </props>
+        </property>
+    </bean>
+
+    <!-- Domain (Database Connection) -->
+    <bean id="domainDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          autowire="byName" 
+          destroy-method="close"
+          lazy-init="true">
+        <property name="driverClassName" value="${domain.jdbc.driverClassName}" />
+        <property name="url" value="${domain.jdbc.url}" />
+        <property name="username" value="${domain.jdbc.username}" />
+        <property name="password" value="${domain.jdbc.password}" />
+        <property name="maxActive" value="${domain.jdbc.maxActive}" />
+        <property name="maxWait" value="${domain.jdbc.maxWait}" />
+        <property name="minIdle" value="${domain.jdbc.minIdle}" />
+        <property name="maxIdle" value="${domain.jdbc.maxIdle}" />
+        <property name="validationQuery" value="${domain.jdbc.validationQuery}" />
+        <property name="testOnBorrow" value="${domain.jdbc.testOnBorrow}" />
+        <property name="defaultTransactionIsolation" value="${domain.jdbc.defaultTransactionIsolation}" />
+        <property name="removeAbandoned" value="${domain.jdbc.removeAbandoned}" />
+        <property name="removeAbandonedTimeout" value="${domain.jdbc.removeAbandonedTimeout}" />
+        <property name="logAbandoned" value="${domain.jdbc.logAbandoned}" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="dataSource" ref="domainDataSource" />
+    </bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<!-- AuditLog (Entities configuration) -->
+	<context:component-scan base-package="com.byyd.middleware.auditlog.dao.jpa" />
+	<context:component-scan base-package="com.byyd.middleware.auditlog.service.jpa" />
+	<bean id="auditLogJpaListener" class="com.byyd.middleware.auditlog.listener.AuditLogJpaListener">
+		<constructor-arg index="0" value="${auditlog.log.auditsource}" />
+	</bean>
+	<import resource="classpath:spring/adfonic-middleware-auditlog-entities-configuration.xml"/>
+	
+	<!-- Only for Middleware testing purposes, not copy to other projects -->
+	<bean id="auditLogTestService" class="com.byyd.middleware.auditlog.listener.AuditLogTestService"/>
+</beans>

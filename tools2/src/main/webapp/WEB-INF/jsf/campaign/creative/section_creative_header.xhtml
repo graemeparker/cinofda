@@ -1,0 +1,131 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+                
+	<pri:outputPanel styleClass="item-data">
+	
+        <!-- Creative Name -->
+        <pri:outputPanel styleClass="head-row">
+            <pri:outputLabel value="#{status.index+1}. #{toolsApplicationBean.shortMessage(creative.name, 70)}" styleClass="propType name" />
+        </pri:outputPanel>
+        
+    	<!-- Creative Status with icon -->
+	    <pri:outputPanel styleClass="head-row">
+	    	
+	        <span class="stat-ico"></span>
+	        <pri:outputPanel styleClass="#{creative.rejected ? 'red' : ''}">
+	        	<pri:outputLabel value="#{msg['page.campaign.creative.active.status']}" rendered="#{creative.active}" styleClass="propType" />
+	        	<pri:outputLabel value="#{msg['page.campaign.creative.paused.status']}" rendered="#{creative.paused and !creative.pending}" styleClass="propType" />
+	            <pri:outputLabel value="#{msg['page.campaign.creative.pending.status']}" rendered="#{creative.pending}" styleClass="propType" />
+	            <pri:outputLabel value="#{msg['page.campaign.creative.rejected.status']}" rendered="#{creative.rejected}" styleClass="propType" />
+	            <pri:outputLabel value="#{msg['page.campaign.creative.incomplete.status']}" rendered="#{creative.state==1}" styleClass="propType"/>
+	            <pri:outputLabel value="#{msg['page.campaign.creative.error.status']}" rendered="#{creative.state==2}" styleClass="propType"/>
+	        </pri:outputPanel>
+	    </pri:outputPanel>
+	    
+	    <!-- Native App description -->
+	    <pri:outputPanel rendered="#{creative.format.systemName.equals('native_app_install')}" styleClass="head-row">
+	    	<pri:outputLabel value="#{msg['page.campaign.creative.description.label']}: " styleClass="propType" />
+	        <pri:outputLabel value="#{creative.nativeAdInfo.description.equals('')?msg['page.campaign.menu.noneset.label']:creative.nativeAdInfo.description}" /> 
+	    </pri:outputPanel>
+	    
+	    <!-- Creative destination -->
+	    <pri:outputPanel rendered="#{creative.state!=2}" styleClass="head-row">
+	        <pri:outputLabel value="#{creative.destinated ? msg[creative.destination.destinationType.name] : msg['page.campaign.creative.destination.label']}: " styleClass="propType" />
+	        <pri:outputLabel value="#{creative.destinated ? toolsApplicationBean.shortMessage(creative.destination.data, 70) : msg['page.campaign.creative.incomplete.notset']}" />
+	    </pri:outputPanel>
+	
+		<!-- Text Ad section -->
+		<ui:param name="isTextAd" value="#{creative.format.systemName.equals('text')}" />
+		
+   		<!-- Text Ad -->
+   		<pri:outputPanel rendered="#{isTextAd}" styleClass="head-row">
+   			<pri:outputLabel value="#{msg['page.campaign.creative.textad']} " styleClass="propType" />
+       		<pri:outputLabel value="#{creative.state == 0 ? creative.adText : msg['page.campaign.creative.incomplete.notset']}" />
+       	</pri:outputPanel>
+            
+        <!-- Translation -->
+        <pri:outputPanel rendered="#{isTextAd and !creative.english}" styleClass="head-row">
+        	<pri:outputLabel value="#{msg['page.campaign.creative.translationfrom']} #{creative.language.name}: " styleClass="propType" />
+       		<pri:outputLabel value="#{toolsApplicationBean.shortMessage(creative.englishTranslation,12)}" />
+		</pri:outputPanel>
+		
+	    <pri:outputPanel rendered="#{creative.state!=2}" styleClass="head-row">
+			<!-- Creative format summary -->
+	        <pri:outputLabel value="#{campaignMBean.campaignCreativeMBean.getCreativeSummaryFormat(status.index)}" styleClass="propType" />
+	        
+	        <!-- SSL Compliance -->
+			<pri:outputLabel id="sslHeader" value="#{sslType}" rendered="#{not empty creative.id}" styleClass="#{sslIcon}" />
+	    </pri:outputPanel>
+	    
+	    <!-- Creative error -->
+	    <pri:outputPanel rendered="#{creative.state==2}" styleClass="head-row" >
+	        <pri:outputLabel value="#{msg[creative.incompleteMessage]}" styleClass="propType" />
+	    </pri:outputPanel>
+	    
+	    <!-- Images section -->
+	    
+	    <!-- 3rd Party / RM images -->
+		<pri:outputPanel rendered="#{!creative.format.systemName.equals('text') and !creative.format.systemName.equals('native_app_install') and !creative.vastVideo}" layout="block">
+		
+			<!-- Creative Image -->
+		    <ui:param name="hasImage" value="#{not creative.missingImage}" />
+			<pri:outputPanel styleClass="thumb-panel">
+			
+				<!-- Image -->
+			    <pri:graphicImage rendered="#{hasImage}" value="#{campaignCreativeMBean.existingStream}" cache="false"
+			                      width="#{creative.smallWidth}" height="#{creative.smallHeight}">
+			        <f:param name="index" value="#{status.index}"/>
+			    </pri:graphicImage>
+				
+				<!-- No Image -->
+			    <pri:graphicImage rendered="#{not hasImage}" url="/resources/images/no_image.png">
+			        <f:param name="index" value="#{status.index}"/>
+			    </pri:graphicImage>
+			</pri:outputPanel>
+			
+		</pri:outputPanel>
+		
+		<!-- Native Images -->
+		<pri:outputPanel rendered="#{creative.format.systemName.equals('native_app_install')}">
+			
+			<!-- Native Icon -->
+			<ui:param name="hasNativeIcon" value="#{creative.nativeAdInfo.icon != null}" />
+			<pri:outputPanel styleClass="thumb-panel icon">
+			
+				<!-- Icon -->
+			    <pri:graphicImage rendered="#{hasNativeIcon}" value="#{campaignCreativeMBean.nativeAdIconStream}" cache="false" width="20" height="20">
+			        <f:param name="index" value="#{status.index}" />
+			    </pri:graphicImage>
+			    
+			    <!-- No Icon -->
+			    <pri:graphicImage rendered="#{not hasNativeIcon}" url="/resources/images/no_image.png" width="20" height="20" >
+			        <f:param name="index" value="#{status.index}" />
+			    </pri:graphicImage>
+			</pri:outputPanel>
+			
+			<!-- Native Image -->
+			<ui:param name="hasNativeImage" value="#{creative.nativeAdInfo.image != null}" />
+			<pri:outputPanel styleClass="thumb-panel image">
+			
+				<!-- Image -->
+			    <pri:graphicImage rendered="#{hasNativeImage}" value="#{campaignCreativeMBean.nativeAdImageStream}" cache="false" width="90" height="48">
+			        <f:param name="index" value="#{status.index}" />
+			    </pri:graphicImage>
+			
+				<!-- No Image -->
+			    <pri:graphicImage rendered="#{not hasNativeImage}" url="/resources/images/no_image.png" width="106">
+			        <f:param name="index" value="#{status.index}" />
+			    </pri:graphicImage>
+			</pri:outputPanel>
+			
+		</pri:outputPanel>
+	     
+	</pri:outputPanel>
+	        	
+</ui:composition>

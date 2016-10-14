@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+                           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<!-- Allow @Scheduled and what not on component methods -->
+	<task:executor id="executor" pool-size="20" />
+	<task:scheduler id="scheduler" pool-size="20" />
+	<task:annotation-driven executor="executor"
+		scheduler="scheduler" />
+
+	<context:annotation-config />
+	
+	<import resource="/systemmanager-test-context.xml"/>
+	
+    <bean class="com.adfonic.tasks.DeviceIdentifierValidator" />
+    <bean class="com.adfonic.tasks.truste.JpaTrusteIdTypeMapper" />
+	<bean class="com.adfonic.tasks.truste.BatchPreferenceService" />
+	
+	      <bean id="muidDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${muid.jdbc.driverClassName}"
+        p:url="${muid.jdbc.url}"
+        p:username="${muid.jdbc.username}"
+        p:password="${muid.jdbc.password}"
+        p:maxActive="${muid.dbcp.maxActive}"
+        p:maxWait="${muid.dbcp.maxWait}"
+        p:minIdle="${muid.dbcp.minIdle}"
+        p:maxIdle="${muid.dbcp.maxIdle}"
+        p:validationQuery="${muid.dbcp.validationQuery}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+    <bean id="optOutServiceDao" class="com.adfonic.tasks.dao.OptOutServiceDaoImpl" />
+
+    
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="file:${adfonic.config.home:/usr/local/adfonic/config}/adfonic-tasks.properties" />
+
+
+	
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="objectMapper" ref="jacksonObjectMapper" />
+	</bean>
+                
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+	
+	
+
+	<bean id="idTypeMapper" class="com.adfonic.tasks.truste.JpaTrusteIdTypeMapper" />
+	<bean id="trusteSyncTasks" class="com.adfonic.tasks.truste.TrusteSyncTasks"/>
+	<bean class="com.adfonic.tasks.dao.TasksDaoJdbc" />
+</beans>

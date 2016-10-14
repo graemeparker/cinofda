@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+                           http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           ">
+
+  <context:annotation-config/>
+        
+  <bean id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        autowire="byName"
+        destroy-method="close"
+        p:driverClassName="${tools.read.jdbc.driverClassName}"
+        p:url="${tools.read.jdbc.url}"
+        p:username="${tools.read.jdbc.username}"
+        p:password="${tools.read.jdbc.password}"
+        p:maxActive="${tools.read.dbcp.maxActive}"
+        p:maxWait="${tools.read.dbcp.maxWait}"
+        p:minIdle="${tools.read.dbcp.minIdle}"
+        p:maxIdle="${tools.read.dbcp.maxIdle}"
+        p:validationQuery="${tools.read.dbcp.validationQuery}"
+        p:testOnBorrow="true"
+        p:defaultTransactionIsolation="4"
+        p:removeAbandoned="true"
+        p:removeAbandonedTimeout="300"
+        p:logAbandoned="true" />
+
+ 
+  
+  <bean id="domainSerializerProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+        p:location="classpath:test-adfonic-domaincache.properties"/>
+  
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:properties-ref="domainSerializerProperties"/>
+
+  <bean id="domainCacheLoader"
+        class="com.adfonic.domain.cache.DomainCacheLoader">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+  </bean>
+  
+  <bean id="publisherCreativeSyncNotifier" class="com.adfonic.domain.cache.ext.loader.FakePublisherCreativeSyncNotifier"/>
+  
+  <!-- simulating production wiring -->
+    <bean id="auditedCreativesFilter"
+        class="com.adfonic.domain.cache.ext.loader.AuditedCreativesFilterImpl"
+        p:auditingPublishers="#{'${external.auditing.publishers}'.split(',')}"
+        p:appNexusAllowAuditPublishers="#{'${appnxs.allow.audit}'.split(',')}"
+        p:creativeSyncService-ref="publisherCreativeSyncNotifier" />
+
+</beans>

@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pri="http://primefaces.org/ui"
+	xmlns:p="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:body>
+		<pri:dialog id="fundsInDialogId" widgetVar="fundsInDialog" modal="true"
+			resizable="false"
+			header="#{msg['page.transactions.fundsin.dialog.header']}"
+			styleClass="fundsInDialog" height="500"
+			onShow="ADT.scrollToElement('#fundsInDialogId .ui-dialog-content div:first', '#fundsInDialogId .ui-dialog-content'); /* $('#fundsInDialogId .submit').addClass('fixed') */">
+			<h:form id="fundsInForm" styleClass="fundsInForm" prependId="false">
+				<div class="form-row warning message">
+					<h3>#{msg['page.transactions.fundsin.dialog.p1']}</h3>
+					<p>#{msg['page.transactions.fundsin.dialog.notes']}</p>
+					<ul>
+						<li>#{msg['page.transactions.fundsin.dialog.notes.item1']}
+							#{transactionMBean.transactionFundsInMBean.minimumAmountMessage}</li>
+						<li>#{msg['page.transactions.fundsin.dialog.notes.item2']}</li>
+					</ul>
+				</div>
+				<div class="form-row">
+					<p>#{msg['page.transactions.fundsin.dialog.steps']}</p>
+	
+					<p>#{msg['page.transactions.fundsin.dialog.steps1']}
+						#{transactionMBean.transactionFundsInMBean.minimumAmountMessage}</p>
+	
+					<pri:panelGrid columns="2">
+						<h:outputText styleClass="b"
+							value="#{msg['page.transactions.fundsin.dialog.account.name.label']}" />
+						<h:outputText
+							value="#{msg['page.transactions.fundsin.dialog.account.name.value']}" />
+	
+						<h:outputText styleClass="b"
+							value="#{msg['page.transactions.fundsin.dialog.account.type.label']}" />
+						<h:outputText
+							value="#{msg['page.transactions.fundsin.dialog.account.type.value']}" />
+	
+						<h:outputText styleClass="b"
+							value="#{msg['page.transactions.fundsin.dialog.account.sort.label']}" />
+						<h:outputText
+							value="#{msg['page.transactions.fundsin.dialog.account.sort.value']}" />
+	
+						<h:outputText styleClass="b"
+							value="#{msg['page.transactions.fundsin.dialog.account.number.label']}" />
+						<h:outputText
+							value="#{msg['page.transactions.fundsin.dialog.account.number.value']}" />
+	
+						<h:outputText styleClass="b"
+							value="#{msg['page.transactions.fundsin.dialog.account.identifier.label']}" />
+						<h:outputText
+							value="#{msg['page.transactions.fundsin.dialog.account.identifier.value']}" />
+	
+						<h:outputText styleClass="b"
+							value="#{msg['page.transactions.fundsin.dialog.account.international.label']}" />
+						<h:outputText
+							value="#{msg['page.transactions.fundsin.dialog.account.international.value']}" />
+	
+						<h:outputText styleClass="b"
+							value="#{msg['page.transactions.fundsin.dialog.account.branchaddress.label']}" />
+						<h:outputText
+							value="#{msg['page.transactions.fundsin.dialog.account.branchaddress.value']}" />
+					</pri:panelGrid>
+	
+					<p>#{msg['page.transactions.fundsin.dialog.steps2']}</p>
+				</div>
+	
+				<div class="form-row"><h2 class="sec-title">#{msg['page.transactions.fundsin.dialog.details']}</h2></div>
+				<div class="form-row input-field funds">
+					<h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsin.dialog.amount']}" />
+					<h:inputText 
+						id="fundsInAmount" 
+						required="true"				
+						requiredMessage="#{msg['page.transactions.fundsin.dialog.amount.required']}"
+						value="#{transactionMBean.transactionFundsInMBean.amount}"
+						validator="#{transactionMBean.transactionFundsInMBean.validateAmount}" 
+					/>
+					<div class="input-label">#{msg['page.transactions.fundsin.dialog.funds.footnote']}</div>
+					<pri:watermark for="fundsInAmount" value="#{msg['page.transactions.addfunds.amount.watermark']}" />
+					<pri:message id="fundsInAmountMessage" for="fundsInAmount" />
+				</div>
+	
+				<div class="form-row input-field ref">
+					<h:outputLabel styleClass="bl b" value="#{msg['page.transactions.fundsin.dialog.reference']}" />
+					<h:inputText id="fundsInReference" required="true"
+						converter="stringTrimConverter" maxlength="255"
+						requiredMessage="#{msg['page.transactions.fundsin.dialog.reference.required']}"
+						value="#{transactionMBean.transactionFundsInMBean.reference}" 	
+					/>
+					<pri:watermark for="fundsInReference" value="#{msg['page.transactions.addfunds.reference.watermark']}" />
+					<pri:message id="fundsInReferenceMessage" for="fundsInReference" />
+				</div>
+	
+				<div class="form-row submit">
+					<pri:commandButton
+						value="#{msg['page.transactions.fundsacross.dialog.save.label']}"
+						id="saveFundsInButton" onclick="progressDialog.show();"
+						oncomplete="progressDialog.hide()"
+						actionListener="#{transactionMBean.transactionFundsInMBean.doSave}"
+						process="@form" update="@form, :menuForm:side-panel"
+					>
+					</pri:commandButton>
+	
+					<pri:commandButton
+						value="#{msg['page.transactions.fundsin.dialog.cancel.label']}"
+						id="cancelFundsInButton"
+						actionListener="#{transactionMBean.transactionFundsInMBean.doCancel}"
+						onclick="fundsInDialog.hide();"
+						update="@form, :menuForm:side-panel">
+					</pri:commandButton>
+				</div>
+			</h:form>
+		</pri:dialog>
+	</h:body>
+</ui:composition>

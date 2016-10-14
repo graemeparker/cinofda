@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <header class="top">
+        <nav>
+            <pri:menubar styleClass="row">
+                <pri:menuitem value="Developer Docs" url="Developer docs " />
+                <pri:menuitem value="Contact" url="pretty:salesContact" />
+            </pri:menubar>
+        </nav>
+        <div class="row">
+            <p:link mappingId="home">
+                <pri:graphicImage url="/resources/images/logo.png" id="logo" alt="Logo" />
+            </p:link>
+        </div>
+    </header>
+
+</ui:composition>

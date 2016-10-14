@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+]>
+
+<project name="adfonic-domainserializer" default="domainserializer" basedir=".">
+
+  <property name="home" value="."/>
+  <property name="parent" value=".." />
+  <property name="args" value="" />
+  <property environment="env."/>
+
+  <path id="main.run.classpath">
+    <fileset dir="lib" />
+    <pathelement location="conf" />
+  </path>
+
+  <target name="taskprep" depends="" />
+
+  <target name="database-smoke-test" description="Database Smoke Test">
+    <java classname="com.adfonic.domainserializer.DatabaseSmokeTest"
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+    </java>
+  </target>
+  
+  <property name="dsMinHeapArg" value="-Xms16500m"/>
+  <property name="dsMaxHeapArg" value="-Xmx16500m"/>
+  <property name="runOnceMode" value="false"/>
+  <property name="omitDomainCache" value="false"/>
+  <property name="omitDataCollectorDomainCache" value="false"/>
+  <property name="omitAdserverDomainCache" value="false"/>
+  <property name="com.adfonic.progress.enabled" value="false"/>
+  <property name="newrelicArg" value="-javaagent:/opt/newrelic/java/newrelic.jar"/>
+  <condition property="serviceport" value="${service.port}">
+      <isset property="service.port"/>
+  </condition>
+  <property name="serviceport" value=""/>
+	
+  <target name="domainserializer">
+    <echo>Using heap size: ${dsMinHeapArg} ${dsMaxHeapArg}</echo>
+    <java classname="com.adfonic.domainserializer.DomainSerializerS3" 
+          classpathref="main.run.classpath"
+          fork="true" failonerror="true">
+      <jvmarg value="${dsMinHeapArg}"/>
+      <jvmarg value="${dsMaxHeapArg}"/>
+      <jvmarg value="-XX:-OmitStackTraceInFastThrow"/>
+      <jvmarg value="${newrelicArg}"/>
+      <sysproperty key="runOnceMode" value="${runOnceMode}"/>
+      <sysproperty key="omitDomainCache" value="${omitDomainCache}"/>
+      <sysproperty key="omitDataCollectorDomainCache" value="${omitDataCollectorDomainCache}"/>
+      <sysproperty key="omitAdserverDomainCache" value="${omitAdserverDomainCache}"/>
+      <sysproperty key="com.sun.management.jmxremote.port" value="${com.sun.management.jmxremote.port}"/>
+      <sysproperty key="com.sun.management.jmxremote.password.file" value="/usr/local/adfonic/config/jmxremote.password"/>
+      <sysproperty key="com.sun.management.jmxremote.access.file" value="/usr/local/adfonic/config/jmxremote.access"/>
+      <sysproperty key="com.sun.management.jmxremote.ssl" value="false"/> 
+  	  <sysproperty key="shard" value="${shard}"/>
+      <sysproperty key="com.adfonic.progress.enabled" value="${com.adfonic.progress.enabled}"/>
+      <sysproperty key="service.port" value="${serviceport}"/>
+    	<sysproperty key="logging.config" value="/usr/local/adfonic/config/virtualcp/adfonic-domainserializer/logback.xml"/>
+    </java>
+  </target>
+
+</project>

@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pri="http://primefaces.org/ui"
+    			xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://ocpsoft.com/prettyfaces"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:byydtechJs="http://byyd-tech.com/jsf/extenderjs"
+                xmlns:sec="http://www.springframework.org/security/tags">
+	
+	<pe:importConstants className="com.adfonic.tools.beans.util.Constants" var="Tools2Constants" />
+	<pe:importConstants className="com.adfonic.domain.Role" var="RoleConstants" />
+	
+    <header class="top">
+        <ui:insert name="adminHeader">
+            <ui:include src="/WEB-INF/jsf/template/common/adminHeader.xhtml" />
+        </ui:insert>
+        <h:form id="headerForm" prependId="false">
+            <div class="row">
+                <nav id="top">
+                    <div class="f-left">
+                        <pri:menubar model="#{userSessionBean.advModel}" rendered="#{(userSessionBean.map['userDto']).userType eq 'agency' and !navigationSessionBean.agencyConsole}" styleClass="scrollMenu floatMenu"/>
+
+                        <pri:menubar rendered="#{(userSessionBean.map['userDto']).userType ne 'agency'}">
+                            <pri:menuitem value="#{msg['page.header.label.link.advertisers']}" url="/" styleClass="current" />
+                            <pri:menuitem value="#{msg['page.header.label.link.appandpublishers']}" action="#{userSessionBean.switchToPublisher}" rendered="#{userSessionBean.publisher}" onclick="progressDialog.show()"/>
+                            <pri:menuitem value="#{(userSessionBean.map['userDto']).advertiserDto.name}" />
+                        </pri:menubar>
+                        
+                        <pri:menubar styleClass ="floatMenu" rendered="#{(userSessionBean.map['userDto']).userType eq 'agency' and userSessionBean.adminAgency}">
+	                    	<pri:submenu label="Account Settings">
+	                    	    <pri:menuitem value="#{msg['page.agency.settings.menu.companysettings']}" url="/agencyconsole/companysettings"/>
+	                    		<pri:menuitem value="#{msg['page.agency.settings.menu.newUser']}" url="/agencyconsole/newuser"/>
+	                    		<pri:menuitem value="#{msg['page.agency.settings.menu.removeUser']}" url="/agencyconsole/removeuser"/>
+	                    		<pri:menuitem value="#{msg['page.agency.settings.menu.reactivateUser']}" url="/agencyconsole/reactivateuser"/>
+	                    		<pri:menuitem value="#{msg['page.agency.settings.menu.manageUsers']}" url="/agencyconsole/manageusers"/>
+	                    		<pri:menuitem value="#{msg['page.agency.settings.menu.resetPassword']}" url="/agencyconsole/resetpassword"/>
+	                    	</pri:submenu>                           	
+                        </pri:menubar>                            
+                                          									
+                    </div>
+                    <div class="f-right">
+                        <pri:menubar>
+                        	<pri:submenu label="#{msg['page.header.label.link.documents']}">
+                        		<pri:menuitem value="#{msg['page.header.label.link.creativespecs']}" url="#{toolsApplicationBean.externalUrls['creativeSpecsUrl']}" target="_blank"/>
+                        		<pri:menuitem value="#{msg['page.header.label.link.developersdocs']}" url="#{toolsApplicationBean.externalUrls['devDocsUrl']}" target="_blank"/>
+                        		<pri:menuitem value="#{msg['page.header.label.link.deviceslist']}" url="#{toolsApplicationBean.externalUrls['devModelsListUrl']}" target="_blank"/>
+                        		<pri:menuitem value="#{msg['page.header.label.link.uploadpublist']}" url="#{toolsApplicationBean.externalUrls['uploadPubListUrl']}" target="_blank"/>
+                        		<pri:menuitem value="#{msg['page.header.label.link.uploadcoordinatestemplate']}" url="#{toolsApplicationBean.externalUrls['uploadCoordTemplateUrl']}" target="_blank"/>
+                        		<pri:menuitem value="#{msg['page.header.label.link.uploadcodestemplate']}" url="#{toolsApplicationBean.externalUrls['uploadCodesTemplateUrl']}" target="_blank"/>
+                                <pri:menuitem value="#{msg['page.header.label.link.uploadaudiencedeviceidstemplate']}" url="#{toolsApplicationBean.externalUrls['uploadAudienceDeviceIdsTemplateUrl']}" target="_blank"/>
+                        	</pri:submenu>
+                            <pri:menuitem styleClass="support-form-link" value="#{msg['page.header.label.link.customercontact']}" oncomplete="contactForm.show();" actionListener="contactUsMBean.init" update=":contact-form"/>
+                            <pri:submenu label="#{(userSessionBean.map['userDto']).email}">
+                                <pri:menuitem value="#{msg['page.header.label.link.accountsettings']}" rendered="#{!navigationSessionBean.agencyConsole}"
+                                              action="#{navigationSessionBean.gotoAccountDetails}"/>
+                                <sec:authorize ifNotGranted="#{Tools2Constants.LOGGED_IN_AS_ADMIN_ROLE}">
+                                    <pri:menuitem value="#{msg['page.header.label.link.logout']}" url="/logout"/>
+                                </sec:authorize>
+                            </pri:submenu>
+                        </pri:menubar>
+
+                    </div>
+                    <div class="clear"></div>
+                </nav>
+                <p:link mappingId="home" styleClass="logo">
+                    <pri:graphicImage url="/resources/images/external-icon.png" width="100%" />
+                </p:link>
+                <h:panelGroup layout="block" rendered="#{!navigationSessionBean.agencyConsole}">
+	                <nav>
+	                    <ul id="nav">
+
+	                        <!-- Dashboard -->
+	                        <li class="#{navigationSessionBean.tabClass(Tools2Constants.DASHBOARD)}">
+	                            <pri:commandLink id="headerCampaignDashboardLink" action="#{navigationSessionBean.gotoAdvertiserDashboard}" process="@this">
+	                                <span class="tabLink">#{msg['page.header.label.link.dashboard']}</span><span class="rightTab"></span>
+	                            </pri:commandLink>
+	                        </li>
+	                        
+	                        <!-- New Campaign -->
+	                        <li class="#{navigationSessionBean.tabClass(Tools2Constants.ADD_CAMPAIGN)}">
+	                            <pri:commandLink id="headerAddCampaignCampaignLink" action="#{campaignMBean.doInitCampaign}" process="@this" disabled="#{userSessionBean.readOnlyUser}">
+	                                <span class="tabLink">#{msg['page.header.label.link.addnewcampaign']}</span><span class="rightTab"></span>
+	                            </pri:commandLink>
+	                        </li>
+	                        
+	                        <!-- Optimisation -->
+                            <c:if test="#{toolsApplicationBean.advertiserOptimisationEnabled}">
+                                <li class="#{navigationSessionBean.tabClass(Tools2Constants.OPTIMISATION)}">
+                                    <pri:commandLink id="headerOptimisationLink" action="#{navigationSessionBean.gotoOptimisation}" process="@this">
+                                        <span class="tabLink">#{msg['page.header.label.link.optimisation']}</span><span class="rightTab"></span>
+                                    </pri:commandLink>
+                                </li>
+                            </c:if>
+                            
+                            <!-- Audiences -->
+                            <c:if test="#{toolsApplicationBean.audienceEnabled}">
+	                            <li class="#{navigationSessionBean.tabClass(Tools2Constants.AUDIENCE_BUILDER)}">
+	                                <pri:commandLink id="headerAudienceBuilderLink" action="#{navigationSessionBean.gotoAudienceBuilder}" process="@this">
+	                                    <span class="tabLink">#{msg['page.header.label.link.audiencebuilder']}</span><span class="rightTab"></span>
+	                                </pri:commandLink>                             
+	                            </li>
+                            </c:if>
+                            
+                            <!-- Tools2 Reporting -->
+                            <li class="#{navigationSessionBean.tabClass(Tools2Constants.REPORTING)}">
+                                <pri:commandLink id="headerReportingLink" action="#{navigationSessionBean.gotoAdvertiserReporting}" process="@this">
+                                    <span class="tabLink">#{msg['page.header.label.link.reporting']}</span><span class="rightTab"></span>
+                                </pri:commandLink>                             
+                            </li>
+                            
+                            <!-- Transactions -->
+                            <li class="#{navigationSessionBean.tabClass(Tools2Constants.TRANSACTIONS)}">
+	                            <pri:commandLink id="headerTransactionsLink" action="#{navigationSessionBean.gotoTransactions}" process="@this">
+	                                <span class="tabLink">#{msg['page.header.label.link.transactions']}</span><span class="rightTab"></span>
+	                            </pri:commandLink>
+	                        </li>
+	                    </ul>
+	                </nav>
+                </h:panelGroup>
+
+                <h:panelGroup styleClass="accFigures" layout="block" rendered="#{!navigationSessionBean.agencyConsole}">
+                    <h2>#{msg['page.header.label.accountbalance']}</h2>
+                    <span class="accBalance">
+                        <h:outputText id="balance" value="#{accountSessionBean.balance}" >
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                        <pri:poll interval="300" update="balance" />
+                    </span>
+                </h:panelGroup>
+                <h:panelGroup styleClass="accFigures" layout="block" rendered="#{navigationSessionBean.agencyConsole}">
+                    <h2>#{msg['page.header.label.accountbalance']}</h2>
+                    <span class="accBalance">
+                        <h:outputText id="agencybalance" value="#{accountSessionBean.agencyBalance}" >
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                        <pri:poll interval="300" update="agencybalance" />
+                    </span>
+                </h:panelGroup>
+            </div>
+        </h:form>
+    </header>
+</ui:composition>
+
+
+

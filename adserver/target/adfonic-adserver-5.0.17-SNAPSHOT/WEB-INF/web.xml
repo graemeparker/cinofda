@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0" id="ByydAdServer">
+
+  <display-name>Byyd AdServer</display-name>
+
+  <!-- Invoke Spring via our own ContextLoaderListener wrapper -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.adfonic.adserver.web.jsf.managed.beans.NumberConfigListener</listener-class>
+  </listener>
+
+  <!-- Tell Spring where to find the context config -->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>com.adfonic.adserver.spring.config.AdserverSpringConfig</param-value>
+	</context-param>
+  
+  <context-param>
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <!-- Paths to asset and click-through URIs -->
+  <context-param>
+    <param-name>clickThroughUri</param-name>
+    <param-value>/ct</param-value>
+  </context-param>
+  <context-param>
+    <param-name>beaconUri</param-name>
+    <param-value>/bc</param-value>
+  </context-param>
+  <context-param>
+    <param-name>clickRedirectUri</param-name>
+    <param-value>/cr</param-value>
+  </context-param>
+
+  <!-- AS-159 Restrict access to byyd.net/internal -->
+	<filter>
+		<filter-name>RemoteAddrFilter</filter-name>
+		<filter-class>org.apache.catalina.filters.RemoteAddrFilter</filter-class>
+		<init-param>
+			<param-name>allow</param-name> <!-- or deny -->
+			<param-value>10\.96\.\d+\.\d+|127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1</param-value> <!-- regexp for your ip adress -->
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>RemoteAddrFilter</filter-name>
+		<url-pattern>/internal/*</url-pattern> <!-- the url of your admin page -->
+	</filter-mapping>
+
+  <filter>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <url-pattern>/del/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <!-- SC-233 BackupLogger request timing support -->
+  <filter> 
+    <filter-name>backupLoggerFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter> 
+  <filter-mapping>
+    <filter-name>backupLoggerFilter</filter-name> 
+    <url-pattern>/*</url-pattern> 
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+  
+	<filter>
+		<filter-name>trafficFilter</filter-name>
+		<filter-class>com.adfonic.adserver.TrafficConservationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>trafficFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>MetricsFilter</filter-name>
+		<filter-class>com.codahale.metrics.servlet.InstrumentedFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>MetricsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>SpringMvcServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/ad/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/js/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/ct/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/cb/conversion.gif</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/cs/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/bc/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/is/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/pw/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/rtb/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/bms/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/tcs/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/test/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/anxs/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/diag/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/shard/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/plugin/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/internal/quovacheck</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/adserver/*</url-pattern>
+    <url-pattern>/adcache/*</url-pattern>
+    <url-pattern>/creative/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/si/*</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/sc/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpringMvcServlet</servlet-name>
+    <url-pattern>/cr/*</url-pattern>
+  </servlet-mapping>
+  
+	<servlet>
+		<servlet-name>FacesServlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>FacesServlet</servlet-name>
+		<url-pattern>/faces/*</url-pattern>
+		<url-pattern>*.faces</url-pattern>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AppInfoServlet</servlet-name>
+		<servlet-class>com.adfonic.util.status.AppInfoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AppInfoServlet</servlet-name>
+		<url-pattern>/status</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>MetricsAdminServlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MetricsAdminServlet</servlet-name>
+		<url-pattern>/adserver/metrics/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>JolokiaServlet</servlet-name>
+		<servlet-class>org.jolokia.http.AgentServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>JolokiaServlet</servlet-name>
+		<url-pattern>/adserver/jmx/*</url-pattern>
+	</servlet-mapping>
+
+  
+  <security-constraint>
+    <display-name>Adfonic Adserver Security Constraint</display-name>
+    <web-resource-collection>
+      <web-resource-name>Internal Adserver Tools</web-resource-name>
+      <url-pattern>/internal/*</url-pattern>
+      <url-pattern>/adserver/*</url-pattern>
+      <url-pattern>/adcache/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>internal</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Internal Adserver Tools</realm-name>
+  </login-config>
+  
+  <security-role>
+    <role-name>internal</role-name>
+  </security-role>
+  
+</web-app>

@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pri="http://primefaces.org/ui"
+      xmlns:p="http://ocpsoft.com/prettyfaces"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      >
+      
+    <!-- Constants, enums -->
+	<pe:importConstants className="com.adfonic.tools.beans.audience.source.AudienceSourceMBean" var="AudienceSourceMBean" />
+	
+	<!-- Variables -->
+	<ui:param name="isFactualAudience" value="#{audienceMBean.audienceSourceMBean.factualAudience}" />
+      
+    <pri:panelGrid id="sourceTable" style="width:100%">
+        <f:facet name="header">  
+            <pri:row>
+                <pri:column colspan="3">
+                    <pri:commandLink id="sourceLinkId" 
+                                actionListener="#{audienceNavigationSessionBean.doNavigateTo}" process="@this" update=":menuForm,:navigationDiv" 
+                                disabled="#{userSessionBean.readOnlyUser}">
+                                <f:attribute name="navigateTo" value="source"/>      
+                    <span>#{msg['page.audience.source.menu.label']}</span>
+                    </pri:commandLink>  
+                </pri:column>
+            </pri:row>
+        </f:facet>
+
+		<!-- DMP Vendor -->
+        <pri:row>
+          <pri:column>
+              <span><h:outputText value="#{msg['page.audience.source.label.dmpvendor']}" /></span>
+          </pri:column>
+          <pri:column colspan="2">
+              <span><h:outputText value="#{audienceMBean.audienceConfirmationMBean.audienceDto.dmpAudience.dmpVendor.name}" /></span>
+          </pri:column>
+        </pri:row>
+        
+        <!-- Factual DMP -->
+        
+	    <!-- Factual Proximity -->
+        <pri:row rendered="#{isFactualAudience and audienceMBean.audienceSourceMBean.dmpFactualType eq AudienceSourceMBean.DMP_FACTUAL_PROXIMITY_TYPE}">
+            <pri:column>
+                <span><h:outputText value="#{msg['page.audience.source.label.option.factual.proximity.segment']}" /></span>
+            </pri:column>
+            <pri:column colspan="2">
+                <span><h:outputText value="#{audienceMBean.audienceConfirmationMBean.audienceDto.dmpAudience.userEnteredDMPSelectorExternalId}" /></span>
+            </pri:column>
+        </pri:row>
+        
+        <!-- Factual Audiences -->
+        <pri:row rendered="#{isFactualAudience and audienceMBean.audienceSourceMBean.dmpFactualType eq AudienceSourceMBean.DMP_FACTUAL_AUDIENCE_TYPE}">
+            <pri:column>
+                <span><h:outputText value="#{msg['page.audience.source.label.option.factual.audience.segments']}" /></span>
+            </pri:column>
+            <pri:column colspan="2">
+                <pri:dataList styleClass="borderlessList" type="none" var="selector" value="#{audienceMBean.audienceSourceMBean.customFactualAudienceSelectors}">
+                	<ui:param name="extId" value="#{selector.externalID}" />
+                	<pri:outputPanel rendered="#{not empty extId}">
+                    	<pri:outputLabel value="#{selector.publisher.name}" styleClass="b" /><br/>
+                    	<pri:outputLabel value="#{extId}" /><br/>
+                    </pri:outputPanel>
+                </pri:dataList>
+            </pri:column>
+        </pri:row>
+        
+        <!-- Custom DMP -->
+        
+        <!-- Custom Segment ID -->
+        <pri:row rendered="#{not isFactualAudience and audienceMBean.audienceSourceMBean.dmpType eq AudienceSourceMBean.DMP_CUSTOM_SEGMENT_TYPE}">
+            <pri:column>
+                <span><h:outputText value="#{msg['page.audience.source.label.option.customsegment']}" /></span>
+            </pri:column>
+            <pri:column colspan="2">
+                <span><h:outputText value="#{audienceMBean.audienceConfirmationMBean.audienceDto.dmpAudience.userEnteredDMPSelectorExternalId}" /></span>
+            </pri:column>
+        </pri:row>
+        
+        <!-- Segments -->
+        <pri:row rendered="#{not isFactualAudience and audienceMBean.audienceSourceMBean.dmpType eq AudienceSourceMBean.DMP_DEFAULT_SEGMENTS_TYPE}">
+            <pri:column>
+                <span><h:outputText value="#{msg['page.audience.source.label.option.defaultsegments']}" /></span>
+            </pri:column>
+            <pri:column colspan="2">
+                <pri:dataList styleClass="borderlessList" type="none" var="attribute" value="#{audienceMBean.audienceSourceMBean.summaryAttributes}">
+                    <h:outputLabel class="b" value="#{attribute.name}"/><br/>
+                        <pri:dataList styleClass="borderlessList" type="none" var="selector" value="#{attribute.DMPSelectors}">        
+                            #{selector.name}
+                        </pri:dataList>                        
+                </pri:dataList>
+            </pri:column>
+        </pri:row>
+        
+    </pri:panelGrid>  
+</ui:composition>

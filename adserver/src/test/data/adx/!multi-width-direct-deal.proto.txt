@@ -1,0 +1,179 @@
+id: "VrruVQABTFEKGJjUzQyoKw=="
+ip: "\246\211\370"
+user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1"
+url: "http://games.express.co.uk/ads/adContent.aspx"
+detected_language: "en"
+detected_vertical {
+  id: 408
+  weight: 1.0
+}
+adslot {
+  id: 1
+  width: 320
+  width: 300
+  height: 50
+  height: 50
+  excluded_attribute: 70
+  excluded_attribute: 28
+  excluded_attribute: 30
+  excluded_attribute: 32
+  excluded_attribute: 34
+  excluded_attribute: 48
+  excluded_attribute: 95
+  excluded_attribute: 22
+  excluded_attribute: 13
+  excluded_attribute: 14
+  excluded_attribute: 15
+  excluded_attribute: 16
+  excluded_attribute: 17
+  excluded_attribute: 18
+  excluded_attribute: 19
+  excluded_attribute: 20
+  excluded_attribute: 25
+  excluded_attribute: 26
+  excluded_attribute: 27
+  excluded_attribute: 52
+  allowed_vendor_type: 10
+  allowed_vendor_type: 42
+  allowed_vendor_type: 43
+  allowed_vendor_type: 51
+  allowed_vendor_type: 60
+  allowed_vendor_type: 94
+  allowed_vendor_type: 113
+  allowed_vendor_type: 126
+  allowed_vendor_type: 128
+  allowed_vendor_type: 130
+  allowed_vendor_type: 144
+  allowed_vendor_type: 145
+  allowed_vendor_type: 182
+  allowed_vendor_type: 204
+  allowed_vendor_type: 225
+  allowed_vendor_type: 231
+  allowed_vendor_type: 232
+  allowed_vendor_type: 233
+  allowed_vendor_type: 237
+  allowed_vendor_type: 238
+  allowed_vendor_type: 255
+  allowed_vendor_type: 260
+  allowed_vendor_type: 267
+  allowed_vendor_type: 296
+  allowed_vendor_type: 303
+  allowed_vendor_type: 323
+  allowed_vendor_type: 331
+  allowed_vendor_type: 332
+  allowed_vendor_type: 334
+  allowed_vendor_type: 342
+  allowed_vendor_type: 414
+  allowed_vendor_type: 432
+  allowed_vendor_type: 445
+  allowed_vendor_type: 474
+  allowed_vendor_type: 476
+  allowed_vendor_type: 477
+  allowed_vendor_type: 481
+  allowed_vendor_type: 485
+  allowed_vendor_type: 486
+  allowed_vendor_type: 489
+  allowed_vendor_type: 490
+  allowed_vendor_type: 497
+  allowed_vendor_type: 517
+  allowed_vendor_type: 522
+  allowed_vendor_type: 551
+  allowed_vendor_type: 562
+  allowed_vendor_type: 575
+  allowed_vendor_type: 625
+  allowed_vendor_type: 668
+  allowed_vendor_type: 673
+  allowed_vendor_type: 674
+  allowed_vendor_type: 714
+  allowed_vendor_type: 720
+  allowed_vendor_type: 722
+  allowed_vendor_type: 730
+  allowed_vendor_type: 736
+  allowed_vendor_type: 738
+  allowed_vendor_type: 750
+  allowed_vendor_type: 755
+  allowed_vendor_type: 759
+  allowed_vendor_type: 760
+  excluded_sensitive_category: 19
+  excluded_sensitive_category: 4
+  excluded_sensitive_category: 23
+  excluded_sensitive_category: 30
+  excluded_sensitive_category: 10
+  excluded_sensitive_category: 31
+  excluded_sensitive_category: 8
+  excluded_sensitive_category: 24
+  excluded_sensitive_category: 18
+  matching_ad_data {
+    billing_id: 4546339036
+    minimum_cpm_micros: 190000
+    direct_deal {
+      direct_deal_id: 267456237816251086
+      fixed_cpm_micros: 2750000
+    }
+  }
+  targetable_channel: "pack-brand-Northern and Shell::All"
+  slot_visibility: NO_DETECTION
+  excluded_product_category: 10031
+  excluded_product_category: 10050
+  excluded_product_category: 10085
+  excluded_product_category: 10086
+  excluded_product_category: 10087
+  excluded_product_category: 10088
+  excluded_product_category: 10089
+  excluded_product_category: 10091
+  excluded_product_category: 10108
+  excluded_product_category: 11020
+  excluded_product_category: 11496
+  excluded_product_category: 12204
+  excluded_product_category: 13422
+  excluded_product_category: 13423
+  excluded_product_category: 13469
+  excluded_product_category: 13491
+  ad_block_key: 739774200
+  publisher_settings_list_id: 5520480155422916391
+  publisher_settings_list_id: 7477347978300364015
+  iframing_state: UNKNOWN_IFRAME_STATE
+}
+is_test: false
+cookie_version: 1
+google_user_id: "CAESEMGQml4V3VBr9hu5gmBI1x0"
+timezone_offset: 0
+detected_content_label: 26
+detected_content_label: 41
+mobile {
+  DEPRECATED_platform: "iphone"
+  is_app: false
+  DEPRECATED_mobile_device_type: HIGHEND_PHONE
+  DEPRECATED_brand: "apple"
+  DEPRECATED_model: "iphone"
+  DEPRECATED_os_version {
+    os_version_major: 9
+    os_version_minor: 2
+    os_version_micro: 1
+  }
+  DEPRECATED_screen_width: 320
+  DEPRECATED_screen_height: 568
+  is_mobile_web_optimized: true
+  DEPRECATED_carrier_id: 0
+  DEPRECATED_device_pixel_ratio_millis: 2000
+}
+cookie_age_seconds: 23328000
+postal_code_prefix: "SK15"
+geo_criteria_id: 1007105
+seller_network_id: 3146
+publisher_settings_list_id: 10081177898524304387
+device {
+  device_type: HIGHEND_PHONE
+  platform: "iphone"
+  brand: "apple"
+  model: "iphone"
+  os_version {
+    major: 9
+    minor: 2
+    micro: 1
+  }
+  carrier_id: 0
+  screen_width: 320
+  screen_height: 568
+  screen_pixel_ratio_millis: 2000
+}

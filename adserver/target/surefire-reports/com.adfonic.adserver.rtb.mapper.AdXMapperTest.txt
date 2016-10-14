@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.adserver.rtb.mapper.AdXMapperTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.047 sec - in com.adfonic.adserver.rtb.mapper.AdXMapperTest

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- 
+  <bean id="ecservice" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean"
+      p:serviceInterface="com.adfonic.service.IEligibleCreativeService"
+      p:wsdlDocumentUrl="http://localhost:8180/EligibilityService?WSDL"
+      p:serviceName="EligibilityService"
+      p:namespaceUri="http://service.domainserializer.adfonic.com/"
+      p:portName="EligibleCreativeServicePort"/>
+ -->
+ <!-- 
+	<bean id="ecservice" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean"
+      p:serviceInterface="com.adfonic.service.IEligibleCreativeService"
+      p:wsdlDocumentUrl="http://localhost:8180/EligibilityService?WSDL"
+      p:serviceName="EligibilityService"
+      p:namespaceUri="http://service.adfonic.com/"
+      p:portName="EligibleCreativeServicePort"/>
+ -->
+       
+  <bean id="serviceEpStub" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean"
+      p:serviceInterface="com.adfonic.service.IEligibleCreativeService"
+      p:wsdlDocumentUrl="classpath:EligibilityService.wsdl"
+      p:serviceName="EligibilityService"
+      p:namespaceUri="http://service.adfonic.com/"
+      p:endpointAddress="http://localhost:8183/EligibilityService"
+      p:portName="EligibleCreativeServicePort"/>
+  
+       
+</beans>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver
+-------------------------------------------------------------------------------
+Tests run: 120, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.769 sec - in com.adfonic.adserver.deriver.impl.TestAbstractGeoDeriver

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <bean id="auditorConfig"
+        class="com.adfonic.audit.AuditorConfig">
+    <property name="auditedProperties">
+      <props>
+        <prop key="com.adfonic.domain.User">
+          email,firstName,lastName,country,phoneNumber,emailOptIn,status,rolesAsString
+        </prop>
+        <prop key="com.adfonic.domain.Company">
+          accountTypeFlags,individual,country,taxCode,defaultTimeZone,autoTopupLimit,autoTopupAmount,postPayActivationDate,creditLimit,discount,postPayTermDays,rolesAsString
+        </prop>
+        <prop key="com.adfonic.domain.Advertiser">
+          name,status,dailyBudget,notifyLimit,notifyAdditionalEmails,users,key,adOpsOwner,salesOwner
+        </prop>
+        <prop key="com.adfonic.domain.AdvertiserMediaCostMargin">
+          mediaCostMargin
+        </prop>
+        <prop key="com.adfonic.domain.MarginShareDSP">
+            margin
+        </prop>
+        <prop key="com.adfonic.domain.Campaign">
+          name,reference,description,startDate,endDate,defaultLanguage,overallBudget,dailyBudget,dailyBudgetWeekday,dailyBudgetWeekend,evenDistributionOverallBudget,evenDistributionDailyBudget,budgetType,dailyBudgetImpressions,overallBudgetImpressions,dailyBudgetClicks,overallBudgetClicks,status,applicationID,conversionTrackingEnabled,installTrackingEnabled,targetCPA,optimizationMaxRemoval,optimizationMultiplier
+        </prop>
+        <prop key="com.adfonic.domain.Segment">
+          channelsAsString,connectionType,genderMix,minAge,maxAge,daysOfWeek,hoursOfDay,hoursOfDayWeekend,browsersAsString,countriesAsString,operatorsAsString,modelsAsString,platformsAsString,targetedPublishersAsString,vendorsAsString,safetyLevel
+        </prop>
+        <prop key="com.adfonic.domain.Creative">
+          name,format,status,closedMode
+        </prop>
+        <prop key="com.adfonic.domain.Destination">
+          destinationType,data
+        </prop>
+        <prop key="com.adfonic.domain.Asset">
+          dataAsString
+        </prop>
+        <prop key="com.adfonic.domain.CampaignBid">
+          bidType,amount
+        </prop>
+        <prop key="com.adfonic.domain.Publisher">
+          name,pendingAdType,defaultAdRequestTimeout,defaultRevShare,rtbConfig,key,adOpsOwner,salesOwner,currentRevShare
+        </prop>
+        <prop key="com.adfonic.domain.Publication">
+          name,publicationType,description,autoApproval,status,genderMix,minAge,maxAge,languagesAsString,category,publicationAttributes,safetyLevel
+        </prop>
+        <prop key="com.adfonic.domain.AdSpace">
+          name,status,formatsAsString
+        </prop>
+        <prop key="com.adfonic.domain.PaymentOptions">
+          paymentType,paymentAccount
+        </prop>
+        <prop key="com.adfonic.domain.PostalAddress">
+          firstName,lastName,address1,address2,city,state,postcode,country
+        </prop>
+        <prop key="com.adfonic.domain.AccountDetail">
+          amount
+        </prop>
+        <prop key="com.adfonic.domain.CampaignTimePeriod">
+          startDate,endDate
+        </prop>
+        <prop key="com.adfonic.domain.RtbConfig">
+          adMode,winNoticeMode
+        </prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- Auditor -->
+  <bean id="entityAuditor" class="com.byyd.middleware.domainlog.EntityAuditorJpaImpl">
+      <constructor-arg ref="auditorConfig"/>
+      <constructor-arg ref="domainLogManager"/>
+      <constructor-arg value="admin"/>
+  </bean>
+  
+  <!-- EntityAuditorFilter -->
+  <bean id="entityAuditorFilter" class="com.adfonic.servlet.EntityAuditorFilter"/>
+  
+</beans>
